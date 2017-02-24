@@ -1,0 +1,11 @@
+name: Tutorial
+authors: [Eduard]
+version: 1.0
+main: me.eduard.tutorial.MainTutorial
+description: Esse e apenas um plugin tutorial
+commands:
+  nomedocomando:
+    aliases: [cmd,nomedocmd]
+    permission: comando.use
+    permission-message: Voce nao pode usar este comando
+    description: Esse e um comando simples

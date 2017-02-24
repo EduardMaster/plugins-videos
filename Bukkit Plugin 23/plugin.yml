@@ -1,0 +1,6 @@
+name: Som
+description: Som
+main: me.eduard.som.Main
+version: 1.0
+authors: [Eduard]
+commands:

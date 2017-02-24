@@ -1,0 +1,11 @@
+name: WitherSpawn
+description: Sistema de criacao de Wither automaticamente
+main: net.eduard.witherspawn.WitherSpawn
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
+commands:
+  wither:
+    usage: /<command> <spawn|setspawn>
+    description: Set o Spawn do Wither ou Spawne o Wither

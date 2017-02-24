@@ -1,0 +1,6 @@
+name: Scoreboard
+description: Plugin Scoreboard
+main: me.eduard.score.Main
+version: 1.0
+authors: [Eduard]
+commands:

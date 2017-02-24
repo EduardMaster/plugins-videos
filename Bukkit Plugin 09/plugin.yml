@@ -1,0 +1,6 @@
+name: MainControlada
+description: MainControlada
+main: me.eduard.maincontrolada.Main
+version: 1.0
+authors: [Eduard]
+commands:

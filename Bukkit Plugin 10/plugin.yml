@@ -1,0 +1,8 @@
+name: Kits
+description: Kits
+main: me.eduard.kit.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  kit:
+    description: Pegar um Kit

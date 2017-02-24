@@ -1,0 +1,9 @@
+name: TapeteVoador
+description: Plugin TapeteVoador
+main: me.eduard.tapete.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  tapete:
+    aliases: [tpt]
+    description: ativar e desativar o Efeito do Tapete Voador

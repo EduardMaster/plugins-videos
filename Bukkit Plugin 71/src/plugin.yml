@@ -1,0 +1,8 @@
+name: Build
+description: Plugin Build
+main: net.eduard.build.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  build:

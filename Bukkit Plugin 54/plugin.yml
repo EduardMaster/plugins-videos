@@ -1,0 +1,6 @@
+name: Teste
+description: Plugin Teste
+main: me.eduard.java.Main
+version: 1.0
+authors: [Eduard]
+commands:

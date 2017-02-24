@@ -1,0 +1,6 @@
+name: LaunchPad
+description: LaunchPad
+main: me.eduard.launchpad.Main
+version: 1.0
+authors: [Eduard]
+commands:

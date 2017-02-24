@@ -1,0 +1,7 @@
+name: Soup
+description: Soup
+main: me.eduard.soup.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  soup:

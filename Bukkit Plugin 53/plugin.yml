@@ -1,0 +1,6 @@
+name: BarAPICustom
+description: Plugin BarAPICustom
+main: me.eduard.barapicustom.Main
+version: 1.0
+authors: [Eduard]
+commands:

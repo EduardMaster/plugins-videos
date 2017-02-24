@@ -1,0 +1,6 @@
+name: ChatEdit
+description: ChatEdit
+main: me.eduard.chat.Main
+version: 1.0
+authors: [Eduard]
+commands:

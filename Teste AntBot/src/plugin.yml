@@ -1,0 +1,6 @@
+name: AntBot
+description: Sistema Ant Login de Bot usando Proxy de uma config para saber quem eh Proxy
+main: net.eduard.antbot.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardAPI]

@@ -1,0 +1,9 @@
+name: SimplesCommand
+description: Plugin SimplesCommand
+main: me.eduard.commands.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  simples:
+    aliases: [smp]
+    description: Simples NICK

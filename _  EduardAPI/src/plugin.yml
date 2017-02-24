@@ -1,0 +1,21 @@
+name: EduardAPI
+description: A melhor API ja criada pelo Eduard
+main: net.eduard.eduardapi.EduardAPI
+version: 1.0
+authors: [Eduard]
+soft-depend: [Essentials,Vault]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  deleteworld:
+    description: Deletar um Mundo
+    aliases: [removeworld]
+    usage: /<command> <world>
+  goto:
+    description: Teleportar para um Mundo
+    aliases: [world]
+    usage: /<command> <world>
+  gamemode:
+    description: Trocar o Modo de Jogo
+    aliases: [gm,mode]
+    usage: /<command> [0-3] [player]
+    

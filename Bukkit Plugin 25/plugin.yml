@@ -1,0 +1,10 @@
+name: Extra
+description: Extra
+main: me.eduard.extra.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  clearchat:
+    description: Limpar o Chat
+  clearchatall:
+    description: Limpar o Chat de todos

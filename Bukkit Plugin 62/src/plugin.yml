@@ -1,0 +1,7 @@
+name: ScoreboardAPI
+description: Plugin ScoreboardAPI
+main: net.eduard.score.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]

@@ -1,0 +1,8 @@
+name: Listener
+description: Plugin Listener
+main: me.eduard.listener.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  test:
+    description: Reload Completo do PLugin

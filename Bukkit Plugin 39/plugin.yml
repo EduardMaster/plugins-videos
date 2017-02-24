@@ -1,0 +1,6 @@
+name: KitPvP
+description: Plugin KitPvP
+main: me.eduard.kitpvp.Main
+version: 1.0
+authors: [Eduard]
+commands:

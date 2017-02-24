@@ -1,0 +1,51 @@
+name: KitPvP
+description: Plugin de KitPvP
+main: net.eduard.kitpvp.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
+commands:
+  admin:
+    description: Ativar e desativar o Modo Admin
+  aplicate:
+    aliases: [aplicar]
+    description: Tente participar da Staff
+  broadcast:
+    aliases: [bc]
+    description: Enviar uma Mensagens Global
+  chat:
+    description: Ativar e desativar o Chat
+  clearchat:
+    aliases: [cc,limparchat]
+    description: Limpar o Chat do Jogadores
+  fly:
+    description: Ativar e desativar Modo de Voo
+  inventorysee:
+    aliases: [invsee,verinventorio,verinv]
+    description: Abrir inventario dos Jogadores
+  invisible:
+    aliases: [inv,invisivel]
+    description: Ficar Invisivel
+  ping:
+    description: Ver o seu Ping
+  pvp:
+    description: Ativar e desativar o PvP
+  report:
+    aliases: [inv,reportar,reporte]
+    description: Reportar Jogadores
+  score:
+    description: Mostrar ou Esconder Pontuacao (Score)
+  staffchat:
+    aliases: [sc]
+    description: Ativar e desativar o Chat da Staff
+  teleportall:
+    aliases: [tpall]
+    description: Teleportar Todos Jogadores ate Voce
+  visible:
+    aliases: [vis,visivel]
+    description: Ficar Visivel
+  youtuber:
+    description: Ver requisitos para Tag Youtuber
+
+  

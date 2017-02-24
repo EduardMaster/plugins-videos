@@ -1,0 +1,6 @@
+name: HeldSound
+description: HeldSound
+main: me.eduard.held.Main
+version: 1.0
+authors: [Eduard]
+commands:

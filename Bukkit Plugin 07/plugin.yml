@@ -1,0 +1,6 @@
+name: TeleportBow
+description: TeleportBow
+main: me.eduard.teleportbow.Main
+version: 1.0
+authors: [Eduard]
+commands:

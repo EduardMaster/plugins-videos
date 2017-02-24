@@ -1,0 +1,6 @@
+name: Configs
+description: Plugin Configs
+main: me.eduard.configs.Main
+version: 1.0
+authors: [Eduard]
+commands:

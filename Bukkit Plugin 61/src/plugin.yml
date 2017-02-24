@@ -1,0 +1,7 @@
+name: GUI
+description: Plugin GUI
+main: net.eduard.gui.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]

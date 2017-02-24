@@ -1,0 +1,7 @@
+name: Loja
+description: Plugin Loja
+main: net.eduard.tesao.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI,Vault]

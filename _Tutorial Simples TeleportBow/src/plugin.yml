@@ -1,0 +1,6 @@
+name: SimpleTeleportBow
+description: Tutorial Simples do Plugin TeleportBow
+main: net.eduard.teleportbow.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD

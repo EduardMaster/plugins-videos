@@ -1,0 +1,9 @@
+name: Parkour
+description: Parkour
+main: me.eduard.parkour.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  parkour:
+    aliases: [pk]
+    description: Comando Principal do PLugin

@@ -1,0 +1,8 @@
+name: Money
+description: Money
+main: me.eduard.money.Main
+version: 1.0
+authors: [Eduard]
+commands:
+  money:
+    description: Comando do Plugin Money

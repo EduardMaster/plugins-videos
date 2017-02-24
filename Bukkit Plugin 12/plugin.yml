@@ -1,0 +1,6 @@
+name: DoubleJump
+description: DoubleJump
+main: me.eduard.doublejump.Main
+version: 1.0
+authors: [Eduard]
+commands:

@@ -1,0 +1,12 @@
+name: Drops
+description: Customizacao de Drops de Mobs em gerais
+main: net.eduard.drops.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
+commands:
+  dropsreload:
+    aliases: [drl]
+    description: Recarrega as configuracoes
+    usage: /<command>

@@ -1,0 +1,12 @@
+name: Parkour
+description: Plugin do Minigame de Parkour
+main: net.eduard.parkour.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  parkour:
+    aliases: [pa,pk]
+    permission: parkour.use
+    usage: /<command> help
+    description: Comando do Minigame do Parkour

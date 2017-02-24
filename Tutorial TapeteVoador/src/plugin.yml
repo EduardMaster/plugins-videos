@@ -1,0 +1,10 @@
+name: TapeteVoador
+description: Sistema de Tapete que flutua (Baseado no MagicCarpet)
+main: net.eduard.tapetevoador.TapeteVoador
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
+commands:
+  tapete:
+    description: Ativar e Desativar o Tapete Voador

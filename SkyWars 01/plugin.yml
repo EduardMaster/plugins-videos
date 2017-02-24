@@ -1,0 +1,4 @@
+name: SkyWars
+description: Plugin SkyWars
+version: 1.0
+main: net.eduard.skywars.Main

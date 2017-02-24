@@ -1,0 +1,6 @@
+name: NoCmd
+description: NoCmd
+main: me.eduard.cmd.Main
+version: 1.0
+authors: [Eduard]
+commands:

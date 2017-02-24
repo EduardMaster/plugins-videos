@@ -1,0 +1,18 @@
+name: Tutorial
+authors: [Eduard]
+version: 1.0
+main: me.eduard.tutorial.MainTutorial
+description: Esse e apenas um plugin tutorial
+commands:
+  send:
+    permission: send.use
+    permission-message: Voce nao pode usar este comando
+    description: Mandar uma mensagem
+  heal:
+    permission: heal.use
+    permission-message: Voce nao pode usar este comando
+    description: Mandar uma mensagem
+  feed:
+    permission: feed.use
+    permission-message: Voce nao pode usar este comando
+    description: Mandar uma mensagem
