@@ -6,11 +6,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import net.eduard.api.manager.EventAPI;
 
-public class TemplateEvent extends EventAPI{
-
+public class TemplateEvent extends EventAPI {
+ 
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
-		
 	}
 
 }

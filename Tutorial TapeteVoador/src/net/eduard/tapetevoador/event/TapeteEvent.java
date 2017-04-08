@@ -17,73 +17,73 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.EventAPI;
-import net.eduard.tapetevoador.TapeteVoador;
+import net.eduard.tapetevoador.Main;
 
 public class TapeteEvent extends EventAPI {
-
+	
 	@EventHandler
-	public void onEntityDamageEvent(EntityDamageEvent e) {
+	public void event(EntityDamageEvent e) {
 
 		if (e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL) {
 			Player p = (Player) e.getEntity();
-			if (TapeteVoador.players.contains(p)) {
+			if (Main.players.contains(p)) {
 				e.setCancelled(true);
 			}
 		}
 	}
 	@EventHandler
-	public void onPlayerDeathEvent(PlayerDeathEvent e) {
+	public void event(PlayerDeathEvent e) {
 
 		Player p = e.getEntity();
-		if (TapeteVoador.players.contains(p)) {
-			if (p.getGameMode() == TapeteVoador.getGamemode()) {
-				TapeteVoador.reset(p);
+		if (Main.players.contains(p)) {
+			if (p.getGameMode() == Main.getGamemode()) {
+				Main.reset(p);
 			}
 		}
 
 	}
 
 	@EventHandler
-	public void onPlayerGameModeChangeEvent(PlayerGameModeChangeEvent e) {
+	public void event(PlayerGameModeChangeEvent e) {
 
 		Player p = e.getPlayer();
-		if (TapeteVoador.players.contains(p)) {
-			if (p.getGameMode() == TapeteVoador.getGamemode()) {
-				TapeteVoador.reset(p);
+		if (Main.players.contains(p)) {
+			if (p.getGameMode() == Main.getGamemode()) {
+				Main.reset(p);
 			}
 		}
 	}
 	@EventHandler
-	public void onPlayerQuitEvent(PlayerQuitEvent e) {
+	public void event(PlayerQuitEvent e) {
 
 		Player p = e.getPlayer();
-		if (TapeteVoador.players.contains(p)) {
-			TapeteVoador.reset(p);
-			TapeteVoador.players.remove(p);
+		if (Main.players.contains(p)) {
+			Main.reset(p);
+			Main.players.remove(p);
 		}
 	}
 
 	@EventHandler
-	public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
+	public void event(PlayerTeleportEvent e) {
 
 		Player p = e.getPlayer();
-		if (TapeteVoador.players.contains(p)) {
-			if (p.getGameMode() == TapeteVoador.getGamemode()) {
-				TapeteVoador.reset(p);
+		if (Main.players.contains(p)) {
+			if (p.getGameMode() == Main.getGamemode()) {
+				Main.reset(p);
 			}
 		}
 	}
 	@EventHandler
-	public void onPlayerMoveEvent(PlayerMoveEvent e) {
+	public void event(PlayerMoveEvent e) {
 
 		Player p = e.getPlayer();
 
 		if (!API.equals(e.getTo(), e.getFrom())) {
-			if (TapeteVoador.players.contains(p)) {
+			if (Main.players.contains(p)) {
 				if (p.isDead()) {
 					return;
 				}
-				if (p.getGameMode() == TapeteVoador.getGamemode()) {
+				if (p.getGameMode() == Main.getGamemode()) {
 					if (p.isSneaking()) {
 						if (e.getFrom().getY() < e.getTo().getY()) {
 							e.setCancelled(true);
@@ -91,8 +91,8 @@ public class TapeteEvent extends EventAPI {
 						}
 					}
 					List<Block> listDeBlocosDeletados = new ArrayList<>();
-					List<Block> listaDeBlocoFrom = TapeteVoador.getTapeteBlocks(e.getFrom());
-					List<Block> listaDeBlocoTo = TapeteVoador.getTapeteBlocks(e.getTo());
+					List<Block> listaDeBlocoFrom = Main.getTapeteBlocks(e.getFrom());
+					List<Block> listaDeBlocoTo = Main.getTapeteBlocks(e.getTo());
 
 					for (Block block : listaDeBlocoFrom) {
 						if (!listaDeBlocoTo.contains(block)) {
@@ -100,13 +100,13 @@ public class TapeteEvent extends EventAPI {
 						}
 					}
 					for (Block block : listDeBlocosDeletados) {
-						if (block.getType() == TapeteVoador.getMaterial()) {
+						if (block.getType() == Main.getMaterial()) {
 							block.setType(Material.AIR);
 						}
 					}
 					for (Block block : listaDeBlocoTo) {
 						if (block.getType() == Material.AIR) {
-							block.setType(TapeteVoador.getMaterial());
+							block.setType(Main.getMaterial());
 						}
 					}
 				}

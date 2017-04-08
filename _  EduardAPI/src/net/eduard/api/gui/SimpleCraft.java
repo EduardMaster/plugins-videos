@@ -9,8 +9,8 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
 import net.eduard.api.API;
+import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
-import net.eduard.api.util.Save;
 
 public final class SimpleCraft implements Save {
 

@@ -1,0 +1,19 @@
+
+
+server-tag: '&b&lSky&6&lWars '
+no-console: '$tag&cComando em Jogo!'
+# Criação
+create-arena: '$tag&aO mapa &2$map &afoi criado!'
+delete-arena: '$tag&aO mapa &2$map &afoi deletado!'
+no-arena: '$tag&cNão existe este mapa: &4$map'
+arena: '$tag&cJá existe este mapa: &4$map'
+reset-spawns: '$tag&f$map &aSpawns removidos!'
+add-spawn: '$tag&f$map &aSpawn adicionado!'
+set-high: '$tag&f$map &aPosição alta setada!'
+set-low: '$tag&f$map &aPosição baixa setada!'
+set-feast-high: '$tag&f$map &aPosição alta do feast setada!'
+set-feast-low: '$tag&f$map &aPosição baixa do feast setada!'
+set-min-players-amount: '$tag&f$map &aQuantidade minima de jogadores setado &2$value!'
+set-max-players-amount: '$tag&f$map &aQuantidade maxima de jogadores setado &2$value!'
+update-blocks: '$tag&f$map &aBlocos atualizados!'
+set-lobby: '$tag&aLobby setado!'

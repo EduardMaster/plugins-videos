@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -16,33 +17,38 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.dev.Cooldown;
-import net.eduard.api.dev.Effects;
-import net.eduard.api.dev.Sounds;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.DropItem;
+import net.eduard.api.click.Click;
+import net.eduard.api.gui.Gui;
+import net.eduard.api.kits.Achilles;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.util.Save;
-import net.eduard.kits.Achilles;
+import net.eduard.api.player.Cooldown;
+import net.eduard.api.player.DropItem;
+import net.eduard.api.player.Effects;
+import net.eduard.api.player.Potions;
+import net.eduard.api.player.SoundEffect;
 
 public class Section {
 	static HashMap<String, Save> saves = new HashMap<>();
 
 	private static HashMap<Class<?>, String> lists = new HashMap<>();
+	private static HashMap<Class<?>, Class<?>> primitives = new HashMap<>();
 	private static HashMap<String, String> packages = new HashMap<>();
 
 	static {
-		register(Effects.class, "");
-		register(Cooldown.class, "");
 		register(Click.class, "");
-		Section.register(Achilles.class,"Kit");
+		register(Gui.class, "");
+		register(Cooldown.class, "");
+		register(Effects.class, "");
+		register(Achilles.class, "Kit");
 		registerList(ItemStack.class, "item");
 		registerList(DropItem.class, "drop");
 		registerList(Location.class, "loc");
+		registerList(Potions.class, "pot");
 		register("Vector", new SaveVector());
-		register("PotionEffect", new SavePotionEffect());
 		register("Location", new SaveLocation());
-		register("ItemStack",new SaveItemStack());
+		register("ItemStack", new SaveItemStack());
+		primitives.put(Integer.TYPE, Integer.class);
+		primitives.put(Double.TYPE, Double.class);
 
 	}
 
@@ -108,7 +114,8 @@ public class Section {
 			return "";
 		}
 		String[] split = line.split(":");
-		String result = line.replaceFirst(split[0] + ":", "").replaceFirst(" ", "");
+		String result = line.replaceFirst(split[0] + ":", "").replaceFirst(" ",
+				"");
 		return result;
 
 	}
@@ -158,7 +165,8 @@ public class Section {
 		return true;
 	}
 
-	public static void setConfigLines(Path path, List<String> lines) throws Exception {
+	public static void setConfigLines(Path path, List<String> lines)
+			throws Exception {
 		Files.write(path, lines);
 	}
 
@@ -170,11 +178,11 @@ public class Section {
 
 	String key;
 
-	HashMap<String, Section> section = new LinkedHashMap<>();
+	Map<String, Section> section = new LinkedHashMap<>();
 
-	ArrayList<Object> list = new ArrayList<>();
+	List<Object> list = new ArrayList<>();
 
-	ArrayList<String> comments = new ArrayList<>();
+	List<String> comments = new ArrayList<>();
 
 	public Section(Section father, String key, Object value) {
 		this(key, value);
@@ -275,7 +283,7 @@ public class Section {
 		return getSection(path).getKeys();
 	}
 
-	public ArrayList<Object> getList() {
+	public List<Object> getList() {
 		return list;
 	}
 
@@ -312,7 +320,7 @@ public class Section {
 		return getSection(path).getMessages();
 	}
 
-	public HashMap<String, Section> getSection() {
+	public Map<String, Section> getSection() {
 		return section;
 	}
 
@@ -336,11 +344,11 @@ public class Section {
 		return section.entrySet();
 	}
 
-	public Sounds getSound() {
-		return (Sounds) getValue();
+	public SoundEffect getSound() {
+		return (SoundEffect) getValue();
 	}
 
-	public Sounds getSound(String path) {
+	public SoundEffect getSound(String path) {
 		return getSection(path).getSound();
 	}
 
@@ -376,14 +384,15 @@ public class Section {
 					Save instance = null;
 					if (name.contains(".")) {
 						try {
-							claz = RexAPI.getClass(name);
+							claz = RexAPI.get(name);
 						} catch (Exception ex) {
 							return null;
 						}
 					} else {
 						for (Entry<String, String> pack : packages.entrySet()) {
 							try {
-								claz = RexAPI.getClass(pack.getKey() + "." + name.replace(pack.getValue(), ""));
+								claz = RexAPI.get(pack.getKey() + "."
+										+ name.replace(pack.getValue(), ""));
 								break;
 							} catch (Exception ex) {
 							}
@@ -500,8 +509,7 @@ public class Section {
 			} else if (isSection(line)) {
 				String key = getKey(line, space);
 				Object value = getValue(line, space);
-				current = getSection(key).set(value);
-				;
+				current = getSection(key).set(value);;
 				for (String text : texts) {
 					current.comments.add(text);
 				}
@@ -550,6 +558,8 @@ public class Section {
 			for (Field field : clazz.getDeclaredFields()) {
 				if (Modifier.isStatic(field.getModifiers()))
 					continue;
+				if (Modifier.isTransient(field.getModifiers()))
+					continue;
 				field.setAccessible(true);
 				Object result = field.get(instance);
 
@@ -559,7 +569,7 @@ public class Section {
 					set(field.getName(), result);
 				}
 			}
-			RexAPI.save(this, instance);
+			Config.save(this, instance);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -667,29 +677,36 @@ public class Section {
 			try {
 				if (Modifier.isStatic(field.getModifiers()))
 					continue;
-				if (field.getType().isAnonymousClass()) {
-					API.console("§bisAnonymousClass §c"+field.getName()+" §e"+field.getType().getName());
-				}
+				if (Modifier.isTransient(field.getModifiers()))
+					continue;
 				field.setAccessible(true);
 				if (field.getType().isEnum()) {
 					try {
-						field.set(instance, RexAPI.getValue(field.getType(), getString(field.getName())));
+						field.set(instance, RexAPI.getValue(field.getType(),
+								getString(field.getName())));
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 				} else {
 					if (contains(field.getName())) {
 						try {
-							String name = API.toTitle(field.getType().getSimpleName());
-							Object result = RexAPI.getResult(API.class, "to" + name, RexAPI.getParameters(Object.class),
+							String name = API
+									.toTitle(field.getType().getSimpleName());
+							Object result = RexAPI.getResult(API.class,
+									"to" + name,
+									RexAPI.getParameters(Object.class),
 									getString(field.getName()));
 							field.set(instance, result);
 						} catch (Exception ex) {
 							try {
-								field.set(instance, get(field.getName()));
-							} catch (Exception ex2) {
+								Object result = get(field.getName());
+								if (result.getClass().equals(field.getType())){
+									field.set(instance,result);
+								}
+								
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-
 						}
 					}
 				}
@@ -698,7 +715,7 @@ public class Section {
 			}
 		}
 		try {
-			RexAPI.get(this, instance);
+			Config.get(this, instance);
 		} catch (Exception ex) {
 		}
 

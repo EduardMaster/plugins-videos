@@ -13,10 +13,20 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.dev.Sounds;
-import net.eduard.eduardapi.EduardAPI;
+import net.eduard.api.API;
+import net.eduard.api.manager.RexAPI;
+import net.eduard.api.player.SoundEffect;
 
 public class Config {
+
+	public static void save(Section section, Save save) throws Exception {
+		RexAPI.getResult(save, "save",
+				RexAPI.getParameters(section, Object.class), section, save);
+	}
+
+	public static void get(Section section, Save save) throws Exception {
+		RexAPI.getResult(save, "get", RexAPI.getParameters(section), section);
+	}
 
 	public final static List<Config> CONFIGS = new ArrayList<>();
 	private Section root;
@@ -55,12 +65,52 @@ public class Config {
 			root.lineSpaces = 1;
 			this.root.father = root;
 			reloadConfig();
-
 		}
-	}
 
+	}
+	public Config reloadConfig() {
+		try {
+			if (!file.exists()) {
+				if (name.endsWith("/") | name.endsWith("\\")
+						| name.endsWith(File.separator)) {
+					file.mkdirs();
+				} else {
+					file.getParentFile().mkdirs();
+					try {
+						file.createNewFile();
+
+					} catch (Exception e) {
+					}
+					if (plugin.getResource(name) != null)
+						plugin.saveResource(name, true);
+				}
+
+			}
+			if (file.isFile()){
+				try {
+					if (Charset.isSupported("UTF-8")) {
+						lines = Files.readAllLines(file.toPath(),
+								StandardCharsets.UTF_8);
+					} else {
+						lines = Files.readAllLines(file.toPath(),
+								Charset.defaultCharset());
+					}
+					root.reload(this);
+
+				} catch (Exception ex) {
+					lines = Files.readAllLines(file.toPath(),
+							Charset.defaultCharset());
+					root.reload(this);
+				}
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return this;
+	}
 	public Config(String name) {
-		this(EduardAPI.getInstance(), name);
+		this(API.getAPI(), name);
 	}
 
 	public Section add(String path, Object value, String... comments) {
@@ -216,7 +266,7 @@ public class Config {
 		return root.getSection(path);
 	}
 
-	public Sounds getSound(String path) {
+	public SoundEffect getSound(String path) {
 		return root.getSound(path);
 	}
 
@@ -250,37 +300,6 @@ public class Config {
 
 	private void reload() {
 		root.reload(this);
-	}
-
-	public Config reloadConfig() {
-		try {
-			if (Files.isDirectory(file.toPath())) {
-				Files.createDirectories(file.toPath());
-			} else {
-				file.getParentFile().mkdirs();
-				// Files.copy(source, this.file.toPath());
-				if (!file.exists()) {
-					file.createNewFile();
-					if (plugin.getResource(name) != null)
-						plugin.saveResource(name, true);
-				}
-				try {
-					if (Charset.isSupported("UTF-8")) {
-						lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-					} else {
-						lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-					}
-					root.reload(this);
-
-				} catch (Exception ex) {
-					lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-					root.reload(this);
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return this;
 	}
 
 	public Config remove(String path) {
@@ -328,5 +347,6 @@ public class Config {
 	public String toString() {
 		return "Config [plugin=" + plugin + ", name=" + name + "]";
 	}
+
 
 }

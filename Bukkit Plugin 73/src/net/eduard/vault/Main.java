@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.gui.Events;
 import net.eduard.api.gui.Gui;
-import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.gui.Slot;
+import net.eduard.api.player.PlayerEffect;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -28,25 +28,27 @@ public class Main extends JavaPlugin {
 
 		Gui loja = new Gui(3, "§8Loja");
 		loja.setItem(new ItemStack(Material.BONE));
-		
-		loja.set(5,new ItemStack(Material.DIAMOND),new Events().effect(new PlayerEffect() {
-			
-			public void effect(Player p) {
-				if (p.hasPermission("loja.teste")) {
-					Main.economy.depositPlayer(p.getName(), 200);
-					p.sendMessage("§bVoce vendeu o diamante!");
-					Main.permission.playerRemove(p, "loja.teste");
+		loja.set((Slot) new Slot(new ItemStack(Material.DIAMOND), 5)
+				.setEffect(new PlayerEffect() {
 
-				} else {
-					// Ta diferente por causa da API do Vault atualizada '-'
-					Main.economy.withdrawPlayer(p.getName(), 200);
-					p.sendMessage("§aVoce comprou o diamante");
-					Main.permission.playerAdd(p, "loja.teste");
-				}
-				p.setNoDamageTicks(20 * 10);
-			}
-		}));
-		loja.register();
+					@SuppressWarnings("deprecation")
+					@Override
+					public void effect(Player p) {
+						if (p.hasPermission("loja.teste")) {
+							Main.economy.depositPlayer(p.getName(), 200);
+							p.sendMessage("§bVoce vendeu o diamante!");
+							Main.permission.playerRemove(p, "loja.teste");
+
+						} else {
+							// Ta diferente por causa da API do Vault atualizada
+							// '-'
+							Main.economy.withdrawPlayer(p.getName(), 200);
+							p.sendMessage("§aVoce comprou o diamante");
+							Main.permission.playerAdd(p, "loja.teste");
+						}
+						p.setNoDamageTicks(20 * 10);
+					}
+				})).register(this);
 	}
 
 	public void onEnable() {
@@ -61,8 +63,8 @@ public class Main extends JavaPlugin {
 
 	private boolean setupChat() {
 
-		RegisteredServiceProvider<Chat> chatProvider =
-			getServer().getServicesManager()
+		RegisteredServiceProvider<Chat> chatProvider = getServer()
+				.getServicesManager()
 				.getRegistration(net.milkbowl.vault.chat.Chat.class);
 		if (chatProvider != null) {
 			chat = chatProvider.getProvider();
@@ -73,8 +75,8 @@ public class Main extends JavaPlugin {
 
 	private boolean setupEconomy() {
 
-		RegisteredServiceProvider<Economy> economyProvider =
-			getServer().getServicesManager()
+		RegisteredServiceProvider<Economy> economyProvider = getServer()
+				.getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
@@ -85,9 +87,9 @@ public class Main extends JavaPlugin {
 
 	private boolean setupPermissions() {
 
-		RegisteredServiceProvider<Permission> permissionProvider =
-			getServer().getServicesManager()
-				.getRegistration(net.milkbowl.vault.permission.Permission.class);
+		RegisteredServiceProvider<Permission> permissionProvider = getServer()
+				.getServicesManager().getRegistration(
+						net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null) {
 			permission = permissionProvider.getProvider();
 		}

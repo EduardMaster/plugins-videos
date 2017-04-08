@@ -2,122 +2,113 @@
 package net.eduard.api.gui;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
+import net.eduard.api.click.Click;
+import net.eduard.api.click.ClickEffect;
 import net.eduard.api.config.Section;
-import net.eduard.api.util.ClickCheck;
-import net.eduard.api.util.ClickEffect;
-import net.eduard.api.util.ClickType;
 
 public class Gui extends Click {
-	public void register() {
 
-		API.GUIS.add(this);
-	}
-	public void unregister() {
+	private boolean open = true;
 
-		API.GUIS.remove(this);
-	}
+	private transient Map<Integer, Slot> slots = new HashMap<>();
 
-	public void open(Player player) {
-		player.openInventory(inventory);
-	}
+	private transient Inventory inventory;
 
-	public void clear() {
-		inventory.clear();
-		effects.clear();
-	}
+	/**
+	 * e.getView().getTopInventory() == e.getInventory()
+	 * e.getView().getBottomInventory() == Inventario do Jogador
+	 * 
+	 * @param e
+	 */
+	@EventHandler
+	private void event(InventoryClickEvent e) {
+		if (e.getWhoClicked() instanceof Player) {
+			Player p = (Player) e.getWhoClicked();
+			if (inventory.equals(e.getInventory())) {
+				e.setCancelled(true);
+//				if (e.getAction() == InventoryAction.HOTBAR_SWAP){
+//					e.setCancelled(true);
+//				}
+//				if (e.getCurrentItem() == null) {
+//					return;
+//				}
+//				if (e.getCurrentItem().getType() == Material.AIR) {
+//					return;
+//				}
+//				
+//				
+//				if (e.getRawSlot() > e.getSlot()) {
+//					return;
+//				}
+				Slot slot = slots.get(e.getRawSlot());
+				if (slot != null) {
+					slot.effect(p);
+				}
+			}
+		}
 
-	private boolean canOpen = true;
-
-	private Inventory inventory;
-
-	private HashMap<Integer, Events> effects = new HashMap<>();
-	
-	private int getId(int id) {
-		return id<0?0:id>=inventory.getSize()?0:id;
-	}
-	
-	public Gui aset(Slot slot) {
-		int id = getId(slot.getSlot());
-		inventory.setItem(id, slot.getItem());
-		return this;
 	}
 
 	public Gui(int size, String name) {
-		super(Material.CHEST);
-		setType(ClickType.RIGHT_CLICK);
-		setCheck(ClickCheck.IGNORING_AMOUNT);
-		setInventory(API.newInventory(name, size * 9));
-		setEffect(new ClickEffect() {
+		this.inventory = API.newInventory(name, size * 9);
+		setClick(new ClickEffect() {
 
 			public void effect(PlayerInteractEvent e) {
-				if (canOpen) {
+				if (open) {
 					open(e.getPlayer());
 				}
 			}
 
 			public void effect(PlayerInteractEntityEvent e) {
-				if (canOpen) {
+				if (open) {
 					open(e.getPlayer());
 				}
 			}
 		});
 	}
+	public Gui open(Player player) {
+		player.openInventory(inventory);
+		return this;
+	}
 
-	public boolean set(int id, ItemStack item) {
-		if (id == -1)
-			return false;
-		if (id > getInventory().getSize()) {
-			return false;
+	public Gui clear() {
+		inventory.clear();
+		slots.clear();
+		return this;
+	}
+	private int getId(int id) {
+		return id < 0 ? 0 : id >= inventory.getSize() ? 0 : id;
+	}
+	public Gui add(Slot slot) {
+		int first = inventory.firstEmpty();
+		if (first != -1) {
+			first = getId(first);
+			inventory.setItem(first, slot.getItem());
+			slots.put(first, slot);
 		}
-		inventory.setItem(id, item);
-		return true;
+		return this;
 	}
 
-	public boolean add(ItemStack item) {
-		return set(inventory.firstEmpty(), item);
-	}
-
-	public boolean set(int id, ItemStack item, Events effect) {
-		if (id == -1)
-			return false;
-		if (id > getInventory().getSize()) {
-			return false;
-		}
-		inventory.setItem(id, item);
-		if (effect == null) {
-			return false;
-		}
-		effects.put(id, effect);
-		return true;
-	}
-
-	public boolean add(ItemStack item, Events effect) {
-		return set(inventory.firstEmpty(), item, effect);
-	}
-
-	public boolean add(Slot slot) {
-		return add(slot.getItem(), slot);
-	}
-
-	public boolean set(Slot slot) {
-		return set(slot, slot);
-	}
-
-	public boolean set(Slot slot, Events event) {
-		return set(slot.getSlot(), slot.getItem(), event);
+	public Gui set(Slot slot) {
+		int id = getId(slot.getSlot());
+		inventory.setItem(id, slot.getItem());
+		slots.put(id, slot);
+		return this;
 	}
 
 	public Gui remove(int id) {
-		effects.remove(id);
+		slots.remove(id);
 		inventory.setItem(id, null);
 		return this;
 	}
@@ -127,51 +118,39 @@ public class Gui extends Click {
 		return inventory;
 	}
 
-	public Events getEvent(int id) {
-
-		return effects.get(id);
+	public boolean isOpen() {
+		return open;
 	}
 
-	public ItemStack getItem(int id) {
-		return inventory.getItem(id);
-	}
-
-	private void setInventory(Inventory inventory) {
-
-		this.inventory = inventory;
-	}
-
-	public Gui canOpen(boolean canOpen) {
-		this.canOpen = canOpen;
+	public Gui setOpen(boolean canOpen) {
+		this.open = canOpen;
 		return this;
 	}
 
-	public boolean canOpen() {
-		return canOpen;
+	public Map<Integer, Slot> getSlots() {
+		return slots;
 	}
 
-	public boolean isRegistred() {
-		return API.GUIS.contains(this);
+	public Gui setSlots(Map<Integer, Slot> slots) {
+		this.slots = slots;
+		return this;
+
 	}
+
 	public void save(Section section, Object value) {
 		section.remove("Drops");
-		int index = 0;
-		for (ItemStack item:inventory.getContents()) {
-			String tag = "Drops.drop"+index;
-			section.set(tag+".item",item);
-			section.set(tag+".slot",index);
-			section.set(tag+".action",effects.get(index));
-			index++;
+		for (Entry<Integer, Slot> map : slots.entrySet()) {
+			Integer id = map.getKey();
+			Slot ed = map.getValue();
+			ed.setSlot(id);
+			section.set("Drops.drop" + id);
 		}
-		
+
 	}
 	public Object get(Section section) {
-		for (Section sub:section.getSection("Drops").getValues()) {
-			Integer index = sub.getInt("slot");
-			inventory.setItem(index, sub.getItem("item"));
-			if (sub.contains("action")) {
-				effects.put(index, (Events) sub.get("action"));
-			}
+		for (Section sub : section.getSection("Drops").getValues()) {
+			Slot slot = (Slot) sub.getValue();
+			set(slot);
 		}
 		return null;
 	}

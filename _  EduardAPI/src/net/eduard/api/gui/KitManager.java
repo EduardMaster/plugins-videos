@@ -2,65 +2,133 @@ package net.eduard.api.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
+import net.eduard.api.click.Click;
+import net.eduard.api.click.ClickEffect;
+import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
-import net.eduard.api.config.VaultAPI;
+import net.eduard.api.manager.EventAPI;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.util.ClickCheck;
-import net.eduard.api.util.ClickType;
-import net.eduard.api.util.KitType;
-import net.eduard.api.util.PlayerEffect;
-import net.eduard.api.util.Save;
+import net.eduard.api.manager.VaultAPI;
+import net.eduard.api.player.PlayerEffect;
 
-public class KitManager implements Save {
+public class KitManager extends EventAPI implements Save {
+
 	private String prePerm = "kits.";
 	private Click kitSelector;
 	private Click kitShop;
-	private Slot confirmShop = new Slot(API.newItem(Material.CACTUS, "§bConfirmar Compra"), 0);
-	private Slot cancelShop = new Slot(API.newItem(Material.BED, "§bAvançar"), 8);;
+	private double defaultKitPrice = 0;
+	private Slot confirmShop = new Slot(
+			API.newItem(Material.EMERALD, "§bConfirmar Compra"), 0);
+	private Slot cancelShop = new Slot(API.newItem(Material.BED, "§bAvançar"),
+			8);;
 	private ItemStack soup = API.newItem("§6Sopa", Material.MUSHROOM_SOUP);
 	private int pagesAmount = 3;
-	private Slot nextPageItem = new Slot(API.newItem(Material.BEACON, "§bAvançar"), 8);;
-	private ItemStack emptySlotItem = API.newItem(" ", Material.STAINED_GLASS_PANE, 15);
-	private ItemStack hotBarItem = API.newItem("§6§lKit§f§lPvP", Material.STAINED_GLASS_PANE, 10);
-	private Slot previousPageItem = new Slot(API.newItem(Material.BED, "§bVoltar"), 0);;
-	private String pageTag = "§8Página §7$page";
-	private String selectorTitle = "§8Seus Kits: ";
-	private String shopTitle = "§7Compre Kits: ";
-	private String kitSelected = "§6Voce escolheu o Kit $kit";
-	private String kitGived = "§6Voce ganhou o Kit $kit";
-	private String kitBuyed = "§§Voce comprou o Kit $kit";
-	private String noKitBuyed = "§§Voce nao tem dinheiro para comprar este kit $kit";
-	private String guiShopTitle = "§8Kit $kit seu preço: $price";
+	private Slot nextPageItem = new Slot(
+			API.newItem(Material.BEACON, "§bAvançar"), 8);;
+	private ItemStack emptySlotItem = API.newItem(" ",
+			Material.STAINED_GLASS_PANE, 15);
+	private ItemStack hotBarItem = API.newItem("§6§lKit§f§lPvP",
+			Material.STAINED_GLASS_PANE, 10);
+	private Slot previousPageItem = new Slot(
+			API.newItem(Material.BED, "§bVoltar"), 0);;
+	private String pageTag = "§8Página §0$page";
+	private String selectorTitle = "§5§lSeus Kits: ";
+	private String shopTitle = "§1§lCompre Kits: ";
+	private String kitSelected = "§6Voce escolheu o Kit §e$kit";
+	private String kitGived = "§6Voce ganhou o Kit §e$kit";
+	private String kitBuyed = "§§Voce comprou o Kit §e$kit";
+	private String noKitBuyed = "§§Voce nao tem dinheiro para comprar o kit §e$kit";
+	private String guiShopTitle = "§cKit §4§l$kit §cseu preço: §a§l$price";
 	private boolean giveSoups, fillHotBar = true, onSelectGainKit = true;
-	private HashMap<Player, Gui[]> guisKitSelectors = new HashMap<>();
-	private HashMap<Player, Gui[]> guisKitShops = new HashMap<>();
-	private ArrayList<Integer> blackLists = new ArrayList<>();
-	private HashMap<Player, Kit> buying = new HashMap<>();
-	private HashMap<Player, Kit> players = new HashMap<>();
+	private transient Map<Player, Gui[]> guisKitSelectors = new HashMap<>();
+	private transient Map<Player, Gui[]> guisKitShops = new HashMap<>();
+	private List<Integer> blackLists = new ArrayList<>();
+	private List<ItemStack> globalItems = new ArrayList<>();
+	private transient Map<Player, Kit> buying = new HashMap<>();
+	private transient Map<Player, Kit> players = new HashMap<>();
+	private transient Map<String, Kit> kits = new HashMap<>();
 
-	private HashMap<String, Kit> kits = new HashMap<>();
+	public Map<String, Kit> getKits() {
+		return kits;
+	}
+
+	public String getPrePerm() {
+		return prePerm;
+	}
+
+	public void setPrePerm(String prePerm) {
+		this.prePerm = prePerm;
+	}
+
+	public boolean isFillHotBar() {
+		return fillHotBar;
+	}
+
+	public void setFillHotBar(boolean fillHotBar) {
+		this.fillHotBar = fillHotBar;
+	}
+
+	public boolean isOnSelectGainKit() {
+		return onSelectGainKit;
+	}
+
+	public void setOnSelectGainKit(boolean onSelectGainKit) {
+		this.onSelectGainKit = onSelectGainKit;
+	}
 
 	public KitManager() {
-		kitSelector = (Click) new Click(API.newItem(Material.COMPASS, "§4§lKitSelector"), ClickType.RIGHT_CLICK,
-				ClickCheck.IGNORING_AMOUNT) {
+		kitSelector = (Click) new Click(
+				API.newItem(Material.COMPASS, "§4§lKitSelector"),
+				new ClickEffect() {
 
-		}.setSlot(4);
-		kitShop = (Click) new Click(API.newItem(Material.EMERALD, "§b§lKitShop"), ClickType.RIGHT_CLICK,
-				ClickCheck.IGNORING_AMOUNT) {
+					@Override
+					public void effect(PlayerInteractEntityEvent e) {
 
-		}.setSlot(2);
+					}
+
+					@Override
+					public void effect(PlayerInteractEvent e) {
+						Player p = e.getPlayer();
+						if (guisKitSelectors.containsKey(p)) {
+							openKitSelector(p);
+						}
+					}
+				}).setSlot(4);
+		kitShop = (Click) new Click(
+				API.newItem(Material.EMERALD, "§b§lKitShop"),
+				new ClickEffect() {
+
+					@Override
+					public void effect(PlayerInteractEntityEvent e) {
+
+					}
+
+					@Override
+					public void effect(PlayerInteractEvent e) {
+						Player p = e.getPlayer();
+						if (guisKitShops.containsKey(p)) {
+							openKitShop(p);
+						}
+					}
+				}).setSlot(2);
 
 		for (int i = 0; i < 6 * 9; i++) {
 			if (i < 8) {
@@ -72,10 +140,12 @@ public class KitManager implements Save {
 				blackLists.add(i + 1);
 			}
 		}
+		globalItems.add(new ItemStack(Material.STONE_SWORD));
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
-	private void event(InventoryClickEvent e) {
+	public void event(InventoryClickEvent e) {
 		if (e.getCurrentItem() == null)
 			return;
 		if (e.getWhoClicked() instanceof Player) {
@@ -85,15 +155,20 @@ public class KitManager implements Save {
 				if (e.getCurrentItem().equals(confirmShop.getItem())) {
 					Kit kit = buying.get(p);
 					if (VaultAPI.hasVault()) {
-						if (VaultAPI.getEconomy().has(p.getName(), kit.getPrice())) {
-							VaultAPI.getEconomy().withdrawPlayer(p.getName(), kit.getPrice());
-							VaultAPI.getPermission().playerAdd(p, prePerm + kit.getName().toLowerCase());
-							p.sendMessage(
-									kitBuyed.replace("$kit", kit.getName()).replace("$price", "" + kit.getPrice()));
+						if (VaultAPI.getEconomy().has(p.getName(),
+								kit.getPrice())) {
+							VaultAPI.getEconomy().withdrawPlayer(p.getName(),
+									kit.getPrice());
+							VaultAPI.getPermission().playerAdd(p,
+									prePerm + kit.getName().toLowerCase());
+							p.sendMessage(kitBuyed
+									.replace("$kit", kit.getName())
+									.replace("$price", "" + kit.getPrice()));
 							generateGuis(p);
 						} else {
-							p.sendMessage(
-									noKitBuyed.replace("$kit", kit.getName()).replace("$price", "" + kit.getPrice()));
+							p.sendMessage(noKitBuyed
+									.replace("$kit", kit.getName())
+									.replace("$price", "" + kit.getPrice()));
 						}
 					}
 					p.closeInventory();
@@ -107,7 +182,7 @@ public class KitManager implements Save {
 	}
 
 	@EventHandler
-	private void event(InventoryCloseEvent e) {
+	public void event(InventoryCloseEvent e) {
 		if (buying.containsKey(e.getPlayer())) {
 			buying.remove(e.getPlayer());
 		}
@@ -129,26 +204,17 @@ public class KitManager implements Save {
 			subKit.add(player);
 		}
 		kit.add(player);
+		for (ItemStack item : globalItems) {
+			inv.addItem(item);;
+		}
+		if (giveSoups) {
+			API.fill(inv, soup);
+			API.setEquip(player, Color.GREEN, "§4§lINSANE");
+		}
 		player.sendMessage(kitGived.replace("$kit", kit.getName()));
 	}
 
 	public void generateGuis(Player player) {
-		if (kitSelector.getCustomEffect() == null) {
-			kitSelector.setCustomEffect(new PlayerEffect() {
-
-				public void effect(Player p) {
-					openKitSelector(p);
-				}
-			});
-		}
-		if (kitShop.getCustomEffect() == null) {
-			kitShop.setCustomEffect(new PlayerEffect() {
-
-				public void effect(Player p) {
-					openKitShop(p);
-				}
-			});
-		}
 		if (guisKitSelectors.containsKey(player)) {
 			for (Gui gui : guisKitSelectors.get(player)) {
 				gui.unregister();
@@ -164,43 +230,52 @@ public class KitManager implements Save {
 		guisKitSelectors.put(player, new Gui[pagesAmount]);
 		guisKitShops.put(player, new Gui[pagesAmount]);
 		for (int i = 0; i < pagesAmount; i++) {
-			Gui inv = new Gui(6, selectorTitle + pageTag.replace("$page", "" + (i + 1)));
-			Gui shop = new Gui(6, shopTitle + pageTag.replace("$page", "" + (i + 1)));
+			Gui inv = new Gui(6,
+					selectorTitle + pageTag.replace("$page", "" + (i + 1)));
+			Gui shop = new Gui(6,
+					shopTitle + pageTag.replace("$page", "" + (i + 1)));
 			if (i > 0) {
-				inv.canOpen(false);
-				shop.canOpen(false);
+				inv.setOpen(false);
+				shop.setOpen(false);
 			}
-			inv.register();
-			shop.register();
+			inv.register(getPlugin());
+			shop.register(getPlugin());
 			for (Integer id : blackLists) {
-				inv.set(id, emptySlotItem);
-				shop.set(id, emptySlotItem);
+				Slot emptySlot = new Slot(emptySlotItem, id);
+				inv.set(emptySlot);
+				shop.set(emptySlot);
 			}
 			final int x = i;
-			inv.set(nextPageItem, new Events().setCustomEffect(new PlayerEffect() {
+			inv.set((Slot) nextPageItem.clone().setEffect(new PlayerEffect() {
 
+				@Override
 				public void effect(Player p) {
-					openKitSelector(player, getPage(x + 1));
+					openKitSelector(p, getPage(x + 1));
 				}
 			}));
-			inv.set(previousPageItem, new Events().setCustomEffect(new PlayerEffect() {
+			inv.set((Slot) previousPageItem.clone()
+					.setEffect(new PlayerEffect() {
 
+						@Override
+						public void effect(Player p) {
+							openKitSelector(p, getPage(x - 1));
+						}
+					}));
+			shop.set((Slot) nextPageItem.clone().setEffect(new PlayerEffect() {
+
+				@Override
 				public void effect(Player p) {
-					openKitSelector(player, getPage(x - 1));
+					openKitShop(p, getPage(x + 1));
 				}
 			}));
-			shop.set(nextPageItem, new Events().setCustomEffect(new PlayerEffect() {
+			shop.set((Slot) previousPageItem.clone()
+					.setEffect(new PlayerEffect() {
 
-				public void effect(Player p) {
-					openKitShop(player, getPage(x + 1));
-				}
-			}));
-			shop.set(previousPageItem, new Events().setCustomEffect(new PlayerEffect() {
-
-				public void effect(Player p) {
-					openKitShop(player, getPage(x - 1));
-				}
-			}));
+						@Override
+						public void effect(Player p) {
+							openKitShop(p, getPage(x - 1));
+						}
+					}));
 			guisKitSelectors.get(player)[i] = inv;
 			guisKitShops.get(player)[i] = shop;
 		}
@@ -224,35 +299,52 @@ public class KitManager implements Save {
 				}
 			}
 			if (!player.hasPermission(prePerm + kit.getName())) {
-				guisKitShops.get(player)[pageShop].set(idShop, kit.getIcon(), new Events() {
-					public void effect(Player p) {
-						Inventory inv = API.newInventory(
-								guiShopTitle.replace("$kit", kit.getName()).replace("$price", "" + kit.getPrice()), 9);
-						inv.setItem(getConfirmShop().getSlot(), getConfirmShop().getItem());
-						inv.setItem(getCancelShop().getSlot(), getCancelShop().getItem());
-						while (!API.isFull(inv)) {
-							inv.setItem(inv.firstEmpty(), emptySlotItem);
-						}
-						p.openInventory(inv);
-						buying.put(p, kit);
-					}
-				});
+				Slot slot = (Slot) new Slot(kit.getIcon(), idShop)
+						.setEffect(new PlayerEffect() {
+
+							@Override
+							public void effect(Player p) {
+								Inventory inv = API
+										.newInventory(
+												guiShopTitle
+														.replace("$kit",
+																kit.getName())
+														.replace("$price",
+																"" + kit.getPrice()),
+												9);
+								inv.setItem(getConfirmShop().getSlot(),
+										getConfirmShop().getItem());
+								inv.setItem(getCancelShop().getSlot(),
+										getCancelShop().getItem());
+								while (!API.isFull(inv)) {
+									inv.setItem(inv.firstEmpty(),
+											emptySlotItem);
+								}
+								p.openInventory(inv);
+								buying.put(p, kit);
+							}
+						});
+				guisKitShops.get(player)[pageShop].set(slot);
 				idShop++;
 			} else {
-				guisKitSelectors.get(player)[pageKit].set(idKit, kit.getIcon(), new Events() {
-					public void effect(Player p) {
-						selectKit(p, kit);
-						p.closeInventory();
-					}
-				});
+				Slot slot = (Slot) new Slot(kit.getIcon(), idKit)
+						.setCloseInventory(true).setEffect(new PlayerEffect() {
+							public void effect(Player p) {
+								selectKit(p, kit);
+							}
+						});
+				guisKitSelectors.get(player)[pageKit].set(slot);
 				idKit++;
 			}
 
 		}
 	}
+	public Kit getKit(Player player) {
+		return players.get(player);
+	}
 
 	public Object get(Section section) {
-		section.getSection("kits").set("!HashMap");
+		section.getSection("kits").set("!Map");
 		for (Section key : section.getValues("kits")) {
 			kits.put(key.getKey(), (Kit) key.getValue());
 		}
@@ -354,11 +446,7 @@ public class KitManager implements Save {
 		API.setSlot(inv, kitSelector);
 		API.setSlot(inv, kitShop);
 		if (fillHotBar) {
-			int id = 0;
-			while (((id = inv.firstEmpty()) < 9)) {
-				inv.setItem(id, hotBarItem);
-
-			}
+			API.addHotBar(player, hotBarItem);
 		}
 
 	}
@@ -389,12 +477,57 @@ public class KitManager implements Save {
 		kits.put(name, kit);
 		return true;
 	}
+	public KitManager register(JavaPlugin plugin) {
+		for (Kit kit : kits.values()) {
+			kit.register(plugin);
+			if (kit.getClick() != null) {
+				kit.getClick().register(plugin);
+			}
+			if (kit.getPrice() == 0){
+				kit.setPrice(defaultKitPrice);
+			}
+		}
+		
+		kitSelector.setClick(new ClickEffect() {
+
+			@Override
+			public void effect(PlayerInteractEntityEvent e) {
+
+			}
+
+			@Override
+			public void effect(PlayerInteractEvent e) {
+				Player p = e.getPlayer();
+				if (guisKitSelectors.containsKey(p)) {
+					openKitSelector(p);
+				}
+			}
+		});
+		kitShop.setClick(new ClickEffect() {
+
+			@Override
+			public void effect(PlayerInteractEntityEvent e) {
+
+			}
+
+			@Override
+			public void effect(PlayerInteractEvent e) {
+				Player p = e.getPlayer();
+				if (guisKitShops.containsKey(p)) {
+					openKitShop(p);
+				}
+			}
+		});
+		kitSelector.register(plugin);
+		kitShop.register(plugin);
+		return this;
+	}
 
 	public void reloadDefaults() {
 		for (KitType type : KitType.values()) {
 			try {
-				String pack = "net.eduard.kits.";
-				Kit kit = (Kit) RexAPI.getNew(pack + API.toTitle(type.toString(), ""));
+				Kit kit = (Kit) RexAPI
+						.getNew("#k" + API.toTitle(type.name(), ""));
 				register(type.name(), kit);
 
 			} catch (Exception ex) {
@@ -430,13 +563,20 @@ public class KitManager implements Save {
 		}
 
 	}
-
+	public void selectKit(Player player, KitType type) {
+		if (kits.containsKey(type.name())) {
+			Kit kit = kits.get(type.name());
+			selectKit(player, kit);
+		}
+	}
 	public void selectKits(KitType... kits) {
-		for (KitType type:kits) {
+		for (KitType type : kits) {
 			try {
-				String pack = "net.eduard.kits.";
-				Kit kit = (Kit) RexAPI.getNew(pack + API.toTitle(type.toString(), ""));
+				Kit kit = (Kit) RexAPI
+						.getNew("#k" + API.toTitle(type.name(), ""));
 				register(type.name(), kit);
+				API.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
+						+ "§f foi registrado!");
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -523,6 +663,27 @@ public class KitManager implements Save {
 
 	public void setSoup(ItemStack soup) {
 		this.soup = soup;
+	}
+
+	public void removeGuis(Player p) {
+		guisKitSelectors.remove(p);
+		guisKitShops.remove(p);
+	}
+
+	public List<ItemStack> getGlobalItems() {
+		return globalItems;
+	}
+
+	public void setGlobalItems(List<ItemStack> globalItems) {
+		this.globalItems = globalItems;
+	}
+
+	public double getDefaultKitPrice() {
+		return defaultKitPrice;
+	}
+
+	public void setDefaultKitPrice(double defaultKitPrice) {
+		this.defaultKitPrice = defaultKitPrice;
 	}
 
 }

@@ -13,9 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
-import net.eduard.api.dev.Game;
-import net.eduard.api.dev.Score;
-import net.eduard.api.util.SimpleEffect;
+import net.eduard.api.player.Score;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -23,19 +21,21 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void onEnable() {
 		API.event(this);
-		new Game(1).timer(new SimpleEffect() {
-			
-			public void effect() {
+		
+		API.timer(this,20,new Runnable() {
+
+			@Override
+			public void run() {
 				updateScoreboards();
 			}
 		});
 	}
 	public void updateScoreboards() {
-		for (Entry<Player, Score> map:scoreboards.entrySet()) {
+		for (Entry<Player, Score> map : scoreboards.entrySet()) {
 			updateScoreboard(map.getKey(), map.getValue());
 		}
 	}
-	public void updateScoreboard(Player p,Score score) {
+	public void updateScoreboard(Player p, Score score) {
 		score.setEmpty(10);
 		score.set(8, "§aNick: §6" + p.getDisplayName());
 		score.set(6, "§3Kills: §e" + p.getStatistic(Statistic.PLAYER_KILLS));

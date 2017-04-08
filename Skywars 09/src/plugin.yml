@@ -1,0 +1,11 @@
+name: SkyWars
+description: Plugin Skywars
+main: net.eduard.skywars.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  skywars:
+    aliases: [sw]
+    usage: /<command> help
+    description: Comando principal do Skywars

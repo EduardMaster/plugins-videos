@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import net.eduard.api.util.Save;
-
 public class SaveLocation implements Save{
 	public Location get(Section section) {
 		World world = Bukkit.getWorld(section.getString("world"));

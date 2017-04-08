@@ -2,8 +2,6 @@ package net.eduard.api.config;
 
 import org.bukkit.util.Vector;
 
-import net.eduard.api.util.Save;
-
 public class SaveVector implements Save{
 
 	public Object get(Section section) {

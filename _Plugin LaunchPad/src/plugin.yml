@@ -1,7 +1,0 @@
-name: LaunchPad
-description: Sistema de LaunchPad Ganhar Pulso em blocos
-main: net.eduard.launchpad.Main
-version: 1.0
-authors: [Eduard]
-website: https://www.youtube.com/user/EduTutoriaisHD
-depend: [EduardAPI]

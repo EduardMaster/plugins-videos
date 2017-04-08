@@ -10,16 +10,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
-import net.eduard.api.dev.Sounds;
-import net.eduard.api.gui.Events;
 import net.eduard.api.gui.Gui;
-import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.gui.Slot;
+import net.eduard.api.player.SoundEffect;
 
 public class Main extends JavaPlugin implements Listener {
 	public Gui gui;
 
 	public void onEnable() {
-		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
+		SoundEffect sound = new SoundEffect(Sound.LEVEL_UP, 2, 0.5F);
 		gui.setItem(API.newItem("§4Abrir Gui Custom", Material.DIAMOND));
 		gui = new Gui(3, "§8Trocar velocidade");
 		for (int i = 0; i < 5; i++) {
@@ -43,18 +42,20 @@ public class Main extends JavaPlugin implements Listener {
 			default:
 				break;
 			}
-			int id = i;
-			gui.set(11 + i, API.newItem(boot, "§6Nivel " + (i + 1)),
-					new Events().setSound(sound).setCloseInventory(true)
-							.setMessage("§6Sua velocidade foi alterada para o nivel " + (i + 1))
-							.effect(new PlayerEffect() {
-
-								public void effect(Player p) {
-									float value = (id + 1) * 0.2F;
-									p.setWalkSpeed(value);
-								}
-							}));
+			final int id = i;
+			gui.set((Slot) new Slot(API.newItem(boot, "§6Nivel " + (i + 1),11+i)).setEffect(new net.eduard.api.player.PlayerEffect() {
+				
+				@Override
+				public void effect(Player p) {
+					p.sendMessage("§6Sua velocidade foi alterada para o nivel " + (id + 1));
+					p.closeInventory();
+					sound.create(p);
+					float value = (id + 1) * 0.2F;
+					p.setWalkSpeed(value);
+				}
+			}));
 		}
+		API.event(this);
 	}
 
 	@EventHandler
