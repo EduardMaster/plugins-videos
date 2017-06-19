@@ -1,0 +1,70 @@
+					Location loc = com.hcp.utils.Utils.getRandomLocation();
+					Bukkit.getConsoleSender().sendMessage("§aCaixa§f§ §eGerada em " + loc.getX() + " e " + loc.getZ());
+
+					Schemas.caixa = new ArrayList<Block>();
+					try {
+						Schemas aa = Schemas.loadSchematic(new File(Main.plugin.getDataFolder(), "casa.schematic"));
+						Schemas.pasteSchematic(Bukkit.getWorld("world"), loc, aa);
+
+						for (Player p : Bukkit.getOnlinePlayers()) {
+
+							if (br.com.piracraft.api.Main.network.get(p) == 1) {
+								p.sendMessage("       §f§l§ §e§lCaixa com itens especiais §f§l§");
+								p.sendMessage("  §aCoordenadas entre §b" + loc.getX() + 15.0 + " §ae §b" + loc.getZ() + 15.0);
+							} else {
+								p.sendMessage("       §f§l§ §e§lBox with special items §f§l§");
+								p.sendMessage(
+										"  §aCoordinates between §b" + loc.getX() + 15.0 + " §aand §b" + loc.getZ() + 15.0);
+							}
+						}
+
+						Days.spawned = true;
+
+						BoxContent.fillChest();
+
+						new BukkitRunnable() {
+							public void run() {
+								if (Days.spawned) {
+									Days.caixa += 1;
+
+									if (Days.caixa == 240) {
+										for (Player p : Bukkit.getOnlinePlayers()) {
+
+											if (br.com.piracraft.api.Main.network.get(p) == 1) {
+												p.sendMessage("         §f§l§ §e§lCaixa §f§l§");
+												p.sendMessage("  §aFalta apenas 1 minuto para a caixa desaparecer.");
+											} else {
+												p.sendMessage("         §f§l§ §e§lBox §f§l§");
+												p.sendMessage("  §aOnly 1 minute left to the box desappear.");
+											}
+										}
+									}
+
+									if (Days.caixa == 300) {
+										cancel();
+										for (int x = 0; x < Schemas.caixa.size(); x++) {
+											Schemas.caixa.get(x).setType(Material.AIR);
+										}
+
+										for (Player p : Bukkit.getOnlinePlayers()) {
+											if (br.com.piracraft.api.Main.network.get(p) == 1) {
+												p.sendMessage("   §f§l§ §e§lCaixa §f§l§");
+												p.sendMessage("  §aAguardem a proxima caixa.");
+											} else {
+												p.sendMessage("   §f§l§ §e§lBox §f§l§");
+												p.sendMessage("  §aWait to another box.");
+											}
+										}
+
+										Days.spawned = false;
+
+										Days.caixa = 0;
+
+										Bukkit.getConsoleSender().sendMessage("§aCaixa§f§ §eAguarde a proxima caixa!");
+									}
+								}
+							}
+						}.runTaskTimer(Main.plugin, 0, 20);
+					} catch (IOException e) {
+						System.out.println("ERRO - HARDCORE : " + e.getCause());
+					}

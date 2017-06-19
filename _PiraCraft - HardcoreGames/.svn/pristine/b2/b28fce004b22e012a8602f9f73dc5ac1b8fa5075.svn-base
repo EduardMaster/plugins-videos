@@ -1,0 +1,305 @@
+package me.douglasamv.hg.Inv;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import me.douglasamv.hg.Main;
+
+public class InvKit implements Listener {
+
+	@EventHandler
+	public void Kits(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		if (p.getItemInHand().getType() == Material.CHEST) {
+			if (Main.PreGame) {
+				new Inventario(p).openInv(1);
+			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onPlayerCLickInventry(InventoryClickEvent e) {
+		Player p = (Player) e.getWhoClicked();
+		if ((e.getInventory().getTitle().equalsIgnoreCase("§7Outros Kits")) && (e.getCurrentItem() != null)
+				&& (e.getCurrentItem().getTypeId() != 0)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem().getType() == Material.CARPET) {
+				e.setCancelled(true);
+				new Inventario(p).openInv(1);
+				return;
+			}
+		}
+		if ((e.getInventory().getTitle().equalsIgnoreCase("§7Kits")) && (e.getCurrentItem() != null)
+				&& (e.getCurrentItem().getTypeId() != 0)) {
+			e.setCancelled(true);
+			if (e.getCurrentItem().getType() == Material.CARPET) {
+				e.setCancelled(true);
+				new Inventario(p).openInv(2);
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.BLAZE_POWDER) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit firer");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.LOG) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit lumberjack");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.MUSHROOM_SOUP) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit hermit");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.DOUBLE_PLANT) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit copycat");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.WORKBENCH) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit crafter");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.BREAD) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit cultivator");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.LEATHER) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit backpacker");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.GRAVEL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit demoman");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.GOLD_BOOTS) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit dwarf");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.ENDER_PORTAL_FRAME) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit endermage");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.FISHING_ROD) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit fisherman");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.STICK) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit grandpa");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.ANVIL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit anchor");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.COAL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit forger");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.IRON_FENCE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit gladiator");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.CACTUS) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit cacto");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.SADDLE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit hulk");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.DIAMOND_BOOTS) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit tower");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.CLAY_BALL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit jellyfish");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.FIREWORK) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit kangaroo");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.STONE_PICKAXE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit miner");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.BLAZE_ROD) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit monk");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.QUARTZ) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit ninja");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.BOWL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit noob");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.WATER_BUCKET) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit poseidon");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.IRON_AXE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit viking");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.LAVA_BUCKET) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit fireman");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.BOOK) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit specialist");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.WOOD_HOE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit reaper");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.EYE_OF_ENDER) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit seeker");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.STRING) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit snail");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.FERMENTED_SPIDER_EYE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit madman");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.SPIDER_EYE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit viper");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.IRON_BOOTS) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit stomper");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.SNOW_BALL) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit switcher");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.TNT) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit tank");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.NAME_TAG) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit surprise");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.WOOD_AXE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit thor");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.FERMENTED_SPIDER_EYE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit madman");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.WATCH) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit timelord");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.DIAMOND_CHESTPLATE) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit turtle");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.DIRT) {
+				e.setCancelled(true);
+				p.closeInventory();
+				p.chat("/kit worm");
+				return;
+			}
+			if (e.getCurrentItem().getType() == Material.SPONGE) {
+				e.setCancelled(true);
+				p.chat("/kit Launcher");
+				p.closeInventory();
+				return;
+			}
+		}
+	}
+}

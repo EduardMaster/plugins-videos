@@ -16,13 +16,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.game.Effects;
+import net.eduard.api.game.Jump;
+import net.eduard.api.game.Potions;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Effects;
-import net.eduard.api.player.Jump;
-import net.eduard.api.player.Potions;
-import net.eduard.api.player.SoundEffect;
+import net.eduard.api.manager.ItemAPI;
 
 public class Sonic extends Kit {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -33,7 +34,7 @@ public class Sonic extends Kit {
 		add(Material.LAPIS_BLOCK);
 		setDisplay( new Effects(Effect.SMOKE, 10));
 		setJump(new Jump(true, 0.5, 2,
-				SoundEffect.create(Sound.CLICK)));
+				Sounds.create(Sound.CLICK)));
 		getPotions().add(new Potions(PotionEffectType.POISON, 1, 20 * 5));
 		setClick(new Click(Material.LAPIS_BLOCK, new ClickEffect() {
 
@@ -48,15 +49,15 @@ public class Sonic extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						API.saveItems(p);
-						API.setEquip(p, Color.BLUE, "§b" + getName());
+						ItemAPI.saveItems(p);
+						ItemAPI.setEquip(p, Color.BLUE, "§b" + getName());
 						inEffect.add(p);
 						API.TIME.delay(effectSeconds,new Runnable() {
 
 							@Override
 							public void run() {
 								if (hasKit(p)) {
-									API.getArmours(p);
+									ItemAPI.getArmours(p);
 								}
 								inEffect.remove(p);
 							}

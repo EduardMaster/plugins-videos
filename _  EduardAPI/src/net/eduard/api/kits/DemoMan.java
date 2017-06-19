@@ -11,9 +11,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.game.Explosion;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Explosion;
+import net.eduard.api.manager.WorldAPI;
 
 public class DemoMan extends Kit {
 	
@@ -45,9 +45,9 @@ public class DemoMan extends Kit {
 
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
-		if (!API.equals(e.getFrom(), e.getTo())) {
+		if (!WorldAPI.equals(e.getFrom(), e.getTo())) {
 			for (Location loc : inEffect) {
-				if (API.equals(loc, e.getTo().subtract(0, 1, 0))) {
+				if (WorldAPI.equals(loc, e.getTo().subtract(0, 1, 0))) {
 					inEffect.remove(loc);
 					getExplosion().create(loc);
 					break;

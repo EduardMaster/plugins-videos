@@ -7,10 +7,10 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class WhiteListHelpCommand extends SubCommands {
+public class WhiteListHelpCommand extends CMD {
 
 	private List<String> messages = new ArrayList<>();
 
@@ -22,13 +22,14 @@ public class WhiteListHelpCommand extends SubCommands {
 		messages.add("§a/whitelist add|remove <player>");
 
 	}
-
 	@Override
-	public void command(CommandSender sender, Command command, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command command,
+			String label, String[] args) {
 		for (String line : messages) {
-			API.chat(sender,line);
+			Cs.chat(sender,line);
 		}
+		
+		return true;
 	}
 
 }

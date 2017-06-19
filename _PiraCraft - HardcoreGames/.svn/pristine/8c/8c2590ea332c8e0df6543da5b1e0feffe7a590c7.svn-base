@@ -1,0 +1,42 @@
+package me.douglasamv.hg.Comandos;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+
+import me.douglasamv.hg.Main;
+
+public class Fly implements CommandExecutor, Listener {
+
+	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("§cComando de Jogador!");
+			return true;
+		}
+		if (cmd.getName().equalsIgnoreCase("fly")) {
+			Player player = (Player) sender;
+			if (args.length == 0) {
+				if (sender.hasPermission("hg.cmd.fly")) {
+					if (Main.PreGame) {
+						if (!player.getAllowFlight()) {
+							player.sendMessage("§aVoce ativou o Fly");
+							player.setAllowFlight(true);
+						} else {
+							sender.sendMessage("§cVoce desativou o Fly");
+							player.setAllowFlight(false);
+						}
+					} else {
+						player.sendMessage("§cVoce so pode usar isso no antes do jogo iniciar");
+						return true;
+					}
+				} else {
+					player.sendMessage("§cSem permissao!");
+					return true;
+				}
+			}
+		}
+		return true;
+	}
+}

@@ -14,8 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Sounds;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.player.SoundEffect;
 
 public class Config {
 
@@ -38,7 +38,7 @@ public class Config {
 
 	public Config() {
 		this("config.yml");
-	}
+	} 
 
 	public Config(JavaPlugin plugin) {
 		this(plugin, "config.yml");
@@ -266,7 +266,7 @@ public class Config {
 		return root.getSection(path);
 	}
 
-	public SoundEffect getSound(String path) {
+	public Sounds getSound(String path) {
 		return root.getSound(path);
 	}
 

@@ -1,0 +1,7 @@
+name: PiraLobby
+version: 1.0
+authors: [Leo,Eduard,THG,Douglas]
+main: br.com.piracraft.lobby2.Main
+depend: [PiraCraftAPI, Citizens]
+commands:
+  npcs:

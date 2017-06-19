@@ -1,0 +1,33 @@
+package br.com.piracraft.lobby2.servidores.skywars;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import br.com.piracraft.api.PiraCraftAPI;
+import br.com.piracraft.lobby2.utils.Bungee;
+import br.com.piracraft.lobby2.utils.Cor;
+import br.com.piracraft.lobby2.utils.UtilsChat;
+
+public class ClicarSkyWars implements Listener {
+
+	@EventHandler
+	void click(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		if (event.getInventory().getName().equalsIgnoreCase("§aSkyWars") && (event.getCurrentItem() != null)) {
+			event.setCancelled(true);
+			if (event.getCurrentItem().getType() == Material.INK_SACK) {
+				// GAMBIARRA LEVEL HARD, sorry
+				String server = PiraCraftAPI.getSWPort()[1];
+				new UtilsChat(player, "SkyWars", "Voce esta sendo enviado para " + server, Cor.Verde)
+						.enviarAlertaPlayer();
+				new Bungee().enviar(player, server);
+				player.closeInventory();
+			}
+		}
+
+	}
+
+}

@@ -1,0 +1,27 @@
+package me.douglasamv.hg.Habilidades;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
+import me.douglasamv.hg.Comandos.Kit;
+import me.douglasamv.hg.Eventos.LoadKits;
+import me.douglasamv.hg.Manager.Habilidade;
+
+public class CopyCat implements Listener {
+
+	@EventHandler
+	public void onCopyCat(PlayerDeathEvent e) {
+		if (((e.getEntity() instanceof Player)) && ((e.getEntity().getKiller() instanceof Player))) {
+			Player p = e.getEntity();
+			Player p2 = e.getEntity().getKiller();
+			if (Kit.CopyCat.contains(p2.getName())) {
+				String NovoKit = Habilidade.getAbility(p);
+				Habilidade.setAbility(p2, NovoKit);
+				LoadKits.CheckKits(p2);
+				p2.sendMessage("§eSeu novo kit e " + NovoKit.toLowerCase());
+			}
+		}
+	}
+}

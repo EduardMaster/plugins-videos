@@ -6,28 +6,32 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.minigame.Arena;
 
-public class EduardPasteCommand extends SubCommands {
+public class EduardPasteCommand extends CMD {
 
 	public EduardPasteCommand() {
-		super("paste","colar");
-		
+		super("paste", "colar");
+
 	}
 	@Override
-	public void command(CommandSender sender, Command command, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command command,
+			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			if (!API.MAPS.containsKey(p)) {
 				p.sendMessage(
 						"§bEduardAPI §2Primeiro copie um Mapa:§a /e copy");
-				return;
+				return true;
 			}
-			API.MAPS.get(p).paste(p.getLocation());
-			p.sendMessage("§bEduardAPI §6Mapa colado com sucesso!");
-		}
 
+			Arena map = API.MAPS.get(p);
+			map.paste(p.getLocation());
+			p.sendMessage("§bEduardAPI §6Mapa colado com sucesso! ($blocks)"
+					.replace("$blocks", "" + map.getBlocks().size()));
+		}
+		return true;
 	}
 
 }

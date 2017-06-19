@@ -6,10 +6,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class WhiteListListommand extends SubCommands {
+public class WhiteListListommand extends CMD {
 
 	public String message = " §6Jogadores na WhiteList: ";
 	
@@ -17,15 +17,17 @@ public class WhiteListListommand extends SubCommands {
 		super("list", "jogadores","lista");
 
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void command(CommandSender sender, Command command, String label,
-			String[] args) {
-		API.chat(sender, message);
+	public boolean onCommand(CommandSender sender, Command command,
+			String label, String[] args) {
+		Cs.chat(sender, message);
 		for (OfflinePlayer player:Bukkit.getWhitelistedPlayers()){
-			API.chat(sender,player.getName());
+			Cs.chat(sender,player.getName());
 		}
+		return true;
 	}
+
 
 }

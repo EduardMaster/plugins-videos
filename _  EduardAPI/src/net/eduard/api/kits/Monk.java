@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
-import net.eduard.api.click.ClickType;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
+import net.eduard.api.gui.ClickType;
 import net.eduard.api.gui.Kit;
 
 public class Monk extends Kit {

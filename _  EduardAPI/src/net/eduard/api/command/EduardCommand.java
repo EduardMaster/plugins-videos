@@ -1,18 +1,19 @@
 
 package net.eduard.api.command;
 
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 
-public class EduardCommand extends Commands {
+public class EduardCommand extends CMD {
 
 	public EduardCommand() {
 		super("eduard");
-		addSub(new EduardCopyCommand());
-		addSub(new EduardPasteCommand());
-		addSub(new EduardPos1Command());
-		addSub(new EduardPos2Command());
-		addSub(new EduardLoadCommand());
-		addSub(new EduardSaveCommand());
+		register(new EduardCopyCommand());
+		register(new EduardPasteCommand());
+		register(new EduardPos1Command());
+		register(new EduardPos2Command());
+		register(new EduardLoadCommand());
+		register(new EduardSaveCommand());
+		register(new EduardWorldCommand());
 	}
 
 }

@@ -1,5 +1,6 @@
 package net.eduard.api.kits;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -7,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 
+import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Potions;
 
 public class Poseidon extends Kit {
 
@@ -21,12 +22,19 @@ public class Poseidon extends Kit {
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
-		if (hasKit(p)) {
-			Material type = e.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
-			if (type == Material.WATER | type == Material.STATIONARY_WATER) {
-				givePotions(p);
+		Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), new Runnable() {
+			
+			@Override
+			public void run() {
+				if (hasKit(p)) {
+					Material type = e.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
+					if (type == Material.WATER | type == Material.STATIONARY_WATER) {
+						givePotions(p);
+					}
+				}
 			}
-		}
+		});
+		
 	}
 
 }

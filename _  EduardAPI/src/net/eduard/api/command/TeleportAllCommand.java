@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class TeleportAllCommand extends Commands {
+public class TeleportAllCommand extends CMD {
 	public TeleportAllCommand() {
 		super("teleportall");
 	}
@@ -22,10 +23,10 @@ public class TeleportAllCommand extends Commands {
 				if (d.equals(p))
 					continue;
 				d.teleport(p);
-				API.chat(d,
+				Cs.chat(d,
 						messageTarget.replace("$player", p.getDisplayName()));
 			}
-			API.chat(p,message);
+			Cs.chat(p,message);
 		}
 		return true;
 	}

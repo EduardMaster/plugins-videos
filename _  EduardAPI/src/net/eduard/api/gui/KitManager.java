@@ -1,6 +1,7 @@
 package net.eduard.api.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,21 +21,26 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
 import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
-import net.eduard.api.manager.EventAPI;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.manager.Manager;
 import net.eduard.api.manager.RexAPI;
 import net.eduard.api.manager.VaultAPI;
-import net.eduard.api.player.PlayerEffect;
+import net.eduard.api.util.Cs;
+import net.eduard.api.util.PlayerEffect;
 
-public class KitManager extends EventAPI implements Save {
-
+public class KitManager extends Manager implements Save {
+	public static final Kit KIT_NONE = new Kit("Nenhum",KitType.NONE);
 	private String prePerm = "kits.";
 	private Click kitSelector;
 	private Click kitShop;
+	private String noneKit = "§8Nenhum";
+	private List<KitType> types=new ArrayList<>();
+	private boolean kitsEnabled = true;
 	private double defaultKitPrice = 0;
+	private String kitsDisabled = "§cOs kits foram desabilitados!";
 	private Slot confirmShop = new Slot(
 			API.newItem(Material.EMERALD, "§bConfirmar Compra"), 0);
 	private Slot cancelShop = new Slot(API.newItem(Material.BED, "§bAvançar"),
@@ -189,9 +195,10 @@ public class KitManager extends EventAPI implements Save {
 	}
 
 	public void gainKit(Player player) {
+		if (!isKitsEnabled())return;
 		Kit kit = players.get(player);
 		removeKits(player);
-		API.refreshAll(player);
+		GameAPI.refreshAll(player);
 		PlayerInventory inv = player.getInventory();
 		for (ItemStack item : kit.getItems()) {
 			inv.addItem(item);
@@ -208,8 +215,8 @@ public class KitManager extends EventAPI implements Save {
 			inv.addItem(item);;
 		}
 		if (giveSoups) {
-			API.fill(inv, soup);
-			API.setEquip(player, Color.GREEN, "§4§lINSANE");
+			ItemAPI.fill(inv, soup);
+			ItemAPI.setEquip(player, Color.GREEN, "§4§lINSANE");
 		}
 		player.sendMessage(kitGived.replace("$kit", kit.getName()));
 	}
@@ -298,6 +305,7 @@ public class KitManager extends EventAPI implements Save {
 					pageShop++;
 				}
 			}
+			if (!kit.isShowOnGui())continue;
 			if (!player.hasPermission(prePerm + kit.getName())) {
 				Slot slot = (Slot) new Slot(kit.getIcon(), idShop)
 						.setEffect(new PlayerEffect() {
@@ -316,7 +324,7 @@ public class KitManager extends EventAPI implements Save {
 										getConfirmShop().getItem());
 								inv.setItem(getCancelShop().getSlot(),
 										getCancelShop().getItem());
-								while (!API.isFull(inv)) {
+								while (!ItemAPI.isFull(inv)) {
 									inv.setItem(inv.firstEmpty(),
 											emptySlotItem);
 								}
@@ -340,7 +348,14 @@ public class KitManager extends EventAPI implements Save {
 		}
 	}
 	public Kit getKit(Player player) {
-		return players.get(player);
+		if (hasKit(player)){
+			return players.get(player);			
+		}
+		players.put(player, KIT_NONE);
+		return KIT_NONE;
+	}
+	public boolean hasKit(Player player){
+		return players.containsKey(player);
 	}
 
 	public Object get(Section section) {
@@ -443,10 +458,10 @@ public class KitManager extends EventAPI implements Save {
 
 	public void giveItems(Player player) {
 		PlayerInventory inv = player.getInventory();
-		API.setSlot(inv, kitSelector);
-		API.setSlot(inv, kitShop);
+		ItemAPI.setSlot(inv, kitSelector);
+		ItemAPI.setSlot(inv, kitShop);
 		if (fillHotBar) {
-			API.addHotBar(player, hotBarItem);
+			ItemAPI.addHotBar(player, hotBarItem);
 		}
 
 	}
@@ -456,7 +471,10 @@ public class KitManager extends EventAPI implements Save {
 	}
 
 	public void openKitSelector(Player player) {
-		openKitSelector(player, 0);
+		if (kitsEnabled)
+			openKitSelector(player, 0);
+		else
+			Cs.chat(player, kitsDisabled);
 	}
 
 	public void openKitSelector(Player player, int page) {
@@ -483,11 +501,11 @@ public class KitManager extends EventAPI implements Save {
 			if (kit.getClick() != null) {
 				kit.getClick().register(plugin);
 			}
-			if (kit.getPrice() == 0){
+			if (kit.getPrice() == 0) {
 				kit.setPrice(defaultKitPrice);
 			}
 		}
-		
+
 		kitSelector.setClick(new ClickEffect() {
 
 			@Override
@@ -525,9 +543,11 @@ public class KitManager extends EventAPI implements Save {
 
 	public void reloadDefaults() {
 		for (KitType type : KitType.values()) {
+			if (type==KitType.NONE|type==KitType.ANOTHER)continue;
 			try {
+				
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + API.toTitle(type.name(), ""));
+						.getNew("#k" + Cs.toTitle(type.name(), ""));
 				register(type.name(), kit);
 
 			} catch (Exception ex) {
@@ -569,13 +589,14 @@ public class KitManager extends EventAPI implements Save {
 			selectKit(player, kit);
 		}
 	}
-	public void selectKits(KitType... kits) {
+	public void registerKits(KitType... kits) {
+		getTypes().clear();
 		for (KitType type : kits) {
 			try {
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + API.toTitle(type.name(), ""));
+						.getNew("#k" + Cs.toTitle(type.name(), ""));
 				register(type.name(), kit);
-				API.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
+Cs.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
 						+ "§f foi registrado!");
 
 			} catch (Exception ex) {
@@ -583,6 +604,7 @@ public class KitManager extends EventAPI implements Save {
 			}
 
 		}
+		getTypes().addAll(Arrays.asList(kits));
 	}
 
 	public void setCancelShop(Slot cancelShop) {
@@ -684,6 +706,39 @@ public class KitManager extends EventAPI implements Save {
 
 	public void setDefaultKitPrice(double defaultKitPrice) {
 		this.defaultKitPrice = defaultKitPrice;
+	}
+
+
+	public List<KitType> getTypes() {
+		return types;
+	}
+
+	public void setTypes(List<KitType> types) {
+		this.types = types;
+	}
+
+	public boolean isKitsEnabled() {
+		return kitsEnabled;
+	}
+
+	public void setKitsEnabled(boolean kitsEnabled) {
+		this.kitsEnabled = kitsEnabled;
+	}
+
+	public String getKitsDisabled() {
+		return kitsDisabled;
+	}
+
+	public void setKitsDisabled(String kitsDisabled) {
+		this.kitsDisabled = kitsDisabled;
+	}
+
+	public String getNoneKit() {
+		return noneKit;
+	}
+
+	public void setNoneKit(String noneKit) {
+		this.noneKit = noneKit;
 	}
 
 }

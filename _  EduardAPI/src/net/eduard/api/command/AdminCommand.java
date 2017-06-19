@@ -23,52 +23,54 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.game.Jump;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.manager.Commands;
-import net.eduard.api.manager.EventAPI;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.ItemAPI;
 import net.eduard.api.manager.RexAPI;
 import net.eduard.api.manager.VaultAPI;
-import net.eduard.api.player.Jump;
-import net.eduard.api.player.SoundEffect;
-import net.eduard.api.util.ChatType;
+import net.eduard.api.util.Cs;
 
-public class AdminCommand extends Commands {
+public class AdminCommand extends CMD {
 
 	public AdminCommand() {
 		super("admin");
+		hasEvents = true;
 	}
 
 	public static List<Player> players = new ArrayList<>();
-	public Jump jumpEffect = new Jump(SoundEffect.create(Sound.BAT_LOOP),
+	public Jump jumpEffect = new Jump(Sounds.create(Sound.BAT_LOOP),
 			new Vector(0, 2, 0));
-	public String messageOn = ChatType.EFFECT.getLight()+"Voce entrou no Modo Admin!";
-	public String messageOff = ChatType.EFFECT.getLight()+"Voce saiu do Modo Admin!";
+	public String messageOn = "Voce entrou no Modo Admin!";
+	public String messageOff = "Voce saiu do Modo Admin!";
 
 	public Slot testAutoSoup = new Slot(
-			API.newItem(Material.ENDER_PEARL, ChatType.GAME+"Testar Auto-Soup"), 3);
+			API.newItem(Material.ENDER_PEARL, "Testar Auto-Soup"), 3);
 
 	public Slot testFF = new Slot(
-			API.newItem(Material.MAGMA_CREAM, ChatType.GAME+"Ativar Troca Rapida"), 2);
+			API.newItem(Material.MAGMA_CREAM, "Ativar Troca Rapida"), 2);
 
 	public Slot testPrison = new Slot(
-			API.newItem(Material.MAGMA_CREAM, ChatType.GAME+"Aprisionar Jogador"), 1);
+			API.newItem(Material.MAGMA_CREAM, "Aprisionar Jogador"), 1);
 
 	public Slot testNoFall = new Slot(
-			API.newItem(Material.FEATHER, ChatType.GAME+"Testar No-Fall"), 4);
+			API.newItem(Material.FEATHER, "Testar No-Fall"), 4);
 
 	public Slot testInfo = new Slot(
-			API.newItem(Material.BLAZE_ROD, ChatType.GAME+"Ver Informações"), 5);
+			API.newItem(Material.BLAZE_ROD, "Ver Informações"), 5);
 
 	public Slot testAntKB = new Slot(
-			API.add(API.newItem(Material.STICK, ChatType.GAME+"Testar Knockback"),
+			ItemAPI.addEnchant(API.newItem(Material.STICK, "Testar Knockback"),
 					Enchantment.KNOCKBACK, 10),
 			6);
 
 	public void joinAdminMode(Player player) {
-		API.saveItems(player);
-		API.hide(player);
+		ItemAPI.saveItems(player);
+		GameAPI.hide(player);
 		players.add(player);
 		PlayerInventory inv = player.getInventory();
 		testAutoSoup.give(inv);
@@ -82,13 +84,17 @@ public class AdminCommand extends Commands {
 
 	}
 	public void leaveAdminMode(Player player) {
-		API.getItems(player);
-		API.show(player);
+		ItemAPI.getItems(player);
+		GameAPI.show(player);
 		player.setGameMode(GameMode.SURVIVAL);
 		players.remove(player);
 	}
+	
+	
+	
+	
 	@Override
-	public EventAPI register(Plugin plugin) {
+	public void register(Plugin plugin) {
 		new Click(testNoFall.getItem(), new ClickEffect() {
 
 			@Override
@@ -115,15 +121,15 @@ public class AdminCommand extends Commands {
 			public void effect(PlayerInteractEntityEvent e) {
 				Player p = e.getPlayer();
 				if (players.contains(p)) {
-					API.show(p);
-					API.makeInvunerable(p, 1);
-					API.chat(p,"§6Troca rapida ativada!");
+					GameAPI.show(p);
+					GameAPI.makeInvunerable(p, 1);
+					Cs.chat(p,"§6Troca rapida ativada!");
 					API.TIME.delay(20, new Runnable() {
 
 						@Override
 						public void run() {
-							API.hide(p);
-							API.chat(p,"§6Troca rapida desativada!");
+							GameAPI.hide(p);
+							Cs.chat(p,"§6Troca rapida desativada!");
 						}
 					});
 				}
@@ -204,7 +210,7 @@ public class AdminCommand extends Commands {
 			}
 		}).register(plugin);
 
-		return super.register(plugin);
+		 super.register(plugin);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

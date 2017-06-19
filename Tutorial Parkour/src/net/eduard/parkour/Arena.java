@@ -14,16 +14,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
 import net.eduard.api.config.Config;
 import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
+import net.eduard.api.game.Potions;
+import net.eduard.api.game.Score;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Gui;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.player.PlayerEffect;
-import net.eduard.api.player.Potions;
-import net.eduard.api.player.Score;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.PlayerEffect;
 
 public class Arena implements Save {
 	private static final Config STATS = Main.config.createConfig("Stats.yml");
@@ -83,12 +85,12 @@ public class Arena implements Save {
 					p.teleport(arena.getSpawn());
 					players.put(p, arena);
 					Score score = new Score("§6§lParkour");
-					score.setEmpty(15);
+					score.empty(15);
 					score.set(14, "§a§l"+arena);
-					score.setEmpty(13);
+					score.empty(13);
 					score.set(12, "§aTentativas:");
 					score.set(11, "§e0 vezes");
-					score.setEmpty(10);
+					score.empty(10);
 					score.set(9, "");
 				}
 			}));
@@ -99,7 +101,7 @@ public class Arena implements Save {
 		if (exists(name) & !isPlaying(player)) {
 			Arena arena = getArena(name);
 			items.put(player, player.getInventory().getContents());
-			API.refreshAll(player);
+			GameAPI.refreshAll(player);
 			player.sendMessage(arena.chat("Join"));
 			return true;
 		}
@@ -218,7 +220,7 @@ public class Arena implements Save {
 		if (checkpoints.containsKey(p)) {
 			Location check = checkpoints.get(p);
 			checkpoints.put(p, p.getLocation());
-			if (API.equals(check, p.getLocation())) {
+			if (WorldAPI.equals(check, p.getLocation())) {
 				return;
 			}
 		}
@@ -345,7 +347,7 @@ public class Arena implements Save {
 					arenas.put(map.getName().toLowerCase(), map);
 					p.sendMessage(map.chat("Create"));
 					maps.remove(p);
-					API.refreshAll(p);
+					GameAPI.refreshAll(p);
 				}
 			}
 
@@ -361,7 +363,7 @@ public class Arena implements Save {
 				if (maps.containsKey(p)) {
 					Arena map = maps.get(p);
 					maps.remove(p);
-					API.refreshAll(p);
+					GameAPI.refreshAll(p);
 					p.sendMessage(map.chat("Delete"));
 				}
 			}

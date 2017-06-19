@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Ninja extends Kit {
 
@@ -44,7 +44,7 @@ public class Ninja extends Kit {
 				if (targets.containsKey(p)) {
 					if (cooldown(p)) {
 						Player target = targets.get(p);
-						API.teleport(p, target.getLocation());
+						GameAPI.teleport(p, target.getLocation());
 						e.setCancelled(true);
 					}
 				}

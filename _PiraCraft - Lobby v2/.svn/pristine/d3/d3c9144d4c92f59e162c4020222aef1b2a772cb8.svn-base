@@ -1,0 +1,73 @@
+package br.com.piracraft.lobby2.eventos;
+
+import org.bukkit.Material;
+import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+public class CancelarEventos implements Listener {
+
+	@EventHandler
+	void plantacao(PlayerInteractEvent event) {
+		if ((event.getAction() == Action.PHYSICAL) && (event.getClickedBlock().getType() == Material.SOIL)) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	void click(InventoryClickEvent event) {
+		event.setCancelled(true);
+	}
+
+	@EventHandler
+	void clicar(PlayerInteractEvent event) {
+		event.setUseInteractedBlock(Result.DENY);
+		event.setUseItemInHand(Result.DENY);
+	}
+
+	@EventHandler
+	void fome(FoodLevelChangeEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	void dano(EntityDamageByEntityEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	void dano(EntityDamageEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	void drop(PlayerDropItemEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	void sair(PlayerQuitEvent e) {
+		e.setQuitMessage(null);
+	}
+
+	@EventHandler
+	void quebar(BlockBreakEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	void colocar(BlockPlaceEvent e) {
+		e.setCancelled(true);
+	}
+
+}

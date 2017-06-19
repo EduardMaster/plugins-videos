@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Ajnin extends Kit {
 
@@ -47,7 +47,7 @@ public class Ajnin extends Kit {
 					if (target != null) {
 						if (target.getLocation().distance(p.getLocation()) <= maxDistance) {
 							if (cooldown(p)) {
-								API.teleport(target, p.getLocation());
+								GameAPI.teleport(target, p.getLocation());
 								e.setCancelled(true);
 
 							}

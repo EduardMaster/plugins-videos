@@ -1,0 +1,54 @@
+package br.com.piracraft.lobby2.npc;
+
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+
+public class SpawnNPC {
+
+	private Location loc;
+	private String nick;
+	private String skin;
+
+	public SpawnNPC(Location loc, String nick, String skin) {
+		setLoc(loc);
+		setNick(nick);
+		setSkin(skin);
+	}
+
+	public void Spawn() {
+		NPCRegistry registry = CitizensAPI.getNPCRegistry();
+		NPC npc = registry.createNPC(EntityType.PLAYER, getNick());
+		npc.setName(getNick());
+		npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA, getSkin());
+		npc.spawn(getLoc());
+	}
+
+	public Location getLoc() {
+		return loc;
+	}
+
+	public void setLoc(Location loc) {
+		this.loc = loc;
+	}
+
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
+	public String getSkin() {
+		return skin;
+	}
+
+	public void setSkin(String skin) {
+		this.skin = skin;
+	}
+
+}

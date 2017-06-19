@@ -161,7 +161,7 @@ public class SkywarsCommand implements CommandExecutor {
 						if (sender instanceof Player) {
 							Player p = (Player) sender;
 							Skywars.get(name).getFeast()
-									.setPos1(p.getLocation());
+									.setFirstPosition(p.getLocation());
 							sender.sendMessage(
 									Main.message("set-feast-low", name));
 
@@ -182,7 +182,7 @@ public class SkywarsCommand implements CommandExecutor {
 						if (sender instanceof Player) {
 							Player p = (Player) sender;
 							Skywars.get(name).getFeast()
-									.setPos2(p.getLocation());
+									.setSecondPosition(p.getLocation());
 							sender.sendMessage(
 									Main.message("set-feast-high", name));
 
@@ -229,7 +229,7 @@ public class SkywarsCommand implements CommandExecutor {
 						if (sender instanceof Player) {
 							Player p = (Player) sender;
 							Skywars.get(name).getMap()
-									.setPos1(p.getLocation());
+									.setFirstPosition(p.getLocation());
 							sender.sendMessage(
 									Main.message("set-low", name));
 
@@ -250,7 +250,7 @@ public class SkywarsCommand implements CommandExecutor {
 						if (sender instanceof Player) {
 							Player p = (Player) sender;
 							Skywars.get(name).getMap()
-									.setPos2(p.getLocation());
+									.setSecondPosition(p.getLocation());
 							sender.sendMessage(
 									Main.message("set-high", name));
 

@@ -1,0 +1,33 @@
+package br.com.piracraft.lobby2.utils.lobby;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+
+import br.com.piracraft.lobby2.utils.Cor;
+import br.com.piracraft.lobby2.utils.UtilsChat;
+
+public class SetarLobby {
+
+	public static Location lobby;
+
+	public void setarLobby() {
+		try {
+			ResultSet s = br.com.piracraft.api.Main.getMysql().conectar().createStatement().executeQuery(
+					"SELECT * FROM `MINIGAMES_SALAS_E_SERVIDORES` WHERE PORTA = '" + Bukkit.getPort() + "'");
+			if (s.next()) {
+				lobby = new Location(Bukkit.getWorld("world"), Double.parseDouble(s.getString("LOBBY").split(" ")[0]),
+						Double.parseDouble(s.getString("LOBBY").split(" ")[1]),
+						Double.parseDouble(s.getString("LOBBY").split(" ")[2]));
+
+				lobby.add(0, 2, 0);
+			}
+			s.getStatement().getConnection().close();
+		} catch (SQLException e) {
+			new UtilsChat("Mysql ERRO", e.getMessage() + ".", Cor.Vermelho).enviarAlertaConsole();
+		}
+	}
+
+}

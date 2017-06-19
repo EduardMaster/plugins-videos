@@ -1,10 +1,14 @@
 
 package net.eduard.skywars;
 
+import java.io.File;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,7 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.eduard.skywars.command.SkywarsCommand;
 import net.eduard.skywars.event.TemplateEvent;
 import net.eduard.skywars.kits.TeleportBowKit;
-import net.eduard.skywars.util.ConfigAPI;
+import net.eduard.skywars.manager.ConfigAPI;
+import net.eduard.skywars.manager.EmptyWorld;
 
 public class Main extends JavaPlugin implements Listener {
 	
@@ -55,5 +60,41 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 
+	}
+	public static World newEmptyWorld(String worldName) {
+		World world = Bukkit.createWorld(
+				new WorldCreator(worldName).generateStructures(false)
+						.generator(new EmptyWorld()));
+		world.getBlockAt(100, 100, 100).setType(Material.GLASS);
+		world.setSpawnLocation(100, 101, 100);
+		return world;
+	}
+	public static void deleteFolder(File file) {
+		if (file.exists()) {
+			File files[] = file.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteFolder(files[i]);
+				} else {
+					files[i].delete();
+				}
+			}
+		}
+	}
+
+	public static void deleteWorld(String name) {
+		World world = Bukkit.getWorld(name);
+		if (world != null) {
+			for (Player p : world.getPlayers()) {
+				p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation()
+						.setDirection(p.getLocation().getDirection()));
+			}
+			Bukkit.unloadWorld(world, false);
+			
+		}
+		try {
+			deleteFolder(world.getWorldFolder());
+		} catch (Exception e) {
+		}
 	}
 }

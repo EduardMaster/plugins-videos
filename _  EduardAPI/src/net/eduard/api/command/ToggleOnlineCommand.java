@@ -6,9 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.util.Cs;
 
-public class ToggleOnlineCommand extends Commands {
+public class ToggleOnlineCommand extends CMD {
 	public String messageOn = "§6Voce esta visivel!";
 	public String messageOff = "§6Voce esta invisivel!";
 	public ToggleOnlineCommand() {
@@ -23,11 +25,11 @@ public class ToggleOnlineCommand extends Commands {
 					| label.equalsIgnoreCase("esconder")
 					| label.equalsIgnoreCase("desaparecer")) {
 
-				API.chat(p,messageOn);
-				API.hide(p);
+				Cs.chat(p,messageOn);
+				GameAPI.hide(p);
 			} else {
-				API.show(p);
-				API.chat(p,messageOff);
+				GameAPI.show(p);
+				Cs.chat(p,messageOff);
 			}
 		}
 		return true;

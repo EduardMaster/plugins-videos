@@ -11,8 +11,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Potions;
+import net.eduard.api.manager.WorldAPI;
 
 public class Magma extends Kit {
 
@@ -58,7 +59,7 @@ public class Magma extends Kit {
 	public void event(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
-			if (!API.equals2(e.getFrom(), e.getTo())) {
+			if (!WorldAPI.equals2(e.getFrom(), e.getTo())) {
 				Material type = p.getLocation().getBlock()
 						.getRelative(BlockFace.DOWN).getType();
 				if (type == Material.WATER

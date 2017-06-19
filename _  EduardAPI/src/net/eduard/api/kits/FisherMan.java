@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class FisherMan extends Kit {
 
@@ -20,7 +20,7 @@ public class FisherMan extends Kit {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
 			if (e.getCaught() != null) {
-				API.teleport(e.getCaught(), p.getLocation());
+				GameAPI.teleport(e.getCaught(), p.getLocation());
 			}
 		}
 	}

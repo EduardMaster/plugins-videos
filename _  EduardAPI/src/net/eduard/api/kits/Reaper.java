@@ -7,14 +7,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 
+import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Potions;
 
 public class Reaper extends Kit {
 	public Material reaper = Material.WOOD_HOE;
 
 	public Reaper() {
-		setIcon(Material.WOOD_HOE, "Envene seus inimigos com Wither");
+		setIcon(Material.WOOD_HOE, "§fEnvene seus inimigos com Wither");
 		getPotions().add(new Potions(PotionEffectType.WITHER, 3, 20 * 5));
 	}
 

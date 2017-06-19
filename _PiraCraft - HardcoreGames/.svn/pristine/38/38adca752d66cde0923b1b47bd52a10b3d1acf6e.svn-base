@@ -1,0 +1,51 @@
+package me.douglasamv.hg.Comandos;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class Chat implements CommandExecutor {
+
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("§cComando de Jogador!");
+			return true;
+		}
+		Player p = (Player) sender;
+		if (cmd.getName().equalsIgnoreCase("chat")) {
+			if (sender.hasPermission("hg.cmd.chat")) {
+				if (args.length > 0) {
+					if (args.length == 1) {
+						if (args[0].equalsIgnoreCase("off")) {
+							Bukkit.broadcastMessage("§eChat foi desativado!");
+							for (Player p1 : Bukkit.getOnlinePlayers()) {
+								if (!p1.hasPermission("hg.cmd.chat")) {
+									Listener.chat.add(p1);
+								}
+							}
+						} else if (args[0].equalsIgnoreCase("on")) {
+							Bukkit.broadcastMessage("§eChat foi ativado!");
+							for (Player p1 : Bukkit.getOnlinePlayers()) {
+								if (Listener.chat.contains(p1)) {
+									Listener.chat.remove(p1);
+								}
+							}
+						}
+					} else {
+						p.sendMessage("§cUse: /chat <on/off>");
+					}
+				} else {
+					p.sendMessage("§cUse: /chat <on/off>");
+				}
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+			return true;
+		}
+		return false;
+
+	}
+}

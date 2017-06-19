@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Flash extends Kit {
 
@@ -29,7 +29,7 @@ public class Flash extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						API.teleport(p, distance);
+						GameAPI.teleport(p, distance);
 					}
 				}
 			}

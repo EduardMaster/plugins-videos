@@ -1,0 +1,194 @@
+package br.com.piracraft.lobby2.utils;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+import br.com.piracraft.api.PiraCraftAPI;
+import br.com.piracraft.api.util.MySQL;
+import br.com.piracraft.lobby2.Main;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+
+public final class LobbyAPI {
+
+	public static void saveLocation(Location location, String query) {
+
+	}
+	public static Location getLocation(Location location, String query) {
+		return null;
+
+	}
+	public static void playercount(Player p, String server) {
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		out.writeUTF("PlayerCount");
+		out.writeUTF(server);
+		p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+	}
+
+	public static void motd(Player p, String server) {
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		out.writeUTF("PlayerCount");
+		out.writeUTF(server);
+		p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+	}
+
+	private static ArrayList<Entity> entidades = new ArrayList<Entity>();
+
+	private static void createNPC(String nick, String skin, Location loc) {
+		NPCRegistry registry = CitizensAPI.getNPCRegistry();
+		NPC npc = registry.createNPC(EntityType.PLAYER, nick);
+		npc.setName(nick);
+		npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA, skin);
+		npc.spawn(loc);
+		entidades.add(npc.getEntity());
+	}
+
+	public static void spawnNpcs() {
+		PreparedStatement stm = null;
+		try {
+			String network = PiraCraftAPI.getIdNetwork()[0];
+			String sala = PiraCraftAPI.getIdNetwork()[0];
+			stm = MySQL.conectar().prepareStatement(
+					"SELECT * FROM V_NPC_LOCALIZACAO where ID_NETWORK = '"
+							+ network + "' and ID_SALA = '" + sala + "';");
+			ResultSet rs = stm.executeQuery();
+			while (rs.next()) {
+				Location loc = new Location(Bukkit.getWorld("world"),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[0]),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[1]),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[2]),
+						Float.valueOf(rs.getString("COORDENADA").split(",")[3]),
+						Float.valueOf(
+								rs.getString("COORDENADA").split(",")[4]));
+				createNPC(rs.getString("NOME"), rs.getString("SKIN"), loc);
+				Bukkit.getConsoleSender().sendMessage("§aNPC Spawnados!");
+			}
+			rs.close();
+			stm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void removeNpcs() {
+		CitizensAPI.getNPCRegistry().deregisterAll();
+		for (Entity entity : entidades) {
+			entity.remove();
+		}
+		Bukkit.getConsoleSender().sendMessage("§aNPC Removidos!");
+	}
+	
+	public static void enviar(Player p, String server) {
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		out.writeUTF("Connect");
+		out.writeUTF(server);
+		p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+	}
+	/**
+	 * Nao usado mais
+	 */
+	public static void removerNPCs() {
+		LobbyAPI.enviarAlertaConsole("Aviso", "Removendo todos os npcs.",
+				Cor.Verde);
+		CitizensAPI.getNPCRegistry().deregisterAll();
+	}
+	
+	public static void removerEntidades() {
+		LobbyAPI.enviarAlertaConsole("Aviso", "Removendo todas as entidades.",
+				Cor.Verde);
+		for (Entity entity : Main.getPlugin().getServer().getWorld("world")
+				.getEntities()) {
+			entity.remove();
+		}
+	}
+
+	private static Location lobby;
+
+	public static void setarLobby() {
+		try {
+			ResultSet s = MySQL.conectar().createStatement().executeQuery(
+					"SELECT * FROM `MINIGAMES_SALAS_E_SERVIDORES` WHERE PORTA = '"
+							+ Bukkit.getPort() + "'");
+			if (s.next()) {
+				lobby = new Location(Bukkit.getWorld("world"),
+						Double.parseDouble(s.getString("LOBBY").split(" ")[0]),
+						Double.parseDouble(s.getString("LOBBY").split(" ")[1]),
+						Double.parseDouble(s.getString("LOBBY").split(" ")[2]));
+
+				lobby.add(0, 2, 0);
+			}
+			s.getStatement().getConnection().close();
+		} catch (SQLException e) {
+			enviarAlertaConsole("Mysql ERRO", e.getMessage() + ".",
+					Cor.Vermelho);
+		}
+	}
+	public static Location getLobby() {
+		return lobby;
+	}
+
+	public static void enviarAlertaPlayer(Player player,  String prefix,
+			String message,Cor cor) {
+		if (cor == Cor.Vermelho) {
+			player.sendMessage("§4" + prefix + " §c> §f" + message);
+		}
+		if (cor == Cor.Amarelo) {
+			player.sendMessage("§6" + prefix + " §e> §f" + message);
+		}
+		if (cor == Cor.Cinza) {
+			player.sendMessage("§7" + prefix + " §8> §f" + message);
+		}
+		if (cor == Cor.Verde) {
+			player.sendMessage("§2" + prefix + " §a> §f" + message);
+		}
+		if (cor == Cor.Azul) {
+			player.sendMessage("§9" + prefix + " §b> §f" + message);
+		}
+		if (cor == Cor.Roxo) {
+			player.sendMessage("§5" + prefix + " §d> §f" + message);
+		}
+	}
+
+	public static void enviarAlertaConsole(String prefix, String message,
+			Cor cor) {
+		if (cor == Cor.Vermelho) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§4" + prefix + " §c> §f" + message);
+		}
+		if (cor == Cor.Amarelo) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§6" + prefix + " §e> §f" + message);
+		}
+		if (cor == Cor.Cinza) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§7" + prefix + " §8> §f" + message);
+		}
+		if (cor == Cor.Verde) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§2" + prefix + " §a> §f" + message);
+		}
+		if (cor == Cor.Azul) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§9" + prefix + " §b> §f" + message);
+		}
+		if (cor == Cor.Roxo) {
+			Main.getPlugin().getServer().getConsoleSender()
+					.sendMessage("§5" + prefix + " §d> §f" + message);
+		}
+	}
+}

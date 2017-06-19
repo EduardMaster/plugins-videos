@@ -1,0 +1,12 @@
+
+save-worlds: true
+save-players: false
+auto-respawn: true
+no-join-message: true
+no-quit-message: true
+no-death-message: true
+custom-join-message: false
+custom-quit-message: false
+on-join-message: '&6O jogador &e$player &6entrou no server'
+on-quit-message: '&6O jogador &e$player &6saiu do server'
+server-tag: Server

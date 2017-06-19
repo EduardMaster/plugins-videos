@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.skywars.Main;
-import net.eduard.skywars.util.ArenaSpace;
 
 /**
  * É Sala
@@ -35,7 +34,7 @@ public class Room implements Runnable{
 		if (task!=null){
 			task.cancel();
 		}
-		ArenaSpace.deleteWorld("sw-"+id);
+		Main.deleteWorld("sw-"+id);
 		task = Bukkit.getScheduler().runTaskTimer(Main.plugin	,this, 20, 20);
 	}
 

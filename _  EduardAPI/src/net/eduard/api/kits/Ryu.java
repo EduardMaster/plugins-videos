@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.BlockIterator;
 
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
 
 public class Ryu extends Kit {

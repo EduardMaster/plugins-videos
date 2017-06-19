@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 
-public class ReportCommand extends Commands {
+public class ReportCommand extends CMD {
 
 	public String message = "§6O jogador §e$target §6foi reportado por §a$sender  §6motido: §c$reason";
 public ReportCommand() {

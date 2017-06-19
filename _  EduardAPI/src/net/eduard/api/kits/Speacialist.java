@@ -8,10 +8,10 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.ItemAPI;
 
 public class Speacialist extends Kit {
 
@@ -46,7 +46,7 @@ public class Speacialist extends Kit {
 		if (e.getEntity().getKiller() != null) {
 			Player killer = e.getEntity().getKiller();
 			if (hasKit(p)) {
-				API.drop(killer, new ItemStack(Material.EXP_BOTTLE, xpAmount));
+				ItemAPI.drop(killer, new ItemStack(Material.EXP_BOTTLE, xpAmount));
 			}
 		}
 	}

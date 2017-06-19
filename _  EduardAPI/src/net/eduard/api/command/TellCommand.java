@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
-import net.eduard.api.util.Extras;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class TellCommand extends Commands {
+public class TellCommand extends CMD {
 
 	public String message = "§aPara: §f$target$> §7$message";
 	public String messageTarget = "§De: §f$player$> §7$message";
@@ -27,13 +27,13 @@ public TellCommand() {
 			for (int i = 1; i < args.length; i++) {
 				builder.append(args[i] + " ");
 			}
-			String message = API.toChatMessage(builder.toString());
+			String message = Cs.toChatMessage(builder.toString());
 			sender.sendMessage(this.message.replace("$target", target.getName())
-					.replace("$>", Extras.getArrowRight())
+					.replace("$>", Cs.getArrowRight())
 					.replace("$message", message));
 			target.sendMessage(
 					messageTarget.replace("$player", sender.getName())
-							.replace("$>", Extras.getArrowRight())
+							.replace("$>", Cs.getArrowRight())
 							.replace("$message", message));
 		}
 

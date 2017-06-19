@@ -6,10 +6,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class UnBanCommand extends Commands {
+public class UnBanCommand extends CMD {
 
 	public String message = "§6O jogador §e$target §6foi desabanido!";
 	
@@ -22,7 +22,7 @@ public class UnBanCommand extends Commands {
 		String name = args[0];
 		OfflinePlayer target = Bukkit.getOfflinePlayer(name);
 		target.setBanned(false);
-		API.chat(sender,message.replace("$target", target.getName()));
+		Cs.chat(sender,message.replace("$target", target.getName()));
 		
 
 		return true;

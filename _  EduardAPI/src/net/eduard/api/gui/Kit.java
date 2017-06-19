@@ -12,38 +12,46 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
 import net.eduard.api.config.Section;
-import net.eduard.api.player.Cooldown;
+import net.eduard.api.manager.Cooldown;
+import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.util.Cs;
 
 public class Kit extends Cooldown {
 
 	private String name;
 	private double price;
 	private ItemStack icon;
+	private KitType type;
+	private boolean showOnGui=true;
+	private boolean enabled=true;
+	private String disabled = "§6Habilidade desativada temporariamente!";
 	private boolean activeCooldownOnPvP;
 	private int times = 1;
 	private transient Click click;
 	private transient Map<Player, Integer> timesUsed = new HashMap<>();
 	private transient List<String> kits = new ArrayList<>();
 	private transient List<Player> players = new ArrayList<>();
-
-	public Kit() {
-		this("");
+	public Kit(KitType type) {
+		this("",type);
 
 	}
-	public Kit(String name) {
+	public Kit() {
+		this("",KitType.ANOTHER);
+
+	}
+	public Kit(String name, KitType type) {
 		if (name.isEmpty()) {
 			setName(getClass().getSimpleName());
 
 		} else
 			setName(name);
 		setPermission(name.toLowerCase());
+		setType(type);
 	}
 
 	public ItemStack add(ItemStack item) {
-		getItems().add(API.setName(item, "§b" + name));
+		getItems().add(ItemAPI.setName(item, "§b" + name));
 		return item;
 	}
 
@@ -72,6 +80,10 @@ public class Kit extends Cooldown {
 
 	@Override
 	public boolean cooldown(Player player) {
+		if (!enabled){
+			Cs.chat(player, disabled);
+			return false;
+		}
 		if (onCooldown(player)) {
 			sendOnCooldown(player);
 			return false;
@@ -157,9 +169,9 @@ public class Kit extends Cooldown {
 
 	public Kit setIcon(Material material, int data, String... lore) {
 		icon = new ItemStack(material);
-		API.setName(icon, "§6Kit " + name);
-		API.setLore(icon, lore);
-		API.add(icon, Enchantment.DURABILITY, 10);
+		ItemAPI.setName(icon, "§6Kit " + name);
+		ItemAPI.setLore(icon, lore);
+		ItemAPI.addEnchant(icon, Enchantment.DURABILITY, 10);
 		return this;
 	}
 
@@ -190,5 +202,29 @@ public class Kit extends Cooldown {
 	}
 	public void setClick(Click click) {
 		this.click = click;
+	}
+	public boolean isShowOnGui() {
+		return showOnGui;
+	}
+	public void setShowOnGui(boolean showOnGui) {
+		this.showOnGui = showOnGui;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	public String getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(String disabled) {
+		this.disabled = disabled;
+	}
+	public KitType getType() {
+		return type;
+	}
+	public void setType(KitType type) {
+		this.type = type;
 	}
 }

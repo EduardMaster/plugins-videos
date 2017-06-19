@@ -8,9 +8,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 
-public class AplicateCommand extends Commands {
+public class AplicateCommand extends CMD {
 
 	public List<String> messages = new ArrayList<>();
 	public AplicateCommand() {

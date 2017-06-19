@@ -8,9 +8,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.ItemAPI;
 
 
 public class Backpacker extends Kit{
@@ -28,7 +29,7 @@ public class Backpacker extends Kit{
 				if (hasKit(p)){
 					if (cooldown(p)){
 						Inventory inv = API.newInventory("§7Backpacker", 6*9);
-						API.fill(inv, soup);
+						ItemAPI.fill(inv, soup);
 						p.openInventory(inv);
 					}
 				}

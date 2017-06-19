@@ -1,0 +1,323 @@
+package me.douglasamv.hg.Comandos;
+
+import java.util.ArrayList;
+
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Inv.Inventario;
+import me.douglasamv.hg.Manager.Habilidade;
+
+public class Kit implements Listener, CommandExecutor {
+
+	public static void onKitChest(Player p) {
+		if (Main.PreGame) {
+			new Inventario(p).openInv(1);
+		} else {
+			return;
+		}
+	}
+
+	public static ArrayList<String> CopyCat = new ArrayList<String>();
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("§cComando de Jogador!");
+			return true;
+		}
+		Player p = (Player) sender;
+		if ((cmd.getName().equalsIgnoreCase("kit"))) {
+			if ((args.length == 0)) {
+				onKitChest(p);
+				return true;
+			}
+			if ((p.hasPermission("hg.kit.kangaroo")) && (args[0].equalsIgnoreCase("kangaroo"))) {
+				p.sendMessage("§aVoce pegou o kit Kangaroo");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Kangaroo");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.crafter")) && (args[0].equalsIgnoreCase("crafter"))) {
+				p.sendMessage("§aVoce pegou o kit Crafter");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Crafter");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.launcher")) && (args[0].equalsIgnoreCase("launcher"))) {
+				p.sendMessage("§aVoce pegou o kit Launcher");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Launcher");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.madman")) && (args[0].equalsIgnoreCase("madman"))) {
+				p.sendMessage("§aVoce pegou o kit Madman");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Madman");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.noob")) && (args[0].equalsIgnoreCase("noob"))) {
+				p.sendMessage("§aVoce pegou o kit Noob");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Noob");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.grandpa")) && (args[0].equalsIgnoreCase("grandpa"))) {
+				p.sendMessage("§aVoce pegou o kit Grandpa");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Grandpa");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.copycat")) && (args[0].equalsIgnoreCase("copycat"))) {
+				p.sendMessage("§aVoce pegou o kit Copycat");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "CopyCat");
+				CopyCat.add(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.backpacker")) && (args[0].equalsIgnoreCase("backpacker"))) {
+				p.sendMessage("§aVoce pegou o kit Backpacker");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "BackPacker");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.surprise")) && (args[0].equalsIgnoreCase("surprise"))) {
+				p.sendMessage("§aVoce pegou o kit Surprise");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Surprise");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.cultivator")) && (args[0].equalsIgnoreCase("cultivator"))) {
+				p.sendMessage("§aVoce pegou o kit Cultivator");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Cultivator");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.anchor")) && (args[0].equalsIgnoreCase("anchor"))) {
+				p.sendMessage("§aVoce pegou o kit Anchor");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Anchor");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.hulk")) && (args[0].equalsIgnoreCase("hulk"))) {
+				p.sendMessage("§aVoce pegou o kit Hulk");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Hulk");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.demoman")) && (args[0].equalsIgnoreCase("Demoman"))) {
+				p.sendMessage("§aVoce pegou o kit Demoman");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Demoman");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.dwarf")) && (args[0].equalsIgnoreCase("dwarf"))) {
+				p.sendMessage("§aVoce pegou o kit Dwarf");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Dwarf");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.endermage")) && (args[0].equalsIgnoreCase("endermage"))) {
+				p.sendMessage("§aVoce pegou o kit Endermage");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Endermage");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.tower")) && (args[0].equalsIgnoreCase("tower"))) {
+				p.sendMessage("§aVoce pegou o kit Tower");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Tower");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.firer")) && (args[0].equalsIgnoreCase("firer"))) {
+				p.sendMessage("§aVoce pegou o kit Firer");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Firer");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.cacto")) && (args[0].equalsIgnoreCase("cacto"))) {
+				p.sendMessage("§aVoce pegou o kit Cacto");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Cacto");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.fisherman")) && (args[0].equalsIgnoreCase("fisherman"))) {
+				p.sendMessage("§aVoce pegou o kit Fisherman");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Fisherman");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.forger")) && (args[0].equalsIgnoreCase("forger"))) {
+				p.sendMessage("§aVoce pegou o kit Forger");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Forger");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.gladiator")) && (args[0].equalsIgnoreCase("gladiator"))) {
+				p.sendMessage("§aVoce pegou o kit Gladiator");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Gladiator");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.jellyfish")) && (args[0].equalsIgnoreCase("jellyfish"))) {
+				p.sendMessage("§aVoce pegou o kit Jellyfish");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Jellyfish");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.lumberjack")) && (args[0].equalsIgnoreCase("lumberjack"))) {
+				p.sendMessage("§aVoce pegou o kit Lumberjack");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Lumberjack");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.Miner")) && (args[0].equalsIgnoreCase("miner"))) {
+				p.sendMessage("§aVoce pegou o kit Miner");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Miner");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.monk")) && (args[0].equalsIgnoreCase("monk"))) {
+				p.sendMessage("§aVoce pegou o kit Monk");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Monk");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.fireman")) && (args[0].equalsIgnoreCase("fireman"))) {
+				p.sendMessage("§aVoce pegou o kit Fireman");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Fireman");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.viking")) && (args[0].equalsIgnoreCase("viking"))) {
+				p.sendMessage("§aVoce pegou o kit Viking");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Viking");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.ninja")) && (args[0].equalsIgnoreCase("ninja"))) {
+				p.sendMessage("§aVoce pegou o kit Ninja");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Ninja");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.poseidon")) && (args[0].equalsIgnoreCase("poseidon"))) {
+				p.sendMessage("§aVoce pegou o kit Poseidon");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Poseidon");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.reaper")) && (args[0].equalsIgnoreCase("reaper"))) {
+				p.sendMessage("§aVoce pegou o kit Reaper");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Reaper");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.snail")) && (args[0].equalsIgnoreCase("snail"))) {
+				p.sendMessage("§aVoce pegou o kit Snail");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Snail");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.specialist")) && (args[0].equalsIgnoreCase("specialist"))) {
+				p.sendMessage("§aVoce pegou o kit Specialist");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Specialist");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.stomper")) && (args[0].equalsIgnoreCase("stomper"))) {
+				p.sendMessage("§aVoce pegou o kit Stomper");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Stomper");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.switcher")) && (args[0].equalsIgnoreCase("switcher"))) {
+				p.sendMessage("§aVoce pegou o kit Switcher");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Switcher");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.tank")) && (args[0].equalsIgnoreCase("tank"))) {
+				p.sendMessage("§aVoce pegou o kit Tank");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Tank");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.thor")) && (args[0].equalsIgnoreCase("thor"))) {
+				p.sendMessage("§aVoce pegou o kit Thor");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Thor");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.timelord")) && (args[0].equalsIgnoreCase("timelord"))) {
+				p.sendMessage("§aVoce pegou o kit Timelord");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Timelord");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.turtle")) && (args[0].equalsIgnoreCase("turtle"))) {
+				p.sendMessage("§aVoce pegou o kit Turtle");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Turtle");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.viper")) && (args[0].equalsIgnoreCase("Viper"))) {
+				p.sendMessage("§aVoce pegou o kit Viper");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Viper");
+				CopyCat.remove(p.getName());
+			}
+			if ((p.hasPermission("hg.kit.worm")) && (args[0].equalsIgnoreCase("worm"))) {
+				p.sendMessage("§aVoce pegou o kit Worm");
+				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+				Habilidade.removeAbility(p);
+				Habilidade.setAbility(p, "Worm");
+				CopyCat.remove(p.getName());
+			}
+		}
+		return true;
+	}
+}

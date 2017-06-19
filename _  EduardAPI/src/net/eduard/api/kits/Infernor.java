@@ -14,10 +14,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.LocationEffect;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.LocationEffect;
 
 public class Infernor extends Kit {
 	
@@ -47,10 +49,17 @@ public class Infernor extends Kit {
 				Player p = e.getPlayer();
 				if (e.getRightClicked() instanceof Player) {
 					Player target = (Player) e.getRightClicked();
+					
+					if (onCooldown(p)){
+						return;
+					}
+					
 					if (arenas.containsKey(target) | arenas.containsKey(p)) {
 						p.sendMessage("§6Voce ja esta em Batalha!");
 						return;
 					}
+					
+					
 					Location loc = p.getLocation().add(0, high, 0);
 					List<Location> arena = createArena(p);
 					locations.put(p, p.getLocation());
@@ -59,8 +68,8 @@ public class Infernor extends Kit {
 					targets.put(target, p);
 					arenas.put(p, arena);
 					arenas.put(target, arena);
-					API.makeInvunerable(p, effectSeconds);
-					API.makeInvunerable(target, effectSeconds);
+					GameAPI.makeInvunerable(p, effectSeconds);
+					GameAPI.makeInvunerable(target, effectSeconds);
 					p.teleport(loc.clone().add(size - 2, 1, 2 - size)
 							.setDirection(p.getLocation().getDirection()));
 					target.teleport(loc.clone().add(2 - size, 1, size - 2)
@@ -76,7 +85,7 @@ public class Infernor extends Kit {
 	}
 	public List<Location> createArena(Player p){
 		Location x = p.getLocation().add(0, 100, 0);
-		List<Location> locs = API.getBox(x, size, size, size, new LocationEffect() {
+		List<Location> locs = WorldAPI.getBox(x, size, size, size, new LocationEffect() {
 			
 			@SuppressWarnings("deprecation")
 			@Override
@@ -87,7 +96,7 @@ public class Infernor extends Kit {
 				return true;
 			}
 		});
-		API.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
+		WorldAPI.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
 			
 			@Override
 			public boolean effect(Location location) {

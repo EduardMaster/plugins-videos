@@ -9,16 +9,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Potions;
+import net.eduard.api.game.Sounds;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Potions;
-import net.eduard.api.player.SoundEffect;
 
 public class Berserker extends Kit {
 	public ItemStack soup = API.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	public Berserker() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
 		setMessage("§6Modo berseker ativado");
-		setSound(SoundEffect.create(Sound.AMBIENCE_THUNDER));
+		setSound(Sounds.create(Sound.AMBIENCE_THUNDER));
 		getPotions().add(new Potions(PotionEffectType.INCREASE_DAMAGE, 0, 20*30));
 		getPotions().add(new Potions(PotionEffectType.SPEED, 0, 20*30));
 	}

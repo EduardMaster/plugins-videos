@@ -14,9 +14,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class TempBanCommand extends Commands {
+public class TempBanCommand extends CMD {
 	public Map<String, Long> tempbanned = new HashMap<>();
 	public Map<String, Long> tempban = new HashMap<>();
 	public String message = "§6O jogador §e$target §6foi banido temporariamente por §a$sender";
@@ -24,6 +25,7 @@ public class TempBanCommand extends Commands {
 	public String messageNoJoin = "§6Voce foi banido temporariamente!";
 	public TempBanCommand() {
 		super("tempban");
+		hasEvents = true;
 	}
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command,
@@ -61,7 +63,7 @@ public class TempBanCommand extends Commands {
 			target.kickPlayer(messageTarget.replace("$target", sender.getName())
 					.replace("$sender", sender.getName())
 					.replace("$time", text));
-			API.broadcast(message.replace("$target", target.getDisplayName())
+			Cs.broadcast(message.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName()));
 		}
 

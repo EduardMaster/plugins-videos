@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 
 public class Zeus extends Kit{
@@ -41,7 +41,7 @@ public class Zeus extends Kit{
 				Player p = (Player) arrow.getShooter();
 				if (hasKit(p)){
 					if (cooldown(p)){
-						API.strike(arrow.getLocation());
+						GameAPI.strike(arrow.getLocation());
 					}
 				}
 				

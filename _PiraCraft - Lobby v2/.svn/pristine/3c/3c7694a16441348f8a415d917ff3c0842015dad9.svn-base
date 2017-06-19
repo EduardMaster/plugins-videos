@@ -1,0 +1,39 @@
+package br.com.piracraft.lobby2.servidores.menu;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import br.com.piracraft.lobby2.servidores.kitpvp.MenuKitpvp;
+import br.com.piracraft.lobby2.servidores.skywars.MenuSkyWars;
+
+public class ClicarMenu implements Listener {
+
+	@EventHandler
+	void clicar(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		if (event.getAction().toString().contains("RIGHT")  && (event.getItem() != null)) {
+			if (event.getItem().getType() == Material.COMPASS) {
+				new MenuMenu(player).abrir();
+			}
+		}
+	}
+
+	@EventHandler
+	void click(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		if (event.getInventory().getName().equalsIgnoreCase("§aMenu") && (event.getCurrentItem() != null)) {
+			event.setCancelled(true);
+			if (event.getCurrentItem().getType() == Material.GRASS) {
+				new MenuSkyWars(player).abrir();
+			}
+			if (event.getCurrentItem().getType() == Material.IRON_SWORD) {
+				new MenuKitpvp(player).abrir();
+			}
+		}
+	}
+
+}

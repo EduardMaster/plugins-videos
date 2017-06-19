@@ -10,13 +10,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.game.Explosion;
+import net.eduard.api.game.Jump;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Explosion;
-import net.eduard.api.player.Jump;
-import net.eduard.api.player.SoundEffect;
+import net.eduard.api.manager.GameAPI;
 
 public class C4 extends Kit {
 
@@ -29,7 +29,7 @@ public class C4 extends Kit {
 		add(Material.STONE_BUTTON);
 		setMessage("§6A bomba foi plantada!");
 		setJump(new Jump(false, 0.6, 0.5,
-				SoundEffect.create(Sound.CLICK)));
+				Sounds.create(Sound.CLICK)));
 		setExplosion(new Explosion(4, false, false));
 		setTime(2);
 		setTimes(2);
@@ -49,7 +49,7 @@ public class C4 extends Kit {
 							Item c4 = p.getWorld().dropItemNaturally(
 									p.getEyeLocation(), new ItemStack(type));
 							c4.setPickupDelay(99999);
-							API.setDirection(c4, p);
+							GameAPI.setDirection(c4, p);
 							jump(c4);
 							bombs.put(p, c4);
 							sendMessage(p);

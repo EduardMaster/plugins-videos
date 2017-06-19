@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.bukkit.Location;
 
-import net.eduard.skywars.util.ArenaSpace;
-
 /**
  * É o Mapa
  * @author Eduard-PC
@@ -18,8 +16,8 @@ public class Arena {
 
 	private String name;
 	private int minPlayersAmount=2,maxPlayersAmount=12;
-	private ArenaSpace map =  new ArenaSpace();
-	private ArenaSpace feast =  new ArenaSpace();
+	private Blocks map =  new Blocks();
+	private Blocks feast =  new Blocks();
 	private double reward;
 	private List<Location> spawns = new ArrayList<>();
 	
@@ -40,12 +38,12 @@ public class Arena {
 	}
 
 
-	public ArenaSpace getMap() {
+	public Blocks getMap() {
 		return map;
 	}
 
 
-	public void setMap(ArenaSpace map) {
+	public void setMap(Blocks map) {
 		this.map = map;
 	}
 
@@ -74,12 +72,12 @@ public class Arena {
 	}
 
 
-	public ArenaSpace getFeast() {
+	public Blocks getFeast() {
 		return feast;
 	}
 
 
-	public void setFeast(ArenaSpace feast) {
+	public void setFeast(Blocks feast) {
 		this.feast = feast;
 	}
 

@@ -15,10 +15,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
-import net.eduard.api.click.ClickType;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
+import net.eduard.api.gui.ClickType;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class EnderMage extends Kit {
 
@@ -83,10 +84,10 @@ public class EnderMage extends Kit {
 				if (livingEntity instanceof Player) {
 					Player player = (Player) entity;
 					sendMessage(player);
-					API.makeInvunerable(player, effectSeconds);
-					API.makeInvunerable(p, effectSeconds);
+					GameAPI.makeInvunerable(player, effectSeconds);
+					GameAPI.makeInvunerable(p, effectSeconds);
 					pulled = true;
-					API.teleport(entity, teleport);
+					GameAPI.teleport(entity, teleport);
 				}
 			}
 
@@ -94,8 +95,8 @@ public class EnderMage extends Kit {
 
 		if (pulled) {
 			sendMessage(p);
-			API.makeInvunerable(p, effectSeconds);
-			API.teleport(p, teleport);
+			GameAPI.makeInvunerable(p, effectSeconds);
+			GameAPI.teleport(p, teleport);
 		}
 
 		return pulled;

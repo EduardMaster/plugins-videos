@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 import net.eduard.tapetevoador.Main;
 
-public class TapeteCommand extends Commands {
+public class TapeteCommand extends CMD {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.noConsole(sender)) {

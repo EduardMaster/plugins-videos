@@ -1,0 +1,112 @@
+package me.douglasamv.hg.Comandos;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import me.douglasamv.hg.Main;
+
+public class CMDSkit implements CommandExecutor {
+
+	List<String> sKIT = new ArrayList<String>();
+	HashMap<String, ItemStack> items = new HashMap<String, ItemStack>();
+
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!(sender instanceof Player)) {
+			Main.instance.getLogger().info("Â§7[Â§a!Â§7] Â§aComandos apenas no servidor!");
+			return true;
+		}
+		Player p = (Player) sender;
+		if (cmd.getName().equalsIgnoreCase("skit")) {
+			if (p.hasPermission("hg.cmd.skit")) {
+				if (args.length > 0) {
+					if (args[0].equalsIgnoreCase("create")) {
+						if (args.length == 2) {
+							ItemStack[] is = p.getInventory().getContents();
+							ItemStack[] armor = p.getInventory().getArmorContents();
+							if (!Main.skit.containsKey(args[1])) {
+								Main.skit.put(args[1], is);
+								Main.armor.put(args[1], armor);
+								p.sendMessage("§e" + args[1] + " criado com sucesso");
+								return true;
+							}
+							p.sendMessage("§cEste kit ja existe");
+							return true;
+						}
+						p.sendMessage("§cUse /skit create <kit>");
+						return true;
+					}
+					if (args[0].equalsIgnoreCase("apply")) {
+						if (args.length == 2) {
+							if (Main.skit.containsKey(args[1])) {
+								for (Player online : Bukkit.getOnlinePlayers()) {
+									if ((p != online) && (!Admin.admin.contains(p.getName()))) {
+										online.sendMessage("§e" + args[1] + " foi aplicado com sucesso");
+										online.getInventory().setContents((ItemStack[]) Main.skit.get(args[1]));
+										online.getInventory().setArmorContents((ItemStack[]) Main.armor.get(args[1]));
+									}
+								}
+								p.sendMessage("§eKit " + args[1] + " foi aplicado a todos os players com sucesso");
+								p.getInventory().setContents((ItemStack[]) Main.skit.get(args[1]));
+								p.getInventory().setArmorContents((ItemStack[]) Main.armor.get(args[1]));
+								return true;
+							}
+							p.sendMessage("§cEste kit nao existe");
+							return true;
+						}
+						if (args.length == 3) {
+							Player pl = Bukkit.getPlayer(args[2]);
+							if (pl != null) {
+								if (Main.skit.containsKey(args[1])) {
+									pl.sendMessage("§eKit " + args[1] + " foi aplicado com sucesso");
+									if (pl != p) {
+										p.sendMessage(
+												"§eKit " + args[1] + " foi aplicado com sucesso em " + pl.getName());
+									}
+									pl.getInventory().setContents((ItemStack[]) Main.skit.get(args[1]));
+									pl.getInventory().setArmorContents((ItemStack[]) Main.armor.get(args[1]));
+									return true;
+								}
+								p.sendMessage("§cEste kit nao existe");
+								return true;
+							}
+						} else {
+							p.sendMessage("§cUse /skit apply (<player> | all) <kit>");
+							return true;
+						}
+					} else if (args[0].equalsIgnoreCase("remove")) {
+						if (args.length == 2) {
+							if (Main.skit.containsKey(args[1])) {
+								Main.skit.remove(args[1]);
+								Main.armor.remove(args[1]);
+								p.sendMessage("§eKit " + args[1] + " removido com sucesso");
+
+								return true;
+							}
+							p.sendMessage("§cEste kit nao existe");
+							return true;
+						}
+
+						p.sendMessage("§cUse /skit remove <kit>");
+
+						return true;
+					}
+				} else {
+					p.sendMessage("§cUse /skit (apply | create | remove)");
+					return true;
+				}
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+		}
+		return false;
+	}
+}

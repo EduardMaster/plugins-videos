@@ -6,14 +6,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class SetKitCommand extends Commands {
+public class SetKitCommand extends CMD {
 
 	public String message = "§6Seu inventario foi aplicado para todos jogadores!";
-public SetKitCommand() {
-	super("setkit");
-}
+	public SetKitCommand() {
+		super("setkit");
+		register(getPlugin());
+	}
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
@@ -32,7 +34,7 @@ public SetKitCommand() {
 
 				}
 			}
-			API.chat(p,message);
+			Cs.chat(p, message);
 		}
 
 		return true;

@@ -6,16 +6,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class UnMuteCommand extends Commands {
+public class UnMuteCommand extends CMD {
 
 	public String messageTarget = "§6O jogador §e$player §6foi desmutado por §a$sender";
 	public String message = "§aVoce foi desmutado!";
-public UnMuteCommand() {
-	super("unmute");
-	setPermission("eduardapi.command.unmute");
-}
+	public UnMuteCommand() {
+	}
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {
@@ -25,10 +24,10 @@ public UnMuteCommand() {
 		if (API.existsPlayer(sender, args[0])) {
 			Player target = API.getPlayer(args[0]);
 			target.removeMetadata("muted", getPlugin());
-			API.broadcast(
+			Cs.broadcast(
 					messageTarget.replace("$player", target.getDisplayName())
 							.replace("$sender", sender.getName()));
-			API.chat(target,message);
+			Cs.chat(target, message);
 
 		}
 		return true;

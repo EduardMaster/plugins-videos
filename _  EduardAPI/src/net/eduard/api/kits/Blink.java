@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Blink extends Kit {
 	public int distance = 7;
@@ -26,8 +26,8 @@ public class Blink extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						Location loc = API.getTarget(p, distance);
-						API.teleport(p,loc.clone().add(0, 2, 0));
+						Location loc = GameAPI.getTarget(p, distance);
+						GameAPI.teleport(p,loc.clone().add(0, 2, 0));
 						loc.getBlock().setType(Material.LEAVES);
 					}
 				}

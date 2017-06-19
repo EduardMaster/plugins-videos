@@ -10,15 +10,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Sounds;
 import net.eduard.api.gui.Gui;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.player.SoundEffect;
 
 public class Main extends JavaPlugin implements Listener {
 	public Gui gui;
 
 	public void onEnable() {
-		SoundEffect sound = new SoundEffect(Sound.LEVEL_UP, 2, 0.5F);
+		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
 		gui.setItem(API.newItem("§4Abrir Gui Custom", Material.DIAMOND));
 		gui = new Gui(3, "§8Trocar velocidade");
 		for (int i = 0; i < 5; i++) {
@@ -43,7 +43,7 @@ public class Main extends JavaPlugin implements Listener {
 				break;
 			}
 			final int id = i;
-			gui.set((Slot) new Slot(API.newItem(boot, "§6Nivel " + (i + 1),11+i)).setEffect(new net.eduard.api.player.PlayerEffect() {
+			gui.set((Slot) new Slot(API.newItem(boot, "§6Nivel " + (i + 1),11+i)).setEffect(new net.eduard.api.util.PlayerEffect() {
 				
 				@Override
 				public void effect(Player p) {

@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
 import net.eduard.parkour.Arena;
 
-public class PlaySUB extends SubCommands {
+public class PlaySUB extends CMD {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.onlyPlayer(sender)) {

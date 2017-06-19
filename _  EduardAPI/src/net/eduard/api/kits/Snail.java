@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Potions;
 
 public class Snail extends Kit {
 	public double chance = 0.35;

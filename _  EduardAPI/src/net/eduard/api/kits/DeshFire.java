@@ -15,12 +15,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.game.Effects;
+import net.eduard.api.game.Jump;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Effects;
-import net.eduard.api.player.Jump;
-import net.eduard.api.player.SoundEffect;
+import net.eduard.api.manager.ItemAPI;
 
 public class DeshFire extends Kit {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -32,7 +33,7 @@ public class DeshFire extends Kit {
 		setTime(40);
 		add(Material.REDSTONE_BLOCK);
 		setDisplay(new Effects(Effect.MOBSPAWNER_FLAMES, 10));
-		setJump(new Jump(true, 0.5, 2, SoundEffect.create(Sound.CLICK)));
+		setJump(new Jump(true, 0.5, 2, Sounds.create(Sound.CLICK)));
 		setClick(new Click(Material.REDSTONE_BLOCK, new ClickEffect() {
 
 			@Override
@@ -46,8 +47,8 @@ public class DeshFire extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						API.saveArmours(p);
-						API.setEquip(p, Color.RED, "§c" + getName());
+						ItemAPI.saveArmours(p);
+						ItemAPI.setEquip(p, Color.RED, "§c" + getName());
 						inEffect.add(p);
 						p.setAllowFlight(true);
 						API.TIME.delay(effectSeconds, new Runnable() {
@@ -55,7 +56,7 @@ public class DeshFire extends Kit {
 							@Override
 							public void run() {
 								if (hasKit(p)) {
-									API.getArmours(p);
+									ItemAPI.getArmours(p);
 									inEffect.remove(p);
 								}
 							}

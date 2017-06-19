@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.player.Events;
+import net.eduard.api.manager.Events;
 
 public class Slot extends Events {
 	public static final Slot DEFAULT = new Slot();

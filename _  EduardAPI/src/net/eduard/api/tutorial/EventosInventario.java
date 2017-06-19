@@ -2,7 +2,6 @@
 package net.eduard.api.tutorial;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -16,11 +15,14 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-public class EventosInventario implements Listener {
+import net.eduard.api.manager.Manager;
+import net.eduard.api.util.Cs;
+
+public class EventosInventario extends Manager {
 
 	@EventHandler
 	public void InventoryCraft(CraftItemEvent e) {
-		
+		Cs.broadcast(e.getEventName());
 	}
 	@EventHandler
 	public void InventoryAbre(InventoryOpenEvent e) {

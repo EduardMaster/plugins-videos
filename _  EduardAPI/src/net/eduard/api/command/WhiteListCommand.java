@@ -1,17 +1,17 @@
 
 package net.eduard.api.command;
 
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 
-public class WhiteListCommand extends Commands {
+public class WhiteListCommand extends CMD {
 	public WhiteListCommand() {
 		super("whitelist");
-		addSub(new WhiteListHelpCommand());
-		addSub(new WhiteListAddCommand());
-		addSub(new WhiteListRemoveCommand());
-		addSub(new WhiteListOnCommand());
-		addSub(new WhiteListOffCommand());
-		addSub(new WhiteListListommand());
+		register(new WhiteListHelpCommand());
+		register(new WhiteListAddCommand());
+		register(new WhiteListRemoveCommand());
+		register(new WhiteListOnCommand());
+		register(new WhiteListOffCommand());
+		register(new WhiteListListommand());
 
 	}
 

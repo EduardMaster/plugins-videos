@@ -1,0 +1,7 @@
+name: SkyWars
+version: 0.5
+main: me.leo.skywars.Main
+authors: [Leo,Eduard]
+depend: [PiraCraftAPI]
+commands:
+   iniciar:

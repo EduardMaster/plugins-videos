@@ -6,9 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.util.Cs;
 
-public class ClearInventoryCommand extends Commands {
+public class ClearInventoryCommand extends CMD {
 	public String message = "§6Seu inventario foi limpo!";
 	public String messageTarget = "§6Voce limpou o inventario do §e$player";
 	public ClearInventoryCommand() {
@@ -20,18 +22,18 @@ public class ClearInventoryCommand extends Commands {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				API.clearInventory(p);
-				API.chat(p,message);
+				ItemAPI.clearInventory(p);
+				Cs.chat(p,message);
 			}else 
 			return false;
 		} else {
 			String name = args[0];
 			if (API.existsPlayer(sender, name)) {
 				Player target = API.getPlayer(name);
-				API.chat(sender, messageTarget.replace("$player",
+				Cs.chat(sender, messageTarget.replace("$player",
 						target.getDisplayName()));
-				API.chat(target,message);
-				API.clearInventory(target);
+				Cs.chat(target,message);
+				ItemAPI.clearInventory(target);
 			}
 		}
 

@@ -1,0 +1,70 @@
+package br.com.piracraft.lobby2.npc;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+
+import br.com.piracraft.api.PiraCraftAPI;
+import br.com.piracraft.api.util.MySQL;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+
+public class NPCs {
+
+	private static ArrayList<Entity> entidades = new ArrayList<Entity>();
+
+	private static void createNPC(String nick, String skin, Location loc) {
+		NPCRegistry registry = CitizensAPI.getNPCRegistry();
+		NPC npc = registry.createNPC(EntityType.PLAYER, nick);
+		npc.setName(nick);
+		npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA, skin);
+		npc.spawn(loc);
+		entidades.add(npc.getEntity());
+	}
+
+	public static void spawn() {
+		PreparedStatement stm = null;
+		try {
+			String network = PiraCraftAPI.getIdNetwork()[0];
+			String sala = PiraCraftAPI.getIdNetwork()[0];
+			stm = MySQL.conectar().prepareStatement(
+					"SELECT * FROM V_NPC_LOCALIZACAO where ID_NETWORK = '"
+							+ network + "' and ID_SALA = '" + sala + "';");
+			ResultSet rs = stm.executeQuery();
+			while (rs.next()) {
+				Location loc = new Location(Bukkit.getWorld("world"),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[0]),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[1]),
+						Double.valueOf(
+								rs.getString("COORDENADA").split(",")[2]),
+						Float.valueOf(rs.getString("COORDENADA").split(",")[3]),
+						Float.valueOf(
+								rs.getString("COORDENADA").split(",")[4]));
+				createNPC(rs.getString("NOME"), rs.getString("SKIN"), loc);
+				Bukkit.getConsoleSender().sendMessage("§aNPC Spawnados!");
+			}
+			rs.close();
+			stm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void remove() {
+		CitizensAPI.getNPCRegistry().deregisterAll();
+		for (Entity entity : entidades) {
+			entity.remove();
+		}
+		Bukkit.getConsoleSender().sendMessage("§aNPC Removidos!");
+	}
+
+}

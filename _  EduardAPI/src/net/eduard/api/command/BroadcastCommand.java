@@ -4,11 +4,10 @@ package net.eduard.api.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
-import net.eduard.api.util.Extras;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class BroadcastCommand extends Commands {
+public class BroadcastCommand extends CMD {
 	public String message = "§f$> $message";
 	public BroadcastCommand() {
 		super("broadcast");
@@ -24,9 +23,9 @@ public class BroadcastCommand extends Commands {
 			else
 				builder.append(" ");
 
-			builder.append(API.toChatMessage(arg));
+			builder.append(Cs.toChatMessage(arg));
 		}
-		API.all(this.message.replace("$>", Extras.getArrowRight())
+		Cs.all(this.message.replace("$>", Cs.getArrowRight())
 				.replace("$message", builder.toString()));
 		return true;
 	}

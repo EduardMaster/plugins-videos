@@ -16,10 +16,11 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.EventAPI;
+import net.eduard.api.manager.Manager;
+import net.eduard.api.util.Cs;
 
 @SuppressWarnings("deprecation")
-public class EstacarMobs3 extends EventAPI{
+public class EstacarMobs3 extends Manager{
 
 	private static HashMap<LivingEntity, Integer> stacks = new HashMap<>();
 	@EventHandler
@@ -88,7 +89,7 @@ public class EstacarMobs3 extends EventAPI{
 		}
 	}
 	public void stack(LivingEntity entity,int stack) {
-		entity.setCustomName("§6"+API.toTitle(entity.getType().name())+" §ex"+stack);
+		entity.setCustomName("§6"+Cs.toTitle(entity.getType().name())+" §ex"+stack);
 		entity.setCustomNameVisible(true);
 		stacks.put(entity, stack);
 	}

@@ -8,16 +8,18 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.LocationEffect;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.LocationEffect;
 
 public class Gladiator extends Kit {
 	
@@ -25,7 +27,7 @@ public class Gladiator extends Kit {
 	public static HashMap<Player, Player> targets = new HashMap<>();
 	public static HashMap<Player, List<Location>> arenas = new HashMap<>();
 	public int high = 100;
-	public int size = 5;
+	public int size = 10;
 	public Material type = Material.GLASS;
 	public int data = 0;
 	public int effectSeconds = 5;
@@ -46,6 +48,9 @@ public class Gladiator extends Kit {
 				Player p = e.getPlayer();
 				if (e.getRightClicked() instanceof Player) {
 					Player target = (Player) e.getRightClicked();
+					if (onCooldown(p)){
+						return;
+					}
 					if (arenas.containsKey(target) | arenas.containsKey(p)) {
 						p.sendMessage("§6Voce ja esta em Batalha!");
 						return;
@@ -58,8 +63,8 @@ public class Gladiator extends Kit {
 					targets.put(target, p);
 					arenas.put(p, arena);
 					arenas.put(target, arena);
-					API.makeInvunerable(p, effectSeconds);
-					API.makeInvunerable(target, effectSeconds);
+					GameAPI.makeInvunerable(p, effectSeconds);
+					GameAPI.makeInvunerable(target, effectSeconds);
 					p.teleport(loc.clone().add(size - 2, 1, 2 - size)
 							.setDirection(p.getLocation().getDirection()));
 					target.teleport(loc.clone().add(2 - size, 1, size - 2)
@@ -74,7 +79,7 @@ public class Gladiator extends Kit {
 		
 	}
 	public List<Location> createArena(Player p){
-		List<Location> locs = API.getBox(p.getLocation().add(0, 100, 0), size, size, size, new LocationEffect() {
+		List<Location> locs = WorldAPI.getBox(p.getLocation().add(0, 100, 0), size, size, size, new LocationEffect() {
 			
 			@SuppressWarnings("deprecation")
 			@Override
@@ -84,7 +89,7 @@ public class Gladiator extends Kit {
 				return true;
 			}
 		});
-		API.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
+		WorldAPI.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
 			
 			@Override
 			public boolean effect(Location location) {
@@ -120,6 +125,10 @@ public class Gladiator extends Kit {
 		if (arenas.containsKey(p)) {
 			win(targets.get(p), p);
 		}
+	}
+	@EventHandler
+	public void event(BlockDamageEvent e){
+		
 	}
 
 

@@ -9,14 +9,16 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class MuteCommand extends Commands {
+public class MuteCommand extends CMD {
 
 	public String messageTarget = "§6O jogador §e$target §6foi mutado por §a$sender §6motido: §c$reason";
 	public String message = "§cVoce foi mutado";
 	public MuteCommand() {
 		super("mute");
+		hasEvents = true;
 	}
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
@@ -32,7 +34,7 @@ public class MuteCommand extends Commands {
 			broadcast(messageTarget.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
-			API.chat(target,message);
+			Cs.chat(target,message);
 			target.setMetadata("muted",
 					new FixedMetadataValue(getPlugin(), true));
 		}
@@ -43,7 +45,7 @@ public class MuteCommand extends Commands {
 		Player p = e.getPlayer();
 		if (p.hasMetadata("muted")) {
 			e.setCancelled(true);
-			API.chat(p,message);
+			Cs.chat(p,message);
 
 		}
 	}

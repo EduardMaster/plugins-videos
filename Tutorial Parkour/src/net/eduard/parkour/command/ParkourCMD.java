@@ -1,20 +1,21 @@
 
 package net.eduard.parkour.command;
 
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
 
-public class ParkourCMD extends Commands {
+public class ParkourCMD extends CMD {
 	
 	public ParkourCMD() {
-		addSub(new CreateSUB());
-		addSub(new DeleteSUB());
-		addSub(new HelpSUB());
-		addSub(new LobbySUB());
-		addSub(new PlaySUB());
-		addSub(new ReloadSUB());
-		addSub(new SetEndSUB());
-		addSub( new SetLobbySUB());
-		addSub(new SetSpawnSUB());
+		register(new CreateSUB());
+		register(new DeleteSUB());
+		register(new HelpSUB());
+		register(new LobbySUB());
+		register(new PlaySUB());
+		register(new ReloadSUB());
+		register(new SetEndSUB());
+		register( new SetLobbySUB());
+		register(new SetSpawnSUB());
+		register();
 		
 	}
 }

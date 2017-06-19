@@ -1,0 +1,102 @@
+package br.com.piracraft.lobby2.utils;
+
+import org.bukkit.entity.Player;
+
+import br.com.piracraft.lobby2.Main;
+
+public class UtilsChat {
+
+	private Player player;
+	private String prefix;
+	private String mensagem;
+	private Cor cor;
+
+	public UtilsChat(Player player, String prefix, String mensagem, Cor cor) {
+		setPlayer(player);
+		setPrefix(prefix);
+		setMensagem(mensagem);
+		setCor(cor);
+	}
+
+	public UtilsChat(String prefix, String mensagem, Cor cor) {
+		setPlayer(player);
+		setPrefix(prefix);
+		setMensagem(mensagem);
+		setCor(cor);
+	}
+
+	public void enviarAlertaPlayer() {
+		if (getCor() == Cor.Vermelho) {
+			getPlayer().sendMessage("§4" + getPrefix() + " §c> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Amarelo) {
+			getPlayer().sendMessage("§6" + getPrefix() + " §e> §f" + getMensagem());
+		}	
+		if (getCor() == Cor.Cinza) {
+			getPlayer().sendMessage("§7" + getPrefix() + " §8> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Verde) {
+			getPlayer().sendMessage("§2" + getPrefix() + " §a> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Azul) {
+			getPlayer().sendMessage("§9" + getPrefix() + " §b> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Roxo) {
+			getPlayer().sendMessage("§5" + getPrefix() + " §d> §f" + getMensagem());
+		}
+	}
+
+	public void enviarAlertaConsole() {
+		if (getCor() == Cor.Vermelho) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§4" + getPrefix() + " §c> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Amarelo) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§6" + getPrefix() + " §e> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Cinza) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§7" + getPrefix() + " §8> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Verde) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§2" + getPrefix() + " §a> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Azul) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§9" + getPrefix() + " §b> §f" + getMensagem());
+		}
+		if (getCor() == Cor.Roxo) {
+			Main.getPlugin().getServer().getConsoleSender().sendMessage("§5" + getPrefix() + " §d> §f" + getMensagem());
+		}
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getMensagem() {
+		return mensagem;
+	}
+
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
+	public Cor getCor() {
+		return cor;
+	}
+
+	public void setCor(Cor cor) {
+		this.cor = cor;
+	}
+
+}

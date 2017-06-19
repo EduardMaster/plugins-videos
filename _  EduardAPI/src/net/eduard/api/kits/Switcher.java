@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Switcher extends Kit {
 	public Switcher() {
@@ -29,8 +29,8 @@ public class Switcher extends Kit {
 				if (hasKit(p)) {
 					Location loc = snowball.getLocation();
 					Location ploc = p.getLocation();
-					API.teleport(p, loc);
-					API.teleport(e.getEntity(), ploc);
+					GameAPI.teleport(p, loc);
+					GameAPI.teleport(e.getEntity(), ploc);
 				}
 
 			}

@@ -16,39 +16,38 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.gui.Gui;
-import net.eduard.api.kits.Achilles;
+import net.eduard.api.command.ReportCommand;
+import net.eduard.api.game.Potions;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.game.Tag;
+import net.eduard.api.game.Title;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.DropItem;
+import net.eduard.api.kits.Archer;
+import net.eduard.api.manager.Cooldown;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.player.Cooldown;
-import net.eduard.api.player.DropItem;
-import net.eduard.api.player.Effects;
-import net.eduard.api.player.Potions;
-import net.eduard.api.player.SoundEffect;
+import net.eduard.api.util.Cs;
 
 public class Section {
 	static HashMap<String, Save> saves = new HashMap<>();
 
 	private static HashMap<Class<?>, String> lists = new HashMap<>();
-	private static HashMap<Class<?>, Class<?>> primitives = new HashMap<>();
 	private static HashMap<String, String> packages = new HashMap<>();
 
 	static {
 		register(Click.class, "");
-		register(Gui.class, "");
+		register(Title.class, "");
+		register(ReportCommand.class,"");
+		register(Archer.class, "");
 		register(Cooldown.class, "");
-		register(Effects.class, "");
-		register(Achilles.class, "Kit");
 		registerList(ItemStack.class, "item");
 		registerList(DropItem.class, "drop");
 		registerList(Location.class, "loc");
 		registerList(Potions.class, "pot");
+		registerList(Tag.class, "tag");
 		register("Vector", new SaveVector());
 		register("Location", new SaveLocation());
 		register("ItemStack", new SaveItemStack());
-		primitives.put(Integer.TYPE, Integer.class);
-		primitives.put(Double.TYPE, Double.class);
 
 	}
 
@@ -220,7 +219,7 @@ public class Section {
 	}
 
 	public boolean getBoolean() {
-		return API.toBoolean(object);
+		return Cs.toBoolean(object);
 	}
 
 	public boolean getBoolean(String path) {
@@ -228,7 +227,7 @@ public class Section {
 	}
 
 	public Double getDouble() {
-		return API.toDouble(object);
+		return Cs.toDouble(object);
 	}
 
 	public Double getDouble(String path) {
@@ -236,7 +235,7 @@ public class Section {
 	}
 
 	public Float getFloat() {
-		return API.toFloat(object);
+		return Cs.toFloat(object);
 	}
 
 	public Float getFloat(String path) {
@@ -248,7 +247,7 @@ public class Section {
 	}
 
 	public Integer getInt() {
-		return API.toInt(object);
+		return Cs.toInt(object);
 	}
 
 	public Integer getInt(String path) {
@@ -258,7 +257,7 @@ public class Section {
 	public List<Integer> getIntList() {
 		ArrayList<Integer> list = new ArrayList<>();
 		for (Object item : getList()) {
-			list.add(API.toInt(item));
+			list.add(Cs.toInt(item));
 		}
 		return list;
 	}
@@ -296,7 +295,7 @@ public class Section {
 	}
 
 	public Long getLong() {
-		return API.toLong(object);
+		return Cs.toLong(object);
 	}
 
 	public Long getLong(String path) {
@@ -305,13 +304,13 @@ public class Section {
 
 	public String getMessage() {
 
-		return API.toChatMessage(getString());
+		return Cs.toChatMessage(getString());
 	}
 
 	public ArrayList<String> getMessages() {
 		ArrayList<String> list = new ArrayList<>();
 		for (String text : getStringList()) {
-			list.add(API.toChatMessage(text));
+			list.add(Cs.toChatMessage(text));
 		}
 		return list;
 	}
@@ -344,16 +343,16 @@ public class Section {
 		return section.entrySet();
 	}
 
-	public SoundEffect getSound() {
-		return (SoundEffect) getValue();
+	public Sounds getSound() {
+		return (Sounds) getValue();
 	}
 
-	public SoundEffect getSound(String path) {
+	public Sounds getSound(String path) {
 		return getSection(path).getSound();
 	}
 
 	public String getString() {
-		return API.toString(object);
+		return Cs.toString(object);
 	}
 
 	public String getString(String path) {
@@ -363,7 +362,7 @@ public class Section {
 	public List<String> getStringList() {
 		ArrayList<String> list = new ArrayList<>();
 		for (Object item : getList()) {
-			list.add(API.toString(item));
+			list.add(Cs.toString(item));
 		}
 		return list;
 	}
@@ -645,7 +644,7 @@ public class Section {
 		if (comments != null & comments.length > 0) {
 			this.comments.clear();
 			for (Object value : comments) {
-				this.comments.add(API.toString(value));
+				this.comments.add(Cs.toString(value));
 			}
 		}
 		return this;
@@ -690,9 +689,9 @@ public class Section {
 				} else {
 					if (contains(field.getName())) {
 						try {
-							String name = API
+							String name = Cs
 									.toTitle(field.getType().getSimpleName());
-							Object result = RexAPI.getResult(API.class,
+							Object result = RexAPI.getResult(Cs.class,
 									"to" + name,
 									RexAPI.getParameters(Object.class),
 									getString(field.getName()));

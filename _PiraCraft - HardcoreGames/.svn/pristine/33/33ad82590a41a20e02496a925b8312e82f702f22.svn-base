@@ -1,0 +1,83 @@
+package me.douglasamv.hg.api;
+
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Manager.Habilidade;
+import me.douglasamv.hg.Timer.StringTimer;
+
+public class ScoreBoardBolada {
+
+	public static ArrayList<String> score = new ArrayList<>();
+
+	@SuppressWarnings("deprecation")
+	public static void scoreBoard(Player p) {
+		if (score.contains(p.getName())) {
+			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+			board.clearSlot(DisplaySlot.SIDEBAR);
+			p.setScoreboard(board);
+			return;
+		}
+		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+		Objective obj = board.registerNewObjective("a", "b");
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		obj.setDisplayName("§6§lHardcore Games");
+		if (Main.PreGame) {
+			if (p.getScoreboard() == null || p.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) {
+				obj.getScore("              ").setScore(7);
+				obj.getScore("Jogadores: ").setScore(6);
+				obj.getScore("Kit: ").setScore(5);
+				obj.getScore("  ").setScore(4);
+				obj.getScore("Iniciando: ").setScore(3);
+				obj.getScore(" ").setScore(2);
+				obj.getScore("§ewww.piracraft.com.br").setScore(1);
+
+				board.registerNewTeam("s").addPlayer(new FastOfflinePlayer("              "));
+				board.registerNewTeam("j").addPlayer(new FastOfflinePlayer("Jogadores: "));
+				board.registerNewTeam("k").addPlayer(new FastOfflinePlayer("Kit: "));
+				board.registerNewTeam("t").addPlayer(new FastOfflinePlayer("Iniciando: "));
+				p.setScoreboard(board);
+			}
+			p.getScoreboard().getTeam("s").setSuffix("     ");
+			p.getScoreboard().getTeam("k").setSuffix(Habilidade.NomeDoKit(Habilidade.getAbility(p)));
+			p.getScoreboard().getTeam("t").setSuffix(StringTimer.TimerGame(Main.TimerIniciando));
+			p.getScoreboard().getTeam("j").setSuffix(Main.Jogadores.size() + "/" + Bukkit.getMaxPlayers());
+
+		}
+		if (Main.PreInvencibilidade) {
+			if (p.getScoreboard() == null || p.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) {
+				obj.getScore("              ").setScore(7);
+				obj.getScore("Jogadores: ").setScore(6);
+				obj.getScore("Kit: ").setScore(5);
+				obj.getScore("  ").setScore(4);
+				obj.getScore("Invencibilidade: ").setScore(3);
+				obj.getScore(" ").setScore(2);
+				obj.getScore("§ewww.piracraft.com.br").setScore(1);
+
+				board.registerNewTeam("s").addPlayer(new FastOfflinePlayer("              "));
+				board.registerNewTeam("j").addPlayer(new FastOfflinePlayer("Jogadores: "));
+				board.registerNewTeam("k").addPlayer(new FastOfflinePlayer("Kit: "));
+				board.registerNewTeam("t2").addPlayer(new FastOfflinePlayer("Invencibilidade: "));
+				p.setScoreboard(board);
+			}
+			p.getScoreboard().getTeam("s").setSuffix("     ");
+			p.getScoreboard().getTeam("k").setSuffix(Habilidade.NomeDoKit(Habilidade.getAbility(p)));
+			p.getScoreboard().getTeam("t2").setSuffix(StringTimer.TimerGame(Main.TimerInvencibilidade));
+			p.getScoreboard().getTeam("j").setSuffix(Main.Jogadores.size() + "/" + Bukkit.getMaxPlayers());
+
+		}
+	}
+
+	public static void removeScore(Player p) {
+		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+		board.clearSlot(DisplaySlot.SIDEBAR);
+		p.setScoreboard(board);
+	}
+
+}

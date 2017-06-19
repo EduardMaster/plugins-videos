@@ -16,12 +16,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.EventAPI;
+import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.Cs;
 import net.eduard.parkour.Arena;
-import net.eduard.parkour.Main;
 
-public class ParkourEvent extends EventAPI {
+public class ParkourEvent extends Manager {
 
 	@EventHandler
 	public void event(EntityDamageEvent e) {
@@ -69,8 +69,8 @@ public class ParkourEvent extends EventAPI {
 
 		Player p = e.getPlayer();
 		if (Arena.isPlaying(p)) {
-			if (API.startWith(e.getMessage(), "/leave")
-					| API.startWith(e.getMessage(), "/sair")) {
+			if (Cs.startWith(e.getMessage(), "/leave")
+					| Cs.startWith(e.getMessage(), "/sair")) {
 				Arena.leave(p);
 			} else {
 				p.sendMessage(Arena.message("OnlyQuit"));
@@ -83,7 +83,7 @@ public class ParkourEvent extends EventAPI {
 		Player p = e.getPlayer();
 		if (Arena.isPlaying(p)) {
 			Arena arena = Arena.getArena(p);
-			if (API.equals(e.getTo(), arena.getEnd())) {
+			if (WorldAPI.equals(e.getTo(), arena.getEnd())) {
 				Arena.win(p);
 			}
 			if (e.getTo().getBlock().getRelative(BlockFace.DOWN)

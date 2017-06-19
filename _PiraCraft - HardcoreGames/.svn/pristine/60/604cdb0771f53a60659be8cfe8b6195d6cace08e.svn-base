@@ -1,0 +1,399 @@
+package me.douglasamv.hg.Eventos;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Comandos.Admin;
+
+@SuppressWarnings("deprecation")
+public class ChecarVitoria implements Listener {
+
+	@EventHandler
+	public void onRegen(EntityRegainHealthEvent event) {
+		final LivingEntity entity = (LivingEntity) event.getEntity();
+		int lvl = 0;
+		Collection<PotionEffect> Effects = entity.getActivePotionEffects();
+		for (PotionEffect effect : Effects) {
+			if ((effect.getType().getName() == "REGENERATION") || (effect.getType().getName() == "HEAL")) {
+				lvl = effect.getAmplifier() + 1;
+				break;
+			}
+		}
+		if ((event.getRegainReason() == EntityRegainHealthEvent.RegainReason.MAGIC_REGEN) && (event.getAmount() == 1.0D)
+				&& (lvl > 0)) {
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+				public void run() {
+					if (entity.getMaxHealth() >= entity.getHealth() + 1.0D) {
+						entity.setHealth(entity.getHealth() + 1.0D);
+					}
+				}
+			}, 50L / (lvl * 2));
+		} else if ((event.getRegainReason() == EntityRegainHealthEvent.RegainReason.MAGIC) && (event.getAmount() > 1.0D)
+				&& (lvl > 0)) {
+			event.setAmount(event.getAmount() * 1.5D);
+		}
+	}
+
+	@EventHandler
+	public void onBlockSpread(BlockSpreadEvent event) {
+		event.setCancelled(true);
+		return;
+	}
+
+	public static boolean ProtecaoFeast;
+
+	@EventHandler
+	public void onBreakFeast(BlockBreakEvent e) {
+		Player p = (Player) e.getPlayer();
+		if (e.getBlock().getType() == Material.getMaterial(159)) {
+			if (ProtecaoFeast) {
+				e.setCancelled(true);
+				p.sendMessage("§cVoce nao pode quebrar blocos do Feast");
+				return;
+			} else {
+				return;
+			}
+		}
+	}
+
+	private Map<String, Long> timeout = new HashMap<String, Long>();
+
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent e) {
+		Player p = e.getPlayer();
+		if (e.getMessage().toLowerCase().endsWith("%")) {
+			e.setCancelled(true);
+			return;
+		}
+		if ((timeout.containsKey(p.getName()))
+				&& (((Long) timeout.get(p.getName())).longValue() > System.currentTimeMillis())) {
+			if (p.hasPermission("hg.cmd.admin")) {
+				return;
+			}
+			p.sendMessage("§cVoce deve falar devagar");
+			e.setCancelled(true);
+			return;
+		}
+		timeout.put(p.getName(), Long.valueOf(System.currentTimeMillis() + 3000L));
+	}
+
+	@EventHandler
+	public void onAdm(PlayerPickupItemEvent e) {
+		if (Admin.admin.contains(e.getPlayer())) {
+			e.setCancelled(true);
+			return;
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Player p = event.getPlayer();
+		ItemStack item = event.getItem();
+		if (((event.getAction() == Action.RIGHT_CLICK_AIR) || (event.getAction() == Action.RIGHT_CLICK_BLOCK))
+				&& (item != null) && (item.getType() == Material.MUSHROOM_SOUP)
+				&& ((p.getHealth() < 20.0D) || (p.getFoodLevel() < 20))) {
+			int restores = 7;
+			event.setCancelled(true);
+			if (p.getHealth() < 20.0D) {
+				if (p.getHealth() + restores <= 20.0D) {
+					p.setHealth(p.getHealth() + restores);
+				} else {
+					p.setHealth(20.0D);
+				}
+			} else if (p.getFoodLevel() < 20) {
+				if (p.getFoodLevel() + restores <= 20) {
+					p.setFoodLevel(p.getFoodLevel() + restores);
+					p.setSaturation(75.0F);
+					p.setExhaustion(0);
+				} else {
+					p.setFoodLevel(20);
+					p.setSaturation(75.0F);
+					p.setExhaustion(0);
+				}
+			}
+			if (item.getAmount() > 1) {
+				p.setItemInHand(new ItemStack(Material.BOWL));
+			} else {
+				item = new ItemStack(Material.BOWL);
+			}
+			p.setItemInHand(item);
+		}
+	}
+
+	@EventHandler
+	public void onSpecRank(AsyncPlayerChatEvent e) {
+		Player p = e.getPlayer();
+		if (Main.Watch.contains(p.getName())) {
+			e.setCancelled(true);
+			p.sendMessage("§cEspectadores nao podem falar!");
+			return;
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onQuit(PlayerQuitEvent e) {
+		if (Main.Partida) {
+			if (Main.Jogadores.size() == 0) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+					public void run() {
+						Bukkit.shutdown();
+						Main.Jogadores.clear();
+					}
+				}, 250L);
+			}
+		}
+	}
+
+	public static void spawnRandomFirework(Location loc) {
+		Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+		FireworkMeta fwm = fw.getFireworkMeta();
+		Random r = new Random();
+		int rt = r.nextInt(4) + 1;
+		FireworkEffect.Type type = FireworkEffect.Type.BALL;
+		if (rt == 1) {
+			type = FireworkEffect.Type.BALL;
+		}
+		if (rt == 2) {
+			type = FireworkEffect.Type.BALL_LARGE;
+		}
+		if (rt == 3) {
+			type = FireworkEffect.Type.BURST;
+		}
+		if (rt == 4) {
+			type = FireworkEffect.Type.CREEPER;
+		}
+		if (rt == 5) {
+			type = FireworkEffect.Type.STAR;
+		}
+		Color c1 = Color.RED;
+		Color c2 = Color.YELLOW;
+		Color c3 = Color.ORANGE;
+		FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withColor(c2)
+				.withFade(c3).with(type).trail(r.nextBoolean()).build();
+		fwm.addEffect(effect);
+		int rp = r.nextInt(2) + 1;
+		fwm.setPower(rp);
+		fw.setFireworkMeta(fwm);
+	}
+
+	public static void onVerific() {
+		if (Main.Finalizando) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+				public void run() {
+					Bukkit.shutdown();
+				}
+			}, 600L);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+				public void run() {
+					onVerific();
+				}
+			}, 650L);
+		}
+	}
+
+	public static String NEW_WINNER = "";
+
+	@EventHandler
+	void morrer(PlayerDeathEvent e) {
+		Player matou = e.getEntity().getKiller();
+		Player morreu = e.getEntity().getPlayer();
+		if (!(matou instanceof Player && morreu instanceof Player)) {
+			return;
+		}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				// new KillDeathWin_HG(matou, 1).addKill();
+				// new KillDeathWin_HG(morreu, 1).addDeath();
+			}
+		}.runTaskAsynchronously(Main.instance);
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void NerfSwords(EntityDamageByEntityEvent event) {
+		if ((event.getDamager() instanceof Player)) {
+			Player player = (Player) event.getDamager();
+			if (event.getDamage() > 1.0D) {
+				event.setDamage(event.getDamage() - 1.0D);
+			}
+			if ((event.getDamager() instanceof Player)) {
+				if ((player.getFallDistance() > 0.0F) && (!((CraftPlayer) player).isOnGround())
+						&& (!player.hasPotionEffect(PotionEffectType.BLINDNESS))) {
+					int NewDamage = (int) (event.getDamage() * 1.5D) - (int) event.getDamage();
+					if (event.getDamage() > 1.0D) {
+						event.setDamage(event.getDamage() - NewDamage);
+					}
+				}
+				if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+					for (PotionEffect Effect : player.getActivePotionEffects()) {
+						if (Effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+							double Division = (Effect.getAmplifier() + 2) * 1.3D + 1.0D;
+							int NewDamage;
+							if (event.getDamage() / Division <= 1.0D) {
+								NewDamage = (Effect.getAmplifier() + 2) * 3 + 3;
+							} else {
+								NewDamage = (int) (event.getDamage() / Division);
+							}
+							event.setDamage(NewDamage);
+							break;
+						}
+					}
+				}
+				if (player.getItemInHand().getType() == Material.AIR) {
+					event.setDamage(0.5D);
+				}
+				if (player.getItemInHand().getType() == Material.WOOD_SWORD) {
+					event.setDamage(2.0D);
+				}
+				if (player.getItemInHand().getType() == Material.STONE_SWORD) {
+					event.setDamage(3.0D);
+				}
+				if (player.getItemInHand().getType() == Material.GOLD_SWORD) {
+					event.setDamage(4.0D);
+				}
+				if (player.getItemInHand().getType() == Material.IRON_SWORD) {
+					event.setDamage(4.0D);
+				}
+				if (player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
+					event.setDamage(5.0D);
+				}
+				if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+					for (PotionEffect Effect : player.getActivePotionEffects()) {
+						if ((Effect.getType().equals(PotionEffectType.INCREASE_DAMAGE))
+								&& (player.getItemInHand() != null)
+								&& (player.getItemInHand().getType().name().contains("SWORD"))) {
+							Random r = new Random();
+							if (r.nextInt(3) == 0) {
+								event.setDamage(event.getDamage() + 2.0D);
+								break;
+							}
+							event.setDamage(event.getDamage() + 1.5D);
+						}
+					}
+				}
+				if ((player.getFallDistance() > 0.0F) && (!((CraftPlayer) player).isOnGround())
+						&& (!player.hasPotionEffect(PotionEffectType.BLINDNESS))) {
+					if (player.getItemInHand().getType() == Material.AIR) {
+						event.setDamage(0.5D);
+					}
+					if (player.getItemInHand().getType() == Material.WOOD_SWORD) {
+						event.setDamage(event.getDamage() + 1.0D);
+					}
+					if (player.getItemInHand().getType() == Material.STONE_SWORD) {
+						event.setDamage(event.getDamage() + 1.0D);
+					}
+					if (player.getItemInHand().getType() == Material.GOLD_SWORD) {
+						event.setDamage(event.getDamage() + 1.5D);
+					}
+					if (player.getItemInHand().getType() == Material.IRON_SWORD) {
+						event.setDamage(event.getDamage() + 1.0D);
+					}
+					if (player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
+						event.setDamage(event.getDamage() + 1.0D);
+					}
+				}
+			}
+		}
+	}
+
+	public static void verificaWin() {
+		if (Main.Partida) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+				public void run() {
+					if (Main.Jogadores.size() == 1) {
+						for (String s : Main.Jogadores) {
+							final Player pl1 = Bukkit.getPlayer(s);
+							pl1.playSound(pl1.getLocation(), Sound.LEVEL_UP, 1.0F, 1.0F);
+							Location pLoc = pl1.getLocation();
+							pl1.getInventory().clear();
+							pl1.getInventory().setArmorContents(null);
+							pl1.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
+							pl1.setVelocity(new Vector(0, 2, 0));
+							pl1.updateInventory();
+							final Location winnerLoc = new Location(pl1.getWorld(), pLoc.getBlockX(), 110.0D,
+									pLoc.getBlockZ());
+							for (int i = 0; i < 1; i++) {
+								for (int x = -2; x < 2; x++) {
+									for (int z = -2; z < 2; z++) {
+										Block b = winnerLoc.clone().add(x, -2.0D, z).getBlock();
+										Block b2 = winnerLoc.clone().add(x, -1.0D, z).getBlock();
+										b.setType(Material.GLASS);
+										b2.setType(Material.CAKE_BLOCK);
+										pl1.teleport(winnerLoc);
+									}
+									Main.Finalizando = true;
+									ChecarVitoria.spawnRandomFirework(winnerLoc);
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+										public void run() {
+											ChecarVitoria.spawnRandomFirework(winnerLoc);
+										}
+									}, 120L);
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+										public void run() {
+											ChecarVitoria.spawnRandomFirework(winnerLoc);
+										}
+									}, 180L);
+								}
+							}
+							Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, new Runnable() {
+								public void run() {
+									Bukkit.broadcastMessage("§e" + pl1.getName() + " Venceu");
+								}
+							}, 2L, 1 * 20L);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+								public void run() {
+									if (pl1.isOnline()) {
+										// new KillDeathWin_HG(pl1, 1).addWin();	
+										new BukkitRunnable() {
+											@Override
+											public void run() {
+												Bukkit.shutdown();
+											}
+										}.runTaskLater(Main.instance, 20);
+									}
+								}
+							}, 250L);
+						}
+					} else if (Main.Jogadores.size() == 0) {
+						Bukkit.shutdown();
+					}
+				}
+			}, 25L);
+		}
+	}
+}

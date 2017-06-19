@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
+import net.eduard.api.manager.WorldAPI;
 import net.eduard.tapetevoador.command.TapeteCommand;
 import net.eduard.tapetevoador.event.TapeteEvent;
 
@@ -53,7 +54,7 @@ public class Main extends JavaPlugin {
 
 	public static List<Block> getTapeteBlocks(Location location) {
 		List<Block> list = new ArrayList<>();
-		for (Location loc : API.getBox(location.subtract(0, 1, 0), 0, 0, 2)) {
+		for (Location loc : WorldAPI.getBox(location.subtract(0, 1, 0), 0, 0, 2)) {
 			list.add(loc.getBlock());
 		}
 		return list;

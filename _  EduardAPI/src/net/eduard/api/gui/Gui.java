@@ -13,13 +13,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
 import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
 import net.eduard.api.config.Section;
 
 public class Gui extends Click {
 
 	private boolean open = true;
+	
+	private int size;
+	
+	private String title;
 
 	private transient Map<Integer, Slot> slots = new HashMap<>();
 
@@ -60,23 +62,14 @@ public class Gui extends Click {
 
 	}
 
-	public Gui(int size, String name) {
-		this.inventory = API.newInventory(name, size * 9);
-		setClick(new ClickEffect() {
-
-			public void effect(PlayerInteractEvent e) {
-				if (open) {
-					open(e.getPlayer());
-				}
-			}
-
-			public void effect(PlayerInteractEntityEvent e) {
-				if (open) {
-					open(e.getPlayer());
-				}
-			}
-		});
+	public Gui() {
 	}
+	public Gui(int size, String name) {
+		this.size = size;
+		this.title = name;
+		init();
+	}
+	
 	public Gui open(Player player) {
 		player.openInventory(inventory);
 		return this;
@@ -136,19 +129,39 @@ public class Gui extends Click {
 		return this;
 
 	}
+	public void init(){
+		this.inventory = API.newInventory(title, size * 9);
+		setClick(new ClickEffect() {
+
+			public void effect(PlayerInteractEvent e) {
+				if (open) {
+					open(e.getPlayer());
+				}
+			}
+
+			public void effect(PlayerInteractEntityEvent e) {
+				if (open) {
+					open(e.getPlayer());
+				}
+			}
+		});
+	}
 
 	public void save(Section section, Object value) {
-		section.remove("Drops");
+		section.remove("Slots");
 		for (Entry<Integer, Slot> map : slots.entrySet()) {
 			Integer id = map.getKey();
-			Slot ed = map.getValue();
-			ed.setSlot(id);
-			section.set("Drops.drop" + id);
+			Slot slots = map.getValue();
+			slots.setSlot(id);
+			section.set("Slots.slot" + id,slots);
 		}
 
 	}
 	public Object get(Section section) {
-		for (Section sub : section.getSection("Drops").getValues()) {
+		if (inventory == null){
+			init();
+		}
+		for (Section sub : section.getSection("Slots").getValues()) {
 			Slot slot = (Slot) sub.getValue();
 			set(slot);
 		}

@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
+import net.eduard.api.util.Cs;
 
 public final class SimpleCraft implements Save {
 
@@ -65,8 +65,8 @@ public final class SimpleCraft implements Save {
 			try {
 				String[] split = line.split("-");
 				@SuppressWarnings("deprecation")
-				Material id = Material.getMaterial(API.toInt(split[0]));
-				Integer data = API.toInt(split[1]);
+				Material id = Material.getMaterial(Cs.toInt(split[0]));
+				Integer data = Cs.toInt(split[1]);
 				craft.add(id, data);
 			} catch (Exception ex) {
 				ex.printStackTrace();

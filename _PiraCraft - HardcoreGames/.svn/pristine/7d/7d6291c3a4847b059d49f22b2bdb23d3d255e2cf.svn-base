@@ -1,0 +1,171 @@
+package me.douglasamv.hg.Eventos;
+
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Comandos.Admin;
+import me.douglasamv.hg.Comandos.CMDWatch;
+import me.douglasamv.hg.Manager.Habilidade;
+
+public class PreJoin implements Listener {
+
+	public ArrayList<String> antilog = new ArrayList<String>();
+	public ArrayList<String> NoLog = new ArrayList<String>();
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onQuitInv(PlayerQuitEvent e) {
+		final Player p = e.getPlayer();
+		final String KitName = Habilidade.NomeDoKit(Habilidade.getAbility(p));
+		e.setQuitMessage(null);
+		if (Main.PreGame) {
+			return;
+		} else {
+			Main.saiu.add(p.getName());
+			if ((Main.saiu.contains(p.getName()))) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+					public void run() {
+						if (p.isOnline()) {
+							return;
+						} else {
+							Main.Jogadores.remove(p.getName());
+							Main.saiu.remove(p.getName());
+							ChecarVitoria.verificaWin();
+							NoLog.add(p.getName());
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+								public void run() {
+									if (!Main.mortos.contains(p.getName()) && (!Admin.admin.contains(p.getName())
+											&& (!Main.Watch.contains(p.getName())))) {
+										Bukkit.broadcastMessage("§c" + p.getName() + "§7(" + KitName
+												+ ") §eDemorou demais para relogar!");
+									} else {
+										return;
+									}
+								}
+							}, 5L);
+						}
+					}
+				}, 650L);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onAdm(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if ((Main.PreGame) && (p.hasPermission("hg.cmd.admin"))) {
+			Bukkit.dispatchCommand(p, "admin");
+		}
+		if ((Main.PreInvencibilidade)
+				&& (!Main.Jogadores.contains(p.getName()) && ((p.hasPermission("hg.cmd.admin"))))) {
+			Bukkit.dispatchCommand(p, "admin");
+		}
+		if ((Main.Partida) && (!Main.Jogadores.contains(p.getName()) && ((p.hasPermission("hg.cmd.admin"))))) {
+			Bukkit.dispatchCommand(p, "admin");
+		}
+	}
+
+	@EventHandler
+	public void onCheck(PlayerLoginEvent e) {
+		Player p = e.getPlayer();
+		if (Main.PreGame) {
+			if (Bukkit.getServer().getOnlinePlayers().size() <= Bukkit.getMaxPlayers()) {
+				e.allow();
+			} else if (p.hasPermission("hg.join")) {
+				e.allow();
+			} else {
+				e.disallow(PlayerLoginEvent.Result.KICK_OTHER, e.getKickMessage());
+			}
+		} else {
+			if (Main.Jogadores.contains(p.getName())) {
+				e.allow();
+			} else {
+				if (p.hasPermission("hg.join") && (Main.PreInvencibilidade)) {
+					e.allow();
+					p.getInventory().addItem(new ItemStack(Material.COMPASS));
+					Main.Jogadores.add(p.getName());
+				} else {
+					e.disallow(PlayerLoginEvent.Result.KICK_OTHER, e.getKickMessage());
+				}
+			}
+			if (Main.Watch.contains(p.getName()) && (p.hasPermission("hg.join"))) {
+				e.allow();
+				p.setAllowFlight(true);
+				p.setFlying(true);
+				CMDWatch.setarWatch(p);
+				Location loc = new Location(Bukkit.getWorld("world"), 10.0D, 120.0D, 10.0D, -90.0F, 0.0F);
+				p.teleport(loc);
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					pl.hidePlayer(p);
+				}
+			}
+			if (NoLog.contains(p.getName())) {
+				e.disallow(PlayerLoginEvent.Result.KICK_OTHER, e.getKickMessage());
+			} else {
+				if (p.hasPermission("hg.cmd.admin")) {
+					e.allow();
+				}
+			}
+			if (antilog.contains(p.getName())) {
+				e.disallow(PlayerLoginEvent.Result.KICK_OTHER, e.getKickMessage());
+			} else {
+				if (p.hasPermission("hg.cmd.admin")) {
+					e.allow();
+				}
+			}
+			if (Main.mortos.contains(p.getName())) {
+				e.disallow(PlayerLoginEvent.Result.KICK_OTHER, e.getKickMessage());
+			} else {
+				if (p.hasPermission("hg.cmd.admin")) {
+					e.allow();
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onSleep(PlayerBedEnterEvent event) {
+		event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void AntiCaps(AsyncPlayerChatEvent evt) {
+		evt.setMessage(evt.getMessage().toLowerCase());
+	}
+
+	@EventHandler
+	public void onAntiLogDmg(EntityDamageByEntityEvent event) {
+		if (((event.getDamager() instanceof Player)) && ((event.getEntity() instanceof Player))) {
+			final Player player = (Player) event.getEntity();
+			final Player target = (Player) event.getDamager();
+			if (Main.Partida) {
+				if ((!antilog.contains(player.getName())) && (!antilog.contains(target.getName()))) {
+					antilog.add(player.getName());
+					antilog.add(target.getName());
+					Main.instance.getServer().getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+						public void run() {
+							if ((antilog.contains(player.getName())) && (antilog.contains(target.getName()))) {
+								antilog.remove(player.getName());
+								antilog.remove(target.getName());
+							}
+						}
+					}, 450L);
+				}
+			}
+		}
+	}
+}

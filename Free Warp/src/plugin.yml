@@ -1,0 +1,24 @@
+name: Warp
+description: Criacao de Warps
+main: net.eduard.warp.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  warp:
+    permission: warp.use
+    usage: /<command> <warp>
+    description: Teleporta ate o Warp
+  setwarp:
+    permission: warp.set
+    usage: /<command> <warp>
+    description: Cria um Warp
+  warps:
+    aliases: [warplist]
+    permission: warp.list
+    description: Lista as Warps
+  deletewarp:
+    aliases: [delwarp]
+    permission: warp.delete
+    usage: /<command> <warp>
+    description: Deleta uma Warp

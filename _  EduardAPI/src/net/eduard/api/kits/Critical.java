@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Effects;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Effects;
 
 public class Critical extends Kit {
 	public double chance = 0.3;

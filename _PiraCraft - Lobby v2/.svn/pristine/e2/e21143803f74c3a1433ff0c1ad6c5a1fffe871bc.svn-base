@@ -1,0 +1,52 @@
+package br.com.piracraft.lobby2.servidores.menu;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+import br.com.piracraft.api.caixas.ItemAPI;
+
+public class MenuMenu {
+
+	private Player player;
+	public static Inventory inventory = Bukkit.createInventory(null, 27, "§aMenu");
+
+	public MenuMenu(Player player) {
+		setPlayer(player);
+	}
+
+	public void setarItens() {
+		for (int i = 0; i < 10; i++) {
+			inventory.setItem(i, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		}
+		inventory.setItem(10, ItemAPI.Criar(Material.GRASS, 1, 0, "§6§lSkyWars", false, " ", "§7Click para jogar"));
+		inventory.setItem(11,
+				ItemAPI.Criar(Material.IRON_SWORD, 1, 0, "§6§lKit Pvp", false, " ", "§7Click para jogar"));
+		inventory.setItem(12,
+				ItemAPI.Criar(Material.MUSHROOM_SOUP, 1, 0, "§6§lHardcore Games", false, " ", "§7Click para jogar"));
+		inventory.setItem(13,
+				ItemAPI.Criar(Material.LAVA_BUCKET, 1, 0, "§6§l7 Dias", false, " ", "§7Click para jogar"));
+		inventory.setItem(14,
+				ItemAPI.Criar(Material.DIAMOND_PICKAXE, 1, 0, "§6§lFactions", false, " ", "§cEm desenvolvimento"));
+		inventory.setItem(15, ItemAPI.Criar(Material.BARRIER, 1, 0, "§6§lEm breve", false));
+		inventory.setItem(16, ItemAPI.Criar(Material.BARRIER, 1, 0, "§6§lEm breve", false));
+		for (int i = 17; i < 27; i++) {
+			inventory.setItem(i, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		}
+
+	}
+
+	public void abrir() {
+		getPlayer().openInventory(inventory);
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+}

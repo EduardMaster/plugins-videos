@@ -3,10 +3,11 @@ package net.eduard.api.tutorial;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class BlocosSemIgnorarGravidade implements Listener{
+import net.eduard.api.manager.Manager;
+
+public class BlocosSemIgnorarGravidade extends Manager{
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler

@@ -1,0 +1,3 @@
+default-rank: novato
+command-add: pex user $player group add $rank
+command-remove: pex user $player group remove $rank

@@ -1,0 +1,10 @@
+novato:
+  prefix: '&2'
+  suffix: ''
+  rank: membro
+  price: 1500
+membro:
+  prefix: 'a2'
+  suffix: ''
+  rank: ''
+  price: 2000

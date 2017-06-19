@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class TeleportCommand extends Commands {
+public class TeleportCommand extends CMD {
 	public TeleportCommand() {
 		super("teleport");
 	}
@@ -24,7 +25,7 @@ public class TeleportCommand extends Commands {
 				Player p = (Player) sender;
 				if (API.existsPlayer(sender, args[0])) {
 					Player target = API.getPlayer(args[0]);
-					API.chat(p,message.replace("$target",
+					Cs.chat(p,message.replace("$target",
 							target.getDisplayName()));
 					p.teleport(target);
 				}
@@ -38,9 +39,9 @@ public class TeleportCommand extends Commands {
 					Player player = API.getPlayer(args[0]);
 					Player target = API.getPlayer(args[1]);
 					player.teleport(target);
-					API.chat(player,message.replace("$target",
+					Cs.chat(player,message.replace("$target",
 							target.getDisplayName()));
-					API.chat(sender,messageTarget
+					Cs.chat(sender,messageTarget
 							.replace("$player", player.getDisplayName())
 							.replace("$target", target.getDisplayName()));
 				}

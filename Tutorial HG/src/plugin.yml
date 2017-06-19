@@ -1,0 +1,4 @@
+name: TutorialHG
+version: 0.1
+main: net.eduard.hg.HgPlugin
+author: Eduard

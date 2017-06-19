@@ -1,0 +1,105 @@
+package me.douglasamv.hg.Comandos;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Timer.StringTimer;
+
+public class CMDTimer implements CommandExecutor {
+
+	public static boolean isNumeric(String str) {
+		try {
+			Integer.parseInt(str);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("§cComando de Jogador!");
+			return true;
+		}
+		Player p = (Player) sender;
+		if (cmd.getName().equalsIgnoreCase("tpall")) {
+			if (sender.hasPermission("hg.cmd.tpall")) {
+				p.sendMessage("§cVoce teleportou todos os players!");
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					pl.teleport(p.getLocation());
+				}
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("invencibilidade")) {
+			if (p.hasPermission("hg.cmd.tempo")) {
+				if (args.length > 0) {
+					if (isNumeric(args[0])) {
+						int newTime = Integer.parseInt(args[0]);
+						if ((newTime == 0) && (Main.TimerInvencibilidade != 0))
+							Main.IniciarPartida();
+						else
+							Main.TimerInvencibilidade = newTime;
+						Bukkit.broadcastMessage("§eInvencibilidade alterada para "
+								+ StringTimer.TimerGame(Integer.valueOf(newTime)));
+					} else {
+						sender.sendMessage("§cVoce nao pode alterar para tanto tempo");
+					}
+				} else
+					sender.sendMessage("§eUse: /invencibilidade <tempo>");
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("game")) {
+			if (p.hasPermission("hg.cmd.tempo")) {
+				if (args.length > 0) {
+					if (isNumeric(args[0])) {
+						int newTime = Integer.parseInt(args[0]);
+						if ((newTime == 0) && (Main.Andamento != 0))
+							Main.IniciarPartida();
+						else
+							Main.Andamento = newTime;
+						Bukkit.broadcastMessage("§eTempo de partida alterada para "
+								+ StringTimer.TimerGame(Integer.valueOf(newTime)));
+					} else {
+						sender.sendMessage("§cData invalida");
+					}
+				} else
+					sender.sendMessage("§cUse /game <time>");
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("pregame")) {
+			if (p.hasPermission("hg.cmd.tempo")) {
+				if (args.length > 0) {
+					if (isNumeric(args[0])) {
+						int newTime = Integer.parseInt(args[0]);
+						if ((newTime == 0) && (Main.TimerIniciando != 0))
+							Main.IniciarPartida();
+						else
+							Main.TimerIniciando = newTime;
+						Bukkit.broadcastMessage(
+								"§ePre Jogo alterado para " + StringTimer.TimerGame(Integer.valueOf(newTime)));
+					} else {
+						sender.sendMessage("§cVoce nao pode alterar para tanto tempo");
+					}
+				} else
+					sender.sendMessage("§eUse: /tempo <tempo>");
+			} else {
+				p.sendMessage("§cSem permissao!");
+				return true;
+			}
+		}
+		return false;
+	}
+}

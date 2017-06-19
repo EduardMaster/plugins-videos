@@ -1,0 +1,12 @@
+name: 7Dias
+version: 3.5
+author: Leo
+main: com.hcp.Main
+depend: [PiraCraftAPI]
+commands:
+   test:
+   start:
+   caixa:
+   chuva:
+   cc:
+   hardcore:

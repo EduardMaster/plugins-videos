@@ -8,16 +8,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.ItemAPI;
 
 public class Miner extends Kit {
 
 	public Miner() {
 		setIcon(Material.STONE_PICKAXE, "§fMinere muito rapido");
 		ItemStack item = new ItemStack(Material.STONE_PICKAXE);
-		API.add(item, Enchantment.DURABILITY, 2);
-		API.add(item, Enchantment.DIG_SPEED, 2);
+		ItemAPI.addEnchant(item, Enchantment.DURABILITY, 2);
+		ItemAPI.addEnchant(item, Enchantment.DIG_SPEED, 2);
 		add(item);
 	}
 
@@ -44,7 +44,7 @@ public class Miner extends Kit {
 	public void event(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
-			if (API.isUsing(p, "PICKAXE")) {
+			if (ItemAPI.isUsing(p, "PICKAXE")) {
 				check(e.getBlock().getLocation(),p.getItemInHand());
 			}
 		}

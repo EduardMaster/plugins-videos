@@ -1,0 +1,79 @@
+package br.com.piracraft.lobby2.event;
+
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import br.com.piracraft.api.caixas.ItemAPI;
+import br.com.piracraft.lobby2.utils.LobbyAPI;
+import br.com.piracraft.lobby2.utils.SetarScoreBoard;
+
+public class PlayerManager implements Listener {
+	@EventHandler
+	public void entrar(PlayerJoinEvent event) {
+		event.setJoinMessage(null);
+		Player player = event.getPlayer();
+		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,Integer.MAX_VALUE,3),true);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,Integer.MAX_VALUE,2),true);
+		player.setGameMode(GameMode.SURVIVAL);
+		player.getInventory().clear();
+		player.getInventory().setArmorContents(null);
+		player.setHealthScale(20);
+		player.setFoodLevel(20);
+		darItens(player);
+		player.teleport(LobbyAPI.getLobby());
+		new SetarScoreBoard(player,
+				br.com.piracraft.api.Main.network.get(player)).setar();
+		
+	}
+
+	public static void darItens(Player player) {
+		player.getInventory().setItem(0,
+				ItemAPI.Criar(Material.COMPASS, 1, 0, "§aGames", false));
+	}
+	@EventHandler
+	public void drop(PlayerDropItemEvent e) {
+		e.setCancelled(true);
+	}
+
+	@EventHandler
+	public void sair(PlayerQuitEvent e) {
+		e.setQuitMessage(null);
+	}
+	@EventHandler
+	public void plantacao(PlayerInteractEvent event) {
+		if ((event.getAction() == Action.PHYSICAL)
+				&& (event.getClickedBlock().getType() == Material.SOIL)) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void click(InventoryClickEvent event) {
+		event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void clicar(PlayerInteractEvent event) {
+		event.setUseInteractedBlock(Result.DENY);
+		event.setUseItemInHand(Result.DENY);
+	}
+
+	@EventHandler
+	public void fome(FoodLevelChangeEvent e) {
+		e.setCancelled(true);
+	}
+
+}

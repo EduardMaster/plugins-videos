@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class BuildTower extends Kit {
 	public int size = 65;
@@ -36,7 +36,7 @@ public class BuildTower extends Kit {
 							loc.getBlock().setType(type);
 						}
 						loc.add(0, 1, 0);
-						API.teleport(p, loc);
+						GameAPI.teleport(p, loc);
 					}
 				}
 			}

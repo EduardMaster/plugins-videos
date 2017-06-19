@@ -1,0 +1,60 @@
+package br.com.piracraft.lobby2.npc;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import br.com.piracraft.api.Main;
+import br.com.piracraft.lobby2.servidores.kitpvp.MenuKitpvp;
+import br.com.piracraft.lobby2.servidores.skywars.MenuSkyWars;
+import br.com.piracraft.lobby2.utils.Bungee;
+import br.com.piracraft.lobby2.utils.Cor;
+import br.com.piracraft.lobby2.utils.UtilsChat;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+
+public class InteragirNPC implements Listener {
+
+	public String Faction = "§aFaction";
+	public String Hardcore = "§aHardCore";
+	public String Kitpvp = "§aKitPvP";
+	public String Setedias = "§aSete Dias";
+	public String Skywars = "§aSkyWars";
+
+	@EventHandler
+	void teste(PlayerCommandPreprocessEvent event) {
+		if (event.getMessage().equalsIgnoreCase("/teste")) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(Faction + Hardcore + Kitpvp + Setedias + Skywars);
+		}
+	}
+
+	@EventHandler
+	void clicarDireitoNPC(NPCRightClickEvent event) {
+		if (event.getNPC().getName().equalsIgnoreCase(Faction)) {
+			if (Main.isStaff.get(event.getClicker())) {
+				new Bungee().enviar(event.getClicker(), "factions01");
+			} else {
+				new UtilsChat(event.getClicker(), "Alerta", "Servidor em desenvolvimento!", Cor.Azul)
+						.enviarAlertaPlayer();
+				return;
+			}
+		}
+		if (event.getNPC().getName().equalsIgnoreCase(Hardcore)) {
+			new UtilsChat(event.getClicker(), "Alerta", "Menu em desenvolvimento!", Cor.Vermelho).enviarAlertaPlayer();
+			return;
+		}
+		if (event.getNPC().getName().equalsIgnoreCase(Kitpvp)) {
+			new MenuKitpvp(event.getClicker()).abrir();
+			return;
+		}
+		if (event.getNPC().getName().equalsIgnoreCase(Setedias)) {
+			new UtilsChat(event.getClicker(), "Alerta", "Menu em desenvolvimento!", Cor.Vermelho).enviarAlertaPlayer();
+			return;
+		}
+		if (event.getNPC().getName().equalsIgnoreCase(Skywars)) {
+			new MenuSkyWars(event.getClicker()).abrir();
+			return;
+		}
+	}
+
+}

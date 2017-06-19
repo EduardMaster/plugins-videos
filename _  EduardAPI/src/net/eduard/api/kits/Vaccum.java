@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.GameAPI;
 
 public class Vaccum extends Kit {
 	public int range = 20;
@@ -35,7 +35,7 @@ public class Vaccum extends Kit {
 									range - 5, range)) {
 								if (entity instanceof LivingEntity) {
 									LivingEntity livingEntity = (LivingEntity) entity;
-									API.moveTo(livingEntity, p.getLocation(),
+									GameAPI.moveTo(livingEntity, p.getLocation(),
 											-0.2);
 								}
 							}

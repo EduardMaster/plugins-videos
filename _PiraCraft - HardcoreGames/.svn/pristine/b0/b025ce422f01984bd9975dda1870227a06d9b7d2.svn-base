@@ -1,0 +1,133 @@
+package me.douglasamv.hg.Timer;
+
+import java.text.DecimalFormat;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.douglasamv.hg.Main;
+import me.douglasamv.hg.Comandos.Arena;
+import me.douglasamv.hg.Comandos.CMDMiniArena;
+import me.douglasamv.hg.Eventos.ChecarVitoria;
+import me.douglasamv.hg.Feast.BonusFeast;
+import me.douglasamv.hg.Feast.FeastManager;
+import me.douglasamv.hg.Feast.MiniFeast;
+import me.douglasamv.hg.Feast.MiniFeast2;
+
+public class Andamento {
+
+	private static Integer shed_id = null;
+
+	public static void Checar() {
+		ChecarVitoria.verificaWin();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, new Runnable() {
+			public void run() {
+				Checar();
+			}
+		}, 600L);
+	}
+
+	public static void Iniciar(int Contagem) {
+		Main.Andamento = Contagem;
+		shed_id = Integer
+				.valueOf(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.instance, new Runnable() {
+					public void run() {
+						DecimalFormat df = new DecimalFormat("##.#");
+						Main.Andamento += 1;
+						if (Main.Andamento == 450) {
+							MiniFeast.announceFeast();
+						}
+						if (Main.Andamento == 850) {
+							MiniFeast2.announceFeast();
+						}
+						if (Main.Andamento == 900) {
+							FeastManager.announceFeast(5);
+						}
+						if (Main.Andamento == 960) {
+							FeastManager.announceFeast(4);
+						}
+						if (Main.Andamento == 1020) {
+							FeastManager.announceFeast(3);
+						}
+						if (Main.Andamento == 1080) {
+							FeastManager.announceFeast(2);
+						}
+						if (Main.Andamento == 1140) {
+							FeastManager.announceFeast(1);
+						}
+						if (Main.Andamento == 1195) {
+							Bukkit.broadcastMessage("§eO Feast nascera nas coordenadas "
+									+ df.format(FeastManager.mainBlock.getLocation().getX()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getY()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getZ()) + " em 5s");
+						}
+						if (Main.Andamento == 1196) {
+							Bukkit.broadcastMessage("§eO Feast nascera nas coordenadas "
+									+ df.format(FeastManager.mainBlock.getLocation().getX()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getY()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getZ()) + " em 4s");
+
+						}
+						if (Main.Andamento == 1197) {
+							Bukkit.broadcastMessage("§eO Feast nascera nas coordenadas "
+									+ df.format(FeastManager.mainBlock.getLocation().getX()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getY()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getZ()) + " em 3s");
+
+						}
+						if (Main.Andamento == 1198) {
+							Bukkit.broadcastMessage("§eO Feast nascera nas coordenadas "
+									+ df.format(FeastManager.mainBlock.getLocation().getX()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getY()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getZ()) + " em 2s");
+
+						}
+						if (Main.Andamento == 1199) {
+							Bukkit.broadcastMessage("§eO Feast nascera nas coordenadas "
+									+ df.format(FeastManager.mainBlock.getLocation().getX()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getY()) + ", "
+									+ df.format(FeastManager.mainBlock.getLocation().getZ()) + " em 1s");
+
+						}
+						if (Main.Andamento == 1200) {
+							FeastManager.spawnFeast();
+						}
+						if (Main.Andamento == 2400) {
+							BonusFeast.announceFeast(1);
+							BonusFeast.spawnFeast();
+						}
+						if (Main.Andamento == 3000) {
+							Arena.criarAreaBatle();
+							Bukkit.broadcastMessage("§eArena pvp final gerada!");
+						}
+						if (Main.Andamento == 3600) {
+							Bukkit.broadcastMessage("§eMini arena em 5 minutos!");
+						}
+						if (Main.Andamento == 3900) {
+							CMDMiniArena.criarAreaBatle();
+							Bukkit.broadcastMessage("§eMini arena gerada");
+						}
+						if (Main.Andamento == 4400) {
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								p.kickPlayer("Servidor reiniciando!");
+							}
+							new BukkitRunnable() {
+								@Override
+								public void run() {
+									Bukkit.shutdown();
+								}
+							}.runTaskLater(Main.instance, 20);
+						}
+						Bukkit.getPluginManager().callEvent(new Segundos());
+					}
+				}, 0L, 20L));
+	}
+
+	public static void cancel() {
+		if (shed_id != null) {
+			Bukkit.getServer().getScheduler().cancelTask(shed_id.intValue());
+			shed_id = null;
+		}
+	}
+}

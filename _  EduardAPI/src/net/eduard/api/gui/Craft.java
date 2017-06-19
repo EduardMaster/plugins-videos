@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.material.MaterialData;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
+import net.eduard.api.util.Cs;
 
 public class Craft implements Save {
 	private ShapedRecipe recipe;
@@ -88,8 +88,8 @@ public class Craft implements Save {
 					String text = section.getString("slot" + i);
 					String[] split = text.split("-");
 					@SuppressWarnings("deprecation")
-					Material id = Material.getMaterial(API.toInt(split[0]));
-					craft.set(i, id, API.toInt(split[1]));
+					Material id = Material.getMaterial(Cs.toInt(split[0]));
+					craft.set(i, id, Cs.toInt(split[1]));
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

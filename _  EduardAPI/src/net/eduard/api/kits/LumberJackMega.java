@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.ItemAPI;
 
 public class LumberJackMega extends Kit{
 	
@@ -41,7 +41,7 @@ public class LumberJackMega extends Kit{
 	public void event(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
-			if (API.isUsing(p, "_AXE")) {
+			if (ItemAPI.isUsing(p, "_AXE")) {
 				if (e.getBlock().getType().name().contains("LOG")) {
 					check(e.getBlock().getLocation());
 				}

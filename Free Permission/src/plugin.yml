@@ -1,0 +1,11 @@
+name: GroupMaster
+description: Plugin de Permissao
+main: net.eduard.permission.GroupMaster
+version: 0.2
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  groupmaster:
+    aliases: [mg,group,user]
+    usage: /<command> help
+    description: Comando Principal do Plugin

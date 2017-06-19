@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class InventorySeeCommand extends Commands {
+public class InventorySeeCommand extends CMD {
 	public String messageTarget = "§6Voce abriu o Inventario do §e$target";
 	public InventorySeeCommand() {
 		super("inventorysee");
@@ -22,7 +23,7 @@ public class InventorySeeCommand extends Commands {
 			if (API.existsPlayer(sender, args[0])) {
 				Player target = API.getPlayer(args[0]);
 				p.openInventory(target.getInventory());
-				API.chat(p,messageTarget.replace("$target", target.getDisplayName()));
+				Cs.chat(p,messageTarget.replace("$target", target.getDisplayName()));
 			}
 		}
 

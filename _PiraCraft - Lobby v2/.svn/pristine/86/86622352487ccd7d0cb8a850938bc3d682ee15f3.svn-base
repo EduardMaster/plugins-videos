@@ -1,0 +1,7 @@
+package br.com.piracraft.lobby.utils;
+
+public enum Cor {
+
+	Cinza, Azul, Amarelo, Vermelho, Verde, Roxo;
+
+}

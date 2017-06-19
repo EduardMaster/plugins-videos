@@ -1,0 +1,11 @@
+package br.com.piracraft.lobby2.menu;
+
+public class MenuSevenDays extends Menu{
+
+	public MenuSevenDays() {
+		super("");
+	}
+	public void update() {
+		
+	};
+}

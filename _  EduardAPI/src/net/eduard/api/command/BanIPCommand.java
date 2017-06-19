@@ -7,9 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class BanIPCommand extends Commands {
+public class BanIPCommand extends CMD {
 
 	public String message = "§6O IP do jogador §e$player §6foi banido por §a$sender §6motido: §c$reason";
 	public String messageTarget = "§6Seu IP foi banido por §e$sender §6motivo: §f$reason";
@@ -32,7 +33,7 @@ public class BanIPCommand extends Commands {
 			target.kickPlayer(messageTarget.replace("$sender", sender.getName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
-			API.broadcast(message.replace("$player", target.getDisplayName())
+			Cs.broadcast(message.replace("$player", target.getDisplayName())
 					.replace("$player", sender.getName())
 					.replace("$reason", builder.toString()));
 		}

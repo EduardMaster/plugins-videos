@@ -1,0 +1,49 @@
+package br.com.piracraft.lobby2.servidores.skywars;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+import br.com.piracraft.api.caixas.ItemAPI;
+
+public class MenuSkyWars {
+
+	private Player player;
+	public static Inventory inventory = Bukkit.createInventory(null, 45, "§aSkyWars");
+
+	public MenuSkyWars(Player player) {
+		setPlayer(player);
+	}
+
+	public void setarItens() {
+		for (int i = 0; i < 10; i++) {
+			inventory.setItem(i, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		}
+		inventory.setItem(17, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		inventory.setItem(18, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		inventory.setItem(20, ItemAPI.Criar(Material.INK_SACK, 1, 1, "§6§lEntrar no Jogo", false, " ",
+				"§7Click para conectar rapidamente", "§7a uma sala disponivel de skywars."));
+		inventory.setItem(26, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		inventory.setItem(27, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		inventory.setItem(24,
+				ItemAPI.Criar(Material.IRON_BLOCK, 1, 15, "§6§lTodas as Salas", false, " ", "§7Em desenvolvimento."));
+		for (int i = 35; i < 45; i++) {
+			inventory.setItem(i, ItemAPI.Criar(Material.STAINED_GLASS_PANE, 1, 15, " ", false));
+		}
+
+	}
+
+	public void abrir() {
+		getPlayer().openInventory(inventory);
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+}

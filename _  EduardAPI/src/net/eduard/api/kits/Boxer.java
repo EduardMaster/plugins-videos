@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.gui.Kit;
+import net.eduard.api.manager.ItemAPI;
 
 public class Boxer extends Kit {
 	public double damageReduction = 1;
@@ -23,7 +23,7 @@ public class Boxer extends Kit {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
 			if (hasKit(p)) {
-				if (API.isUsing(p, Material.AIR)) {
+				if (ItemAPI.isUsing(p, Material.AIR)) {
 					e.setDamage(damage);
 				}
 			}

@@ -10,10 +10,9 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.EventAPI;
 
 
 public class ForceField extends Kit{
@@ -77,10 +76,10 @@ public class ForceField extends Kit{
 			}
 		}));
 	}
-	public EventAPI register(Plugin plugin) {
+	public void register(Plugin plugin) {
 		setPlugin(plugin);
 		timer(1,this);
-		return super.register(plugin);
+		super.register(plugin);
 	}
 
 }

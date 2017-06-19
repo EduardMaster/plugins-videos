@@ -4,10 +4,10 @@ package net.eduard.api.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class ClearChatCommand extends Commands {
+public class ClearChatCommand extends CMD {
 	public String message = "§6O $sender limpou o Chat!";
 	public int size = 50;
 	public ClearChatCommand() {
@@ -16,9 +16,9 @@ public class ClearChatCommand extends Commands {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		for (int i = 0; i < size; i++) {
-			API.broadcast(" ");
+			Cs.broadcast(" ");
 		}
-		API.all(message.replace("$sender", sender.getName()));
+		Cs.all(message.replace("$sender", sender.getName()));
 		return true;
 	}
 

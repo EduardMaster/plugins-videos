@@ -2,7 +2,6 @@
 package net.eduard.api.tutorial;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -22,7 +21,9 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
-public class EventosMundo implements Listener {
+import net.eduard.api.manager.Manager;
+
+public class EventosMundo extends Manager {
 
 	@EventHandler
 	public void ItemPendurado(HangingPlaceEvent e) {

@@ -4,27 +4,29 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.WorldAPI;
 
-public class EduardDeleteWorldCommand extends SubCommands {
+public class EduardDeleteWorldCommand extends CMD {
 
 	public EduardDeleteWorldCommand() {
 		super("delete","deletar");
 	}
+
 	@Override
-	public void command(CommandSender sender, Command command, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command command,
+			String label, String[] args) {
 
 		if (args.length == 1){
-			return;
+			return false;
 		}
 		
 		String name = args[0];
 		if (API.existsWorld(sender, name)) {
-			API.deleteWorld(name);
+			WorldAPI.deleteWorld(name);
 			sender.sendMessage(
-					"§aO Mundo §2" + name + "§a foi deletado com sucesso!");
+					"§bEduardAPI §aO Mundo §2" + name + "§a foi deletado com sucesso!");
 		}
-
+		return true;
 	}
 }

@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.gui.Gui;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.player.PlayerEffect;
+import net.eduard.api.util.PlayerEffect;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;

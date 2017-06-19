@@ -1,0 +1,79 @@
+package com.hcp.daays;
+
+import java.util.List;
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.hcp.Main;
+
+public class Range {
+
+	@SuppressWarnings("deprecation")
+	public static void setTarget(Player player, double Speed, double range, LivingEntity le) {
+		Location location = player.getLocation();
+
+		Random rnd = new Random();
+		int zufall = rnd.nextInt(6);
+		switch (zufall) {
+		case 0:
+			location.add(1.5, 0, 1.5);
+			break;
+		case 1:
+			location.add(0, 0, 1.5);
+			break;
+		case 2:
+			location.add(1.5, 0, 0);
+			break;
+		case 3:
+			location.subtract(1.5, 0, 1.5);
+			break;
+		case 4:
+			location.subtract(0, 0, 1.5);
+			break;
+		case 5:
+			location.subtract(1.5, 0, 0);
+			break;
+		}
+
+		if (location.distanceSquared(le.getLocation()) <= range) {
+			((CraftCreature) le).getHandle().getNavigation().a(location.getX(), location.getY(), location.getZ(),
+					Speed);
+
+			if (location.distanceSquared(le.getLocation()) <= 5) {
+				if (le instanceof Creeper) {
+					Bukkit.getWorld("world").createExplosion(le.getLocation(), 5.0F);
+				}
+
+				if (le instanceof Skeleton) {
+					le.shootArrow();
+				}
+			}
+		}
+	}
+
+	public static void setTargetSec(Player player, double Speed, double range, List<LivingEntity> le) {
+		new BukkitRunnable() {
+			public void run() {
+				for (LivingEntity b : le) {
+					if (b.isValid()) {
+						if(b.getType() != EntityType.GHAST || b.getType() != EntityType.BLAZE){
+							setTarget(player, Speed, range, b);
+						}
+					} else {
+						cancel();
+					}
+				}
+			}
+		}.runTaskTimer(Main.plugin, 0, 10);
+	}
+
+}

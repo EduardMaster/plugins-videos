@@ -8,19 +8,19 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.click.Click;
-import net.eduard.api.click.ClickEffect;
-import net.eduard.api.click.ClickType;
+import net.eduard.api.game.Jump;
+import net.eduard.api.game.Sounds;
+import net.eduard.api.gui.Click;
+import net.eduard.api.gui.ClickEffect;
+import net.eduard.api.gui.ClickType;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.player.Jump;
-import net.eduard.api.player.SoundEffect;
 
 public class Hulk extends Kit {
 
 	public Hulk() {
 		setIcon(Material.DISPENSER, "§fLevante seus inimigos");
 		setTime(15);
-		setJump(new Jump(SoundEffect.create(Sound.BURP),
+		setJump(new Jump(Sounds.create(Sound.BURP),
 				new Vector(0, 2, 0)));
 		setClick(new Click(Material.AIR, new ClickEffect() {
 

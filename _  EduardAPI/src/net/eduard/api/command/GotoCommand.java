@@ -6,9 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.GameAPI;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.Cs;
 
-public class GotoCommand extends Commands {
+public class GotoCommand extends CMD {
 	public GotoCommand() {
 		super("goto");
 	}
@@ -22,10 +25,10 @@ public class GotoCommand extends Commands {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			if (API.existsWorld(sender, args[0])) {
-				World world = API.getWorld(args[0]);
-				API.teleport(p, world.getSpawnLocation());
+				World world = WorldAPI.getWorld(args[0]);
+				GameAPI.teleport(p, world.getSpawnLocation());
 				API.SOUND_TELEPORT.create(p);
-				API.chat(p,message.replace("$world", world.getName()));
+				Cs.chat(p,message.replace("$world", world.getName()));
 			}
 		}
 

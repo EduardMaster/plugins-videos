@@ -1,0 +1,7 @@
+name: Cash
+authors: [Eduard]
+version: 1.0
+main: net.eduard.cash.Cash
+commands:
+  cash:
+    description: All Commands.

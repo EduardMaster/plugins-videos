@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class OpCommand extends Commands {
+public class OpCommand extends CMD {
 	public String messageTarget = "§6Voce deu Op para o jogador §e$target";
 	public String message = "§6Voce agora é Op!";
 	public OpCommand() {
@@ -22,8 +23,8 @@ public class OpCommand extends Commands {
 		if (API.existsPlayer(sender, args[0])) {
 			Player target = API.getPlayer(args[0]);
 			target.setOp(true);
-			API.chat(target,message);
-			API.chat(sender,
+			Cs.chat(target,message);
+			Cs.chat(sender,
 					messageTarget.replace("$target", target.getDisplayName()));
 		}
 

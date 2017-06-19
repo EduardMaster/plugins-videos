@@ -3,10 +3,11 @@ package net.eduard.api.tutorial;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-public class BloquearExplosaoCreeper implements Listener{
+import net.eduard.api.manager.Manager;
+
+public class BloquearExplosaoCreeper extends Manager{
 	
 	
 	@EventHandler

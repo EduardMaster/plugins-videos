@@ -6,7 +6,8 @@ import java.util.Map.Entry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.util.Cs;
 
 public class SaveItemStack implements Save {
 
@@ -18,11 +19,11 @@ public class SaveItemStack implements Save {
 		ItemStack item = new ItemStack(id, amount, (short) data);
 		String name = section.message("name");
 		if (!name.isEmpty()) {
-			API.setName(item, name);
+			ItemAPI.setName(item, name);
 		}
 		List<String> lore = section.getMessages("lore");
 		if (!lore.isEmpty()) {
-			API.setLore(item, lore);
+			ItemAPI.setLore(item, lore);
 		}
 		String enchants = section.getString("enchants");
 		if (!enchants.isEmpty()) {
@@ -31,16 +32,16 @@ public class SaveItemStack implements Save {
 				for (String enchs : split) {
 					String[] sub = enchs.split("-");
 					@SuppressWarnings("deprecation")
-					Enchantment ench = Enchantment.getById(API.toInt(sub[0]));
-					Integer level = API.toInt(sub[1]);
+					Enchantment ench = Enchantment.getById(Cs.toInt(sub[0]));
+					Integer level = Cs.toInt(sub[1]);
 					item.addUnsafeEnchantment(ench, level);
 
 				}
 			} else {
 				String[] split = enchants.split("-");
 				@SuppressWarnings("deprecation")
-				Enchantment ench = Enchantment.getById(API.toInt(split[0]));
-				Integer level = API.toInt(split[1]);
+				Enchantment ench = Enchantment.getById(Cs.toInt(split[0]));
+				Integer level = Cs.toInt(split[1]);
 				item.addUnsafeEnchantment(ench, level);
 
 			}
@@ -54,8 +55,8 @@ public class SaveItemStack implements Save {
 		section.set("id", item.getTypeId());
 		section.set("data", item.getDurability());
 		section.set("amount", item.getAmount());
-		section.set("name", API.getName(item));
-		section.set("lore", API.getLore(item));
+		section.set("name", ItemAPI.getName(item));
+		section.set("lore", ItemAPI.getLore(item));
 		String enchants = "";
 		if (item.getItemMeta().hasEnchants()) {
 			StringBuilder b = new StringBuilder();

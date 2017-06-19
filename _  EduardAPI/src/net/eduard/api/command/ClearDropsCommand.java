@@ -8,9 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.util.Cs;
 
-public class ClearDropsCommand extends Commands {
+public class ClearDropsCommand extends CMD {
 
 	public String message = "§6Os drops foram removidos!";
 
@@ -28,15 +30,15 @@ public class ClearDropsCommand extends Commands {
 					entity.remove();
 				}
 			}
-			API.broadcast(message);
+			Cs.broadcast(message);
 
 		} else {
 			if (API.existsWorld(sender, args[0])) {
-				World world = API.getWorld(args[0]);
+				World world = WorldAPI.getWorld(args[0]);
 				for (Item entity : world.getEntitiesByClass(Item.class)) {
 					entity.remove();
 				}
-				API.broadcast(message.replace("$world", world.getName()));
+				Cs.broadcast(message.replace("$world", world.getName()));
 			}
 
 		}

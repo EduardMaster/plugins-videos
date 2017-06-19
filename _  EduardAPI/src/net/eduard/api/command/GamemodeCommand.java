@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class GamemodeCommand extends Commands {
+public class GamemodeCommand extends CMD {
 
 	public GamemodeCommand() {
 		super("gamemode");
@@ -17,7 +18,7 @@ public class GamemodeCommand extends Commands {
 	public String messageTarget = "§6O gamemode do $player agora é: $gamemode";
 
 	public String getGamemode(Player player) {
-		return API.toTitle(player.getGameMode().name());
+		return Cs.toTitle(player.getGameMode().name());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -31,7 +32,7 @@ public class GamemodeCommand extends Commands {
 				} else {
 					p.setGameMode(GameMode.CREATIVE);
 				}
-				API.chat(sender,
+				Cs.chat(sender,
 						message.replace("$gamemode", getGamemode(p)));
 
 			} else
@@ -41,7 +42,7 @@ public class GamemodeCommand extends Commands {
 			String arg = args[0];
 			GameMode gm = null;
 			try {
-				gm = GameMode.getByValue(API.toInt(arg));
+				gm = GameMode.getByValue(Cs.toInt(arg));
 			} catch (Exception ex) {
 				try {
 					gm = GameMode.valueOf(arg.toUpperCase());
@@ -56,7 +57,7 @@ public class GamemodeCommand extends Commands {
 			if (args.length >= 2) {
 				if (API.existsPlayer(sender, args[1])) {
 					p = API.getPlayer(args[1]);
-					API.chat(sender,
+					Cs.chat(sender,
 							messageTarget.replace("$gamemode", getGamemode(p))
 									.replace("$player", p.getDisplayName()));
 				} else
@@ -67,7 +68,7 @@ public class GamemodeCommand extends Commands {
 				return false;
 			}
 			p.setGameMode(gm);
-			API.chat(p,message.replace("$gamemode", getGamemode(p)));
+			Cs.chat(p,message.replace("$gamemode", getGamemode(p)));
 
 		}
 		return true;

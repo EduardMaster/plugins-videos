@@ -1,0 +1,81 @@
+package br.com.piracraft.lobby2.utils;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+
+import br.com.piracraft.api.PiraCraftAPI;
+import br.com.piracraft.lobby2.Main;
+
+public class SetarScoreBoard {
+
+	private Player player;
+	private Integer network;
+
+	public SetarScoreBoard(Player player, Integer network) {
+		setPlayer(player);
+		setNetwork(network);
+	}
+
+	@SuppressWarnings("deprecation")
+	public void setar() {
+		if (getNetwork() == 1) {
+			if (getPlayer().getScoreboard() == null
+					|| getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) {
+				Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+				Objective obj = board.registerNewObjective("a", "b");
+				obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+				Scroller scroller = new Scroller("§6PiraCraft", 16, 5, '§');
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						if (!getPlayer().isOnline()) {
+							cancel();
+						}
+						obj.setDisplayName(scroller.next());
+					}
+				}.runTaskTimer(Main.getPlugin(), 0, 3);
+				obj.getScore("              ").setScore(6);
+				obj.getScore("Seus Cashs: ").setScore(5);
+				obj.getScore("Seus Coins: ").setScore(4);
+				obj.getScore("Suas Caixas: ").setScore(3);
+				obj.getScore(" ").setScore(2);
+				obj.getScore("§7www.piracraft.com.br").setScore(1);
+
+				board.registerNewTeam("espaco").addPlayer(new FastOfflinePlayer("              "));
+				board.registerNewTeam("cashs").addPlayer(new FastOfflinePlayer("Seus Cashs: "));
+				board.registerNewTeam("coins").addPlayer(new FastOfflinePlayer("Seus Coins: "));
+				board.registerNewTeam("caixas").addPlayer(new FastOfflinePlayer("Suas Caixas: "));
+				getPlayer().setScoreboard(board);
+			}
+			getPlayer().getScoreboard().getTeam("espaco").setSuffix("     ");
+			getPlayer().getScoreboard().getTeam("cashs")
+					.setSuffix(String.valueOf(new PiraCraftAPI(getPlayer()).getCash()));
+			getPlayer().getScoreboard().getTeam("coins")
+					.setSuffix(String.valueOf(new PiraCraftAPI(getPlayer()).getCoins()));
+			getPlayer().getScoreboard().getTeam("caixas").setSuffix("0");
+		} else {
+
+		}
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Integer getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(Integer network) {
+		this.network = network;
+	}
+
+}

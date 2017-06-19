@@ -2,10 +2,10 @@ package net.eduard.parkour.command;
 
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.SubCommands;
+import net.eduard.api.manager.CMD;
 import net.eduard.parkour.Arena;
 
-public class DeleteSUB extends SubCommands{
+public class DeleteSUB extends CMD{
 
 	public void command(CommandSender sender, String[] args) {
 		if (args.length == 1) {

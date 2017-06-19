@@ -15,11 +15,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.EventAPI;
+import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.WorldAPI;
 import net.eduard.tapetevoador.Main;
 
-public class TapeteEvent extends EventAPI {
+public class TapeteEvent extends Manager {
 	
 	@EventHandler
 	public void event(EntityDamageEvent e) {
@@ -78,7 +78,7 @@ public class TapeteEvent extends EventAPI {
 
 		Player p = e.getPlayer();
 
-		if (!API.equals(e.getTo(), e.getFrom())) {
+		if (!WorldAPI.equals(e.getTo(), e.getFrom())) {
 			if (Main.players.contains(p)) {
 				if (p.isDead()) {
 					return;

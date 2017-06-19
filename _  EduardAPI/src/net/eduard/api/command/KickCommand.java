@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class KickCommand extends Commands {
+public class KickCommand extends CMD {
 
 	public String message = "§6O jogador §e$target §6foi kitado por §a$sender §6motido: §c$reason";
 	public String messageTarget = "§6Voce foi kickado por §e$target §6motivo: §f$reason";
@@ -29,7 +30,7 @@ public class KickCommand extends Commands {
 			target.kickPlayer(messageTarget.replace("$target", sender.getName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
-			API.broadcast(message.replace("$target", target.getDisplayName())
+			Cs.broadcast(message.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
 		}

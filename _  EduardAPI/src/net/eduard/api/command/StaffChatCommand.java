@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Commands;
-import net.eduard.api.util.Extras;
+import net.eduard.api.manager.CMD;
+import net.eduard.api.util.Cs;
 
-public class StaffChatCommand extends Commands {
+public class StaffChatCommand extends CMD {
 	public StaffChatCommand() {
 		super("staffchat");
 	}
@@ -27,9 +27,9 @@ public class StaffChatCommand extends Commands {
 				else
 					id++;
 
-				builder.append(API.toChatMessage(arg));
+				builder.append(Cs.toChatMessage(arg));
 			}
-			API.broadcast(staffTag + p.getDisplayName() + Extras.getArrowRight()
+			Cs.broadcast(staffTag + p.getDisplayName() + Cs.getArrowRight()
 					+ " " + builder.toString(), getCommand().getPermission());
 		}
 		return true;

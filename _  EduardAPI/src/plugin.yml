@@ -1,12 +1,12 @@
 name: EduardAPI
 description: A melhor API ja criada pelo Eduard
-main: net.eduard.eduardapi.Main
+main: net.eduard.eduardapi.EduardAPI
 version: 1.0
 authors: [Eduard]
 soft-depend: [Essentials,Vault]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
-  eduard:
+  eduard: 
     description: Comando pricipal da API
     aliases: [api,e]
     usage: /<command> help

@@ -1,9 +1,6 @@
 
 package net.eduard.api.tutorial;
-
-import org.bukkit.conversations.PlayerNamePrompt;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -50,7 +47,9 @@ import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.player.PlayerUnregisterChannelEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 
-public class EventosJogador implements Listener {
+import net.eduard.api.manager.Manager;
+
+public class EventosJogador extends Manager  {
 
 	@EventHandler
 	public void JogadorAnimacao(PlayerAnimationEvent e) {
@@ -197,10 +196,10 @@ public class EventosJogador implements Listener {
 
 	}
 
-	@EventHandler
-	public void JogadorName(PlayerNamePrompt e) {
-
-	}
+//	@EventHandler
+//	public void JogadorName(PlayerNamePrompt e) {
+//
+//	}
 
 	@EventHandler
 	public void JogadorPegarItem(PlayerPickupItemEvent e) {
