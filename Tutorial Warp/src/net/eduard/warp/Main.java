@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,10 +23,10 @@ public class Main extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new WarpListener(), this);
 		reload();
 	}
-	public static Collection<Warp> getWarps(){
+	public static Collection<Warp> getWarps() {
 		return warps.values();
 	}
-	
+
 	public static String message(String path) {
 		return ChatColor.translateAlternateColorCodes('&',
 				messages.getString(path));
@@ -36,4 +37,17 @@ public class Main extends JavaPlugin {
 				new File(plugin.getDataFolder(), "messages.yml"));
 
 	}
+
+	public static void setWarp(String name, Location location) {
+		Configs config = new Configs("Warp/" + name.toLowerCase() + ".yml",plugin);
+		config.set("name", name);
+		config.set("world", location.getWorld().getName());
+		config.set("x", location.getX());
+		config.set("y", location.getY());
+		config.set("z", location.getZ());
+		config.set("yaw", location.getYaw());
+		config.set("pitch", location.getPitch());
+		config.saveConfig();
+	}
+
 }

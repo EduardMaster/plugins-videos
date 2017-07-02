@@ -20,6 +20,7 @@ public class Room implements Runnable{
 	private int id;
 	private int time;
 	private BukkitTask task;
+	private RoomState state;
 	private Arena map;
 	private List<Player> alives = new ArrayList<>();
 	private List<Player> deaths = new ArrayList<>();
@@ -96,6 +97,14 @@ public class Room implements Runnable{
 
 	public void setVote(Vote vote) {
 		this.vote = vote;
+	}
+
+	public RoomState getState() {
+		return state;
+	}
+
+	public void setState(RoomState state) {
+		this.state = state;
 	}
 
 }

@@ -18,7 +18,11 @@ import net.eduard.api.game.Jump;
 import net.eduard.api.game.Potions;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.util.PlayerEffect;
-
+/**
+ * Preço: 
+ * @author Eduard-PC
+ *
+ */
 public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	private List<Potions> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();

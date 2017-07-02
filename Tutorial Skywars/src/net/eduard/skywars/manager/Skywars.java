@@ -13,6 +13,7 @@ public class Skywars {
 	private static Map<Player, ItemStack[]> armours = new HashMap<>();
 	private static Map<Player, ItemStack[]> items = new HashMap<>();
 	private static Map<Integer, Room> rooms = new HashMap<>();
+	private static Map<Player, Room> players = new HashMap<>();
 	private static Map<String, Arena> maps = new HashMap<>();
 	public static final Storage STORAGE_OP = new Storage();
 	public static final Storage STORAGE_NORMAL = new Storage();
@@ -24,6 +25,12 @@ public class Skywars {
 
 	public static boolean has(String name) {
 		return maps.containsKey(name.toLowerCase());
+	}
+	public static boolean isPlaying(Player player){
+		return players.containsKey(player);
+	}
+	public static Room getGame(Player player){
+		return players.get(player);
 	}
 	public static Arena get(String name) {
 		return maps.get(name.toLowerCase());

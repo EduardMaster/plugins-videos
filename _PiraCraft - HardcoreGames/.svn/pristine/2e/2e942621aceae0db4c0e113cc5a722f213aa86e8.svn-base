@@ -1,5 +1,0 @@
-package me.douglasamv.hg.Borda;
-
-public enum BorderType {
-	WARN, STOP, SHRINK;
-}

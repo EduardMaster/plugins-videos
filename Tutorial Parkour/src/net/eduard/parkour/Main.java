@@ -25,7 +25,6 @@ public class Main extends JavaPlugin {
 		Arena.reload();
 		new ParkourCMD();
 		new ParkourEvent().register(this);
-
 	}
 
 	public void onDisable() {

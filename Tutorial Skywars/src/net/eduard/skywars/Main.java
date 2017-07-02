@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.skywars.command.SkywarsCommand;
-import net.eduard.skywars.event.TemplateEvent;
+import net.eduard.skywars.event.SkywarsEvent;
 import net.eduard.skywars.kits.TeleportBowKit;
 import net.eduard.skywars.manager.ConfigAPI;
 import net.eduard.skywars.manager.EmptyWorld;
@@ -46,7 +46,7 @@ public class Main extends JavaPlugin implements Listener {
 		getCommand("skywars").setExecutor(new SkywarsCommand());
 	}
 	public void events(){
-		Bukkit.getPluginManager().registerEvents(new TemplateEvent(), this);
+		Bukkit.getPluginManager().registerEvents(new SkywarsEvent(), this);
 	}
 	public static ItemStack newItem(String name, Material material,
 			String... lore) {

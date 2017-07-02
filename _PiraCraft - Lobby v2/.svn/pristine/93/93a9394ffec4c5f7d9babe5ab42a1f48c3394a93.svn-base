@@ -1,7 +1,0 @@
-name: Lobby2
-version: 0.1
-author: PiraTeam
-main: br.com.piracraft.lobby2.Main
-depend: [PiraCraftAPI, Citizens]
-commands:
-  npcs:

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 public class HgManager {
 
+	private HashMap<String, HgRoom> mapas = new HashMap<>();
 	private HashMap<Integer, HgRoom> rooms = new HashMap<>();
 	private HashMap<Player, HgRoom> players = new HashMap<>();
 	
@@ -17,6 +18,15 @@ public class HgManager {
 	private int maxPlayersAmount=30;
 	
 
+	public void reloadMapas(){
+	
+	}
+	public void reloadMensagens(){
+		
+	}
+	public void salvarMapas(){
+	}
+	
 	public int getMinPlayersAmount() {
 		return minPlayersAmount;
 	}

@@ -45,7 +45,7 @@ public class HgTimer extends BukkitRunnable {
 							+ "O invunerabilidade vai acabar em "+room.getTime()+" segundos!");
 				}
 			}
-			if (state == HgState.GAME) {
+			else if (state == HgState.GAME) {
 				room.setTime(room.getTime()+1);
 				if (room.getTime()==HgPlugin.setup.getTimeToGameOver()){
 					Bukkit.broadcastMessage(ChatColor.GOLD

@@ -1,0 +1,22 @@
+#Plugin Criado por zLuck_Dev || Skype: luckony8 || Anti-Pirataria incluso ||
+
+#IP do servidor,exemplo: A1, A2, B1,B2;
+IP: A1
+
+#MySQL;
+Host: localhost
+Database: FuckyKits
+Usuario: root
+Senha: Breno@100Willian
+
+#Coords do spawn do schematic;
+Spawn:
+  X: 25.0
+  Y: 167.0
+  Z: 27.0
+  
+#Coords do spawn do treinopvp;
+TreinoPvP:
+  X: 25.0
+  Y: 162.0
+  Z: 27.0  

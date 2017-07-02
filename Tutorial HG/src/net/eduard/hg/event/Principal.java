@@ -56,6 +56,7 @@ public class Principal extends Events {
 				e.setKickMessage(ChatColor.GREEN
 						+ "Para assistir voce deve possuir um pacote Vip");
 				e.setResult(Result.KICK_OTHER);
+				return;
 			}
 			HgPlugin.hg.getSpectators().add(e.getPlayer());
 		} else

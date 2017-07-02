@@ -1,0 +1,4 @@
+name: Login
+version: 1.0
+author: Eduard
+main: net.eduard.login.Main

@@ -33,7 +33,8 @@ public abstract class EduardPlugin extends JavaPlugin {
 
 	}
 	public void onEnable() {
-		config = new Config(this);
+		
+		config = new Config(this,"config.yml");
 		config.saveConfig();
 		messages = new Configs("messages.yml", this);
 		messages.saveDefaultConfig();

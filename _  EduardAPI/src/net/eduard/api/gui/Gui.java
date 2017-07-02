@@ -14,7 +14,11 @@ import org.bukkit.inventory.Inventory;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Section;
-
+/**
+ * Preço: 
+ * @author Eduard-PC
+ *
+ */
 public class Gui extends Click {
 
 	private boolean open = true;

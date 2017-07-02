@@ -4,7 +4,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.sun.swing.internal.plaf.metal.resources.metal;
+/**
+ * API de Controle de MySQL com apenas 1 conexão
+ * @author Eduard-PC
+ *
+ */
 public class SQL {
 
 	private String user= "root";
@@ -52,6 +64,23 @@ public class SQL {
 	public synchronized Connection getConnection() {
 		return connection;
 	}
+	public List<Map<String, String>> getAll(String query,Object... replacers) {
+		List<Map<String, String>> list = new ArrayList<>();
+		try {
+			ResultSet rs = select(query);
+			while (rs.next()) {
+				Map<String, String> mapa = new HashMap<>();
+				ResultSetMetaData meta = rs.getMetaData();
+				for (int i = 1; i <= meta.getColumnCount(); i++) {
+					String name = meta.getColumnName(i);
+					mapa.put(name, rs.getString(name));
+				}
+				list.add(mapa);
+			}
+		} catch (Exception e) {
+		}
+		return list;
+	}
 
 	public synchronized int update(String query,Object... replacers) {
 		startQuery();
@@ -66,14 +95,24 @@ public class SQL {
 	}
 	public synchronized PreparedStatement query(String query,Object... replacers){
 		try {
+			
+			if (!query.endsWith(";")){
+				query+=";";
+			}
+			// adiciona os atributos no lugar dos "?"
 			query=query.replace('?', '&');
 			for (Object replacer:replacers){
 				query=query.replaceFirst("&", "'"+replacer.toString()+"'");
 			}
-			if (!query.endsWith(";")){
-				query+=";";
+			// outra maneira abaixo de fazer a mesma coisa
+			PreparedStatement state = connection.prepareStatement(query);
+			int id = 1;
+			for (Object replacer:replacers){
+				state.setString((id), replacer.toString());
+				id++;
+				
 			}
-			return connection.prepareStatement(query);
+			return state;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

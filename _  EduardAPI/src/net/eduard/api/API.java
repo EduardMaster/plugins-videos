@@ -863,8 +863,8 @@ public class API {
 		player.setScoreboard(board);
 		return board;
 	}
-	public static int getPosition(int x,int z){
-		int value = (x-1)*9;
+	public static int getPosition(int line,int z){
+		int value = (line-1)*9;
 		return value+z-1;
 	}
 	

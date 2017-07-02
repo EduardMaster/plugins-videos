@@ -14,6 +14,9 @@ public class HgRoom {
 	private List<Player> spectators = new ArrayList<>();
 	
 	
+	
+	
+	
 
 	public int getId() {
 		return id;

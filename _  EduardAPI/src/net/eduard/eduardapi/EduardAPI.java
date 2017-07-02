@@ -1,8 +1,10 @@
 package net.eduard.eduardapi;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -11,8 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.eduard.api.API;
 import net.eduard.api.command.AdminCommand;
 import net.eduard.api.command.EduardCommand;
-import net.eduard.api.command.GamemodeCommand;
-import net.eduard.api.command.GotoCommand;
 import net.eduard.api.config.Section;
 import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
@@ -35,7 +35,6 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		RexAPI.saveObjects();
 		API.loadMaps();
 		Cs.consoleMessage("§bEduardAPI §fMapas §acarregados!");
-		
 		API.AUTO_RESPAWN = getConfig().getBoolean("auto-respawn");
 		API.NO_JOIN_MESSAGE = getConfig().getBoolean("no-join-message");
 		API.NO_QUIT_MESSAGE = getConfig().getBoolean("no-quit-message");
@@ -50,7 +49,6 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		}
 		Section.register(CMD.class);
 		Section.register(AdminCommand.class);
-		RexAPI.commands(config.getSection("commands"),new GamemodeCommand(),new GotoCommand());
 		new EduardCommand().register();
 		config.saveConfig();
 	}
@@ -59,6 +57,15 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		API.saveMaps();
 		Cs.consoleMessage("§bEduardAPI §aMapas salvados!");
 		Cs.consoleMessage("§bEduardAPI §cdesativado!");
+	}
+	@EventHandler
+	public void event(BlockPhysicsEvent e) {
+		if (e.getBlock().getType() == Material.CROPS){
+			e.setCancelled(true);
+			//Talves precise colocar o codigo debaixo
+//			e.getBlock().getRelative(BlockFace.DOWN).setType(Material.SOIL);
+		}
+			
 	}
 
 	@EventHandler

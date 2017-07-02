@@ -18,6 +18,10 @@ public class HgPlugin extends JavaPlugin {
 		setup.getRooms().put(1, hg);
 		timer = new HgTimer();
 		timer.runTaskTimer(this, 20, 20);
+		setup.reloadMapas();
 		
+	}@Override
+	public void onDisable() {
+		setup.salvarMapas();
 	}
 }
