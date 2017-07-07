@@ -14,7 +14,3 @@ commands:
     description: Teleportar para um Mundo
     aliases: [world]
     usage: /<command> <world>
-  gamemode:
-    description: Trocar o Modo de Jogo
-    aliases: [gm,mode]
-    usage: /<command> [0-3] [player]

@@ -5,13 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.sun.swing.internal.plaf.metal.resources.metal;
 /**
  * API de Controle de MySQL com apenas 1 conexão
  * @author Eduard-PC
@@ -31,6 +28,7 @@ public class SQL {
 	static {
 		// test if has mysql
 		try {
+			
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (Exception e) {
 			// dont has mysql
@@ -77,9 +75,29 @@ public class SQL {
 				}
 				list.add(mapa);
 			}
+			
+			endQuery();
 		} catch (Exception e) {
 		}
 		return list;
+	}
+	public boolean contains(String query) {
+		boolean has = false;
+		
+		try {
+			ResultSet rs = select(query);
+			has = rs.next();
+			
+			rs.getStatement().getConnection().close();
+			rs.getStatement().close();
+			rs.close();
+			
+		} catch (Exception e) {
+		}
+		
+		
+		return has;
+		
 	}
 
 	public synchronized int update(String query,Object... replacers) {

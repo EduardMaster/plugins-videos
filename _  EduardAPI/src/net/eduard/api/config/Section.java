@@ -37,7 +37,7 @@ public class Section {
 	static {
 		register(Click.class, "");
 		register(Title.class, "");
-		register(ReportCommand.class,"");
+		register(ReportCommand.class, "");
 		register(Archer.class, "");
 		register(Cooldown.class, "");
 		registerList(ItemStack.class, "item");
@@ -117,6 +117,21 @@ public class Section {
 				"");
 		return result;
 
+	}
+	public static String removeQuotes(String message) {
+		if (message.startsWith("'")) {
+			message = message.replaceFirst("'", "");
+		}
+		if (message.startsWith("\"")) {
+			message = message.replaceFirst("\"", "");
+		}
+		if (message.endsWith("'")) {
+			message = message.substring(0,message.length() - 1);
+		}
+		if (message.endsWith("\"")) {
+			message = message.substring(0,message.length() - 1);
+		}
+		return message;
 	}
 
 	public static boolean isComment(String line) {
@@ -352,7 +367,7 @@ public class Section {
 	}
 
 	public String getString() {
-		return Cs.toString(object);
+		return removeQuotes(Cs.toString(object));
 	}
 
 	public String getString(String path) {
@@ -362,7 +377,7 @@ public class Section {
 	public List<String> getStringList() {
 		ArrayList<String> list = new ArrayList<>();
 		for (Object item : getList()) {
-			list.add(Cs.toString(item));
+			list.add(removeQuotes(Cs.toString(item)));
 		}
 		return list;
 	}
@@ -699,10 +714,10 @@ public class Section {
 						} catch (Exception ex) {
 							try {
 								Object result = get(field.getName());
-								if (result.getClass().equals(field.getType())){
-									field.set(instance,result);
+								if (result.getClass().equals(field.getType())) {
+									field.set(instance, result);
 								}
-								
+
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

@@ -1,6 +1,9 @@
 package net.eduard.template;
 
-import org.bukkit.Bukkit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -9,12 +12,19 @@ public class Main extends JavaPlugin {
 		return JavaPlugin.getPlugin(Main.class);
 	}
 	private static Main plugin;
+	
+	private Map<UUID, Double> money = new HashMap<>();
+	
+	
+	public Map<UUID, Double> getMoney() {
+		return money;
+	}
 	public static Main getInstance() {
 		return plugin;
 	}
 	public void onEnable() {
 		plugin = this;
-		Bukkit.getPluginManager().registerEvents(new Evento(), plugin);
+		getCommand("money").setExecutor(new Money());
 	}
 
 }

@@ -105,7 +105,6 @@ public class API {
 	public static Manager TIME;
 	public static JavaPlugin PLUGIN;
 	private static Map<String, Command> commands = new HashMap<>();
-	
 
 	static {
 		try {
@@ -230,11 +229,6 @@ public class API {
 		});
 	}
 
-	
-
-	
-
-	
 	public static void loadMaps() {
 		Configs cf = new Configs("Maps/");
 		try {
@@ -261,9 +255,6 @@ public class API {
 	public static Map<String, Command> getCommands() {
 		return commands;
 	}
-
-
-	
 
 	public static PluginCommand command(String commandName,
 			CommandExecutor command) {
@@ -296,15 +287,10 @@ public class API {
 		return cmd;
 	}
 
-
-
 	public static void runCommand(String command) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 	}
 
-
-
-	
 	public static boolean isIpProxy(String ip) {
 		try {
 			String url = "http://botscout.com/test/?ip=" + ip;
@@ -320,7 +306,6 @@ public class API {
 		return false;
 	}
 
-	
 	public static BukkitTask delay(Plugin plugin, long ticks, Runnable run) {
 		return Bukkit.getScheduler().runTaskLater(plugin, run, ticks);
 	}
@@ -328,13 +313,6 @@ public class API {
 		return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, run,
 				ticks);
 	}
-
-
-
-	
-
-
-
 
 	public static void event(Listener event) {
 
@@ -365,8 +343,6 @@ public class API {
 		return true;
 	}
 
-
-
 	public static JavaPlugin getAPI() {
 		if (hasAPI()) {
 			PLUGIN = (JavaPlugin) Bukkit.getPluginManager()
@@ -375,25 +351,14 @@ public class API {
 		return PLUGIN;
 	}
 
-	
-
 	public static boolean getChance(double chance) {
 
 		return RANDOM.nextDouble() <= chance;
 	}
 
-	
-	
-
-	
-
-	
-
 	public static Scoreboard getMainScoreboard() {
 		return Bukkit.getScoreboardManager().getMainScoreboard();
 	}
-
-
 
 	public static List<LivingEntity> getNearbyEntities(LivingEntity player,
 			double x, double y, double z, EntityType... types) {
@@ -426,8 +391,6 @@ public class API {
 	public static long getNow() {
 		return System.currentTimeMillis();
 	}
-
-
 
 	public static Player getPlayer(String name) {
 
@@ -466,8 +429,6 @@ public class API {
 		return min + RANDOM.nextInt(max - min + 1);
 	}
 
-
-
 	public static Object getSerializable(File file) {
 		if (!file.exists()) {
 			return null;
@@ -495,12 +456,28 @@ public class API {
 		}
 		return Tag.getTags().get(player);
 	}
+/**
+ * Retorna se (now < (seconds + before));
+ * @param before (Antes)
+ * @param seconds (Cooldown)
+ * @return
+ */
+	public static boolean inCooldown(long before, long seconds) {
 	
 
-	
+		long now = System.currentTimeMillis();
+		long cooldown = seconds * 1000;
+		return now < (cooldown + before);
 
-	
+	}
+	public static void getCooldown(long before, long seconds) {
+		
 
+//		long now = System.currentTimeMillis();
+//		long cooldown = seconds * 1000;
+//		return now < (cooldown + before);
+
+	}
 
 	public static File getWorldsFolder() {
 		return Bukkit.getWorldContainer();
@@ -519,51 +496,34 @@ public class API {
 		return true;
 
 	}
-	public static void addReplacer(String key,Replacer value){
+	public static void addReplacer(String key, Replacer value) {
 		REPLACERS.put(key, value);
 	}
-	public static Replacer getReplacer(String key){
+	public static Replacer getReplacer(String key) {
 		return REPLACERS.get(key);
 	}
 	public static boolean hasPlugin(String plugin) {
 		return Bukkit.getPluginManager().getPlugin(plugin) != null;
 	}
 
-	
-
 	/////////////////////////////
-
 
 	public static boolean isMultBy(int number1, int numer2) {
 
 		return number1 % numer2 == 0;
 	}
-	
 
 	public static World newEmptyWorld(String worldName) {
-		World world = Bukkit.createWorld(
-				new WorldCreator(worldName).generateStructures(false)
-						.generator(new EmptyWorld()));
+		World world = Bukkit.createWorld(new WorldCreator(worldName)
+				.generateStructures(false).generator(new EmptyWorld()));
 		world.getBlockAt(100, 100, 100).setType(Material.GLASS);
 		world.setSpawnLocation(100, 101, 100);
 		return world;
 	}
 
-	
 	public static Inventory newInventory(String name, int size) {
 
 		return Bukkit.createInventory(null, size, name);
-	}
-
-	public static ItemStack newItem(Material material, String name) {
-		ItemStack item = new ItemStack(material);
-		ItemAPI.setName(item, name);
-		return item;
-	}
-
-	public static ItemStack newItem(Material material, String name,
-			int amount) {
-		return newItem(material, name, amount, 0);
 	}
 	public static void deleteFolder(File file) {
 		if (file.exists()) {
@@ -577,6 +537,17 @@ public class API {
 			}
 		}
 	}
+	public static ItemStack newItem(Material material, String name) {
+		ItemStack item = new ItemStack(material);
+		ItemAPI.setName(item, name);
+		return item;
+	}
+
+	public static ItemStack newItem(Material material, String name,
+			int amount) {
+		return newItem(material, name, amount, 0);
+	}
+
 	public static ItemStack newItem(Material material, String name, int amount,
 			int data, String... lore) {
 
@@ -626,7 +597,6 @@ public class API {
 		return noConsole(sender);
 	}
 
-	
 	public static void removeAliaseFromCommand(PluginCommand cmd,
 			String aliase) {
 		String cmdName = cmd.getName().toLowerCase();
@@ -664,12 +634,10 @@ public class API {
 
 	}
 
-
-
 	public static void resetTag(Player player) {
 		setTag(player, "");
 	}
-	
+
 	public static void resetScoreboards() {
 
 		for (Team teams : getMainScoreboard().getTeams()) {
@@ -686,9 +654,6 @@ public class API {
 		}
 	}
 
-	
-		
-
 	public static void setSerializable(Object object, File file) {
 		try {
 			FileOutputStream saveStream = new FileOutputStream(file);
@@ -703,8 +668,6 @@ public class API {
 
 	}
 
-
-
 	public static void setTag(Player player, String prefix) {
 		setTag(player, prefix, "");
 	}
@@ -717,8 +680,6 @@ public class API {
 		Tag.getTags().put(player, tag);
 
 	}
-
-	
 
 	public static BukkitTask timer(Plugin plugin, long ticks, Runnable run) {
 		if (run instanceof BukkitRunnable) {
@@ -737,8 +698,6 @@ public class API {
 				ticks, ticks);
 	}
 
-
-
 	public static void addPermission(String permission) {
 		Bukkit.getPluginManager().addPermission(new Permission(permission));
 	}
@@ -752,8 +711,7 @@ public class API {
 	public static void removePermission(Player p, String permission) {
 		p.addAttachment(API.PLUGIN, permission, false);
 	}
-	
-	
+
 	public static Scoreboard newScoreboard(Player player, String title,
 			String... lines) {
 		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -863,11 +821,11 @@ public class API {
 		player.setScoreboard(board);
 		return board;
 	}
-	public static int getPosition(int line,int z){
-		int value = (line-1)*9;
-		return value+z-1;
+	public static int getPosition(int line, int z) {
+		int value = (line - 1) * 9;
+		return value + z - 1;
 	}
-	
+
 	public static boolean newExplosion(Location location, float power,
 			boolean breakBlocks, boolean makeFire) {
 		return location.getWorld().createExplosion(location.getX(),
@@ -884,8 +842,82 @@ public class API {
 		firework.setFireworkMeta(meta);
 		return firework;
 	}
+	  public static Point getCompassPointForDirection(double inDegrees)
+	  {
+	    double degrees = (inDegrees - 180.0D) % 360.0D;
+	    if (degrees < 0.0D) {
+	      degrees += 360.0D;
+	    }
 
+	    if ((0.0D <= degrees) && (degrees < 22.5D))
+	      return Point.N;
+	    if ((22.5D <= degrees) && (degrees < 67.5D))
+	      return Point.NE;
+	    if ((67.5D <= degrees) && (degrees < 112.5D))
+	      return Point.E;
+	    if ((112.5D <= degrees) && (degrees < 157.5D))
+	      return Point.SE;
+	    if ((157.5D <= degrees) && (degrees < 202.5D))
+	      return Point.S;
+	    if ((202.5D <= degrees) && (degrees < 247.5D))
+	      return Point.SW;
+	    if ((247.5D <= degrees) && (degrees < 292.5D))
+	      return Point.W;
+	    if ((292.5D <= degrees) && (degrees < 337.5D))
+	      return Point.NW;
+	    if ((337.5D <= degrees) && (degrees < 360.0D)) {
+	      return Point.N;
+	    }
+	    return null;
+	  }
 
-	
-	
+	  public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault)
+	  {
+	    ArrayList<String> ret = new ArrayList<>();
+
+	    String row = "";
+	    row = row + Point.NW.toString(Point.NW == point, colorActive, colorDefault);
+	    row = row + Point.N.toString(Point.N == point, colorActive, colorDefault);
+	    row = row + Point.NE.toString(Point.NE == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    row = "";
+	    row = row + Point.W.toString(Point.W == point, colorActive, colorDefault);
+	    row = row + colorDefault + "+";
+	    row = row + Point.E.toString(Point.E == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    row = "";
+	    row = row + Point.SW.toString(Point.SW == point, colorActive, colorDefault);
+	    row = row + Point.S.toString(Point.S == point, colorActive, colorDefault);
+	    row = row + Point.SE.toString(Point.SE == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    return ret;
+	  }
+
+	  public static ArrayList<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault) {
+	    return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
+	  }
+
+	  public static enum Point
+	  {
+	    N('N'), NE('/'), E('O'), SE('\\'), S('S'), SW('/'), W('L'), NW('\\');
+
+	    public final char asciiChar;
+
+	    private Point(char asciiChar) {
+	      this.asciiChar = asciiChar;
+	    }
+
+	    public String toString()
+	    {
+	      return String.valueOf(this.asciiChar);
+	    }
+
+	    public String toString(boolean isActive, ChatColor colorActive, String colorDefault) {
+	      return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
+	    }
+	  }
+
 }
