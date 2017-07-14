@@ -1,4 +1,3 @@
-
 package net.eduard.api.command;
 
 import org.bukkit.Bukkit;

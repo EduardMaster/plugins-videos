@@ -27,16 +27,16 @@ public class ThreadVZ extends Thread {
 	private CommandSender sender;
 	private Player p;
 	private int dias;
-	private Main plugin;
+	private VipZero plugin;
 	private String grupo;
 	private String key;
 	private String fGrupo;
 	private String[] args;
-	public ThreadVZ(Main plugin,String tipo) {
+	public ThreadVZ(VipZero plugin,String tipo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 	}
-	public ThreadVZ(Main plugin,String tipo,CommandSender sender,String grupo,int dias,String key) {
+	public ThreadVZ(VipZero plugin,String tipo,CommandSender sender,String grupo,int dias,String key) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.sender=sender;
@@ -44,29 +44,29 @@ public class ThreadVZ extends Thread {
 		this.grupo=grupo;
 		this.key=key;
 	}
-	public ThreadVZ(Main plugin,String tipo,CommandSender sender,String grupo) {
+	public ThreadVZ(VipZero plugin,String tipo,CommandSender sender,String grupo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.sender=sender;
 		this.grupo=grupo;
 	}
-	public ThreadVZ(Main plugin,String tipo,String key,CommandSender sender) {
+	public ThreadVZ(VipZero plugin,String tipo,String key,CommandSender sender) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.sender=sender;
 		this.key=key;
 	}
-	public ThreadVZ(Main plugin,String tipo,CommandSender sender) {
+	public ThreadVZ(VipZero plugin,String tipo,CommandSender sender) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.sender=sender;
 	}
-	public ThreadVZ(Main plugin,String tipo,Player p) {
+	public ThreadVZ(VipZero plugin,String tipo,Player p) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
 	}
-	public ThreadVZ(Main plugin,String tipo,Player p,String[] args,CommandSender sender,String grupo) {
+	public ThreadVZ(VipZero plugin,String tipo,Player p,String[] args,CommandSender sender,String grupo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
@@ -74,39 +74,39 @@ public class ThreadVZ extends Thread {
 		this.sender=sender;
 		this.grupo=grupo;
 	}
-	public ThreadVZ(Main plugin,String tipo,Player p,String grupo) {
+	public ThreadVZ(VipZero plugin,String tipo,Player p,String grupo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
 		this.grupo=grupo;
 	}
-	public ThreadVZ(Main plugin,String tipo,Player p,String grupo,String fGrupo) {
+	public ThreadVZ(VipZero plugin,String tipo,Player p,String grupo,String fGrupo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
 		this.grupo=grupo;
 		this.fGrupo=fGrupo;
 	}
-	public ThreadVZ(Main plugin,String grupo,String tipo,Player p) {
+	public ThreadVZ(VipZero plugin,String grupo,String tipo,Player p) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
 		this.grupo=grupo;
 	}
-	public ThreadVZ(Main plugin,String tipo,Player p,int dias,String grupo) {
+	public ThreadVZ(VipZero plugin,String tipo,Player p,int dias,String grupo) {
 		this.plugin=plugin;
 		this.tipo = tipo;
 		this.p=p;
 		this.grupo=grupo;
 		this.dias=dias;
 	}
-	public ThreadVZ(Main plugin, String tipo, CommandSender sender, Player p) {
+	public ThreadVZ(VipZero plugin, String tipo, CommandSender sender, Player p) {
 		this.plugin=plugin;
 		this.tipo=tipo;
 		this.sender=sender;
 		this.p=p;
 	}
-	public ThreadVZ(Main plugin, String tipo, CommandSender sender,String grupo, int dias) {
+	public ThreadVZ(VipZero plugin, String tipo, CommandSender sender,String grupo, int dias) {
 		this.plugin=plugin;
 		this.tipo=tipo;
 		this.sender=sender;
@@ -178,9 +178,9 @@ public class ThreadVZ extends Thread {
 						    }
 						    else {
 						    	for(String g : plugin.getConfig().getStringList("vip_groups"))
-						    		if(Main.perms.playerInGroup((Player)sender, g.trim()))
-						    				Main.perms.playerRemoveGroup((Player)sender, g.trim());
-						    	Main.perms.playerAddGroup((Player)sender, grupo);
+						    		if(VipZero.perms.playerInGroup((Player)sender, g.trim()))
+						    				VipZero.perms.playerRemoveGroup((Player)sender, g.trim());
+						    	VipZero.perms.playerAddGroup((Player)sender, grupo);
 						    }
 							PreparedStatement pst = con.prepareStatement("UPDATE `vips` SET `usando`='"+grupo+"' WHERE `nome`='"+sender.getName()+"';");
 							pst.executeUpdate();
@@ -352,9 +352,9 @@ public class ThreadVZ extends Thread {
 				    	}
 				    	else {
 				    		for(String g : plugin.getConfig().getStringList("vip_groups"))
-				    			if(Main.perms.playerInGroup(p, g.trim()))
-				    					Main.perms.playerRemoveGroup(p, g.trim());
-				    		Main.perms.playerAddGroup(p, plugin.getConfig().getString("default_group").trim());
+				    			if(VipZero.perms.playerInGroup(p, g.trim()))
+				    					VipZero.perms.playerRemoveGroup(p, g.trim());
+				    		VipZero.perms.playerAddGroup(p, plugin.getConfig().getString("default_group").trim());
 				    	}
 						plugin.getServer().broadcastMessage(ChatColor.AQUA+"["+plugin.getConfig().getString("server_name").trim()+"] "+ChatColor.WHITE+plugin.getMessage("rvip").trim().replaceAll("%admin%", sender.getName()).replaceAll("%name%", p.getName())+"!");
 					}
@@ -554,9 +554,9 @@ public class ThreadVZ extends Thread {
 //		    		    	    			user.removePermission("fullpvp.vip");
 		    		    	    	}
 		    		    	    	else {
-		    		    	    		if(Main.perms.playerInGroup(p2, n.trim())) {
-		    		    	    			Main.perms.playerRemoveGroup(p2, n.trim());
-		    		    	    			Main.perms.playerAddGroup(p2, plugin.getConfig().getString("default_group").trim());
+		    		    	    		if(VipZero.perms.playerInGroup(p2, n.trim())) {
+		    		    	    			VipZero.perms.playerRemoveGroup(p2, n.trim());
+		    		    	    			VipZero.perms.playerAddGroup(p2, plugin.getConfig().getString("default_group").trim());
 		    		    	    		}
 		    		    	    	}
 		    		    		}

@@ -1,121 +1,97 @@
+
 package net.eduard.parkour.event;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
-import net.eduard.api.manager.Manager;
-import net.eduard.api.manager.WorldAPI;
-import net.eduard.api.util.Cs;
-import net.eduard.parkour.Arena;
+import net.eduard.parkour.manager.Parkour;
 
-public class ParkourEvent extends Manager {
+public class ParkourEvent implements Listener {
+
+	@EventHandler
+	public void event(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+		if (!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
+			if (Parkour.isInGame(p)) {
+				if (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Parkour.getParkour(p)
+						.getCheckpointTester()) {
+					if (Parkour.getCheckpoints().containsKey(p)) {
+						if (!e.getTo().getBlock().getLocation()
+								.equals(Parkour.getCheckpoints().get(p).getBlock().getLocation())) {
+							p.sendMessage(ChatColor.GOLD + "Checkpoint encontrado!");
+						}
+
+					} else {
+						p.sendMessage(ChatColor.GOLD + "Checkpoint encontrado!");
+					}
+					Parkour.getCheckpoints().put(p, e.getTo());
+				}
+				if (e.getTo().getBlock().getLocation()
+						.equals(Parkour.getParkour(p).getEnd().getLocation().getBlock().getLocation())) {
+					
+				}
+			}
+
+		}
+	}
 
 	@EventHandler
 	public void event(EntityDamageEvent e) {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
-			if (e.getCause() == DamageCause.FALL) {
-				if (Arena.isPlaying(p)) {
-					Arena.updateFall(p);
-					Arena.toCheckpoint(p);
-					e.setCancelled(true);
+			if (Parkour.isInGame((Player) e.getEntity())) {
+				e.setCancelled(true);
+				if (e.getCause() == DamageCause.FALL) {
+					Integer value = Parkour.getFalls().get(p);
+					value++;
+					Parkour.getFalls().put(p, value);
+					if (Parkour.getCheckpoints().containsKey(p)) {
+						p.teleport(Parkour.getCheckpoints().get(p));
+					} else {
+						p.teleport(Parkour.getParkour(p).getSpawn().getLocation());
+					}
 				}
 			}
 		}
-	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void event(PlayerRespawnEvent e) {
-
-		Player p = e.getPlayer();
-		if (Arena.isPlaying(p)) {
-			Arena arena = Arena.getArena(p);
-			Arena.updateFall(p);
-			e.setRespawnLocation(arena.getSpawn());
-		}
 	}
 
 	@EventHandler
-	public void event(EntityDamageByEntityEvent e) {
-
-		if (e.getEntity() instanceof Player
-				& e.getDamager() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			Player d = (Player) e.getDamager();
-			if (Arena.isPlaying(p)) {
+	public void event(PlayerInteractEvent e) {
+		if (Parkour.isInGame(e.getPlayer()))
+			if (e.getAction() != Action.PHYSICAL)
 				e.setCancelled(true);
-			}
-			if (Arena.isPlaying(d)) {
-				e.setCancelled(true);
-			}
-		}
 	}
 
 	@EventHandler
 	public void event(PlayerCommandPreprocessEvent e) {
-
 		Player p = e.getPlayer();
-		if (Arena.isPlaying(p)) {
-			if (Cs.startWith(e.getMessage(), "/leave")
-					| Cs.startWith(e.getMessage(), "/sair")) {
-				Arena.leave(p);
-			} else {
-				p.sendMessage(Arena.message("OnlyQuit"));
-			}
+		if (Parkour.isInGame(p)) {
 			e.setCancelled(true);
-		}
-	}
-	@EventHandler
-	public void event(PlayerMoveEvent e) {
-		Player p = e.getPlayer();
-		if (Arena.isPlaying(p)) {
-			Arena arena = Arena.getArena(p);
-			if (WorldAPI.equals(e.getTo(), arena.getEnd())) {
-				Arena.win(p);
-			}
-			if (e.getTo().getBlock().getRelative(BlockFace.DOWN)
-					.getType() == arena.getChecker()) {
-				Arena.updateCheckpoint(p);
+			if (e.getMessage().startsWith("/leave")) {
+				Parkour.leave(p);
+			} else {
+				p.sendMessage(ChatColor.GOLD + "Voce só pode usar /leave quando estiver praticando parkour");
 			}
 		}
+
 	}
-	@EventHandler
-	public void event(PlayerQuitEvent e) {
-		Arena.remove(e.getPlayer());
-	}
-	@EventHandler
-	public void event(PlayerKickEvent e) {
-		Arena.remove(e.getPlayer());
-	}
-	@EventHandler
-	public void event(PlayerJoinEvent e) {
-		Arena.join(e.getPlayer());
-	}
+
 	@EventHandler
 	public void event(FoodLevelChangeEvent e) {
-
-		HumanEntity who = e.getEntity();
-		if (who instanceof Player) {
-			Player p = (Player) who;
-			if (Arena.isPlaying(p)) {
-				e.setFoodLevel(20);
-				p.setSaturation(20);
-				p.setExhaustion(0);
-			}
-
-		}
+		if (e.getEntity() instanceof Player)
+			if (Parkour.isInGame((Player) e.getEntity()))
+				e.setCancelled(true);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,6 +19,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.util.LocationEffect;
+import net.eduard.api.util.Point;
 /**
  * Location , World
  *
@@ -273,4 +275,64 @@ public final class WorldAPI {
 	public static Location getHighPosition(Location location){
 		return location.getWorld().getHighestBlockAt(location).getLocation();
 	}
+	public static Point getCompassPointForDirection(double inDegrees)
+	  {
+	    double degrees = (inDegrees - 180.0D) % 360.0D;
+	    if (degrees < 0.0D) {
+	      degrees += 360.0D;
+	    }
+
+	    if ((0.0D <= degrees) && (degrees < 22.5D))
+	      return Point.N;
+	    if ((22.5D <= degrees) && (degrees < 67.5D))
+	      return Point.NE;
+	    if ((67.5D <= degrees) && (degrees < 112.5D))
+	      return Point.E;
+	    if ((112.5D <= degrees) && (degrees < 157.5D))
+	      return Point.SE;
+	    if ((157.5D <= degrees) && (degrees < 202.5D))
+	      return Point.S;
+	    if ((202.5D <= degrees) && (degrees < 247.5D))
+	      return Point.SW;
+	    if ((247.5D <= degrees) && (degrees < 292.5D))
+	      return Point.W;
+	    if ((292.5D <= degrees) && (degrees < 337.5D))
+	      return Point.NW;
+	    if ((337.5D <= degrees) && (degrees < 360.0D)) {
+	      return Point.N;
+	    }
+	    return null;
+	  }
+
+	  public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault)
+	  {
+	    ArrayList<String> ret = new ArrayList<>();
+
+	    String row = "";
+	    row = row + Point.NW.toString(Point.NW == point, colorActive, colorDefault);
+	    row = row + Point.N.toString(Point.N == point, colorActive, colorDefault);
+	    row = row + Point.NE.toString(Point.NE == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    row = "";
+	    row = row + Point.W.toString(Point.W == point, colorActive, colorDefault);
+	    row = row + colorDefault + "+";
+	    row = row + Point.E.toString(Point.E == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    row = "";
+	    row = row + Point.SW.toString(Point.SW == point, colorActive, colorDefault);
+	    row = row + Point.S.toString(Point.S == point, colorActive, colorDefault);
+	    row = row + Point.SE.toString(Point.SE == point, colorActive, colorDefault);
+	    ret.add(row);
+
+	    return ret;
+	  }
+
+	  public static ArrayList<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault) {
+	    return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
+	  }
+
+	
+
 }

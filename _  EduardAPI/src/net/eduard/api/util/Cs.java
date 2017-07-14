@@ -1,6 +1,8 @@
 package net.eduard.api.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -9,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
+import net.eduard.api.config.Section;
 
 public enum Cs {
 
@@ -21,7 +24,7 @@ public enum Cs {
 		setDark(dark);
 	}
 	public static String getHeart() {
-		return "♥"; 
+		return "♥";
 	}
 
 	public static String getArrow() {
@@ -29,7 +32,7 @@ public enum Cs {
 	}
 
 	public static String getArrowRight() {
-		return "››"; 
+		return "››";
 	}
 
 	public static String getArrowLeft() {
@@ -88,8 +91,13 @@ public enum Cs {
 	public String toString() {
 		return getDarkBold();
 	}
-	public static void chat(CommandSender sender, String message) {
+	public static void chat(CommandSender sender, Object... objects) {
+		String message = Section.getWraps(getText(objects));
 		sender.sendMessage(API.SERVER_TAG + message);
+	}
+	public static void chatMessage(CommandSender sender, Object... objects) {
+		String message = Section.getWraps(getText(objects));
+		sender.sendMessage( message);
 	}
 
 	public static void all(Object... objects) {
@@ -97,12 +105,43 @@ public enum Cs {
 		broadcast(objects);
 		console(objects);
 	}
+	public static void broadcastMessage(Object... objects) {
+
+		for (Player p : API.getPlayers()) {
+			chatMessage(p, objects);
+		}
+	}
 	public static void broadcast(Object... objects) {
 
 		for (Player p : API.getPlayers()) {
-			chat(p, getText(objects));
+			chat(p, objects);
 		}
 	}
+
+	public static void broadcast(String message, String permision) {
+		for (Player p : API.getPlayers()) {
+			if (p.hasPermission(permision)) {
+				chat(p, message);
+			}
+		}
+	}
+	
+	public static void console(Object... objects) {
+
+		chat(Bukkit.getConsoleSender(), objects);
+	}
+	public static void consoleMessage(Object... objects) {
+		chatMessage(Bukkit.getConsoleSender(), objects);
+	}
+
+	public static void sendMessage(Collection<Player> players,
+			Object... objects) {
+		for (Player player : players) {
+			chat(player,objects);
+		}
+
+	}
+
 	public static String getText(Object... objects) {
 		StringBuilder builder = new StringBuilder();
 		for (Object object : objects) {
@@ -111,29 +150,40 @@ public enum Cs {
 		}
 		return builder.toString();
 	}
+	public static List<String> toLines(String text, int size) {
 
+		List<String> lista = new ArrayList<>();
+
+		String x = text;
+
+		int id = 1;
+		while (x.length() >= size) {
+			String cut = x.substring(0, size);
+			x = text.substring(id * size);
+			id++;
+			lista.add(cut);
+		}
+		lista.add(x);
+		return lista;
+
+	}
+	
 	public static String getText(String text, Player player) {
 		for (Entry<String, Replacer> value : API.REPLACERS.entrySet()) {
 			try {
-				if (text.contains(value.getKey())){
+				if (text.contains(value.getKey())) {
 					text = text.replace(value.getKey(),
 							value.getValue().getText(player).toString());
-					
+
 				}
-				
+
 			} catch (Exception e) {
 			}
 
 		}
 		return text;
 	}
-	public static void sendMessage(Collection<Player> players,Object... objects){
-		String message = getText(objects);
-		for (Player player:players){
-			player.sendMessage(message);
-		}
-		
-	}
+	
 
 	public static String getTime(int time) {
 
@@ -167,7 +217,7 @@ public enum Cs {
 
 	}
 
-	public static String[] toArray(Collection<String> list){
+	public static String[] toArray(Collection<String> list) {
 		return list.toArray(new String[0]);
 	}
 	public static boolean startWith(String message, String text) {
@@ -197,8 +247,6 @@ public enum Cs {
 		}
 		return text;
 	}
-
-	
 
 	public static String toText(Collection<String> message) {
 		return message.toString().replace("[", "").replace("]", "");
@@ -241,37 +289,16 @@ public enum Cs {
 	public static boolean contains(String message, String text) {
 		return message.toLowerCase().contains(text.toLowerCase());
 	}
-	public static void broadcastMessage(Object... objects) {
 
-		for (Player p : API.getPlayers()) {
-			p.sendMessage(getText(objects));
-		}
-		Bukkit.getConsoleSender().sendMessage(getText(objects));
-	}
-	public static void console(Object... objects) {
-
-		Bukkit.getConsoleSender().sendMessage(API.SERVER_TAG + getText(objects));
-	}
-	public static void consoleMessage(Object... objects) {
-		Bukkit.getConsoleSender().sendMessage(getText(objects));
-	}
-
-	public static void broadcast(String message, String permision) {
-		for (Player p : API.getPlayers()) {
-			if (p.hasPermission(permision)) {
-				chat(p, message);
-			}
-		}
-	}
-	public static String getText(int init,String... args){
+	public static String getText(int init, String... args) {
 		StringBuilder text = new StringBuilder();
 		int id = 0;
-		for (String arg :args){
-			if (id <init){
+		for (String arg : args) {
+			if (id < init) {
 				id++;
 				continue;
 			}
-			text.append(" "+toChatMessage(arg));
+			text.append(" " + toChatMessage(arg));
 			id++;
 		}
 		return text.toString();
@@ -417,5 +444,3 @@ public enum Cs {
 		return object == null ? "" : object.toString();
 	}
 }
-
-

@@ -8,13 +8,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,7 +22,6 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.World;
@@ -33,10 +32,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -64,6 +60,7 @@ import net.eduard.api.manager.VaultAPI;
 import net.eduard.api.minigame.Arena;
 import net.eduard.api.util.Cs;
 import net.eduard.api.util.EmptyWorld;
+import net.eduard.api.util.FakeOfflinePlayer;
 import net.eduard.api.util.Replacer;
 
 @SuppressWarnings("unchecked")
@@ -86,6 +83,10 @@ public class API {
 	public static String ON_QUIT = "§6O jogador $player saiu no Jogo!";
 	public static String USAGE = "§FDigite: §c";
 	public static String SERVER_TAG = "§b§lEduardAPI ";
+	public static List<String> COMMANDS_ON = new ArrayList<>(
+			Arrays.asList("on", "ativar"));
+	public static List<String> COMMANDS_OFF = new ArrayList<>(
+			Arrays.asList("off", "desativar"));
 	public static Sounds SOUND_TELEPORT = Sounds
 			.create(Sound.ENDERMAN_TELEPORT);
 	public static boolean NO_DEATH_MESSAGE = true;
@@ -360,34 +361,6 @@ public class API {
 		return Bukkit.getScoreboardManager().getMainScoreboard();
 	}
 
-	public static List<LivingEntity> getNearbyEntities(LivingEntity player,
-			double x, double y, double z, EntityType... types) {
-		List<LivingEntity> list = new ArrayList<>();
-		for (Entity item : player.getNearbyEntities(x, y, z)) {
-			if (item instanceof LivingEntity) {
-				LivingEntity livingEntity = (LivingEntity) item;
-				if (types != null) {
-					for (EntityType entitie : types) {
-						if (livingEntity.getType().equals(entitie)) {
-							if (!list.contains(livingEntity))
-								list.add(livingEntity);
-						}
-					}
-				} else
-					list.add(livingEntity);
-			}
-		}
-		return list;
-
-	}
-
-	public static List<LivingEntity> getNearbyEntities(LivingEntity entity,
-			double radio, EntityType... entities) {
-
-		return getNearbyEntities(entity, radio, radio, radio, entities);
-
-	}
-
 	public static long getNow() {
 		return System.currentTimeMillis();
 	}
@@ -397,18 +370,6 @@ public class API {
 		@SuppressWarnings("deprecation")
 		Player player = Bukkit.getPlayerExact(name);
 		return player;
-	}
-
-	public static List<Player> getPlayerAtRange(Location location,
-			double range) {
-
-		List<Player> players = new ArrayList<>();
-		for (Player p : location.getWorld().getPlayers()) {
-			if (p.getLocation().distance(location) <= range) {
-				players.add(p);
-			}
-		}
-		return players;
 	}
 
 	public static List<Player> getPlayers() {
@@ -456,26 +417,30 @@ public class API {
 		}
 		return Tag.getTags().get(player);
 	}
-/**
- * Retorna se (now < (seconds + before));
- * @param before (Antes)
- * @param seconds (Cooldown)
- * @return
- */
+	/**
+	 * Retorna se (now < (seconds + before));
+	 * 
+	 * @param before
+	 *            (Antes)
+	 * @param seconds
+	 *            (Cooldown)
+	 * @return
+	 */
 	public static boolean inCooldown(long before, long seconds) {
-	
 
 		long now = System.currentTimeMillis();
 		long cooldown = seconds * 1000;
 		return now < (cooldown + before);
 
 	}
-	public static void getCooldown(long before, long seconds) {
-		
+	public static long getCooldown(long before, long seconds) {
 
-//		long now = System.currentTimeMillis();
-//		long cooldown = seconds * 1000;
-//		return now < (cooldown + before);
+		long now = System.currentTimeMillis();
+		long cooldown = seconds * 1000;
+
+		// +5 - 19 + 15
+
+		return +cooldown - now + before;
 
 	}
 
@@ -714,104 +679,20 @@ public class API {
 
 	public static Scoreboard newScoreboard(Player player, String title,
 			String... lines) {
+		return applyScoreboard(player, title, lines);
+	}
+
+	public static Scoreboard applyScoreboard(Player player, String title,
+			String... lines) {
 		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective obj = board.registerNewObjective("board", "score");
+		Objective obj = board.registerNewObjective("score", "dummy");
 		obj.setDisplayName(title);
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		int id = 15;
 		for (String line : lines) {
 			String empty = ChatColor.values()[id - 1].toString();
-			obj.getScore(new OfflinePlayer() {
-				@Override
-				public Map<String, Object> serialize() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public void setOp(boolean arg0) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public boolean isOp() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public void setWhitelisted(boolean value) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void setBanned(boolean banned) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public boolean isWhitelisted() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean isOnline() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean isBanned() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public boolean hasPlayedBefore() {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
-				@Override
-				public UUID getUniqueId() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public Player getPlayer() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public String getName() {
-					// TODO Auto-generated method stub
-					return line.isEmpty() ? empty : line;
-				}
-
-				@Override
-				public long getLastPlayed() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-
-				@Override
-				public long getFirstPlayed() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-
-				@Override
-				public Location getBedSpawnLocation() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-			}).setScore(id);;
+			obj.getScore(new FakeOfflinePlayer(line.isEmpty() ? empty : line))
+					.setScore(id);;
 			id--;
 			if (id == 0) {
 				break;
@@ -821,9 +702,9 @@ public class API {
 		player.setScoreboard(board);
 		return board;
 	}
-	public static int getPosition(int line, int z) {
+	public static int getPosition(int line, int column) {
 		int value = (line - 1) * 9;
-		return value + z - 1;
+		return value + column - 1;
 	}
 
 	public static boolean newExplosion(Location location, float power,
@@ -842,82 +723,5 @@ public class API {
 		firework.setFireworkMeta(meta);
 		return firework;
 	}
-	  public static Point getCompassPointForDirection(double inDegrees)
-	  {
-	    double degrees = (inDegrees - 180.0D) % 360.0D;
-	    if (degrees < 0.0D) {
-	      degrees += 360.0D;
-	    }
-
-	    if ((0.0D <= degrees) && (degrees < 22.5D))
-	      return Point.N;
-	    if ((22.5D <= degrees) && (degrees < 67.5D))
-	      return Point.NE;
-	    if ((67.5D <= degrees) && (degrees < 112.5D))
-	      return Point.E;
-	    if ((112.5D <= degrees) && (degrees < 157.5D))
-	      return Point.SE;
-	    if ((157.5D <= degrees) && (degrees < 202.5D))
-	      return Point.S;
-	    if ((202.5D <= degrees) && (degrees < 247.5D))
-	      return Point.SW;
-	    if ((247.5D <= degrees) && (degrees < 292.5D))
-	      return Point.W;
-	    if ((292.5D <= degrees) && (degrees < 337.5D))
-	      return Point.NW;
-	    if ((337.5D <= degrees) && (degrees < 360.0D)) {
-	      return Point.N;
-	    }
-	    return null;
-	  }
-
-	  public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault)
-	  {
-	    ArrayList<String> ret = new ArrayList<>();
-
-	    String row = "";
-	    row = row + Point.NW.toString(Point.NW == point, colorActive, colorDefault);
-	    row = row + Point.N.toString(Point.N == point, colorActive, colorDefault);
-	    row = row + Point.NE.toString(Point.NE == point, colorActive, colorDefault);
-	    ret.add(row);
-
-	    row = "";
-	    row = row + Point.W.toString(Point.W == point, colorActive, colorDefault);
-	    row = row + colorDefault + "+";
-	    row = row + Point.E.toString(Point.E == point, colorActive, colorDefault);
-	    ret.add(row);
-
-	    row = "";
-	    row = row + Point.SW.toString(Point.SW == point, colorActive, colorDefault);
-	    row = row + Point.S.toString(Point.S == point, colorActive, colorDefault);
-	    row = row + Point.SE.toString(Point.SE == point, colorActive, colorDefault);
-	    ret.add(row);
-
-	    return ret;
-	  }
-
-	  public static ArrayList<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault) {
-	    return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
-	  }
-
-	  public static enum Point
-	  {
-	    N('N'), NE('/'), E('O'), SE('\\'), S('S'), SW('/'), W('L'), NW('\\');
-
-	    public final char asciiChar;
-
-	    private Point(char asciiChar) {
-	      this.asciiChar = asciiChar;
-	    }
-
-	    public String toString()
-	    {
-	      return String.valueOf(this.asciiChar);
-	    }
-
-	    public String toString(boolean isActive, ChatColor colorActive, String colorDefault) {
-	      return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
-	    }
-	  }
 
 }

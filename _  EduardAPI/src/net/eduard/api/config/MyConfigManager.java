@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MyConfigManager
@@ -20,6 +21,7 @@ public class MyConfigManager
   public MyConfigManager(JavaPlugin plugin)
   {
     this.plugin = plugin;
+    
   }
 
   public MyConfig getNewConfig(String fileName, String[] header)

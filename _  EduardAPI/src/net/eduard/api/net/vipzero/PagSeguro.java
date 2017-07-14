@@ -19,11 +19,11 @@ import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 
 public class PagSeguro extends Thread {
-	private Main plugin;
+	private VipZero plugin;
 	private String transactionCode = "";
 	Transaction transaction = null;
 	CommandSender sender = null;
-	public PagSeguro(Main plugin,String transactionCode2,CommandSender cmds) {
+	public PagSeguro(VipZero plugin,String transactionCode2,CommandSender cmds) {
 		this.plugin = plugin;
 		transactionCode=transactionCode2.toUpperCase();
 		sender = cmds;

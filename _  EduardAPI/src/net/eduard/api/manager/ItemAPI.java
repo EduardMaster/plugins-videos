@@ -46,6 +46,22 @@ public final class ItemAPI {
 			p.getInventory().setItem(i, null);
 		}
 	}
+	public static ItemStack newSkull(String name,
+			String skull) {
+
+		return setSkull(newItem(Material.SKULL_ITEM, name,3), skull);
+	}
+	public static int getPosition(int line, int column) {
+		int value = (line - 1) * 9;
+		return value + column - 1;
+	}
+
+	public static ItemStack setSkull(ItemStack item, String name) {
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		meta.setOwner(name);
+		item.setItemMeta(meta);
+		return item;
+	}
 
 	public static void clearInventory(Player player) {
 		clearItens(player);
@@ -131,7 +147,8 @@ public final class ItemAPI {
 			}
 		}
 	}
-	public static ItemStack addEnchant(ItemStack item, Enchantment type, int level) {
+	public static ItemStack addEnchant(ItemStack item, Enchantment type,
+			int level) {
 		item.addUnsafeEnchantment(type, level);
 		return item;
 	}
@@ -320,5 +337,39 @@ public final class ItemAPI {
 	public static void saveArmours(Player player) {
 		API.INV_ARMOURS.put(player, player.getInventory().getArmorContents());
 	}
-	
+	public static ItemStack newItem(Material material, String name) {
+		ItemStack item = new ItemStack(material);
+		ItemAPI.setName(item, name);
+		return item;
+	}
+
+	public static ItemStack newItem(Material material, String name,
+			int amount) {
+		return newItem(material, name, amount, 0);
+	}
+
+	public static ItemStack newItem(Material material, String name, int amount,
+			int data, String... lore) {
+
+		ItemStack item = newItem(material, name);
+		ItemAPI.setLore(item, lore);
+		item.setAmount(amount);
+		item.setDurability((short) data);
+		return item;
+	}
+
+	public static ItemStack newItem(String name, Material material) {
+		ItemStack item = new ItemStack(material);
+		ItemAPI.setName(item, name);
+		return item;
+	}
+
+	public static ItemStack newItem(String name, Material material, int data) {
+		return newItem(material, name, 1, data);
+	}
+
+	public static ItemStack newItem(String name, Material material, int amount,
+			int data, String... lore) {
+		return newItem(material, name, amount, data, lore);
+	}
 }

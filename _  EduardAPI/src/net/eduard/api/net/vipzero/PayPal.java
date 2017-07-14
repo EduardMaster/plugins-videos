@@ -20,10 +20,10 @@ import paypalnvp.profile.Profile;
 import paypalnvp.request.GetTransactionDetails;
 
 public class PayPal extends Thread {
-	private Main plugin = null;
+	private VipZero plugin = null;
 	private String transactID = "";
 	private CommandSender sender = null;
-	public PayPal(Main pl,String transactID2,CommandSender cmdss) {
+	public PayPal(VipZero pl,String transactID2,CommandSender cmdss) {
 		plugin=pl;
 		transactID=transactID2.toUpperCase();
 		sender=cmdss;

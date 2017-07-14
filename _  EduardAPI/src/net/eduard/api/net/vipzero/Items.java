@@ -19,10 +19,10 @@ import org.bukkit.potion.PotionType;
 
 public class Items extends Thread {
 	private String group;
-	private Main plugin;
+	private VipZero plugin;
 	private int dias;
 	private Player p;
-	public Items(Main main,Player p2,int days,String grupo) {
+	public Items(VipZero main,Player p2,int days,String grupo) {
 		plugin=main;
 		dias=days;
 		group=grupo;
@@ -414,7 +414,7 @@ public class Items extends Thread {
 		    		else if(text.equalsIgnoreCase("$")) {
 		    			if(!plugin.block_dinheiro) {
 		    				int item_quant = Integer.parseInt(i.split(",")[3]);
-		    				EconomyResponse r = Main.econ.depositPlayer(p.getName(), item_quant);
+		    				EconomyResponse r = VipZero.econ.depositPlayer(p.getName(), item_quant);
 				            if(!r.transactionSuccess())
 				                plugin.getLogger().info(String.format("ERROR: %s", r.errorMessage));
 		    			}

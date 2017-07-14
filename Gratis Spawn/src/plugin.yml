@@ -1,0 +1,16 @@
+name: TutorialSpawn
+description: Tutorial Plugin de Spawn
+main: net.eduard.spawn.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  spawn:
+    permission: spawn.use
+    usage: /<command>
+    description: Teleportar para o Spawn
+  setspawn:
+    permission: spawn.set
+    usage: /<command>
+    description: Configurar o Spawn
+    

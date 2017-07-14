@@ -82,10 +82,12 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		if (getConfig().getBoolean("custom-join-message")) {
 			e.setJoinMessage(API.ON_JOIN.replace("$player", p.getName()));
 		}
+		
 		if (API.NO_JOIN_MESSAGE) {
 			e.setJoinMessage(null);
 			return;
 		}
+		
 
 	}
 	@EventHandler

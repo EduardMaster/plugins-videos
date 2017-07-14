@@ -12,7 +12,7 @@ import net.eduard.api.util.Cs;
 public class GamemodeCommand extends CMD {
 
 	public GamemodeCommand() {
-		super("gamemode");
+		super("gamemode","gm");
 	}
 	public String message = "§6Seu gamemode agora é: $gamemode";
 	public String messageTarget = "§6O gamemode do $player agora é: $gamemode";

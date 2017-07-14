@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitTask;
 import net.eduard.api.API;
 import net.eduard.api.config.Save;
 import net.eduard.api.config.Section;
+import net.eduard.api.util.EventRegister;
 
 public class Manager extends EventRegister implements Runnable,Save{
 

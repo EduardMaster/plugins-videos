@@ -17,6 +17,10 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.command.ReportCommand;
+import net.eduard.api.config.save.SaveConfig;
+import net.eduard.api.config.save.SaveItemStack;
+import net.eduard.api.config.save.SaveLocation;
+import net.eduard.api.config.save.SaveVector;
 import net.eduard.api.game.Potions;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.game.Tag;
@@ -33,6 +37,7 @@ public class Section {
 
 	private static HashMap<Class<?>, String> lists = new HashMap<>();
 	private static HashMap<String, String> packages = new HashMap<>();
+	private static List<String> lineBreakers = new ArrayList<>();
 
 	static {
 		register(Click.class, "");
@@ -48,9 +53,16 @@ public class Section {
 		register("Vector", new SaveVector());
 		register("Location", new SaveLocation());
 		register("ItemStack", new SaveItemStack());
+		register("Config", new SaveConfig());
+		newWrapper("<br>");
+		newWrapper("\\n");
+		newWrapper("$br");
 
 	}
-
+	public static void newWrapper(String wrap) {
+		if (!lineBreakers.contains(wrap))
+			lineBreakers.add(wrap);
+	}
 	public static String getComment(String line) {
 
 		String[] split = line.split("#");
@@ -69,7 +81,12 @@ public class Section {
 		return line.split(":")[0];
 
 	}
-
+	public static String getWraps(String value) {
+		for (String wrap : lineBreakers) {
+			value = value.replaceAll(wrap, "\n");
+		}
+		return value;
+	}
 	public static String getList(String line) {
 		String[] split = line.split("-");
 		if (split.length > 0)
@@ -126,10 +143,10 @@ public class Section {
 			message = message.replaceFirst("\"", "");
 		}
 		if (message.endsWith("'")) {
-			message = message.substring(0,message.length() - 1);
+			message = message.substring(0, message.length() - 1);
 		}
 		if (message.endsWith("\"")) {
-			message = message.substring(0,message.length() - 1);
+			message = message.substring(0, message.length() - 1);
 		}
 		return message;
 	}
@@ -367,7 +384,7 @@ public class Section {
 	}
 
 	public String getString() {
-		return removeQuotes(Cs.toString(object));
+		return getWraps(removeQuotes(Cs.toString(object)));
 	}
 
 	public String getString(String path) {

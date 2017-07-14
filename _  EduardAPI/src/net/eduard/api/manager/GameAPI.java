@@ -1,5 +1,6 @@
 package net.eduard.api.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -8,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,6 +24,44 @@ import net.eduard.api.util.Cs;
  */
 
 public final class GameAPI {
+	public static List<LivingEntity> getNearbyEntities(LivingEntity player,
+			double x, double y, double z, EntityType... types) {
+		List<LivingEntity> list = new ArrayList<>();
+		for (Entity item : player.getNearbyEntities(x, y, z)) {
+			if (item instanceof LivingEntity) {
+				LivingEntity livingEntity = (LivingEntity) item;
+				if (types != null) {
+					for (EntityType entitie : types) {
+						if (livingEntity.getType().equals(entitie)) {
+							if (!list.contains(livingEntity))
+								list.add(livingEntity);
+						}
+					}
+				} else
+					list.add(livingEntity);
+			}
+		}
+		return list;
+
+	}
+
+	public static List<LivingEntity> getNearbyEntities(LivingEntity entity,
+			double radio, EntityType... entities) {
+
+		return getNearbyEntities(entity, radio, radio, radio, entities);
+
+	}
+	public static List<Player> getPlayerAtRange(Location location,
+			double range) {
+
+		List<Player> players = new ArrayList<>();
+		for (Player p : location.getWorld().getPlayers()) {
+			if (p.getLocation().distance(location) <= range) {
+				players.add(p);
+			}
+		}
+		return players;
+	}
 	public static boolean hasLightOn(Entity entity) {
 		return hasLightOn(entity.getLocation());
 	}

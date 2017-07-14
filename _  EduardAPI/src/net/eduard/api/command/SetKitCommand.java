@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.GameAPI;
 import net.eduard.api.util.Cs;
 
 public class SetKitCommand extends CMD {
@@ -25,7 +26,7 @@ public class SetKitCommand extends CMD {
 			} catch (Exception e) {
 			}
 			Player p = (Player) sender;
-			for (Player player : API.getPlayerAtRange(p.getLocation(), range)) {
+			for (Player player : GameAPI.getPlayerAtRange(p.getLocation(), range)) {
 				if (player != p) {
 					player.getInventory().setArmorContents(
 							p.getInventory().getArmorContents());

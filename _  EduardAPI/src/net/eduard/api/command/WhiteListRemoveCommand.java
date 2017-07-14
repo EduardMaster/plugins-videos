@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.util.Cs;
 

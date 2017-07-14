@@ -1,11 +1,15 @@
 package net.eduard.api.tutorial.sistemas;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class NaosVeremPlugins implements Listener {
+	private static List<String> comandosBloqueados = Arrays.asList("");
 	@EventHandler
 	public void NaoProcurarOsPluginsDoServer(PlayerCommandPreprocessEvent e) {
 

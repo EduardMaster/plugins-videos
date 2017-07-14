@@ -20,8 +20,8 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class Commands implements CommandExecutor {
-	private Main plugin;
-	public Commands(Main plugin) {
+	private VipZero plugin;
+	public Commands(VipZero plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -277,9 +277,9 @@ public class Commands implements CommandExecutor {
 											}
 											else {
 												for(String g : plugin.getConfig().getStringList("vip_groups"))
-													if(Main.perms.playerInGroup((Player)sender, g.trim()))
-														Main.perms.playerRemoveGroup((Player)sender, g.trim());
-												Main.perms.playerAddGroup((Player)sender, grupo);
+													if(VipZero.perms.playerInGroup((Player)sender, g.trim()))
+														VipZero.perms.playerRemoveGroup((Player)sender, g.trim());
+												VipZero.perms.playerAddGroup((Player)sender, grupo);
 									    	}
 											if(plugin.getConfig().getBoolean("one_vip_change")) {
 												if(plugin.trocou.containsKey(sender.getName()))
@@ -680,7 +680,7 @@ public class Commands implements CommandExecutor {
 						    	}
 						    	else {
 						    		plugin.removeRelatedVipGroups(p);
-						    		Main.perms.playerAddGroup(p, plugin.getConfig().getString("default_group").trim());
+						    		VipZero.perms.playerAddGroup(p, plugin.getConfig().getString("default_group").trim());
 						    	}
 								plugin.getServer().broadcastMessage(ChatColor.AQUA+"["+plugin.getConfig().getString("server_name").trim()+"] "+ChatColor.WHITE+plugin.getMessage("rvip").trim().replaceAll("%admin%", sender.getName()).replaceAll("%name%", p.getName())+"!");
 							}

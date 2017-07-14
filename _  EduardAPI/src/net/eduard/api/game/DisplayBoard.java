@@ -5,11 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Criterias;
@@ -17,6 +15,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import net.eduard.api.util.FakeOfflinePlayer;
 
 public class DisplayBoard {
 
@@ -129,9 +129,9 @@ public class DisplayBoard {
 	}
 	protected OfflinePlayer text(String text, int id) {
 		if (text.isEmpty()) {
-			return new FakePlayer(ChatColor.values()[id].toString());
+			return new FakeOfflinePlayer(ChatColor.values()[id].toString());
 		}
-		return new FakePlayer(cut(text, PLAYER_NAME_LIMIT));
+		return new FakeOfflinePlayer(cut(text, PLAYER_NAME_LIMIT));
 	}
 	protected int id(int slot) {
 		return slot <= 0 ? 1 : slot > 15 ? 15 : slot;
@@ -191,104 +191,6 @@ public class DisplayBoard {
 		return health;
 	}
 
-	protected static class FakePlayer implements OfflinePlayer {
-
-		protected String text;
-
-		public FakePlayer(String text) {
-			this.text = text;
-		}
-
-		@Override
-		public boolean isOp() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void setOp(boolean arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public Map<String, Object> serialize() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Location getBedSpawnLocation() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public long getFirstPlayed() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public long getLastPlayed() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public String getName() {
-			return text;
-		}
-
-		@Override
-		public Player getPlayer() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public UUID getUniqueId() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean hasPlayedBefore() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isBanned() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isOnline() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isWhitelisted() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void setBanned(boolean banned) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setWhitelisted(boolean value) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
 
 	
 

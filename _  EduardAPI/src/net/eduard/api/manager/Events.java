@@ -35,6 +35,7 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	private Explosion explosion;
 	private Jump jump;
 	private String message;
+	private List<String> commands = new ArrayList<>();
 	private boolean closeInventory;
 	private boolean clearInventory;
 	private boolean clearHotBar;
@@ -293,6 +294,12 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	public Events setDisplay(Effects display) {
 		this.display = display;
 		return this;
+	}
+	public List<String> getCommands() {
+		return commands;
+	}
+	public void setCommands(List<String> commands) {
+		this.commands = commands;
 	}
 
 }

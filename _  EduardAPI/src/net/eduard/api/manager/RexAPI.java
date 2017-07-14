@@ -62,6 +62,7 @@ import sun.net.www.protocol.file.FileURLConnection;
  * Array = Vetor -> String[] ou String... <br>
  * Constructor"cons" = Iniciador -> public RexAPI(){}; <br>
  * Parameters = Parametros -> Class[] ou Object[]
+ * 
  * @author Eduard
  *
  */
@@ -81,6 +82,7 @@ public class RexAPI {
 	public static String cEnumTitleAction = "#cEnumTitleAction";
 	public static String pEnumTitleAction2 = "#pPlayOutTitle$EnumTitleAction";
 	public static String mEnumClientCommand = "#mEnumClientCommand";
+	public static String mEnumClientCommand2 = "#pPlayInClientCommand$EnumClientCommand";
 	public static String mChatSerializer = "#mChatSerializer";
 	public static String mIChatBaseComponent = "#mIChatBaseComponent";
 	public static String mEntityHuman = "#mEntityHuman";
@@ -93,6 +95,7 @@ public class RexAPI {
 	public static String bItemStack = "#bItemStack";
 	public static String bBukkit = "#bBukkit";
 	public static String mChatComponentText = "#mChatComponentText";
+	public static String mMinecraftServer = "#mMinecraftServer";
 
 	/**
 	 * Envia o pacote para o jogador
@@ -109,6 +112,21 @@ public class RexAPI {
 		getResult(getConnection(player), "sendPacket", getParameters(pPacket),
 				packet);
 	}
+
+	public static int getCurrentTick() throws Exception {
+		return (int) RexAPI.getValue(RexAPI.mMinecraftServer, "currentTick");
+	}
+
+	public static Double getTPS() {
+		try {
+			return Double.valueOf(
+					Math.min(20.0D, Math.round(getCurrentTick() * 10) / 10.0D));
+		} catch (Exception e) {
+		}
+
+		return 0D;
+	}
+
 	/**
 	 * Envia o pacote para o jogador
 	 * 
@@ -258,7 +276,7 @@ public class RexAPI {
 				string = string.replace("#b", "org.bukkit.");
 				string = string.replace("#v", getVersion());
 				// string = string.replace("#v2", getVersion2());
-				
+
 				return get(string);
 			}
 
@@ -687,8 +705,13 @@ public class RexAPI {
 			getResult(getConnection(player), "a", packet);
 
 		} catch (Exception ex) {
+			try {
+				Object packet = getNew(pPlayInClientCommand,
+						getValue(mEnumClientCommand2, "PERFORM_RESPAWN"));
+				getResult(getConnection(player), "a", packet);
+			} catch (Exception e) {
+			}
 
-			ex.printStackTrace();
 		}
 	}
 	/**
@@ -998,8 +1021,8 @@ public class RexAPI {
 									section.add(method.getName(), test);
 									used = true;
 								} catch (Exception ex) {
-									Cs.console("§bDataBase §fO metodo §c"
-											+ name + "§f causou erro!");
+									Cs.console("§bDataBase §fO metodo §c" + name
+											+ "§f causou erro!");
 									ex.printStackTrace();
 									continue;
 								}
@@ -1049,7 +1072,6 @@ public class RexAPI {
 		}
 		saveObject("Server", Bukkit.getServer());
 	}
-
 
 	@SuppressWarnings("resource")
 	private static void processJarfile(URL resource, String pkgname,
@@ -1125,22 +1147,22 @@ public class RexAPI {
 	public static void commands(Section section, CMD... cmds) {
 		for (CMD cmd : cmds) {
 			String name = cmd.getName();
-			if (section!=null) {
+			if (section != null) {
 				if (section.contains(name)) {
 					cmd = (CMD) section.get(name);
 
 				}
-				
+
 			}
 			cmd.register();
 			if (cmd.hasEvents()) {
 				cmd.register(cmd.getPlugin());
 			}
-			if (section!=null) {
-				section.add( name, cmd);
+			if (section != null) {
+				section.add(name, cmd);
 
 			}
-		
+
 		}
 	}
 
