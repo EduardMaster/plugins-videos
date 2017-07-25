@@ -9,22 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class NaosVeremPlugins implements Listener {
-	private static List<String> comandosBloqueados = Arrays.asList("");
+	private static List<String> comandosBloqueados = Arrays.asList("/pl",
+			"/plugins", "/bukkit:?"
+
+			, "/bukkit:plugins", "/bukkit:help", "/bukkit:pl", "/ver", "/help",
+			"/bukkit:ver", "/logout", "/?");
 	@EventHandler
 	public void NaoProcurarOsPluginsDoServer(PlayerCommandPreprocessEvent e) {
 
 		Player p = e.getPlayer();
-		if (e.getMessage().equalsIgnoreCase("/pl")
-			|| e.getMessage().equalsIgnoreCase("/plugins")
-			|| e.getMessage().equalsIgnoreCase("/bukkit:?")
-			|| e.getMessage().equalsIgnoreCase("/bukkit:plugins")
-			|| e.getMessage().equalsIgnoreCase("/bukkit:help")
-			|| e.getMessage().equalsIgnoreCase("/bukkit:pl")
-			|| e.getMessage().equalsIgnoreCase("/ver")
-			|| e.getMessage().equalsIgnoreCase("/help")
-			|| e.getMessage().equalsIgnoreCase("/bukkit:ver")
-			|| e.getMessage().equalsIgnoreCase("/logout")
-			|| e.getMessage().equalsIgnoreCase("/?")) {
+		if (comandosBloqueados.contains(e.getMessage().toLowerCase())) {
 			p.sendMessage("§6Nao tente procurar nossos Plugins");
 			e.setCancelled(true);
 		}

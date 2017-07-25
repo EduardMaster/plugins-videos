@@ -9,9 +9,9 @@ import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.antibot.setup.BotDetector;
+import net.eduard.api.config.CS;
 import net.eduard.api.config.Config;
 import net.eduard.api.manager.Manager;
-import net.eduard.api.util.Cs;
 
 public class Main extends JavaPlugin {
 
@@ -27,11 +27,11 @@ public class Main extends JavaPlugin {
 		new BotDetector();
 		try {
 			File file = new File(getDataFolder(),"proxy.yml");
-			Cs.console("§3[§bAntBot§3] §7Salvando a config §eproxy.yml");
+			CS.console("§3[§bAntBot§3] §7Salvando a config §eproxy.yml");
 			saveResource("proxy.yml", false);
-			Cs.console("§3[§bAntBot§3] §7Pegando os §fIps-Proxys§7 da config §eproxy.yml");
+			CS.console("§3[§bAntBot§3] §7Pegando os §fIps-Proxys§7 da config §eproxy.yml");
 			ips_proxy = (List<String>) Files.readAllLines(file.toPath());
-			Cs.console("§3[§bAntBot§3] §aAntivando Bot Detector!");
+			CS.console("§3[§bAntBot§3] §aAntivando Bot Detector!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

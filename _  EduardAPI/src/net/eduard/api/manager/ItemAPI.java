@@ -22,8 +22,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.eduard.api.API;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.util.Cs;
 /**
  * Item , Inventory
  */
@@ -49,7 +49,7 @@ public final class ItemAPI {
 	public static ItemStack newSkull(String name,
 			String skull) {
 
-		return setSkull(newItem(Material.SKULL_ITEM, name,3), skull);
+		return setSkull(newItem(name,Material.SKULL_ITEM,3), skull);
 	}
 	public static int getPosition(int line, int column) {
 		int value = (line - 1) * 9;
@@ -73,7 +73,7 @@ public final class ItemAPI {
 
 	}
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public static void getItems(Player player) {
 		if (API.INV_ITEMS.containsKey(player)) {
 			player.getInventory().setContents(API.INV_ITEMS.get(player));
@@ -82,7 +82,7 @@ public final class ItemAPI {
 		getArmours(player);
 
 	}
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public static void getArmours(Player player) {
 		if (API.INV_ARMOURS.containsKey(player)) {
 			player.getInventory().setArmorContents(API.INV_ARMOURS.get(player));
@@ -200,7 +200,7 @@ public final class ItemAPI {
 		return (getHandType(entity) == material);
 	}
 	public static boolean isUsing(LivingEntity entity, String material) {
-		return (Cs.contains(getHandType(entity).name(), (material)));
+		return (ConfigSection.contains(getHandType(entity).name(), (material)));
 	}
 	public static void drop(Entity entity, ItemStack item) {
 		drop(entity.getLocation(), item);

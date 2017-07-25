@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class SaveLocation implements Save{
-	public Location get(Section section) {
+	public Location get(ConfigSection section) {
 		World world = Bukkit.getWorld(section.getString("world"));
 		Double x = section.getDouble("x");
 		Double y = section.getDouble("y");
@@ -18,7 +18,7 @@ public class SaveLocation implements Save{
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
-	public void save(Section section, Object object) {
+	public void save(ConfigSection section, Object object) {
 		Location location = (Location) object;
 		section.set("world", location.getWorld().getName());
 		section.set("x", location.getX());

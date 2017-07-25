@@ -16,9 +16,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import net.eduard.api.config.CS;
 import net.eduard.api.manager.Manager;
 import net.eduard.api.manager.WorldAPI;
-import net.eduard.api.util.Cs;
 import net.eduard.parkour.Arena;
 
 public class ParkourEvent extends Manager {
@@ -69,8 +69,8 @@ public class ParkourEvent extends Manager {
 
 		Player p = e.getPlayer();
 		if (Arena.isPlaying(p)) {
-			if (Cs.startWith(e.getMessage(), "/leave")
-					| Cs.startWith(e.getMessage(), "/sair")) {
+			if (CS.startWith(e.getMessage(), "/leave")
+					| CS.startWith(e.getMessage(), "/sair")) {
 				Arena.leave(p);
 			} else {
 				p.sendMessage(Arena.message("OnlyQuit"));

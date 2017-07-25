@@ -51,9 +51,8 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import net.eduard.api.API;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.config.Config;
-import net.eduard.api.config.Section;
-import net.eduard.api.util.Cs;
 import net.eduard.api.util.KeyType;
 import sun.net.www.protocol.file.FileURLConnection;
 /**
@@ -537,7 +536,6 @@ public class RexAPI {
 					"getVersion") == 47;
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 		return false;
 	}
@@ -918,7 +916,7 @@ public class RexAPI {
 			for (Field field : value.getFields()) {
 				if (field.getType().equals(value)) {
 					Object obj = field.get(value);
-					Section section = config.getSection(field.getName());
+					ConfigSection section = config.getSection(field.getName());
 					for (Method method : obj.getClass().getDeclaredMethods()) {
 						String name = method.getName();
 						if ((method.getParameterCount() == 0)
@@ -942,7 +940,7 @@ public class RexAPI {
 	public static void saveObject(String local, Object value) {
 		try {
 			Config config = new Config("DataBase/" + local + ".yml");
-			Section section = config.getConfig();
+			ConfigSection section = config.getConfig();
 			for (Method method : value.getClass().getDeclaredMethods()) {
 				String name = method.getName();
 				if ((method.getParameterCount() == 0) && name.startsWith("get")
@@ -972,7 +970,7 @@ public class RexAPI {
 						Config config = new Config(
 								"DataBase/" + value.getSimpleName() + "/"
 										+ obj.name() + ".yml");
-						Section section = config.getConfig();
+						ConfigSection section = config.getConfig();
 						section.set("number", obj.ordinal());
 						for (Method method : obj.getClass()
 								.getDeclaredMethods()) {
@@ -1002,7 +1000,7 @@ public class RexAPI {
 				for (Object part : value.getEnumConstants()) {
 					try {
 						Enum<?> obj = (Enum<?>) part;
-						Section section = config.add(obj.name(), obj.ordinal());
+						ConfigSection section = config.add(obj.name(), obj.ordinal());
 
 						for (Method method : obj.getClass()
 								.getDeclaredMethods()) {
@@ -1021,7 +1019,7 @@ public class RexAPI {
 									section.add(method.getName(), test);
 									used = true;
 								} catch (Exception ex) {
-									Cs.console("§bDataBase §fO metodo §c" + name
+									ConfigSection.console("§bDataBase §fO metodo §c" + name
 											+ "§f causou erro!");
 									ex.printStackTrace();
 									continue;
@@ -1064,7 +1062,6 @@ public class RexAPI {
 		}
 		if (API.PLUGIN.getConfig().getBoolean("save-players")) {
 			for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-				@SuppressWarnings("deprecation")
 				String name = player.getName();
 				saveObject("Players/" + name + " " + player.getUniqueId(),
 						player);
@@ -1144,8 +1141,11 @@ public class RexAPI {
 
 	}
 	@SafeVarargs
-	public static void commands(Section section, CMD... cmds) {
+	public static void commands(ConfigSection section, CMD... cmds) {
 		for (CMD cmd : cmds) {
+			try {
+				
+			
 			String name = cmd.getName();
 			if (section != null) {
 				if (section.contains(name)) {
@@ -1155,14 +1155,13 @@ public class RexAPI {
 
 			}
 			cmd.register();
-			if (cmd.hasEvents()) {
-				cmd.register(cmd.getPlugin());
-			}
 			if (section != null) {
 				section.add(name, cmd);
 
 			}
-
+			} catch (Exception e) {
+				ConfigSection.console(cmd.getName());
+			}
 		}
 	}
 

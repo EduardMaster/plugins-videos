@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
 import net.eduard.api.API;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 /**
  * Preço: 
  * @author Eduard-PC
@@ -151,7 +151,7 @@ public class Gui extends Click {
 		});
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		section.remove("Slots");
 		for (Entry<Integer, Slot> map : slots.entrySet()) {
 			Integer id = map.getKey();
@@ -161,11 +161,11 @@ public class Gui extends Click {
 		}
 
 	}
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		if (inventory == null){
 			init();
 		}
-		for (Section sub : section.getSection("Slots").getValues()) {
+		for (ConfigSection sub : section.getSection("Slots").getValues()) {
 			Slot slot = (Slot) sub.getValue();
 			set(slot);
 		}

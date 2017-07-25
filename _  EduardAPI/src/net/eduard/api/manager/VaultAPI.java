@@ -13,8 +13,14 @@ import net.milkbowl.vault.permission.Permission;
  */
 public final class VaultAPI {
 
+	/**
+	 * Central de controle de permissão
+	 */
 	private static Permission permission = null;
 
+	/**
+	 * Central de controle
+	 */
 	private static Economy economy = null;
 
 	private static Chat chat = null;

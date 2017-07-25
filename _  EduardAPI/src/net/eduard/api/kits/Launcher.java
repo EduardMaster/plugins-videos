@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.LaunchPad;
 import net.eduard.api.game.Sounds;
@@ -27,7 +27,7 @@ public class Launcher extends Kit {
 		 super.register(plugin);
 	}
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		section.set("pad", pad);
 	}
 

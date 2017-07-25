@@ -27,7 +27,7 @@ public class Main extends EduardPlugin {
 		return JavaPlugin.getPlugin(Main.class);
 	}
 
-	public void init() {
+	public void setup() {
 		Sounds sound = Sounds.create(Sound.ENDERMAN_TELEPORT);
 		messages.add("Spawn", "&6Voce foi teleportado para spawn!");
 		messages.add("DelaySpawn",

@@ -1,0 +1,10 @@
+name: PluginPvP
+description: Plugin para PvP
+main: net.eduard.plugin_1v1.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  1v1:
+    description: Entrar em pvp com algum jogador
+    aliases: [pvp]

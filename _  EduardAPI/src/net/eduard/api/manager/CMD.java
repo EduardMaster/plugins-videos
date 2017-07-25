@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,35 +14,31 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 
 import net.eduard.api.API;
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
 
-public abstract class CMD extends Manager implements TabCompleter, CommandExecutor {
+public abstract class CMD extends Manager
+		implements
+			TabCompleter,
+			CommandExecutor {
 
 	private transient PluginCommand command;
-	
-	protected transient boolean hasEvents; 
-	
-	public boolean hasEvents(){
-		return hasEvents;
-	}
 
 	private transient Map<String, CMD> commands = new HashMap<>();
 
-	private String permission = getCommandName()+".use";
-
-	private List<String> aliases = new ArrayList<>();
+	private String permission = getCommandName() + ".use";
 
 	private String name = getCommandName();
 
-	private String usage=API.USAGE+"§c /"+name+" help";
+	private String usage = API.USAGE + "§c /" + name + " help";;
+
+	private List<String> aliases = new ArrayList<>();
 
 	private String permissionMessage = API.NO_PERMISSION;
 
 	private String description;
 
-	private transient boolean sub;
-
 	public String getCommandName() {
+
 		return getClass().getSimpleName().toLowerCase().replace("sub", "")
 				.replace("subcommand", "").replace("comando", "")
 				.replace("command", "").replace("cmd", "")
@@ -56,7 +51,7 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 	}
 
 	public void broadcast(String message) {
-		Cs.broadcast(message, permission);
+		ConfigSection.broadcast(message, permission);
 	}
 
 	public CMD() {
@@ -72,8 +67,10 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 	public CMD(String name, String... aliases) {
 		this.name = name;
 		this.aliases = Arrays.asList(aliases);
-		this.sub = true;
-	} 
+	}
+	public void sendUsage(CommandSender sender) {
+		ConfigSection.chat(sender, getUsage());
+	}
 
 	public boolean register(CMD sub) {
 		if (commands.containsKey(sub.name)) {
@@ -81,34 +78,27 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 		}
 		commands.put(sub.name, sub);
 		sub.command = command;
-		Cs.consoleMessage("§bCommandAPI §fO subcomando §e" + sub.name
+		sub.setUsage(usage);
+		// sub.a
+		ConfigSection.consoleMessage("§bCommandAPI §fO subcomando §e" + sub.name
 				+ " §ffoi registrado no comando §a" + name
 				+ " §fpara o Plugin §b" + getPlugin().getName());
 		return true;
 	}
-	public CMD unregister(String sub) {
-		if (hasSubCommand(sub)) {
 
-		}
-		return this;
-	}
 	/**
 	 * Atualiza informações do Comando
 	 */
 	public void update() {
 		command.setUsage(usage);
 		command.setDescription(description);
-		command.setAliases(aliases);
 		command.setPermissionMessage(permissionMessage);
 		command.setPermission(permission);
-	}
-	public boolean hasSubCommand(String sub) {
-		return commands.containsKey(sub.toLowerCase());
 	}
 	public boolean register() {
 		command = Bukkit.getPluginCommand(name);
 		if (command == null) {
-			Cs.consoleMessage("§bCommandAPI §fO comando §a" + name
+			ConfigSection.consoleMessage("§bCommandAPI §fO comando §a" + name
 					+ " §fnao foi registrado na plugin.yml de nenhum Plugin do Servidor");
 			return false;
 		}
@@ -119,9 +109,14 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 		command.setExecutor(this);
 		permission = getPlugin().getName() + ".command." + name;
 		description = "§a" + command.getDescription();
-		usage = API.SERVER_TAG + API.USAGE + command.getUsage();
+		if (!command.getUsage().isEmpty()) {
+			usage = API.SERVER_TAG + API.USAGE
+					+ command.getUsage().replace("<command>", name);
+		}
+		aliases = command.getAliases();
 		update();
-		Cs.consoleMessage("§bCommandAPI §fO comando §a" + name
+		register(getPlugin());
+		ConfigSection.consoleMessage("§bCommandAPI §fO comando §a" + name
 				+ " §ffoi registrado para o Plugin §b" + pl);
 		return true;
 
@@ -137,41 +132,53 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 	public boolean hasCommand() {
 		return command != null;
 	}
-	public void sendUsage(CommandSender sender){
-		sender.sendMessage(usage);
-	}
-
+/**
+ * Pode dar loop infinito
+ */
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		CMD current = this;
-		for (int arg = 0; arg < args.length; arg++) {
-			CMD sub = null;
-			if (current.commands.isEmpty()) {
-				break;
-			}
-			subFor : for (Entry<String, CMD> subCmdMap : current.commands
-					.entrySet()) {
-				sub = subCmdMap.getValue();
-				String text = args[arg];
-				if (text.equalsIgnoreCase(sub.name)) {
-					break subFor;
-				}
-				for (String aliase : sub.aliases) {
-					if (aliase.equalsIgnoreCase(text)) {
-						break subFor;
-					}
-				}
-				sub = null;
-			}
-			if (sub == null) {
-				break;
-			}
-			current = sub;
-		}
-		if (current == this) {
+		if (args.length == 0) {
 			return false;
 		}
-		return current.onCommand(sender, command, label, args);
+		CMD cmd = this;
+		// args lenght de 2
+		// gamemode adventure|creative|survival [player]
+		// config reload
+		for (int i = 0; i <= args.length; i++) {
+
+			CMD before = cmd;
+			if (args.length == i) {
+				if (cmd.commands.size() == 0) {
+					return cmd.onCommand(sender, command, label, args);
+
+				} else
+					cmd.sendUsage(sender);
+
+			} else {
+				String argument = args[i];
+				if (cmd.commands.size() == 0) {
+					return cmd.onCommand(sender, command, label, args);
+				} else {
+					for (CMD sub : cmd.commands.values()) {
+						if (sub.name.equalsIgnoreCase(argument)) {
+							cmd = sub;
+							break;
+						} else if (sub.aliases
+								.contains(argument.toLowerCase())) {
+							cmd = sub;
+							break;
+						}
+					}
+					if (cmd.equals(before)) {
+						cmd.onCommand(sender, command, label, args);
+						break;
+					}
+				}
+			}
+
+		}
+
+		return true;
 	}
 	public PluginCommand getCommand() {
 		return command;
@@ -236,9 +243,11 @@ public abstract class CMD extends Manager implements TabCompleter, CommandExecut
 		this.description = description;
 	}
 
-	public boolean isSubCommand() {
-		return sub;
+	@Override
+	public Object get(ConfigSection section) {
+		this.aliases = section.getStringList("aliases");
+
+		return null;
 	}
-	
-	
+
 }

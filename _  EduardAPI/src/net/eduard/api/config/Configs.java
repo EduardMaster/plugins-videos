@@ -61,6 +61,7 @@ public class Configs {
 		config = YamlConfiguration.loadConfiguration(file);
 		InputStream defaults = plugin.getResource(file.getName());
 		if (defaults != null) {
+			@SuppressWarnings("deprecation")
 			YamlConfiguration loadConfig = YamlConfiguration
 					.loadConfiguration(defaults);
 			config.setDefaults(loadConfig);

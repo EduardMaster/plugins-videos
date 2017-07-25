@@ -1,6 +1,7 @@
 package net.eduard.api.manager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -16,8 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
+
 import net.eduard.api.API;
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
 
 /**
  * Vector, Player, Entities, Game
@@ -43,6 +45,31 @@ public final class GameAPI {
 		}
 		return list;
 
+	}
+	public static LivingEntity getTargetEntity(Player player ) {
+		int range = 100;
+		try {
+			for (Entity entity : player.getNearbyEntities(range, range, range)) {
+				if (entity.equals(player))
+					continue;
+				if (entity instanceof LivingEntity) {
+					double distance = entity.getLocation().distance(player.getLocation());
+					double variation = 1.5D;
+					LivingEntity target = (LivingEntity) entity;
+					@SuppressWarnings("deprecation")
+					Block block = player.getTargetBlock((HashSet<Byte>) null, (int) distance);
+					if (block.getLocation().distance(target.getLocation()) <= variation) {
+						return target;
+					}
+					
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	public static List<LivingEntity> getNearbyEntities(LivingEntity entity,
@@ -195,7 +222,7 @@ public final class GameAPI {
 	
 
 	public static void changeTabName(Player player, String displayName) {
-		player.setPlayerListName(Cs.toText(displayName));
+		player.setPlayerListName(ConfigSection.toText(displayName));
 	}
 	
 	
@@ -272,7 +299,7 @@ public final class GameAPI {
 	}
 	public static Location getTarget(LivingEntity entity, int distance) {
 		@SuppressWarnings("deprecation")
-		Block block = entity.getTargetBlock(null, distance);
+		Block block = entity.getTargetBlock((HashSet<Byte>)null, distance);
 		return block.getLocation();
 	}
 	

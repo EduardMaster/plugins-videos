@@ -4,8 +4,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class Potions implements Save {
 
@@ -63,12 +63,12 @@ public class Potions implements Save {
 		return this;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		Potions potion = (Potions) value;
 		section.set("type", potion.getType().getName());
 	}
 
-	public Potions get(Section section) {
+	public Potions get(ConfigSection section) {
 		type = PotionEffectType.getByName(section.getString("type"));
 		return null;
 	}

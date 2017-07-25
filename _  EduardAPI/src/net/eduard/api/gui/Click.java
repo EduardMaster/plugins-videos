@@ -7,8 +7,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.config.Section;
-
+import net.eduard.api.config.ConfigSection;
+/**
+ * Representa o Controle de efeito de clicar na Tela<br>
+ * Botão direito, esquerdo com um Item especifico ou não
+ * @author Eduard-PC
+ *
+ */
 public class Click extends Slot {
 	
 	
@@ -136,7 +141,7 @@ public class Click extends Slot {
 	}
 
 	@Override
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 
@@ -157,7 +162,7 @@ public class Click extends Slot {
 	}
 
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 

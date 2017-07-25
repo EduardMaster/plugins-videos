@@ -2,11 +2,11 @@ package net.eduard.api.game;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.RexAPI;
+import net.eduard.api.util.Save;
 
-public class Title implements Save {
+public class Title implements Save, Cloneable {
 
 	private int fadeIn;
 
@@ -38,7 +38,8 @@ public class Title implements Save {
 	public Title() {
 	}
 
-	public Title(int fadeIn, int stay, int fadeOut, String title, String subTitle) {
+	public Title(int fadeIn, int stay, int fadeOut, String title,
+			String subTitle) {
 		super();
 		this.fadeIn = fadeIn;
 		this.stay = stay;
@@ -85,11 +86,18 @@ public class Title implements Save {
 		return this;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
+		return null;
+	}
+	public Title clone() {
+		try {
+			return (Title) super.clone();
+		} catch (Exception e) {
+		}
 		return null;
 	}
 

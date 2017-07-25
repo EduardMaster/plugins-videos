@@ -29,7 +29,7 @@ public abstract class EduardPlugin extends JavaPlugin {
 	protected void events() {
 
 	}
-	protected void init() {
+	protected void setup() {
 
 	}
 	public void onEnable() {
@@ -40,7 +40,7 @@ public abstract class EduardPlugin extends JavaPlugin {
 		messages.saveDefaultConfig();
 		configs();
 		time = new Manager();
-		init();
+		setup();
 		commands();
 		events();
 

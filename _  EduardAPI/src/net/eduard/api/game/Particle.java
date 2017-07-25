@@ -3,9 +3,9 @@ package net.eduard.api.game;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.RexAPI;
+import net.eduard.api.util.Save;
 
 public class Particle implements Save {
 
@@ -149,11 +149,11 @@ public class Particle implements Save {
 		this.zRandom = zRandom;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 	public enum ParticleType {

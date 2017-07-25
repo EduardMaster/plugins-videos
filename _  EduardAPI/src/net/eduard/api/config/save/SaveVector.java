@@ -2,16 +2,16 @@ package net.eduard.api.config.save;
 
 import org.bukkit.util.Vector;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class SaveVector implements Save{
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return new Vector(section.getDouble("x"),section.getDouble("y") , section.getDouble("z"));
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		if (value instanceof Vector) {
 			Vector vector = (Vector) value;
 			section.set("x",vector.getX());

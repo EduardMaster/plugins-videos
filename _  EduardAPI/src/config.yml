@@ -10,3 +10,7 @@ custom-quit-message: false
 on-join-message: '&6O jogador &e$player &6entrou no server'
 on-quit-message: '&6O jogador &e$player &6saiu do server'
 server-tag: Server
+custom-chat: false
+chat-format: '$player: $message'
+auto-save-config-on-disable: true
+auto-rejoin: false

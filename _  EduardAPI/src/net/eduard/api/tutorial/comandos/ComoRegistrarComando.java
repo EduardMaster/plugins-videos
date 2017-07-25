@@ -6,8 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.tutorial.sistemas.ComoCriarTabCompleter;
-
 public class ComoRegistrarComando {
 
 	public static void registrarComando() {

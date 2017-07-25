@@ -2,9 +2,9 @@ package net.eduard.api.tutorial.armazenamento;
 
 import java.sql.ResultSet;
 
-import net.eduard.api.config.SQL;
+import net.eduard.api.manager.DBManager;
 
-public class RankUpSQL extends SQL {
+public class RankUpSQL extends DBManager {
 
 	public RankUpSQL(String user, String pass, String host, String database) {
 		super(user, pass, host, database);

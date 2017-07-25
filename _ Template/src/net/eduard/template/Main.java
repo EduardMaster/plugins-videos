@@ -20,7 +20,7 @@ public class Main extends EduardPlugin {
 	public void events() {
 
 	}
-	public void init() {
+	public void setup() {
 		plugin = this;
 		new TemplateEvent().register(this);
 		new TemplateCommand().register();

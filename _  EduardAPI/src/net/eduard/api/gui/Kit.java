@@ -12,10 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.config.Section;
-import net.eduard.api.manager.Cooldown;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.ItemAPI;
-import net.eduard.api.util.Cs;
+import net.eduard.api.time.Cooldown;
 
 public class Kit extends Cooldown {
 
@@ -81,7 +80,7 @@ public class Kit extends Cooldown {
 	@Override
 	public boolean cooldown(Player player) {
 		if (!enabled){
-			Cs.chat(player, disabled);
+			ConfigSection.chat(player, disabled);
 			return false;
 		}
 		if (onCooldown(player)) {
@@ -116,7 +115,7 @@ public class Kit extends Cooldown {
 	}
 
 	@Override
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 
@@ -154,7 +153,7 @@ public class Kit extends Cooldown {
 	}
 
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 	}
 
 	public Kit setActiveCooldownOnPvP(boolean activeCooldownOnPvP) {

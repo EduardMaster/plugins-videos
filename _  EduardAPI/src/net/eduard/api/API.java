@@ -23,7 +23,6 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -35,6 +34,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +49,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.config.Configs;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.game.Tag;
@@ -56,12 +57,9 @@ import net.eduard.api.manager.GameAPI;
 import net.eduard.api.manager.ItemAPI;
 import net.eduard.api.manager.Manager;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.manager.VaultAPI;
 import net.eduard.api.minigame.Arena;
-import net.eduard.api.util.Cs;
-import net.eduard.api.util.EmptyWorld;
 import net.eduard.api.util.FakeOfflinePlayer;
-import net.eduard.api.util.Replacer;
+import net.eduard.api.world.EmptyWorld;
 
 @SuppressWarnings("unchecked")
 public class API {
@@ -75,13 +73,19 @@ public class API {
 	public static final int DAY_IN_SECONDS = DAY_IN_MINUTES * 60;
 	public static final long DAY_IN_TICKS = DAY_IN_SECONDS * 20;
 	public static final long DAY_IN_LONG = DAY_IN_TICKS * 50;
+	public static final String CHAT_CHANNEL = "§e(L)";
+	public static boolean AUTO_SAVE_CONFIG=true;
+	public static boolean CUSTOM_CHAT = false;
+	public static String CHAT_FORMAT = "$channel $player: $message";
 	public static String ONLY_PLAYER = "§cApenas jogadores pode fazer este comando!";
 	public static String WORLD_NOT_EXISTS = "§cEste mundo $world não existe!";
 	public static String PLAYER_NOT_EXISTS = "§cEste jogador $player não existe!";
+	public static String PLUGIN_NOT_EXITS = "§cEste plugin $plugin não exite!";
 	public static String NO_PERMISSION = "§cVoce não tem permissão para usar este comando!";
 	public static String ON_JOIN = "§6O jogador $player entrou no Jogo!";
 	public static String ON_QUIT = "§6O jogador $player saiu no Jogo!";
 	public static String USAGE = "§FDigite: §c";
+	
 	public static String SERVER_TAG = "§b§lEduardAPI ";
 	public static List<String> COMMANDS_ON = new ArrayList<>(
 			Arrays.asList("on", "ativar"));
@@ -96,16 +100,16 @@ public class API {
 	public static double MIN_FLY_SPEED = 0.1;
 	public static boolean AUTO_RESPAWN = true;
 	public static Random RANDOM = new Random();
-	public static Map<Player, Location> POSITION1 = new HashMap<>();
 	public static Map<Player, Arena> MAPS = new HashMap<>();
 	public static Map<String, Arena> SCHEMATICS = new HashMap<>();
+	public static Map<Player, Location> POSITION1 = new HashMap<>();
 	public static Map<Player, Location> POSITION2 = new HashMap<>();
 	public static Map<Player, ItemStack[]> INV_ARMOURS = new HashMap<>();
 	public static Map<Player, ItemStack[]> INV_ITEMS = new HashMap<>();
-	public static Map<String, Replacer> REPLACERS = new HashMap<>();
 	public static Manager TIME;
 	public static JavaPlugin PLUGIN;
 	private static Map<String, Command> commands = new HashMap<>();
+	
 
 	static {
 		try {
@@ -122,112 +126,7 @@ public class API {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		addReplacer("$name", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getName();
-			}
-		});
-		addReplacer("$group", new Replacer() {
-
-			public Object getText(Player p) {
-				return VaultAPI.getPermission().getPrimaryGroup(p);
-			}
-		});
-		addReplacer("$players", new Replacer() {
-
-			public Object getText(Player p) {
-				return API.getPlayers().size();
-			}
-		});
-		addReplacer("$world", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getWorld().getName();
-			}
-		});
-		addReplacer("$display", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getDisplayName();
-			}
-		});
-		addReplacer("$health", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getHealth();
-			}
-		});
-		addReplacer("$max_health", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getMaxHealth();
-			}
-		});
-		addReplacer("$max_health", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getMaxHealth();
-			}
-		});
-		addReplacer("$kills", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getStatistic(Statistic.PLAYER_KILLS);
-			}
-		});
-		addReplacer("$deaths", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getStatistic(Statistic.DEATHS);
-			}
-		});
-		addReplacer("$kill_per_death", new Replacer() {
-
-			public Object getText(Player p) {
-				int kill = p.getStatistic(Statistic.PLAYER_KILLS);
-				int death = p.getStatistic(Statistic.DEATHS);
-				if (kill == 0)
-					return 0;
-				if (death == 0)
-					return 0;
-				return kill / death;
-			}
-		});
-		addReplacer("$money", new Replacer() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object getText(Player p) {
-				if (VaultAPI.hasVault() && VaultAPI.hasEconomy()) {
-					try {
-						return VaultAPI.getEconomy().getBalance(p);
-					} catch (Exception e) {
-						return VaultAPI.getEconomy().getBalance(p.getName());
-					}
-
-				}
-				return 0;
-			}
-		});
-		addReplacer("$x", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getLocation().getX();
-			}
-		});
-		addReplacer("$y", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getLocation().getY();
-			}
-		});
-		addReplacer("$z", new Replacer() {
-
-			public Object getText(Player p) {
-				return p.getLocation().getZ();
-			}
-		});
+	
 	}
 
 	public static void loadMaps() {
@@ -240,6 +139,7 @@ public class API {
 		} catch (Exception e) {
 		}
 	}
+	
 	public static void saveMaps() {
 		try {
 			for (Entry<String, Arena> map : SCHEMATICS.entrySet()) {
@@ -334,7 +234,19 @@ public class API {
 		}
 		return true;
 	}
+	public static boolean existsPlugin(CommandSender sender, String plugin) {
 
+		Plugin p = getPlugin(plugin);
+		if (p == null) {
+			sender.sendMessage(
+					API.PLUGIN_NOT_EXITS.replace("$plugin", plugin));
+			return false;
+		}
+		return true;
+	}
+	public static Plugin getPlugin(String plugin) {
+		return Bukkit.getPluginManager().getPlugin(plugin);
+	}
 	public static boolean existsWorld(CommandSender sender, String name) {
 		World world = Bukkit.getWorld(name);
 		if (world == null) {
@@ -369,6 +281,7 @@ public class API {
 
 		@SuppressWarnings("deprecation")
 		Player player = Bukkit.getPlayerExact(name);
+		
 		return player;
 	}
 
@@ -461,12 +374,7 @@ public class API {
 		return true;
 
 	}
-	public static void addReplacer(String key, Replacer value) {
-		REPLACERS.put(key, value);
-	}
-	public static Replacer getReplacer(String key) {
-		return REPLACERS.get(key);
-	}
+
 	public static boolean hasPlugin(String plugin) {
 		return Bukkit.getPluginManager().getPlugin(plugin) != null;
 	}
@@ -567,13 +475,12 @@ public class API {
 		String cmdName = cmd.getName().toLowerCase();
 		if (getCommands().containsKey(aliase)) {
 			getCommands().remove(aliase);
-			Cs.console("§bCommandAPI §fremovendo aliase §a" + aliase
+			ConfigSection.console("§bCommandAPI §fremovendo aliase §a" + aliase
 					+ "§f do comando §b" + cmdName);
 		} else {
-			Cs.console("§bCommandAPI §fnao foi encontrado a aliase §a" + aliase
+			ConfigSection.console("§bCommandAPI §fnao foi encontrado a aliase §a" + aliase
 					+ "§f do comando §b" + cmdName);
 		}
-
 	}
 
 	public static void removeCommand(String name) {
@@ -590,10 +497,10 @@ public class API {
 				getCommands().remove(cmd.getName());
 			} catch (Exception e) {
 			}
-			Cs.console("§bCommandAPI §fremovendo o comando §a" + cmdName
+			ConfigSection.console("§bCommandAPI §fremovendo o comando §a" + cmdName
 					+ "§f do Plugin §b" + pluginName);
 		} else {
-			Cs.console(
+			ConfigSection.console(
 					"§bCommandAPI §fnao foi encontrado a commando §a" + name);
 		}
 
@@ -682,6 +589,7 @@ public class API {
 		return applyScoreboard(player, title, lines);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Scoreboard applyScoreboard(Player player, String title,
 			String... lines) {
 		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();

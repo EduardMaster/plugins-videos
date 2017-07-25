@@ -2,8 +2,8 @@ package net.eduard.parkour;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.CS;
+import net.eduard.api.util.Save;
 
 public class Stats implements Save{
 	private int loses;
@@ -43,7 +43,7 @@ public class Stats implements Save{
 	public void setCash(double cash) {
 		this.cash = cash;
 	}
-	public void save(Section section, Object value) {
+	public void save(CS section, Object value) {
 		Stats stat = (Stats)value;
 		section.set("loses",stat.loses);
 		section.set("name",stat.name);
@@ -52,7 +52,7 @@ public class Stats implements Save{
 		section.set("checkpoints",stat.checkpoints);
 		section.set("cash",stat.cash);
 	}
-	public Object get(Section section) {
+	public Object get(CS section) {
 		Stats stat = new Stats();
 		stat.setCash(section.getDouble("cash"));
 		stat.setWins(section.getInt("wins"));

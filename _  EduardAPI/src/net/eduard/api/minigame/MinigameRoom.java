@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
 
 public class MinigameRoom {
 
@@ -31,13 +31,13 @@ public class MinigameRoom {
 		this.map = map;
 	}
 	public void sendToPlayers(Object...text){
-		Cs.sendMessage(players, text);
+		ConfigSection.sendMessage(players, text);
 	}
 	public void sendToSpecs(Object...text){
-		Cs.sendMessage(spectators, text);
+		ConfigSection.sendMessage(spectators, text);
 	}
 	public void sendToAdmins(Object...text){
-		Cs.sendMessage(admins, text);
+		ConfigSection.sendMessage(admins, text);
 	}
 	public void broadcast(Object...text){
 		sendToAdmins(text);

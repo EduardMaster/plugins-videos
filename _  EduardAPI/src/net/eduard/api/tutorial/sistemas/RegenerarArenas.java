@@ -36,7 +36,7 @@ public class RegenerarArenas implements Listener{
 		public void ResetarBlocos(EntityExplodeEvent e) {
 
 			for (Block block : e.blockList()) {
-				if (!BLOCKS.contains(block)) {
+				if (!BLOCKS.contains(block.getState())) {
 					BLOCKS.add(block.getState());
 				}
 			}

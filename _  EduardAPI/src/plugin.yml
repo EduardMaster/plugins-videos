@@ -6,11 +6,20 @@ authors: [Eduard]
 soft-depend: [Essentials,Vault]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
-  eduard: 
-    description: Comando pricipal da API
-    aliases: [api,e]
+  map: 
+    description: Controle dos Mapas da API
+    aliases: [mapa]
     usage: /<command> help
   goto:
     description: Teleportar para um Mundo
-    aliases: [world]
+    aliases: [world,go]
     usage: /<command> <world>
+  config:
+    description: Controle das Configs da API
+    aliases: [configs,config]
+    usage: /<command> help
+  api:
+    description: Comando principal da API
+    aliases: [eduardapi,eduard,e]
+    usage: /<command> help
+  

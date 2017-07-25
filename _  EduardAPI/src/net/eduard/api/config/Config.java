@@ -11,25 +11,55 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.manager.RexAPI;
+import net.eduard.api.util.Save;
 
 public class Config {
 
-	public static void save(Section section, Save save) throws Exception {
+	public static void save(ConfigSection section, Save save) throws Exception {
 		RexAPI.getResult(save, "save",
 				RexAPI.getParameters(section, Object.class), section, save);
 	}
 
-	public static void get(Section section, Save save) throws Exception {
+	public static void get(ConfigSection section, Save save) throws Exception {
 		RexAPI.getResult(save, "get", RexAPI.getParameters(section), section);
+	}
+	public static void saveConfigs() {
+		for (Config config : CONFIGS) {
+			config.saveConfig();
+		}
+	}
+	public static void reloadConfigs() {
+		for (Config config : CONFIGS) {
+			config.reloadConfig();
+		}
+
+	}
+	public static void saveConfigs(Plugin plugin) {
+		for (Config config : CONFIGS) {
+
+			if (config.getPlugin().equals(plugin)) {
+				config.saveConfig();
+			}
+
+		}
+	}
+	public static void reloadConfigs(Plugin plugin) {
+		for (Config config : CONFIGS) {
+			if (config.getPlugin().equals(plugin)) {
+				config.reloadConfig();
+			}
+
+		}
 	}
 
 	public final static List<Config> CONFIGS = new ArrayList<>();
-	private Section root;
+	private ConfigSection root;
 	private File file;
 	private JavaPlugin plugin;
 	private String name;
@@ -38,7 +68,7 @@ public class Config {
 
 	public Config() {
 		this("config.yml");
-	} 
+	}
 
 	public Config(JavaPlugin plugin) {
 		this(plugin, "config.yml");
@@ -59,7 +89,7 @@ public class Config {
 		}
 		if (!contains) {
 			file = new File(plugin.getDataFolder(), name);
-			root = new Section("", "{}");
+			root = new ConfigSection("", "{}");
 			lines = new ArrayList<>();
 			CONFIGS.add(this);
 			root.lineSpaces = 1;
@@ -86,7 +116,7 @@ public class Config {
 				}
 
 			}
-			if (file.isFile()){
+			if (file.isFile()) {
 				try {
 					if (Charset.isSupported("UTF-8")) {
 						lines = Files.readAllLines(file.toPath(),
@@ -103,7 +133,7 @@ public class Config {
 					root.reload(this);
 				}
 			}
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -113,7 +143,7 @@ public class Config {
 		this(API.getAPI(), name);
 	}
 
-	public Section add(String path, Object value, String... comments) {
+	public ConfigSection add(String path, Object value, String... comments) {
 		return root.add(path, value, comments);
 	}
 
@@ -172,7 +202,7 @@ public class Config {
 		return true;
 	}
 
-	public boolean existsConfig() {
+	public boolean existConfig() {
 		return file.exists();
 	}
 
@@ -184,7 +214,7 @@ public class Config {
 		return root.getBoolean(path);
 	}
 
-	public Section getConfig() {
+	public ConfigSection getConfig() {
 		return root;
 	}
 
@@ -262,7 +292,7 @@ public class Config {
 		return plugin;
 	}
 
-	public Section getSection(String path) {
+	public ConfigSection getSection(String path) {
 		return root.getSection(path);
 	}
 
@@ -282,7 +312,7 @@ public class Config {
 		return file.getName().replace(".yml", "");
 	}
 
-	public Collection<Section> getValues(String path) {
+	public Collection<ConfigSection> getValues(String path) {
 		return root.getValues(path);
 	}
 
@@ -326,7 +356,7 @@ public class Config {
 		return this;
 	}
 
-	public Section set(String path, Object value, String... comments) {
+	public ConfigSection set(String path, Object value, String... comments) {
 		return root.set(path, value, comments);
 	}
 
@@ -340,13 +370,12 @@ public class Config {
 		return this;
 	}
 
-	public Section setIndent(int amount) {
+	public ConfigSection setIndent(int amount) {
 		return root.setIndent(amount);
 	}
 
 	public String toString() {
 		return "Config [plugin=" + plugin + ", name=" + name + "]";
 	}
-
 
 }

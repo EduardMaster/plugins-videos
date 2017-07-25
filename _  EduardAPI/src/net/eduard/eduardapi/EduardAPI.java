@@ -1,24 +1,35 @@
 package net.eduard.eduardapi;
 
+import java.util.Map.Entry;
+
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import net.eduard.api.API;
-import net.eduard.api.command.AdminCommand;
-import net.eduard.api.command.EduardCommand;
-import net.eduard.api.config.Section;
+import net.eduard.api.chat.ChatChannel;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.config.Config;
+import net.eduard.api.event.PlayerChatEvent;
+import net.eduard.api.event.PlayerTargetEvent;
 import net.eduard.api.game.Tag;
-import net.eduard.api.manager.CMD;
 import net.eduard.api.manager.EduardPlugin;
+import net.eduard.api.manager.GameAPI;
 import net.eduard.api.manager.RexAPI;
-import net.eduard.api.util.Cs;
+import net.eduard.api.tutorial.eventos.BedrockQuebravel;
+import net.eduard.eduardapi.command.ApiCommand;
+import net.eduard.eduardapi.command.ConfigCommand;
+import net.eduard.eduardapi.command.GotoCommand;
+import net.eduard.eduardapi.command.MapCommand;
 
 public class EduardAPI extends EduardPlugin implements Listener {
 	private static JavaPlugin plugin;
@@ -27,45 +38,98 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		return plugin;
 	}
 
-	public void init() {
+	public void setup() {
 		plugin = this;
-		API.resetScoreboards();
-		Cs.consoleMessage("§bEduardAPI §fBarAPI §aativado!");
-		Cs.consoleMessage("§bEduardAPI §fDataBase §agerada!");
+		API. resetScoreboards();
+		ConfigSection.consoleMessage("§bEduardAPI §fBarAPI §aativado!");
+		ConfigSection.consoleMessage("§bEduardAPI §fDataBase §agerada!");
 		RexAPI.saveObjects();
 		API.loadMaps();
-		Cs.consoleMessage("§bEduardAPI §fMapas §acarregados!");
+		ConfigSection.consoleMessage("§bEduardAPI §fMapas §acarregados!");
 		API.AUTO_RESPAWN = getConfig().getBoolean("auto-respawn");
 		API.NO_JOIN_MESSAGE = getConfig().getBoolean("no-join-message");
 		API.NO_QUIT_MESSAGE = getConfig().getBoolean("no-quit-message");
 		API.NO_DEATH_MESSAGE = getConfig().getBoolean("no-death-message");
+		API.CUSTOM_CHAT = config.getBoolean("custom-chat");
 		API.ON_JOIN = config.message("on-join-message");
 		API.ON_QUIT = config.message("on-quit-message");
 		API.SERVER_TAG = config.message("server-tag");
-		Cs.consoleMessage("§bEduardAPI §aativado!");
+		API.CHAT_FORMAT = config.message("chat-format");
+		API.AUTO_SAVE_CONFIG = config
+				.getBoolean("auto-save-configs-on-disable-plugin");
+		ConfigSection.consoleMessage("§bEduardAPI §aativado!");
 		API.event(this);
-		for (Player p : API.getPlayers()) {
-			API.callEvent(new PlayerJoinEvent(p, null));
+		API.event(new BedrockQuebravel());
+		if (config.getBoolean("auto-relog")) {
+			for (Player p : API.getPlayers()) {
+				API.callEvent(new PlayerJoinEvent(p, null));
+			}
 		}
-		Section.register(CMD.class);
-		Section.register(AdminCommand.class);
-		new EduardCommand().register();
+//		API.timer(this, 10, new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				updateTargets();
+//			}
+//		});
+		new MapCommand().register();
+		new ConfigCommand().register();
+		new ApiCommand().register();
+		new GotoCommand().register();
 		config.saveConfig();
+	}
+	@EventHandler
+	public void evnet(PlayerInteractEvent e) {
+		if (e.getMaterial() == Material.GOLD_AXE) {
+
+		}
+	}
+
+	public void updateTargets() {
+		for (Player p : API.getPlayers()) {
+			PlayerTargetEvent event = new PlayerTargetEvent(p,
+					GameAPI.getTargetEntity(p));
+			API.callEvent(event);
+
+		}
 	}
 
 	public void onDisable() {
 		API.saveMaps();
-		Cs.consoleMessage("§bEduardAPI §aMapas salvados!");
-		Cs.consoleMessage("§bEduardAPI §cdesativado!");
+
+		if (API.AUTO_SAVE_CONFIG) {
+			Config.saveConfigs();
+			ConfigSection.consoleMessage("§bEduardAPI §aConfigs salvadas!");
+		}
+		ConfigSection.consoleMessage("§bEduardAPI §aMapas salvados!");
+		ConfigSection.consoleMessage("§bEduardAPI §cdesativado!");
 	}
 	@EventHandler
-	public void event(BlockPhysicsEvent e) {
-		if (e.getBlock().getType() == Material.CROPS){
+	public void chat(AsyncPlayerChatEvent e) {
+		if (API.CUSTOM_CHAT) {
+			Player player = e.getPlayer();
 			e.setCancelled(true);
-			//Talves precise colocar o codigo debaixo
-//			e.getBlock().getRelative(BlockFace.DOWN).setType(Material.SOIL);
+			PlayerChatEvent chat = new PlayerChatEvent(player,
+					ChatChannel.LOCAL, API.CHAT_FORMAT, e.getMessage());
+			sendChat(chat);
 		}
-			
+
+	}
+	public static void sendChat(PlayerChatEvent chat) {
+		Player p = chat.getPlayer();
+		API.callEvent(chat);
+		if (!chat.isCancelled()) {
+			String message = chat.getFormat();
+
+			for (Entry<String, String> map : chat.getTags().entrySet()) {
+				message = message.replaceAll(map.getKey(), map.getValue());
+			}
+			ConfigSection.sendMessage(chat.getPlayers(),
+					chat.getFormat()
+							.replace("$channel", chat.getChannel().getTag())
+							.replace("$message", chat.getMessage())
+							.replace("$player", p.getName()));
+		}
 	}
 
 	@EventHandler
@@ -82,12 +146,11 @@ public class EduardAPI extends EduardPlugin implements Listener {
 		if (getConfig().getBoolean("custom-join-message")) {
 			e.setJoinMessage(API.ON_JOIN.replace("$player", p.getName()));
 		}
-		
+
 		if (API.NO_JOIN_MESSAGE) {
 			e.setJoinMessage(null);
 			return;
 		}
-		
 
 	}
 	@EventHandler

@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class Effects implements Save {
 
@@ -75,10 +75,10 @@ public class Effects implements Save {
 		return this;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 

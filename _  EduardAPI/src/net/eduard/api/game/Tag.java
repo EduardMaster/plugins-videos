@@ -13,9 +13,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import net.eduard.api.API;
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class Tag implements Save {
 
@@ -26,6 +25,7 @@ public class Tag implements Save {
 		return tags;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void update() {
 		Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
 		for (Player p : API.getPlayers()) {
@@ -44,8 +44,8 @@ public class Tag implements Save {
 				Team team = score.getTeam(name);
 				if (team == null)
 					team = score.registerNewTeam(name);
-				team.setPrefix(Cs.toText(Cs.toChatMessage(tag.getPrefix())));
-				team.setSuffix(Cs.toText(Cs.toChatMessage(tag.getSuffix())));
+				team.setPrefix(ConfigSection.toText(ConfigSection.toChatMessage(tag.getPrefix())));
+				team.setSuffix(ConfigSection.toText(ConfigSection.toChatMessage(tag.getSuffix())));
 				if (!team.hasPlayer(player))
 					team.addPlayer(player);
 
@@ -107,11 +107,11 @@ public class Tag implements Save {
 		return this;
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 

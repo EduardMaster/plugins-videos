@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.api.API;
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
 
 public class Minigame implements MinigameEvents {
 
@@ -36,7 +36,7 @@ public class Minigame implements MinigameEvents {
 		}.runTaskTimer(plugin, 20, 20);
 	}
 	public void broadcast(Object... text) {
-		Cs.sendMessage(playing.keySet(), text);
+		ConfigSection.sendMessage(playing.keySet(), text);
 	}
 
 	public String getName() {

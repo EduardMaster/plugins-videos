@@ -14,9 +14,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.gui.DropItem;
+import net.eduard.api.util.Save;
 
 public class Drop implements Save {
 	
@@ -103,9 +103,9 @@ public class Drop implements Save {
 
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		drops = new ArrayList<>();
-		for (Section sec : section.getSection("drops").getValues()) {
+		for (ConfigSection sec : section.getSection("drops").getValues()) {
 			drops.add((DropItem) sec.getValue());
 		}
 		return null;
@@ -144,7 +144,7 @@ public class Drop implements Save {
 		return normalDrops;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 

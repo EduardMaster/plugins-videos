@@ -3,8 +3,8 @@ package net.eduard.api.game;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 /**
  * Preço: 
  * @author Eduard-PC
@@ -114,11 +114,11 @@ public class Jump implements Save {
 
 	
 	@Override
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		
 	}
 

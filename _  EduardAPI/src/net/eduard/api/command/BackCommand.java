@@ -11,8 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.eduard.api.API;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.util.Cs;
 
 public class BackCommand extends CMD {
 	public BackCommand() {
@@ -27,9 +27,9 @@ public class BackCommand extends CMD {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player)sender;
 			if (locations.containsKey(p)) {
-				Cs.chat(p, messageOn);
+				ConfigSection.chat(p, messageOn);
 			}else {
-				Cs.chat(p, messageOff);
+				ConfigSection.chat(p, messageOff);
 			}
 		}
 

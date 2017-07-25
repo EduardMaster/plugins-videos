@@ -1,31 +1,31 @@
 package net.eduard.api.tutorial.armazenamento;
 
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
 
 public class TesteDeMensagem {
 	public TesteDeMensagem() {
-		Cs.all("§6Tudo bem amo §evoces");
-		Cs.all("§eTudo bem amo §6voces");
-		Cs.all(" ");
-		Cs.all("§2Tudo bem amo §avoces");
-		Cs.all("§aTudo bem amo §2voces");
-		Cs.all(" ");
-		Cs.all("§dTudo bem amo §5voces");
-		Cs.all("§5Tudo bem amo §dvoces");
-		Cs.all(" ");
-		Cs.all("§bTudo bem amo §3voces");
-		Cs.all("§3Tudo bem amo §bvoces");
-		Cs.all(" ");
-		Cs.all("§8Tudo bem amo §7voces");
-		Cs.all("§7Tudo bem amo §8voces");
-		Cs.all(" ");
-		Cs.all("§cTudo bem amo §4voces");
-		Cs.all("§4Tudo bem amo §cvoces");
-		Cs.all(" ");
-		Cs.all("§1Tudo bem amo §9voces");
-		Cs.all("§9Tudo bem amo §1voces");
-		Cs.all(" ");
-		Cs.all("§0Tudo bem amo §Fvoces");
-		Cs.all("§FTudo bem amo §0voces");
+		ConfigSection.all("§6Tudo bem amo §evoces");
+		ConfigSection.all("§eTudo bem amo §6voces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§2Tudo bem amo §avoces");
+		ConfigSection.all("§aTudo bem amo §2voces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§dTudo bem amo §5voces");
+		ConfigSection.all("§5Tudo bem amo §dvoces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§bTudo bem amo §3voces");
+		ConfigSection.all("§3Tudo bem amo §bvoces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§8Tudo bem amo §7voces");
+		ConfigSection.all("§7Tudo bem amo §8voces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§cTudo bem amo §4voces");
+		ConfigSection.all("§4Tudo bem amo §cvoces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§1Tudo bem amo §9voces");
+		ConfigSection.all("§9Tudo bem amo §1voces");
+		ConfigSection.all(" ");
+		ConfigSection.all("§0Tudo bem amo §Fvoces");
+		ConfigSection.all("§FTudo bem amo §0voces");
 	}
 }

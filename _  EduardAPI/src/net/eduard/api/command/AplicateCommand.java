@@ -14,8 +14,8 @@ public class AplicateCommand extends CMD {
 
 	public List<String> messages = new ArrayList<>();
 	public AplicateCommand() {
-		super("aplicate");
-		messages.add(API.SERVER_TAG+"§a - Requisitos para ser STAFF - ");
+		super("aplicate" ); 
+		messages.add(API .SERVER_TAG+"§a - Requisitos para ser STAFF - ");
 
 	}
 	public boolean onCommand(CommandSender sender, Command command,

@@ -198,29 +198,29 @@ public class Shield {
 
 		File file = new File(plugin.getDataFolder(), "licence.yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.addDefault("key", "Compre a Key");
-		config.addDefault("owner", "Compre a Key");
+		config.addDefault("COMPRADOR", "Nome do Comprador");
+		config.addDefault("KEY", "{KEY}");
 		config.options().copyDefaults(true);
 		try {
 			config.save(file);
 		} catch (Exception e) {
 		}
-		String owner = config.getString("owner");
-		String key = config.getString("key");
-		Bukkit.getConsoleSender().sendMessage(" §aDono: §f" + owner);
-		Bukkit.getConsoleSender().sendMessage(" §aKey: §f" + key);
+		String COMPRADOR = config.getString("COMPRADOR");
+		String KEY = config.getString("KEY");
+		Bukkit.getConsoleSender().sendMessage(" §aDono: §f" + COMPRADOR);
+		Bukkit.getConsoleSender().sendMessage(" §aKey: §f" + KEY);
 
 		String error = "§eProblemas: §c";
 		String first = error;
 
 		for (Shield license : keys) {
-			if (!(license.getOwner().equals(config.getString("owner")))) {
+			if (!(license.getOwner().equals(COMPRADOR))) {
 				continue;
 			}
 			if (!(license.getPlugin().equals(plugin.getName()))) {
 				continue;
 			}
-			if (!license.getKey().toString().equals(config.getString("key"))) {
+			if (!license.getKey().toString().equals(KEY)) {
 				error += "Key Invalida!";
 				break;
 			}

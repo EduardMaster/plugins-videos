@@ -6,9 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import net.eduard.api.config.SQL;
+import net.eduard.api.manager.DBManager;
 
-public class WarpTutorialSQL extends SQL {
+public class WarpTutorialSQL extends DBManager {
 
 	public WarpTutorialSQL(String user, String pass, String host,
 			String database) {

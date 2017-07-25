@@ -5,9 +5,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.api.API;
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.util.EventRegister;
+import net.eduard.api.util.Save;
 
 public class Manager extends EventRegister implements Runnable,Save{
 
@@ -94,12 +94,12 @@ public class Manager extends EventRegister implements Runnable,Save{
 	}
 
 	@Override
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		
 	}
 

@@ -5,8 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
+import net.eduard.api.config.CS;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.util.Cs;
 import net.eduard.fake.FakeAPI;
 import net.eduard.fake.Main;
 
@@ -22,7 +22,7 @@ public class FakeCommand extends CMD {
 				} else
 					return false;
 			} else {
-				String name = Cs.toText(args[0]);
+				String name = CS.toText(args[0]);
 				if (FakeAPI.getData().containsValue(name)
 						|| FakeAPI.getOriginal().containsValue(name)) {
 					p.sendMessage(Main.config.message("name_exist_exeption")

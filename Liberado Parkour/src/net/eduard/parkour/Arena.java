@@ -14,18 +14,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.API;
+import net.eduard.api.config.CS;
 import net.eduard.api.config.Config;
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
 import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Gui;
 import net.eduard.api.gui.Slot;
 import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.Score;
 import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.player.Score;
 import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.util.Save;
 
 public class Arena implements Save {
 	private static final Config STATS = Main.config.createConfig("Stats.yml");
@@ -408,7 +408,7 @@ public class Arena implements Save {
 		STATS.saveConfig();
 	}
 
-	public void save(Section section, Object value) {
+	public void save(CS section, Object value) {
 		Arena arena = (Arena) value;
 		section.set("checker", arena.checker);
 		section.set("enabled", arena.enabled);
@@ -425,7 +425,7 @@ public class Arena implements Save {
 		}
 	}
 
-	public Object get(Section section) {
+	public Object get(CS section) {
 		Arena arena = new Arena();
 		arena.setChecker(
 				Material.valueOf(section.getString("checker").toUpperCase()));
@@ -435,7 +435,7 @@ public class Arena implements Save {
 		arena.setReward(section.getDouble("reward"));
 		arena.setName(section.getString("name"));
 		if (section.contains("Effects")) {
-			for (Section sec : section.getSection("Effects").getValues()) {
+			for (CS sec : section.getSection("Effects").getValues()) {
 				arena.effects.add((Potions) sec.getValue());
 			}
 		}

@@ -5,8 +5,8 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public class Sounds implements Save {
 
@@ -73,11 +73,11 @@ public class Sounds implements Save {
 		this.pitch = pitch;
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		return null;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 
 	}
 

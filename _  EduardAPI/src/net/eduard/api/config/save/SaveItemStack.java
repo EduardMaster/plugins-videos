@@ -6,14 +6,13 @@ import java.util.Map.Entry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.ItemAPI;
-import net.eduard.api.util.Cs;
+import net.eduard.api.util.Save;
 
 public class SaveItemStack implements Save {
 
-	public ItemStack get(Section section) {
+	public ItemStack get(ConfigSection section) {
 		int id = section.getInt("id");
 		int amount = section.getInt("amount");
 		int data = section.getInt("data");
@@ -34,16 +33,16 @@ public class SaveItemStack implements Save {
 				for (String enchs : split) {
 					String[] sub = enchs.split("-");
 					@SuppressWarnings("deprecation")
-					Enchantment ench = Enchantment.getById(Cs.toInt(sub[0]));
-					Integer level = Cs.toInt(sub[1]);
+					Enchantment ench = Enchantment.getById(ConfigSection.toInt(sub[0]));
+					Integer level = ConfigSection.toInt(sub[1]);
 					item.addUnsafeEnchantment(ench, level);
 
 				}
 			} else {
 				String[] split = enchants.split("-");
 				@SuppressWarnings("deprecation")
-				Enchantment ench = Enchantment.getById(Cs.toInt(split[0]));
-				Integer level = Cs.toInt(split[1]);
+				Enchantment ench = Enchantment.getById(ConfigSection.toInt(split[0]));
+				Integer level = ConfigSection.toInt(split[1]);
 				item.addUnsafeEnchantment(ench, level);
 
 			}
@@ -52,13 +51,13 @@ public class SaveItemStack implements Save {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void save(Section section, Object value) {
+	public void save(ConfigSection CS, Object value) {
 		ItemStack item = (ItemStack) value;
-		section.set("id", item.getTypeId());
-		section.set("data", item.getDurability());
-		section.set("amount", item.getAmount());
-		section.set("name", ItemAPI.getName(item));
-		section.set("lore", ItemAPI.getLore(item));
+		CS.set("id", item.getTypeId());
+		CS.set("data", item.getDurability());
+		CS.set("amount", item.getAmount());
+		CS.set("name", ItemAPI.getName(item));
+		CS.set("lore", ItemAPI.getLore(item));
 		String enchants = "";
 		if (item.getItemMeta().hasEnchants()) {
 			StringBuilder b = new StringBuilder();
@@ -72,7 +71,7 @@ public class SaveItemStack implements Save {
 			}
 			enchants = b.toString();
 		}
-		section.set("enchants", enchants);
+		CS.set("enchants", enchants);
 	};
 
 }

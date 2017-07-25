@@ -9,8 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
+import net.eduard.api.chat.Chats;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.util.Cs;
 
 public class TellCommand extends CMD {
 
@@ -34,22 +35,22 @@ public class TellCommand extends CMD {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length <= 1) {
-			Cs.chat(sender, getUsage());
+			ConfigSection.chat(sender, getUsage());
 		} else {
 			if (API.existsPlayer(sender, args[0])) {
 				Player target = API.getPlayer(args[0]);
-				String message = Cs.getText(1, args);
+				String message = ConfigSection.getText(1, args);
 				if (!isToggle(target)) {
-					Cs.chat(sender, messageDisabled.replace("$player",
+					ConfigSection.chat(sender, messageDisabled.replace("$player",
 							target.getName()));
 				} else {
-					Cs.chat(sender,
+					ConfigSection.chat(sender,
 							this.message.replace("$target", target.getName())
-									.replace("$>", Cs.getArrowRight())
+									.replace("$>", Chats.getArrowRight())
 									.replace("$message", message));
-					Cs.chat(target,
+					ConfigSection.chat(target,
 							messageTarget.replace("$player", sender.getName())
-									.replace("$>", Cs.getArrowRight())
+									.replace("$>", Chats.getArrowRight())
 									.replace("$message", message));
 				}
 			}

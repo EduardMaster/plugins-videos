@@ -8,9 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
-import net.eduard.api.util.Cs;
+import net.eduard.api.config.ConfigSection;
+import net.eduard.api.util.Save;
 
 public final class SimpleCraft implements Save {
 
@@ -46,7 +45,7 @@ public final class SimpleCraft implements Save {
 		return recipe;
 	}
 
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		SimpleCraft craft = (SimpleCraft) value;
 		section.set("result", craft.getResult());
 		ArrayList<String> list = new ArrayList<>();
@@ -58,15 +57,15 @@ public final class SimpleCraft implements Save {
 		section.set("items", list);
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		ItemStack result = section.getItem("result");
 		SimpleCraft craft = new SimpleCraft(result);
 		for (String line : section.getStringList("items")) {
 			try {
 				String[] split = line.split("-");
 				@SuppressWarnings("deprecation")
-				Material id = Material.getMaterial(Cs.toInt(split[0]));
-				Integer data = Cs.toInt(split[1]);
+				Material id = Material.getMaterial(ConfigSection.toInt(split[0]));
+				Integer data = ConfigSection.toInt(split[1]);
 				craft.add(id, data);
 			} catch (Exception ex) {
 				ex.printStackTrace();

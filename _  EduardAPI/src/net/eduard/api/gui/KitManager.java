@@ -21,15 +21,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.GameAPI;
 import net.eduard.api.manager.ItemAPI;
 import net.eduard.api.manager.Manager;
 import net.eduard.api.manager.RexAPI;
 import net.eduard.api.manager.VaultAPI;
-import net.eduard.api.util.Cs;
 import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.util.Save;
 
 public class KitManager extends Manager implements Save {
 	public static final Kit KIT_NONE = new Kit("Nenhum",KitType.NONE);
@@ -358,9 +357,9 @@ public class KitManager extends Manager implements Save {
 		return players.containsKey(player);
 	}
 
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		section.getSection("kits").set("!Map");
-		for (Section key : section.getValues("kits")) {
+		for (ConfigSection key : section.getValues("kits")) {
 			kits.put(key.getKey(), (Kit) key.getValue());
 		}
 		return null;
@@ -474,7 +473,7 @@ public class KitManager extends Manager implements Save {
 		if (kitsEnabled)
 			openKitSelector(player, 0);
 		else
-			Cs.chat(player, kitsDisabled);
+			ConfigSection.chat(player, kitsDisabled);
 	}
 
 	public void openKitSelector(Player player, int page) {
@@ -547,7 +546,7 @@ public class KitManager extends Manager implements Save {
 			try {
 				
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + Cs.toTitle(type.name(), ""));
+						.getNew("#k" + ConfigSection.toTitle(type.name(), ""));
 				register(type.name(), kit);
 
 			} catch (Exception ex) {
@@ -568,8 +567,8 @@ public class KitManager extends Manager implements Save {
 		}
 	}
 
-	public void save(Section section, Object value) {
-		Section kit = section.getSection("kits");
+	public void save(ConfigSection section, Object value) {
+		ConfigSection kit = section.getSection("kits");
 		for (Entry<String, Kit> map : kits.entrySet()) {
 			kit.set(map.getKey(), map.getValue());
 		}
@@ -594,9 +593,9 @@ public class KitManager extends Manager implements Save {
 		for (KitType type : kits) {
 			try {
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + Cs.toTitle(type.name(), ""));
+						.getNew("#k" + ConfigSection.toTitle(type.name(), ""));
 				register(type.name(), kit);
-Cs.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
+ConfigSection.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
 						+ "§f foi registrado!");
 
 			} catch (Exception ex) {

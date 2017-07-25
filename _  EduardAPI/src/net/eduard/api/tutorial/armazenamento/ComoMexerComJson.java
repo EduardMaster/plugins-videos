@@ -25,6 +25,7 @@ public class ComoMexerComJson {
 			conn.setConnectTimeout(5000);
 			if (conn.getResponseCode() == 200) {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				@SuppressWarnings("resource")
 				JsonReader r = new JsonReader(reader);
 				r.beginObject();
 				r.skipValue();

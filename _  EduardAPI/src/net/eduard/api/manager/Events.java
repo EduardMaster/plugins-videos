@@ -10,14 +10,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.config.Save;
-import net.eduard.api.config.Section;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Potions;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.util.Save;
 /**
  * Preço: 
  * @author Eduard-PC
@@ -53,6 +53,7 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 		if (command != null) {
 			p.chat("/" + command);
 		}
+		
 	}
 	public void sendMessage(Player p) {
 		if (message != null) {
@@ -266,12 +267,12 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	}
 
 	@Override
-	public Object get(Section section) {
+	public Object get(ConfigSection section) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public void save(Section section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		// TODO Auto-generated method stub
 
 	}

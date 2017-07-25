@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.manager.GameAPI;
 import net.eduard.api.manager.WorldAPI;
-import net.eduard.api.util.Cs;
 
 public class MinaCommnad extends CMD {
 	public MinaCommnad() {
@@ -22,13 +22,13 @@ public class MinaCommnad extends CMD {
 			String label, String[] args) {
 
 		if (args.length == 0) {
-			Cs.chat(sender, getUsage());
+			ConfigSection.chat(sender, getUsage());
 		} else if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			World world = WorldAPI.getWorld(this.world);
 			GameAPI.teleport(p, world.getSpawnLocation());
 			API.SOUND_TELEPORT.create(p);
-			Cs.chat(p, message);
+			ConfigSection.chat(p, message);
 		}
 		return true;
 	}
