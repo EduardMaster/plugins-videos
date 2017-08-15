@@ -1,4 +1,4 @@
-name: Rpg
+name: EMRpg
 description: Sistema de Rpg PVE
 main: net.eduard.rpg.Main
 version: 1.0

@@ -9,34 +9,37 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 
-public class Minigame implements MinigameEvents {
+public abstract class Minigame{
 
 	private String name;
 
-	private Map<String, MinigameMap> maps = new HashMap<>();
-	private Map<Integer, MinigameRoom> rooms = new HashMap<>();
-	private Map<Player, MinigameRoom> playing = new HashMap<>();
+	private Map<String, GameMap> maps = new HashMap<>();
+	private Map<Integer, Game> rooms = new HashMap<>();
+	private Map<Player, Game> playing = new HashMap<>();
 	private BukkitTask minigameRunnning;
-	private boolean hasAttributes = true;
 	private boolean hasInvuneability = true;
-	private MinigameAttributes attributes = new MinigameAttributes();
-
+	
 	public Minigame(String name, JavaPlugin plugin) {
 		setName(name);
 		minigameRunnning = new BukkitRunnable() {
 
+			@Override
 			public void run() {
-				for (MinigameRoom room : rooms.values()) {
-					event(room);
+				for (Game game : rooms.values()) {
+					MinigameEvent event = new MinigameEvent(Minigame.this, game);
+					if (event.isCancelled()) {
+						continue;
+					}
+					event(game);
 				}
 
 			}
 		}.runTaskTimer(plugin, 20, 20);
 	}
+	public abstract void event(Game room);
 	public void broadcast(Object... text) {
-		ConfigSection.sendMessage(playing.keySet(), text);
+		API.send(playing.keySet(), text);
 	}
 
 	public String getName() {
@@ -47,56 +50,31 @@ public class Minigame implements MinigameEvents {
 		this.name = name;
 	}
 
-	public Map<String, MinigameMap> getMaps() {
+	public Map<String, GameMap> getMaps() {
 		return maps;
 	}
 
-	public void setMaps(Map<String, MinigameMap> maps) {
+	public void setMaps(Map<String, GameMap> maps) {
 		this.maps = maps;
 	}
 
-	public Map<Integer, MinigameRoom> getRooms() {
+	public Map<Integer, Game> getRooms() {
 		return rooms;
 	}
 
-	public void setRooms(Map<Integer, MinigameRoom> rooms) {
+	public void setRooms(Map<Integer, Game> rooms) {
 		this.rooms = rooms;
 	}
 
-	public Map<Player, MinigameRoom> getPlaying() {
+	public Map<Player, Game> getPlaying() {
 		return playing;
 	}
 
-	public void setPlaying(Map<Player, MinigameRoom> playing) {
+	public void setPlaying(Map<Player, Game> playing) {
 		this.playing = playing;
 	}
 
-	public void event(MinigameRoom room) {
-		 MinigameState state = room.getState();
-		 MinigameEventType type = MinigameEventType.TIMER_CHANGE;
-		 int time = room.getTime();
-		 if (state== MinigameState.STARTING){
-			 room.setTime(time-1);
-			 time = room.getTime();
-			 
-			 if (time==0){
-				 type = MinigameEventType.GAME_START;
-				 MinigameEvent event = new MinigameEvent(this, room,type );
-				 API.callEvent(event);
-				 if (event.isCancelled())
-					 return;
-				 event(room, type);
-				 room.setState(MinigameState.INVULNERABILITY);
-				 room.setTime(time);
-			 }
-
-		 }else if (state==MinigameState.RESTARTING){
-			 
-		 }
-	}
-	public void event(MinigameRoom room, MinigameEventType event) {
-		
-	}
+	
 
 
 	public BukkitTask getMinigameRunnning() {
@@ -107,14 +85,6 @@ public class Minigame implements MinigameEvents {
 		this.minigameRunnning = minigameRunnning;
 	}
 
-	public MinigameAttributes getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(MinigameAttributes attributes) {
-		this.attributes = attributes;
-	}
-
 	public boolean isHasInvuneability() {
 		return hasInvuneability;
 	}
@@ -123,13 +93,5 @@ public class Minigame implements MinigameEvents {
 		this.hasInvuneability = hasInvuneability;
 	}
 
-	public boolean isHasAttributes() {
-		return hasAttributes;
-	}
-
-	public void setHasAttributes(boolean hasAttributes) {
-		this.hasAttributes = hasAttributes;
-	}
-	
 	
 }

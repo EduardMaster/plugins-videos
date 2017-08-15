@@ -9,7 +9,7 @@ import net.eduard.api.manager.CMD;
 public class ApiReloadCommand extends CMD {
 
 	public ApiReloadCommand() {
-		super("api");
+		super("reload");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

@@ -63,11 +63,13 @@ public class Potions implements Save {
 		return this;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 		Potions potion = (Potions) value;
 		section.set("type", potion.getType().getName());
 	}
 
+	@Override
 	public Potions get(ConfigSection section) {
 		type = PotionEffectType.getByName(section.getString("type"));
 		return null;

@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.permission.GroupMaster;
+import net.eduard.permission.Main;
 
 public class GroupMasterCommand implements CommandExecutor {
 
@@ -17,7 +17,7 @@ public class GroupMasterCommand implements CommandExecutor {
 		}else{
 			String arg = args[0];
 			if (arg.equalsIgnoreCase("reload")){
-				GroupMaster.getInstance().reloadPermissions();
+				Main.getInstance().reloadPermissions();
 				sender.sendMessage("§aGroupMaster recarregado!");
 			}else if (arg.equalsIgnoreCase("addperm")){
 				if (args.length == 0){

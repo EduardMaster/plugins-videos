@@ -26,10 +26,12 @@ public class Main extends JavaPlugin implements Listener {
 	public static ArrayList<Player> spectators = new ArrayList<>();
 	public static HGState state;
 	public static Main plugin;
+	@Override
 	public void onLoad() {
 		
 	}
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		pm.registerEvents(new HGEvent(), this);

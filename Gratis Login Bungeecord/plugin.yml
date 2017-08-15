@@ -1,0 +1,5 @@
+name: EMLogin
+version: 1.0
+authors: [Eduard]
+description: Plugin de Login pra bunggecord
+main: net.eduard.login.Main

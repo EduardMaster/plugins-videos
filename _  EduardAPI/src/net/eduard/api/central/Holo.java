@@ -68,7 +68,7 @@ public class Holo
     Location displayLoc = loc.clone().add(0.0D, 0.23D * lines.size() - 1.97D, 0.0D);
     for (int i = 0; i < lines.size(); i++)
     {
-      Object packet = getPacket(this.loc.getWorld(), displayLoc.getX(), displayLoc.getY(), displayLoc.getZ(), (String)this.lines.get(i));
+      Object packet = getPacket(this.loc.getWorld(), displayLoc.getX(), displayLoc.getY(), displayLoc.getZ(), this.lines.get(i));
       this.spawnCache.add(packet);
       try
       {

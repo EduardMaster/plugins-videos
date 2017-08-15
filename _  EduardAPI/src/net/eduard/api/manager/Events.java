@@ -16,13 +16,9 @@ import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Potions;
 import net.eduard.api.game.Sounds;
+import net.eduard.api.setup.ItemAPI;
 import net.eduard.api.util.PlayerEffect;
 import net.eduard.api.util.Save;
-/**
- * Preço: 
- * @author Eduard-PC
- *
- */
 public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	private List<Potions> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();
@@ -42,6 +38,7 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 	private boolean clearArmours;
 	private boolean clearItems;
 
+	@Override
 	public Events clone() {
 		try {
 			return (Events) super.clone();
@@ -133,6 +130,7 @@ public class Events extends Manager implements Save, Cloneable, PlayerEffect {
 		}
 	}
 
+	@Override
 	public void effect(Player p) {
 		makeCustomEffect(p);
 		if (!canContinue(p))

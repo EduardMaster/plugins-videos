@@ -11,6 +11,7 @@ import net.eduard.soup.Main;
 
 public class SoupCommand extends CMD {
 	
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.noConsole(sender)) {
 			Player p = (Player) sender;

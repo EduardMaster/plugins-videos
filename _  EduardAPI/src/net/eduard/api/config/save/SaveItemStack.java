@@ -7,11 +7,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ItemAPI;
 import net.eduard.api.util.Save;
 
 public class SaveItemStack implements Save {
 
+	@Override
 	public ItemStack get(ConfigSection section) {
 		int id = section.getInt("id");
 		int amount = section.getInt("amount");
@@ -33,16 +35,16 @@ public class SaveItemStack implements Save {
 				for (String enchs : split) {
 					String[] sub = enchs.split("-");
 					@SuppressWarnings("deprecation")
-					Enchantment ench = Enchantment.getById(ConfigSection.toInt(sub[0]));
-					Integer level = ConfigSection.toInt(sub[1]);
+					Enchantment ench = Enchantment.getById(ExtraAPI.toInt(sub[0]));
+					Integer level = ExtraAPI.toInt(sub[1]);
 					item.addUnsafeEnchantment(ench, level);
 
 				}
 			} else {
 				String[] split = enchants.split("-");
 				@SuppressWarnings("deprecation")
-				Enchantment ench = Enchantment.getById(ConfigSection.toInt(split[0]));
-				Integer level = ConfigSection.toInt(split[1]);
+				Enchantment ench = Enchantment.getById(ExtraAPI.toInt(split[0]));
+				Integer level = ExtraAPI.toInt(split[1]);
 				item.addUnsafeEnchantment(ench, level);
 
 			}
@@ -50,6 +52,7 @@ public class SaveItemStack implements Save {
 		return item;
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public void save(ConfigSection CS, Object value) {
 		ItemStack item = (ItemStack) value;

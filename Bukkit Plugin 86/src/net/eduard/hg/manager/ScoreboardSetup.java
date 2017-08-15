@@ -16,6 +16,7 @@ public class ScoreboardSetup {
 	public ScoreboardSetup() {
 		new BukkitRunnable() {
 			
+			@Override
 			@SuppressWarnings("deprecation")
 			public void run() {
 				Scoreboard score = Main.sm.getNewScoreboard();

@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Miner extends Kit {
 

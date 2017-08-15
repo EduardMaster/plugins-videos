@@ -12,6 +12,7 @@ import net.eduard.tapetevoador.Main;
 
 public class TapeteCommand extends CMD {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.noConsole(sender)) {
 			Player p = (Player) sender;

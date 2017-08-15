@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class ComandoGanharSuaCabeça implements CommandExecutor {
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		Player jogador = (Player) sender;

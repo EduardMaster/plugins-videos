@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.API;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Vitality extends Kit {
 	public ItemStack soup = API.newItem(Material.BROWN_MUSHROOM, "§6Sopa");

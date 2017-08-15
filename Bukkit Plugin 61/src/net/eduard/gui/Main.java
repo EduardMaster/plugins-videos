@@ -73,6 +73,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	@Override
 	public void onEnable() {
 
 		Main.instance = this;
@@ -81,6 +82,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (Bukkit.getPluginManager() == null) {
 			new BukkitRunnable() {
 
+				@Override
 				public void run() {
 
 					Main.plugin = Bukkit.getPluginManager();

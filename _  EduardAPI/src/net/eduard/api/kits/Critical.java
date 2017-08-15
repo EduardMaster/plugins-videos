@@ -22,6 +22,7 @@ public class Critical extends Kit {
 		setMessage("§6Voce causou critico");
 	}
 
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player) {

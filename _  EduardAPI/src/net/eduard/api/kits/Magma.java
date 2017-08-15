@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import net.eduard.api.API;
 import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.setup.WorldAPI;
 
 public class Magma extends Kit {
 

@@ -28,6 +28,7 @@ public class Main extends JavaPlugin {
 	public static Manager getTime() {
 		return time;
 	}
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = new Config(this);
@@ -40,6 +41,7 @@ public class Main extends JavaPlugin {
 		events();
 	}
 
+	@Override
 	public void onDisable() {
 
 	}

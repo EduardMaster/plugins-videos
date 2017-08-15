@@ -1,4 +1,4 @@
-name: Parkour
+name: EMParkour
 description: Minigame Parkour basendo em Parkours da vida
 main: net.eduard.parkour.Main
 version: 1.0

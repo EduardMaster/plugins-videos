@@ -27,6 +27,7 @@ public class PunishCommand extends CMD {
 		hovers.add("Ao clicar ira Banir jogador permanente");
 
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {

@@ -19,7 +19,7 @@ import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.ClickType;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class EnderMage extends Kit {
 
@@ -28,8 +28,8 @@ public class EnderMage extends Kit {
 	public int effectSeconds = 5;
 
 	public EnderMage() {
-		setIcon(Material.ENDER_PORTAL, "§fPuxe os seus inimigos");
-		add(Material.ENDER_PORTAL);
+		setIcon(Material.ENDER_PORTAL_FRAME, "§fPuxe os seus inimigos");
+		add(Material.ENDER_PORTAL_FRAME);
 		setTime(5);
 		setMessage("§6Voce esta invuneravel por 5 segundos");
 		setClick(new Click(Material.ENDER_PORTAL, new ClickEffect() {
@@ -53,6 +53,7 @@ public class EnderMage extends Kit {
 					p.setItemInHand(null);
 					API.TIME.timer(20,new BukkitRunnable() {
 						int x = effectSeconds;
+						@Override
 						public void run() {
 							x--;
 							if (check(p, e.getClickedBlock().getLocation()

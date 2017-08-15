@@ -1,4 +1,4 @@
-name: Fake
+name: EMFake
 description: Sistema de Alterar o Nome temporariamente
 main: net.eduard.fake.Main
 version: 1.0

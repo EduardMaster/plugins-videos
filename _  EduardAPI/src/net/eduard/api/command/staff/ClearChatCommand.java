@@ -4,7 +4,7 @@ package net.eduard.api.command.staff;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.config.ConfigSection;
+import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
 
 public class ClearChatCommand extends CMD {
@@ -13,12 +13,13 @@ public class ClearChatCommand extends CMD {
 	public ClearChatCommand() {
 		super("clearchat");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		for (int i = 0; i < size; i++) {
-			ConfigSection.broadcast(" ");
+			API.broadcast(" ");
 		}
-		ConfigSection.all(message.replace("$sender", sender.getName()));
+		API.all(message.replace("$sender", sender.getName()));
 		return true;
 	}
 

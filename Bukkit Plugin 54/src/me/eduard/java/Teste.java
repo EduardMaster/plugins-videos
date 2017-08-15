@@ -9,6 +9,7 @@ public class Teste {
 			add();
 		}
 
+		@Override
 		public void add() {
 
 			// TODO Auto-generated method stub
@@ -26,6 +27,7 @@ public class Teste {
 
 		}
 
+		@Override
 		public void add() {
 
 			Interface1_8.super.add();

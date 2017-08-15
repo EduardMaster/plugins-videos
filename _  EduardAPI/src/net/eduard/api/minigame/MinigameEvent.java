@@ -8,25 +8,24 @@ public class MinigameEvent extends Event implements Cancellable{
 
 	private static final HandlerList events = new HandlerList();
 	private Minigame minigame;
-	private MinigameRoom room;
-	private MinigameMap map;
+	private Game room;
+	private GameMap map;
 	private boolean cancelled;
 	
-	
+	@Override
 	public boolean isCancelled() {
 		return cancelled;
 	}
 
+	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
 
-	public MinigameEvent(Minigame minigame, MinigameRoom room,
-			MinigameEventType event) {
-		super();
+	public MinigameEvent(Minigame minigame, Game room) {
+	
 		this.minigame = minigame;
 		this.room = room;
-		this.event = event;
 		this.map = room.getMap();
 	}
 
@@ -34,20 +33,16 @@ public class MinigameEvent extends Event implements Cancellable{
 		return minigame;
 	}
 
-	public MinigameRoom getRoom() {
+	public Game getRoom() {
 		return room;
 	}
 
-	public MinigameMap getMap() {
+	public GameMap getMap() {
 		return map;
 	}
 
-	public MinigameEventType getEvent() {
-		return event;
-	}
 
-	private MinigameEventType event;
-	
+	@Override
 	public HandlerList getHandlers() {
 		return events;
 	}

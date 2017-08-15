@@ -112,6 +112,7 @@ public class Blocks implements Cloneable {
 		return clone().move(playerPosition).paste(false);
 	}
 
+	@Override
 	public Blocks clone() {
 		try {
 			return (Blocks) super.clone();

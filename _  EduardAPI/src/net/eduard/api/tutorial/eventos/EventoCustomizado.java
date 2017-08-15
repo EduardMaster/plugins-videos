@@ -31,15 +31,18 @@ public class EventoCustomizado extends Event implements Listener,Cancellable{
 	        return message;
 	    }
 
-	    public boolean isCancelled() {
+	    @Override
+		public boolean isCancelled() {
 	        return cancelled;
 	    }
 
-	    public void setCancelled(boolean cancel) {
+	    @Override
+		public void setCancelled(boolean cancel) {
 	        cancelled = cancel;
 	    }
 
-	    public HandlerList getHandlers() {
+	    @Override
+		public HandlerList getHandlers() {
 	        return handlers;
 	    }
 

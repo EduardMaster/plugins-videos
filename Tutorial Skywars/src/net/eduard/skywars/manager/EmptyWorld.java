@@ -9,6 +9,7 @@ import org.bukkit.generator.ChunkGenerator;
 
 public class EmptyWorld extends ChunkGenerator {
 
+	@Override
 	public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
 			ChunkGenerator.BiomeGrid biomeGrid) {
 		byte[][] result = new byte[world.getMaxHeight() / 16][];
@@ -17,6 +18,7 @@ public class EmptyWorld extends ChunkGenerator {
 		return result;
 	}
 
+	@Override
 	public Location getFixedSpawnLocation(World world, Random random) {
 		return new Location(world, 100, 100, 100);
 	}

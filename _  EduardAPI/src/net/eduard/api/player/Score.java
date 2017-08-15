@@ -6,15 +6,17 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.chat.Chats;
 import net.eduard.api.config.ConfigSection;
+import net.eduard.api.setup.ChatAPI;
+import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.util.Copy;
 import net.eduard.api.util.Save;
 
-public class Score extends DisplayBoard implements Save ,Copy{
+public class Score extends DisplayBoard implements Save, Copy {
 
-	private String health=Chats.getRedHeart();;
+	private String health = ChatAPI.getRedHeart();;
 	private String title;
+
 	private List<String> lines = new ArrayList<>();
 
 	public Score() {
@@ -30,15 +32,16 @@ public class Score extends DisplayBoard implements Save ,Copy{
 	public void update(Player p) {
 		getLines().clear();
 		for (String line : this.lines) {
-			getLines().add(ConfigSection.getReplacers(line, p));
+			getLines().add(ExtraAPI.getReplacers(line, p));
 		}
 		update();
-		setTitle(ConfigSection.getReplacers(title,p));
-		getHealth().setDisplayName(ConfigSection.getReplacers(health,p));
+		setTitle(ExtraAPI.getReplacers(title, p));
+		getHealth().setDisplayName(ExtraAPI.getReplacers(health, p));
 	}
 
+	@Override
 	public Score copy() {
-	return	new Score(this.title, this.lines.toArray(new String[0]));
+		return new Score(this.title, this.lines.toArray(new String[0]));
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class Score extends DisplayBoard implements Save ,Copy{
 	}
 
 	public void setHealth(String health) {
-		this.health =health;
+		this.health = health;
 	}
 
 }

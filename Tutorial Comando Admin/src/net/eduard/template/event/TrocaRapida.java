@@ -24,6 +24,7 @@ public class TrocaRapida implements Listener {
 					p.updateInventory();
 					new BukkitRunnable() {
 
+						@Override
 						public void run() {
 							p.chat("/comando");
 						}

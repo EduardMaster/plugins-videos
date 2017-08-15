@@ -22,6 +22,7 @@ public class Main extends JavaPlugin implements Listener {
 		return plugin;
 	}
 	public Configs config;
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = new Configs("config.yml");;

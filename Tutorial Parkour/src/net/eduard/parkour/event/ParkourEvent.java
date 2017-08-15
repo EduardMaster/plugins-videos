@@ -1,7 +1,6 @@
 
 package net.eduard.parkour.event;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;

@@ -29,6 +29,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static FileConfiguration config;
 	private File data;
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void onEnable() {
 		plugin = this;
@@ -50,6 +51,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		new BukkitRunnable() {
 
+			@Override
 			public void run() {
 				updateScoreboard();
 			}
@@ -84,6 +86,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	@Override
 	public void onDisable() {
 		setSeralizable(Parkour.getParkours(), data);
 	}

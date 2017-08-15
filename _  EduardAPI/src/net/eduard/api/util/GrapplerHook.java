@@ -37,7 +37,7 @@ public class GrapplerHook extends EntityFishingHook {
 		super(((CraftPlayer) p).getHandle().getWorld(), ((CraftPlayer) p).getHandle());
 		owner = ((CraftPlayer) p).getHandle();
 		Location location = p.getEyeLocation();
-		sb = ((Snowball) p.launchProjectile(Snowball.class));
+		sb = (p.launchProjectile(Snowball.class));
 		controller = ((CraftSnowball) sb).getHandle();
 		this.sb.setVelocity(location.getDirection().multiply(force));
 		PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(new int[] { controller.getId() });
@@ -60,9 +60,11 @@ public class GrapplerHook extends EntityFishingHook {
 
 	}
 
+	@Override
 	protected void c() {
 	}
 
+	@Override
 	public void h() {
 		lastControllerDead = controller.dead;
 		for (Entity entity : controller.world.getWorld().getEntities()) {
@@ -102,6 +104,7 @@ public class GrapplerHook extends EntityFishingHook {
 		}
 	}
 
+	@Override
 	public void die() {
 	}
 

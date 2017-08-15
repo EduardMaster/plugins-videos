@@ -11,6 +11,7 @@ import net.eduard.skywars.manager.Skywars;
 
 public class SkywarsCommand implements CommandExecutor {
 	public static String noConsole = Main.message("no-console", "");
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {

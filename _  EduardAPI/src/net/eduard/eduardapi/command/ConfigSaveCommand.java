@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.config.Config;
 import net.eduard.api.manager.CMD;
 
@@ -27,7 +26,7 @@ public class ConfigSaveCommand extends CMD {
 				Plugin pl = API.getPlugin(cmd);
 				if (args.length == 2) {
 					Config.saveConfigs(pl);
-					ConfigSection.chat(sender,
+					API.chat(sender,
 							"§aSalvandos todas configurações do Plugin "
 									+ pl.getName());
 				} else {

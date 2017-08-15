@@ -10,9 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class ToggleOnlineCommand extends CMD {
 	public String messageOn = "§6Voce esta visivel!";
@@ -23,18 +22,19 @@ public class ToggleOnlineCommand extends CMD {
 	public ToggleOnlineCommand() {
 		super("toggleonline");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			if (commandsOn.contains(label.toLowerCase())) {
 				GameAPI.show(p);
-				ConfigSection.chat(sender, messageOn);
+				API.chat(sender, messageOn);
 				if (!players.contains(p))
 					players.add(p);
 			} else if (commandsOff.contains(label.toLowerCase())) {
 				GameAPI.hide(p);
-				ConfigSection.chat(sender, messageOff);
+				API.chat(sender, messageOff);
 				players.remove(p);
 			} else {
 				if (args.length == 0) {
@@ -44,7 +44,7 @@ public class ToggleOnlineCommand extends CMD {
 					} else {
 						p.chat("/" + commandsOn.get(0));
 					}
-					ConfigSection.all("oi");
+					API.all("oi");
 				} else {
 					String cmd = args[0].toLowerCase();
 					if (API.COMMANDS_ON.contains(cmd)) {
@@ -52,7 +52,7 @@ public class ToggleOnlineCommand extends CMD {
 					} else if (API.COMMANDS_OFF.contains(cmd)) {
 						p.chat("/" + commandsOff.get(0));
 					} else {
-						ConfigSection.chat(sender, getUsage());
+						API.chat(sender, getUsage());
 					}
 				}
 

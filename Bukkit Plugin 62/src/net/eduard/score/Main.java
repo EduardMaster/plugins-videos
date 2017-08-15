@@ -19,6 +19,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public HashMap<Player, DisplayBoard> scoreboards = new HashMap<>();
 
+	@Override
 	public void onEnable() {
 		API.event(this);
 		

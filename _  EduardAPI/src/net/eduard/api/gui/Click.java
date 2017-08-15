@@ -49,6 +49,7 @@ public class Click extends Slot {
 		setItem(item);
 		setSlot(slot);
 	}
+	@Override
 	public Click setItem(Material type) {
 		setCheck(ClickCheck.TYPE);
 		setItem(new ItemStack(type));

@@ -45,16 +45,19 @@ public class Main extends JavaPlugin implements Listener {
 			+ " entrou no servidor!");
 	}
 
+	@Override
 	public void onDisable() {
 
 		HandlerList.unregisterAll();
 	}
 
+	@Override
 	public void onEnable() {
 
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 
+	@Override
 	public void onLoad() {
 
 		m = this;

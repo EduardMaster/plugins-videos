@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,7 +19,7 @@ import net.eduard.api.config.ConfigSection;
 import net.eduard.api.gui.DropItem;
 import net.eduard.api.util.Save;
 
-public class Drop implements Save {
+public class Drop implements Save,Listener {
 	
 	public static final Map<World, Map<EntityType, Drop>> ALL_DROPS = new HashMap<>();
 
@@ -103,6 +104,7 @@ public class Drop implements Save {
 
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		drops = new ArrayList<>();
 		for (ConfigSection sec : section.getSection("drops").getValues()) {
@@ -144,6 +146,7 @@ public class Drop implements Save {
 		return normalDrops;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 
 	}

@@ -5,11 +5,7 @@ import org.bukkit.util.Vector;
 
 import net.eduard.api.config.ConfigSection;
 import net.eduard.api.util.Save;
-/**
- * Preço: 
- * @author Eduard-PC
- *
- */
+
 public class Jump implements Save {
 	private boolean withHigh = true;
 	private boolean highFirst;

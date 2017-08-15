@@ -6,9 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class SetKitCommand extends CMD {
 
@@ -16,6 +15,7 @@ public class SetKitCommand extends CMD {
 	public SetKitCommand() {
 		super("setkit");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
@@ -34,7 +34,7 @@ public class SetKitCommand extends CMD {
 
 				}
 			}
-			ConfigSection.chat(p, message);
+			API.chat(p, message);
 		}
 
 		return true;

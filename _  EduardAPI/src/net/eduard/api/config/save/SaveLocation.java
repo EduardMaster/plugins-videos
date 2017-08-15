@@ -8,6 +8,7 @@ import net.eduard.api.config.ConfigSection;
 import net.eduard.api.util.Save;
 
 public class SaveLocation implements Save{
+	@Override
 	public Location get(ConfigSection section) {
 		World world = Bukkit.getWorld(section.getString("world"));
 		Double x = section.getDouble("x");
@@ -18,6 +19,7 @@ public class SaveLocation implements Save{
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
+	@Override
 	public void save(ConfigSection section, Object object) {
 		Location location = (Location) object;
 		section.set("world", location.getWorld().getName());

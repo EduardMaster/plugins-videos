@@ -11,6 +11,7 @@ import net.eduard.cash.setup.CashManager;
 
 public class CashCommand implements CommandExecutor
 {
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lb, String[] args) {
 		
 		

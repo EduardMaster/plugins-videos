@@ -118,6 +118,7 @@ public abstract class TextualComponent implements Cloneable {
 			writer.name(getKey()).value(getValue());
 		}
 
+		@Override
 		@SuppressWarnings("serial")
 		public Map<String, Object> serialize() {
 			return new HashMap<String, Object>() {{
@@ -185,6 +186,7 @@ public abstract class TextualComponent implements Cloneable {
 			writer.endObject();
 		}
 
+		@Override
 		@SuppressWarnings("serial")
 		public Map<String, Object> serialize() {
 			return new java.util.HashMap<String, Object>() {{
@@ -202,7 +204,7 @@ public abstract class TextualComponent implements Cloneable {
 				if (valEntry.getKey().equals("key")) {
 					key = (String) valEntry.getValue();
 				} else if (valEntry.getKey().startsWith("value.")) {
-					value.put(((String) valEntry.getKey()).substring(6) /* Strips out the value prefix */, valEntry.getValue().toString());
+					value.put(valEntry.getKey().substring(6) /* Strips out the value prefix */, valEntry.getValue().toString());
 				}
 			}
 			return new ComplexTextTypeComponent(key, value);

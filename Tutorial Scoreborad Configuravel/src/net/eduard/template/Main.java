@@ -17,12 +17,12 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.eduard.template.command.TemplateCommand;
-import net.minecraft.server.v1_7_R4.ChatClickable;
 
 public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	public static FileConfiguration config;
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = plugin.getConfig();
@@ -48,6 +48,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	}
 
+	@Override
 	public void onDisable() {
 
 	}

@@ -17,6 +17,7 @@ public class Main extends JavaPlugin {
 	private static Map<String, Warp> warps = new HashMap<>();
 	private static FileConfiguration messages;
 
+	@Override
 	public void onEnable() {
 		getCommand("warp").setExecutor(new WarpCommand());
 		Bukkit.getPluginManager().registerEvents(new WarpListener(), this);

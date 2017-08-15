@@ -51,6 +51,7 @@ public class Slot extends Events {
 		this.slot = id;
 		return this;
 	}
+	@Override
 	public Slot clone() {
 		return (Slot) super.clone();
 	}

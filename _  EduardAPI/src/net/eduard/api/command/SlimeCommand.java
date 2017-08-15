@@ -22,6 +22,7 @@ public class SlimeCommand extends CMD {
 
 	public Config config = new Config("spawn.yml");
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 

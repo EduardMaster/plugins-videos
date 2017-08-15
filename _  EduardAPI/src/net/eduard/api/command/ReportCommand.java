@@ -14,6 +14,7 @@ public class ReportCommand extends CMD {
 public ReportCommand() {
 	super("report");
 }
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		

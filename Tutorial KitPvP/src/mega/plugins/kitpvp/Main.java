@@ -15,6 +15,7 @@ import mega.plugins.kitpvp.kits.Poseidon;
 
 public class Main extends JavaPlugin implements Listener {
 
+	@Override
 	public void onEnable() {
 		getServer().getConsoleSender().sendMessage("");
 		getServer().getConsoleSender().sendMessage("    §3(KitPvP)");
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 		getCommand("spawn").setExecutor(new SpawnCommand());
 	}
 
+	@Override
 	public void onDisable() {
 		getServer().getConsoleSender().sendMessage("");
 		getServer().getConsoleSender().sendMessage("    §4(KitPvP)");
@@ -51,6 +53,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public static Main getInstance() {
-		return Main.getPlugin(Main.class);
+		return JavaPlugin.getPlugin(Main.class);
 	}
 }

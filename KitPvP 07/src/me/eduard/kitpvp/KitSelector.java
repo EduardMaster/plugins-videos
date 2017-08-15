@@ -136,6 +136,7 @@ public class KitSelector implements Listener {
 		PlayerInventory inv = p.getInventory();
 		Main.sh.scheduleSyncDelayedTask(Main.m, new Runnable() {
 
+			@Override
 			public void run() {
 
 				if (p.hasPermission("kitpvp.respawn")) {

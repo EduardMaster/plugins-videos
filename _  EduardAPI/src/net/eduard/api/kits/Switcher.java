@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class Switcher extends Kit {
 	public Switcher() {
@@ -19,6 +19,7 @@ public class Switcher extends Kit {
 		add(new ItemStack(Material.SNOW_BALL, 10));
 
 	}
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Snowball) {

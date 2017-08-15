@@ -10,6 +10,7 @@ import net.eduard.spawn.Main;
 
 public class SetSpawnCommand implements CommandExecutor {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 		if (sender instanceof Player){

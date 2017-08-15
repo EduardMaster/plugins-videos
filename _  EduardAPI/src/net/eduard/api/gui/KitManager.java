@@ -22,21 +22,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.ItemAPI;
 import net.eduard.api.manager.Manager;
-import net.eduard.api.manager.RexAPI;
-import net.eduard.api.manager.VaultAPI;
+import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.VaultAPI;
 import net.eduard.api.util.PlayerEffect;
 import net.eduard.api.util.Save;
 
 public class KitManager extends Manager implements Save {
-	public static final Kit KIT_NONE = new Kit("Nenhum",KitType.NONE);
 	private String prePerm = "kits.";
 	private Click kitSelector;
 	private Click kitShop;
 	private String noneKit = "§8Nenhum";
-	private List<KitType> types=new ArrayList<>();
+	private List<KitType> types = new ArrayList<>();
 	private boolean kitsEnabled = true;
 	private double defaultKitPrice = 0;
 	private String kitsDisabled = "§cOs kits foram desabilitados!";
@@ -194,7 +194,8 @@ public class KitManager extends Manager implements Save {
 	}
 
 	public void gainKit(Player player) {
-		if (!isKitsEnabled())return;
+		if (!isKitsEnabled())
+			return;
 		Kit kit = players.get(player);
 		removeKits(player);
 		GameAPI.refreshAll(player);
@@ -304,7 +305,8 @@ public class KitManager extends Manager implements Save {
 					pageShop++;
 				}
 			}
-			if (!kit.isShowOnGui())continue;
+			if (!kit.isShowOnGui())
+				continue;
 			if (!player.hasPermission(prePerm + kit.getName())) {
 				Slot slot = (Slot) new Slot(kit.getIcon(), idShop)
 						.setEffect(new PlayerEffect() {
@@ -336,6 +338,7 @@ public class KitManager extends Manager implements Save {
 			} else {
 				Slot slot = (Slot) new Slot(kit.getIcon(), idKit)
 						.setCloseInventory(true).setEffect(new PlayerEffect() {
+							@Override
 							public void effect(Player p) {
 								selectKit(p, kit);
 							}
@@ -347,16 +350,18 @@ public class KitManager extends Manager implements Save {
 		}
 	}
 	public Kit getKit(Player player) {
-		if (hasKit(player)){
-			return players.get(player);			
+		if (hasKit(player)) {
+			return players.get(player);
 		}
-		players.put(player, KIT_NONE);
-		return KIT_NONE;
+		Kit def = getKit(KitType.DEFAULT);
+		players.put(player, def);
+		return def;
 	}
-	public boolean hasKit(Player player){
+	public boolean hasKit(Player player) {
 		return players.containsKey(player);
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		section.getSection("kits").set("!Map");
 		for (ConfigSection key : section.getValues("kits")) {
@@ -457,8 +462,8 @@ public class KitManager extends Manager implements Save {
 
 	public void giveItems(Player player) {
 		PlayerInventory inv = player.getInventory();
-		ItemAPI.setSlot(inv, kitSelector);
-		ItemAPI.setSlot(inv, kitShop);
+		API.setSlot(inv, kitSelector);
+		API.setSlot(inv, kitShop);
 		if (fillHotBar) {
 			ItemAPI.addHotBar(player, hotBarItem);
 		}
@@ -473,7 +478,7 @@ public class KitManager extends Manager implements Save {
 		if (kitsEnabled)
 			openKitSelector(player, 0);
 		else
-			ConfigSection.chat(player, kitsDisabled);
+			API.chat(player, kitsDisabled);
 	}
 
 	public void openKitSelector(Player player, int page) {
@@ -542,11 +547,13 @@ public class KitManager extends Manager implements Save {
 
 	public void reloadDefaults() {
 		for (KitType type : KitType.values()) {
-			if (type==KitType.NONE|type==KitType.ANOTHER)continue;
+			API.console(type);
+			if (type == KitType.DEFAULT)
+				continue;
 			try {
-				
+
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + ConfigSection.toTitle(type.name(), ""));
+						.getNew("#k" + ExtraAPI.toTitle(type.name(), ""));
 				register(type.name(), kit);
 
 			} catch (Exception ex) {
@@ -567,6 +574,7 @@ public class KitManager extends Manager implements Save {
 		}
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 		ConfigSection kit = section.getSection("kits");
 		for (Entry<String, Kit> map : kits.entrySet()) {
@@ -593,9 +601,11 @@ public class KitManager extends Manager implements Save {
 		for (KitType type : kits) {
 			try {
 				Kit kit = (Kit) RexAPI
-						.getNew("#k" + ConfigSection.toTitle(type.name(), ""));
+						.getNew("#k" + ExtraAPI.toTitle(type.name(), ""));
+//				kit.setType(type);
 				register(type.name(), kit);
-ConfigSection.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
+				
+				ExtraAPI.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
 						+ "§f foi registrado!");
 
 			} catch (Exception ex) {
@@ -706,7 +716,6 @@ ConfigSection.consoleMessage("§bKitAPI §fo Kit §a" + type.name()
 	public void setDefaultKitPrice(double defaultKitPrice) {
 		this.defaultKitPrice = defaultKitPrice;
 	}
-
 
 	public List<KitType> getTypes() {
 		return types;

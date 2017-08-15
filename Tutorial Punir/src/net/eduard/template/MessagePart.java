@@ -81,6 +81,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 		stylesToNames = builder.build();
 	}
 
+	@Override
 	public void writeJson(JsonWriter json) {
 		try {
 			json.beginObject();
@@ -120,6 +121,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 		}
 	}
 
+	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("text", text);

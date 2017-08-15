@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 public class ComandoChatLimpo implements CommandExecutor{
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		if (command.getName().equalsIgnoreCase("clearchat")) {

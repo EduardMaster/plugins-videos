@@ -20,6 +20,7 @@ public class Cannibal extends Kit {
 		getPotions().add(new Potions(PotionEffectType.HUNGER, 0, 20 * 5));
 	}
 
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player) {

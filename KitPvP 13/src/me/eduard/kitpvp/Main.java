@@ -28,6 +28,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static CommandSender send = Bukkit.getConsoleSender();
 
+	@Override
 	public void onEnable() {
 
 		pm.registerEvents(new KitSelector(), this);
@@ -36,6 +37,7 @@ public class Main extends JavaPlugin implements Listener {
 		pm.registerEvents(new Viper(), this);
 	}
 
+	@Override
 	public void onLoad() {
 
 		m = this;

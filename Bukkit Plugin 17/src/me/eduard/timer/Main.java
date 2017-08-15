@@ -33,6 +33,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public HashMap<Player, Integer> tasktm = new HashMap<>();
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,
 		String[] args) {
 
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin implements Listener {
 
 				int numero = 10;
 
+				@Override
 				public void run() {
 
 					if (numero > 0) {
@@ -75,6 +77,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			int taskID = sh.scheduleSyncDelayedTask(this, new Runnable() {
 
+				@Override
 				public void run() {
 
 					pf.sendMessage("§cO delay acabou!");
@@ -91,6 +94,7 @@ public class Main extends JavaPlugin implements Listener {
 
 				int numero = 10;
 
+				@Override
 				public void run() {
 
 					if (numero > 0) {
@@ -111,16 +115,19 @@ public class Main extends JavaPlugin implements Listener {
 		return false;
 	}
 
+	@Override
 	public void onDisable() {
 
 		HandlerList.unregisterAll();
 	}
 
+	@Override
 	public void onEnable() {
 
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 
+	@Override
 	public void onLoad() {
 
 		m = this;

@@ -1,0 +1,7 @@
+name: Money
+description: Plugin Money
+main: net.eduard.money.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD

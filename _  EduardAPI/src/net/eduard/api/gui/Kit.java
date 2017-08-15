@@ -12,18 +12,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.API;
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.manager.ItemAPI;
-import net.eduard.api.time.Cooldown;
+import net.eduard.api.player.Cooldown;
+import net.eduard.api.setup.ItemAPI;
 
 public class Kit extends Cooldown {
 
 	private String name;
 	private double price;
 	private ItemStack icon;
-	private KitType type;
-	private boolean showOnGui=true;
-	private boolean enabled=true;
+//	private KitType type;
+	private boolean showOnGui = true;
+	private boolean enabled = true;
 	private String disabled = "§6Habilidade desativada temporariamente!";
 	private boolean activeCooldownOnPvP;
 	private int times = 1;
@@ -31,22 +32,28 @@ public class Kit extends Cooldown {
 	private transient Map<Player, Integer> timesUsed = new HashMap<>();
 	private transient List<String> kits = new ArrayList<>();
 	private transient List<Player> players = new ArrayList<>();
-	public Kit(KitType type) {
-		this("",type);
-
-	}
 	public Kit() {
-		this("",KitType.ANOTHER);
+		this("", KitType.DEFAULT);
 
 	}
+//	public KitType getType() {
+//		return type;
+//	}
+//	public void setType(KitType type) {
+//		this.type = type;
+//	}
+//	public String getTitle() {
+//		return ExtraAPI.toTitle(type.name(), " ");
+//	}
 	public Kit(String name, KitType type) {
 		if (name.isEmpty()) {
 			setName(getClass().getSimpleName());
-
-		} else
+		} else {
 			setName(name);
-		setPermission(name.toLowerCase());
-		setType(type);
+		}
+//		setType(type);
+
+		setPermission(name.toLowerCase().replace(" ", ""));
 	}
 
 	public ItemStack add(ItemStack item) {
@@ -79,8 +86,8 @@ public class Kit extends Cooldown {
 
 	@Override
 	public boolean cooldown(Player player) {
-		if (!enabled){
-			ConfigSection.chat(player, disabled);
+		if (!enabled) {
+			API.chat(player, disabled);
 			return false;
 		}
 		if (onCooldown(player)) {
@@ -122,7 +129,6 @@ public class Kit extends Cooldown {
 	public ItemStack getIcon() {
 		return icon;
 	}
-
 
 	public List<String> getKits() {
 		return kits;
@@ -220,10 +226,5 @@ public class Kit extends Cooldown {
 	public void setDisabled(String disabled) {
 		this.disabled = disabled;
 	}
-	public KitType getType() {
-		return type;
-	}
-	public void setType(KitType type) {
-		this.type = type;
-	}
+	
 }

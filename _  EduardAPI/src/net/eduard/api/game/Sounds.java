@@ -73,10 +73,12 @@ public class Sounds implements Save {
 		this.pitch = pitch;
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		return null;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 
 	}

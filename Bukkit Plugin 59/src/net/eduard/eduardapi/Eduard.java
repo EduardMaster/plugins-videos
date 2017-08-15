@@ -263,6 +263,7 @@ public class Eduard {
 			if (!has(p)) {
 				Time time = new Time(new Runnable() {
 
+					@Override
 					public void run() {
 
 						if (getTime(p) == 0) {
@@ -281,6 +282,7 @@ public class Eduard {
 
 			start(p, seconds, new Runnable() {
 
+				@Override
 				public void run() {
 
 					p.sendMessage(message);
@@ -444,6 +446,7 @@ public class Eduard {
 			}
 			Time time = new Time(new Runnable() {
 
+				@Override
 				public void run() {
 
 					if (end != null) {
@@ -460,6 +463,7 @@ public class Eduard {
 
 			start(p, seconds, new Runnable() {
 
+				@Override
 				public void run() {
 
 					p.sendMessage(message);
@@ -1073,6 +1077,7 @@ public class Eduard {
 			setNameSize(16, "§f§l");
 			new Time(new Runnable() {
 
+				@Override
 				public void run() {
 
 					String text = ChatColor.stripColor(scoreName);
@@ -1132,6 +1137,7 @@ public class Eduard {
 			}
 			id = new BukkitRunnable() {
 
+				@Override
 				public void run() {
 
 					if (times == time) {
@@ -1236,6 +1242,7 @@ public class Eduard {
 			}
 			time = new Time(new Runnable() {
 
+				@Override
 				public void run() {
 
 					if (getTime() == 0) {

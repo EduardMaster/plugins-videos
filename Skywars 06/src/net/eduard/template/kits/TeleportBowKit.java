@@ -1,6 +1,5 @@
 package net.eduard.template.kits;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Material;

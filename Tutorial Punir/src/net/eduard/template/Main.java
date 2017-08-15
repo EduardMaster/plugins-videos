@@ -12,6 +12,7 @@ public class Main extends JavaPlugin {
 	public static Main getInstance() {
 		return plugin;
 	}
+	@Override
 	public void onEnable() {
 		plugin = this;
 		Bukkit.getPluginManager().registerEvents(new Evento(), plugin);

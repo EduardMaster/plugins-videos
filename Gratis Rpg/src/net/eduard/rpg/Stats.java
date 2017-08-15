@@ -71,6 +71,7 @@ public class Stats implements Serializable, Cloneable {
 		return damage;
 	}
 
+	@Override
 	public Stats clone() {
 		try {
 			return (Stats) super.clone();

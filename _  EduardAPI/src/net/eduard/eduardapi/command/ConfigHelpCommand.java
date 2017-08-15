@@ -17,9 +17,9 @@ public class ConfigHelpCommand extends CMD {
 		sender.sendMessage("§6§l                  AJUDA");
 		sender.sendMessage(" ");
 		sender.sendMessage(
-				"§b/" + label + " reload [plugin|all] [plugin-name]");
+				"§b/" + label + " reload [plugin|all] [config-name]");
 		sender.sendMessage("  §aRecarrega a configuração dos Plugins");
-		sender.sendMessage("§b/" + label + " save [plugin|all] [plugin-name]");
+		sender.sendMessage("§b/" + label + " save [plugin|all] [config-name]");
 		sender.sendMessage("  §aSalva a configuração dos Plugins");
 		return true;
 	}

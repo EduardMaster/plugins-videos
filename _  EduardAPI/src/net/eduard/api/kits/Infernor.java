@@ -17,9 +17,9 @@ import net.eduard.api.API;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.WorldAPI;
-import net.eduard.api.util.LocationEffect;
+import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.LocationEffect;
+import net.eduard.api.setup.WorldAPI;
 
 public class Infernor extends Kit {
 	
@@ -28,7 +28,7 @@ public class Infernor extends Kit {
 	public static HashMap<Player, List<Location>> arenas = new HashMap<>();
 	public int high = 100;
 	public int size = 10;
-	public Material type = Material.NETHERRACK;
+	public Material mat = Material.NETHERRACK;
 	public int data = 0;
 	public double chance = 0.33;
 	public int effectSeconds = 5;
@@ -90,7 +90,7 @@ public class Infernor extends Kit {
 			@SuppressWarnings("deprecation")
 			@Override
 			public boolean effect(Location location) {
-				location.getBlock().setType(type);
+				location.getBlock().setType(mat);
 				location.getBlock().setData((byte) data);
 //				location.getBlock().getRelative(BlockFace.UP).setType(Material.FIRE);
 				return true;
@@ -115,7 +115,7 @@ public class Infernor extends Kit {
 	public void event(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (arenas.containsKey(p)) {
-			if (e.getBlock().getType() == type) {
+			if (e.getBlock().getType() == mat) {
 				e.setCancelled(true);
 			}
 		}

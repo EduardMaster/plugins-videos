@@ -1,4 +1,4 @@
-name: Warp
+name: EMWarp
 description: Criacao de Warps
 main: net.eduard.warp.Main
 version: 1.0

@@ -13,6 +13,7 @@ import net.eduard.warp.Warp;
 
 public class WarpCommand implements CommandExecutor {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 		if (!(sender instanceof Player)) {

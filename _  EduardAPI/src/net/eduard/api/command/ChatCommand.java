@@ -5,11 +5,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.chat.ChatChannel;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.config.Config;
-import net.eduard.api.event.PlayerChatEvent;
+import net.eduard.api.event.ChatMessageEvent;
+import net.eduard.api.game.ChatChannel;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.setup.ExtraAPI;
 import net.eduard.eduardapi.EduardAPI;
 
 public class ChatCommand extends CMD {
@@ -29,14 +29,14 @@ public class ChatCommand extends CMD {
 		if (args.length == 0) {
 			sendUsage(sender);
 		} else {
-			String message = ConfigSection.getText(0, args);
+			String message = ExtraAPI.getText(0, args);
 			if (API.onlyPlayer(sender)) {
 				Player p = (Player) sender;
-				PlayerChatEvent event = new PlayerChatEvent(p, 
-						ChatChannel.LOCAL, API.CHAT_FORMAT,
-						message.replaceFirst(" ", ""));
+//				PlayerChatEvent event = new PlayerChatEvent(p, 
+//						ChatChannel.LOCAL, API.CHAT_FORMAT,
+//						message.replaceFirst(" ", ""));
 
-				EduardAPI.sendChat(event);
+//				EduardAPI.sendChat(event);
 			}
 		}
 		return true;

@@ -24,6 +24,7 @@ public class Main extends JavaPlugin {
 
 	public static Chat chat = null;
 
+	@Override
 	public void onDisable() {
 
 		Gui loja = new Gui(3, "§8Loja");
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin {
 				})).register(this);
 	}
 
+	@Override
 	public void onEnable() {
 
 		Main.instance = this;

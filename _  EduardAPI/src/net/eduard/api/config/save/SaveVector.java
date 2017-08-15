@@ -7,10 +7,12 @@ import net.eduard.api.util.Save;
 
 public class SaveVector implements Save{
 
+	@Override
 	public Object get(ConfigSection section) {
 		return new Vector(section.getDouble("x"),section.getDouble("y") , section.getDouble("z"));
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 		if (value instanceof Vector) {
 			Vector vector = (Vector) value;

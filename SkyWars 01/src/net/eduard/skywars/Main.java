@@ -17,6 +17,7 @@ public class Main extends JavaPlugin {
 	
 	public static Main main;
 
+	@Override
 	public void onEnable() {
 		main = this;
 		reloadMaps();
@@ -72,6 +73,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	@Override
 	public void onDisable() {
 
 		saveMaps();

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 public class SimplesComando implements CommandExecutor
 {
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 

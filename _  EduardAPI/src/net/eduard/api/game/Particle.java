@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.manager.RexAPI;
+import net.eduard.api.setup.RexAPI;
 import net.eduard.api.util.Save;
 
 public class Particle implements Save {
@@ -149,10 +149,12 @@ public class Particle implements Save {
 		this.zRandom = zRandom;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		return null;
 	}

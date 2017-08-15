@@ -17,6 +17,7 @@ import net.eduard.api.gui.Slot;
 public class Main extends JavaPlugin implements Listener {
 	public Gui gui;
 
+	@Override
 	public void onEnable() {
 		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
 		gui.setItem(API.newItem("§4Abrir Gui Custom", Material.DIAMOND));

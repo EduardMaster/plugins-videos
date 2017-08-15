@@ -10,6 +10,7 @@ import net.eduard.parkour.Arena;
 
 public class CreateSUB extends CMD {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;

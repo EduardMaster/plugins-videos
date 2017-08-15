@@ -6,21 +6,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.setup.ExtraAPI;
 
 public class GamemodeCommand extends CMD {
 
 	public GamemodeCommand() {
-		super("gamemode","gm");
+		super("gamemode", "gm");
 	}
 	public String message = "§6Seu gamemode agora é: $gamemode";
 	public String messageTarget = "§6O gamemode do $player agora é: $gamemode";
 
 	public String getGamemode(Player player) {
-		return ConfigSection.toTitle(player.getGameMode().name());
+		return ExtraAPI.toTitle(player.getGameMode().name());
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
@@ -32,22 +33,17 @@ public class GamemodeCommand extends CMD {
 				} else {
 					p.setGameMode(GameMode.CREATIVE);
 				}
-				ConfigSection.chat(sender,
-						message.replace("$gamemode", getGamemode(p)));
+				API.chat(sender, message.replace("$gamemode", getGamemode(p)));
 
 			} else
 				return false;
 
 		} else {
-			String arg = args[0];
 			GameMode gm = null;
-			try {
-				gm = GameMode.getByValue(ConfigSection.toInt(arg));
-			} catch (Exception ex) {
-				try {
-					gm = GameMode.valueOf(arg.toUpperCase());
-				} catch (Exception ex2) {
-					return false;
+			for (GameMode gameMode : GameMode.values()) {
+				if (args[0].equalsIgnoreCase("" + gameMode.getValue())
+						|| (args[0].equalsIgnoreCase(gameMode.name()))) {
+					gm = gameMode;
 				}
 			}
 			Player p = null;
@@ -57,7 +53,7 @@ public class GamemodeCommand extends CMD {
 			if (args.length >= 2) {
 				if (API.existsPlayer(sender, args[1])) {
 					p = API.getPlayer(args[1]);
-					ConfigSection.chat(sender,
+					API.chat(sender,
 							messageTarget.replace("$gamemode", getGamemode(p))
 									.replace("$player", p.getDisplayName()));
 				} else
@@ -68,7 +64,7 @@ public class GamemodeCommand extends CMD {
 				return false;
 			}
 			p.setGameMode(gm);
-			ConfigSection.chat(p,message.replace("$gamemode", getGamemode(p)));
+			API.chat(p, message.replace("$gamemode", getGamemode(p)));
 
 		}
 		return true;

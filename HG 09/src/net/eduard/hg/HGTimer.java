@@ -67,6 +67,7 @@ public class HGTimer extends BukkitRunnable{
 		HGEvents.restarting();
 	}
 
+	@Override
 	public void run() {
 
 		if (HG.state == HGState.STARTING) {

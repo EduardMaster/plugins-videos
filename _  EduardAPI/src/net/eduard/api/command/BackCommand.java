@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class BackCommand extends CMD {
@@ -21,15 +20,16 @@ public class BackCommand extends CMD {
 	public static HashMap<Player, Location> locations = new HashMap<>();
 	public String messageOn = "§6Voce teleportou para onde você Morreu!";
 	public String messageOff = "§6Voce não morreu ainda!";
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player)sender;
 			if (locations.containsKey(p)) {
-				ConfigSection.chat(p, messageOn);
+				API.chat(p, messageOn);
 			}else {
-				ConfigSection.chat(p, messageOff);
+				API.chat(p, messageOff);
 			}
 		}
 

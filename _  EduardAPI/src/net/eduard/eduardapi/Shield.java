@@ -3,8 +3,6 @@ package net.eduard.eduardapi;
 import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -62,8 +61,6 @@ public class Shield {
 				shield.key = UUID.randomUUID();
 				System.out.println("Key gerada: " + shield.key);
 				System.out.println("Key online: " + shield.getOnline());
-				File file = new File("");
-				shield.write(file);
 				break;
 			} catch (Exception e) {
 				System.out.println("Reiniciando o Programa de criação de Keys");
@@ -92,12 +89,6 @@ public class Shield {
 		a.append("price=" + price);
 		return a.toString();
 	}
-	public void write(File file) {
-		try {
-			Files.write(file.toPath(), getOffline().getBytes());
-		} catch (Exception e) {
-		}
-	}
 	private static Shield read(String text) {
 		Shield shield = new Shield();
 		String[] vars = text.split(" ");
@@ -109,18 +100,6 @@ public class Shield {
 		shield.sale = Long.valueOf(vars[5].split("=")[1]);
 		shield.price = Double.valueOf(vars[6].split("=")[1]);
 		return shield;
-	}
-	@SuppressWarnings("unused")
-	private static Shield read(File file) {
-		try {
-			String text = Files
-					.readAllLines(file.toPath(), Charset.defaultCharset())
-					.get(0);
-			return read(code(deob(text)));
-		} catch (Exception e) {
-		}
-
-		return null;
 	}
 	public static List<Shield> getShields(String url) {
 		try {
@@ -171,6 +150,13 @@ public class Shield {
 		}
 	}
 	public static boolean checkOnline(JavaPlugin plugin, String url) {
+		PluginDescriptionFile desc = plugin.getDescription();
+		if (!desc.getAuthors().contains("Eduard")|!desc.getWebsite().equals("https://www.youtube.com/user/EduTutoriaisHD")) {
+			Bukkit.getPluginManager().disablePlugin(plugin);
+			Bukkit.getConsoleSender()
+			.sendMessage("§cPlugin desativado pois foi modificado a §bPlugin.yml");
+			return false;
+		}
 		String SERVER_IP = getServerIp();
 		String BUKKIT_IP = Bukkit.getIp();
 		// if (BUKKIT_IP.equals("25.5.161.183")) {
@@ -260,11 +246,6 @@ public class Shield {
 		Bukkit.getPluginManager().disablePlugin(plugin);
 		return false;
 
-	}
-
-	public static boolean check(JavaPlugin plugin) {
-
-		return false;
 	}
 
 	private static String ob(String str) {

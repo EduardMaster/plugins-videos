@@ -32,6 +32,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public CommandSender send = Bukkit.getConsoleSender();
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 
@@ -44,21 +45,25 @@ public class Main extends JavaPlugin implements Listener {
 		return true;
 	}
 
+	@Override
 	public void onDisable() {
 
 		HandlerList.unregisterAll();
 	}
 
+	@Override
 	public void onEnable() {
 
 		pm.registerEvents(new HeldSoundEvent(), this);
 
 	}
 
+	@Override
 	public void onLoad() {
 
 	}
 
+	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command,
 		String alias, String[] args) {
 

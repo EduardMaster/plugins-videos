@@ -1,6 +1,6 @@
-name: Template
-description: Plugin Template
-main: net.eduard.template.Main
+name: EMCaixas
+description: Sistema de Caixas Misteriosas Simpels
+main: net.eduard.misterybox.Main
 version: 1.0
 authors: [Eduard]
 website: https://www.youtube.com/user/EduTutoriaisHD

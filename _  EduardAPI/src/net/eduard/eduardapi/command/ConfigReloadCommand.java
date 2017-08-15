@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.config.Config;
 import net.eduard.api.manager.CMD;
 
@@ -27,7 +26,7 @@ public class ConfigReloadCommand extends CMD {
 				Plugin pl = API.getPlugin(cmd);
 				if (args.length == 2) {
 					Config.reloadConfigs(pl);
-					ConfigSection.chat(sender,
+					API.chat(sender,
 							"§aRecarregando todas configurações do Plugin "
 									+ pl.getName());
 				} else {

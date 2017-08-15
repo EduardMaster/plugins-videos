@@ -11,6 +11,7 @@ public class HgPlugin extends JavaPlugin {
 	public static HgManager setup;
 	public static HgRoom hg;
 	public static HgTimer timer;
+	@Override
 	public void onEnable() {
 		hg = new HgRoom();;
 		new Principal();

@@ -1,78 +1,13 @@
 package net.eduard.api.game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-
-import net.eduard.api.API;
 import net.eduard.api.config.ConfigSection;
 import net.eduard.api.util.Save;
 
 public class Tag implements Save {
 
-	private static BukkitTask task;
-	private static Map<Player, Tag> tags = new HashMap<>();
-
-	public static Map<Player, Tag> getTags() {
-		return tags;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void update() {
-		Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
-		for (Player p : API.getPlayers()) {
-			Scoreboard score = p.getScoreboard();
-			if (score == null) {
-				p.setScoreboard(main);
-				score = main;
-				continue;
-			}
-			for (Entry<Player, Tag> map : tags.entrySet()) {
-				Tag tag = map.getValue();
-				Player player = map.getKey();
-				if (player == null)
-					continue;
-				String name = player.getName();
-				Team team = score.getTeam(name);
-				if (team == null)
-					team = score.registerNewTeam(name);
-				team.setPrefix(ConfigSection.toText(ConfigSection.toChatMessage(tag.getPrefix())));
-				team.setSuffix(ConfigSection.toText(ConfigSection.toChatMessage(tag.getSuffix())));
-				if (!team.hasPlayer(player))
-					team.addPlayer(player);
-
-			}
-		}
-	}
-
-
-	public static void enable(JavaPlugin plugin) {
-		if (task != null) {
-			task.cancel();
-		}
-		task = new BukkitRunnable() {
-
-			public void run() {
-				update();
-			}
-		}.runTaskTimer(plugin, 20, 20);
-	}
-
-	public static void disable() {
-		if (task != null) {
-			task.cancel();
-			task = null;
-		}
-	}
 	private String prefix, suffix, name;
+	
+	private int rank;
 
 	public Tag(String prefix, String suffix) {
 		this.prefix = prefix;
@@ -107,12 +42,22 @@ public class Tag implements Save {
 		return this;
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		return null;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 
 }

@@ -64,6 +64,7 @@ public class Ryu extends Kit {
 			}
 		}));
 	}
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Snowball) {

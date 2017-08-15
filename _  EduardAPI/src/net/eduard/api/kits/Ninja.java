@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class Ninja extends Kit {
 

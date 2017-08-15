@@ -5,19 +5,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class PlayerTargetEvent extends PlayerEvent
-		 {
+public class PlayerTargetEvent extends PlayerEvent {
 
-	private LivingEntity entity;
+	
+	@Override
 	public HandlerList getHandlers() {
 		return handlers;
 	}
-
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 	private static final HandlerList handlers = new HandlerList();
-
+	private LivingEntity entity;
 	public PlayerTargetEvent(Player player, LivingEntity livingEntity) {
 		super(player);
 		setEntity(livingEntity);

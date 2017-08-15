@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Teleporter extends Kit {
 	public Teleporter() {
@@ -19,6 +19,7 @@ public class Teleporter extends Kit {
 		add(new ItemStack(Material.ARROW, 10));
 
 	}
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Arrow) {

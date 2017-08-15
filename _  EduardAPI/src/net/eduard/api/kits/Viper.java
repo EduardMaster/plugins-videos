@@ -19,6 +19,7 @@ public class Viper extends Kit {
 		getPotions().add(new Potions(PotionEffectType.POISON, 0, 20 * 5));
 	}
 
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Player) {

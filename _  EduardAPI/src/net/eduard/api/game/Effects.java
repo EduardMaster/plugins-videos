@@ -75,13 +75,16 @@ public class Effects implements Save {
 		return this;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		return "Effects [data=" + data + ", type=" + type + "]";
 	}
@@ -92,6 +95,7 @@ public class Effects implements Save {
 		return new Effects(effect, data);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -100,6 +104,7 @@ public class Effects implements Save {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

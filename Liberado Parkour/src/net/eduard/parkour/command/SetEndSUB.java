@@ -9,6 +9,7 @@ import net.eduard.api.manager.CMD;
 import net.eduard.parkour.Arena;
 
 public class SetEndSUB extends CMD {
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;

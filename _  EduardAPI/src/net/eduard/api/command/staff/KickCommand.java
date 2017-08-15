@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class KickCommand extends CMD {
@@ -16,6 +15,7 @@ public class KickCommand extends CMD {
 	public KickCommand() {
 		super("kick");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length <= 1) {
@@ -30,7 +30,7 @@ public class KickCommand extends CMD {
 			target.kickPlayer(messageTarget.replace("$target", sender.getName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
-			ConfigSection.broadcast(message.replace("$target", target.getDisplayName())
+			API.broadcast(message.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
 		}

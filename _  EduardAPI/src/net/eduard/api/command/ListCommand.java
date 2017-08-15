@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class ListCommand extends CMD {
@@ -14,9 +13,10 @@ public class ListCommand extends CMD {
 	public ListCommand() {
 		super("list");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		ConfigSection.chat(sender, message.replace("$players", ""+API.getPlayers().size()));
+		API.chat(sender, message.replace("$players", ""+API.getPlayers().size()));
 		return true;
 	}
 }

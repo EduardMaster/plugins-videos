@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class TeleportCommand extends CMD {
@@ -15,6 +14,7 @@ public class TeleportCommand extends CMD {
 	}
 	public String message = "§6Voce se teleportou ate o §e$target";
 	public String messageTarget = "§6O jogador §a$player §6foi teleportado ate o §e$target";
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {
@@ -25,7 +25,7 @@ public class TeleportCommand extends CMD {
 				Player p = (Player) sender;
 				if (API.existsPlayer(sender, args[0])) {
 					Player target = API.getPlayer(args[0]);
-					ConfigSection.chat(p,message.replace("$target",
+					API.chat(p,message.replace("$target",
 							target.getDisplayName()));
 					p.teleport(target);
 				}
@@ -39,9 +39,9 @@ public class TeleportCommand extends CMD {
 					Player player = API.getPlayer(args[0]);
 					Player target = API.getPlayer(args[1]);
 					player.teleport(target);
-					ConfigSection.chat(player,message.replace("$target",
+					API.chat(player,message.replace("$target",
 							target.getDisplayName()));
-					ConfigSection.chat(sender,messageTarget
+					API.chat(sender,messageTarget
 							.replace("$player", player.getDisplayName())
 							.replace("$target", target.getDisplayName()));
 				}

@@ -14,6 +14,7 @@ public class Anchor extends Kit {
 	public Anchor() {
 		setIcon(Material.ANVIL, "§fNão leve e nem cause NockBack");
 	}
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		boolean no = false;

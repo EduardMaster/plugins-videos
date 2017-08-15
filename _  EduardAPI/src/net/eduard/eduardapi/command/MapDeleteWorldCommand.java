@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.setup.WorldAPI;
 
 public class MapDeleteWorldCommand extends CMD {
 

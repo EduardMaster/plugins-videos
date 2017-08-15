@@ -35,7 +35,7 @@ public class DragonBar {
 		Dragon dragon = null;
 
 		if ((this.dragonMap.containsKey(player.getName())) && (!reset)) {
-			dragon = (Dragon) this.dragonMap.get(player.getName());
+			dragon = this.dragonMap.get(player.getName());
 		} else {
 			dragon = new Dragon(text,
 					player.getLocation().add(0.0D, -200.0D, 0.0D), percent);

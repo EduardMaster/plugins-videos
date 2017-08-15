@@ -10,7 +10,7 @@ import net.eduard.api.API;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Phantom extends Kit {
 	public int effectSeconds = 5;

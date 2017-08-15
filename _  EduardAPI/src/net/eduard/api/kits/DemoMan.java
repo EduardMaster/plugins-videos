@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Explosion;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.setup.WorldAPI;
 
 public class DemoMan extends Kit {
 	

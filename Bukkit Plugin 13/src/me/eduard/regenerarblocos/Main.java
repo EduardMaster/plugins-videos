@@ -38,6 +38,7 @@ public class Main extends JavaPlugin implements Listener {
 			final BlockState b2 = b.getState();
 			Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
+				@Override
 				public void run() {
 
 					b2.getBlock().setType(b.getType());
@@ -55,6 +56,7 @@ public class Main extends JavaPlugin implements Listener {
 		final BlockState b = e.getBlockReplacedState();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
+			@Override
 			public void run() {
 
 				b.getBlock().setType(b.getType());
@@ -70,6 +72,7 @@ public class Main extends JavaPlugin implements Listener {
 		final BlockState b = e.getBlock().getState();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
+			@Override
 			public void run() {
 
 				b.getBlock().setType(b.getType());
@@ -78,16 +81,19 @@ public class Main extends JavaPlugin implements Listener {
 		}, 3 * 20);
 	}
 
+	@Override
 	public void onDisable() {
 
 		HandlerList.unregisterAll();
 	}
 
+	@Override
 	public void onEnable() {
 
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 
+	@Override
 	public void onLoad() {
 
 		m = this;

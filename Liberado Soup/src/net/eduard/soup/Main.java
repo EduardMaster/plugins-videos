@@ -21,11 +21,6 @@ import net.eduard.soup.event.SoupSignEvent;
 
 /**
  * Preço: 15
- * Comandos 1
- * Eventos 4
- * Config 8
- * Sistema 1.75
- * @author Eduard-PC
  *
  */
 public class Main extends JavaPlugin implements Listener {
@@ -39,6 +34,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static ItemStack soup;
 
+	@Override
 	public void onEnable() {
 
 		config = new Config(this);

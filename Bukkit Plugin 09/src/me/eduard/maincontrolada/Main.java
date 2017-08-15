@@ -21,22 +21,26 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static PluginManager pm;
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 
 		return false;
 	}
 
+	@Override
 	public void onDisable() {
 
 		HandlerList.unregisterAll();
 	}
 
+	@Override
 	public void onEnable() {
 
 		Bukkit.getPluginManager().registerEvents(this, this);
 	}
 
+	@Override
 	public void onLoad() {
 
 		m = this;

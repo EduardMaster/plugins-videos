@@ -9,9 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.chat.Chats;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.setup.ChatAPI;
+import net.eduard.api.setup.ExtraAPI;
 
 public class TellCommand extends CMD {
 
@@ -32,25 +32,26 @@ public class TellCommand extends CMD {
 	public TellCommand() {
 		super("tell", "privado");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length <= 1) {
-			ConfigSection.chat(sender, getUsage());
+			API.chat(sender, getUsage());
 		} else {
 			if (API.existsPlayer(sender, args[0])) {
 				Player target = API.getPlayer(args[0]);
-				String message = ConfigSection.getText(1, args);
+				String message = ExtraAPI.getText(1, args);
 				if (!isToggle(target)) {
-					ConfigSection.chat(sender, messageDisabled.replace("$player",
+					API.chat(sender, messageDisabled.replace("$player",
 							target.getName()));
 				} else {
-					ConfigSection.chat(sender,
+					API.chat(sender,
 							this.message.replace("$target", target.getName())
-									.replace("$>", Chats.getArrowRight())
+									.replace("$>", ChatAPI.getArrowRight())
 									.replace("$message", message));
-					ConfigSection.chat(target,
+					API.chat(target,
 							messageTarget.replace("$player", sender.getName())
-									.replace("$>", Chats.getArrowRight())
+									.replace("$>", ChatAPI.getArrowRight())
 									.replace("$message", message));
 				}
 			}

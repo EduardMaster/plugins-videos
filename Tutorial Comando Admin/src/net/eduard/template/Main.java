@@ -26,6 +26,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	public static FileConfiguration config;
 	public static ArrayList<Player> admins = new ArrayList<>();
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = plugin.getConfig();
@@ -68,6 +69,7 @@ public class Main extends JavaPlugin implements Listener {
 		inv.setItem(7, changeFast);
 	}
 
+	@Override
 	public void onDisable() {
 
 	}

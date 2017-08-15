@@ -14,6 +14,7 @@ public class SetSpawnCommand extends CMD {
 		getCommand().setPermission("spawn.set");
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.noConsole(sender)) {
 			Player p = (Player) sender;

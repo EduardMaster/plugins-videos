@@ -25,6 +25,7 @@ public class Main extends JavaPlugin implements Listener {
 		return getPlugin().getConfig();
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 
@@ -42,10 +43,12 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 
+	@Override
 	public void onLoad() {
 		registrarConfigs();
 	}
 
+	@Override
 	public void onEnable() {
 		
 		registrarComandos();
@@ -53,6 +56,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 
 	}
+	@Override
 	public void onDisable() {
 
 //		HandlerList.unregisterAll();
@@ -88,6 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	
 
+	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command,
 		String alias, String[] args) {
 

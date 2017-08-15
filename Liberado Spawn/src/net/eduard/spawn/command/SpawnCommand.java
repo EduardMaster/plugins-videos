@@ -21,12 +21,14 @@ public class SpawnCommand extends CMD {
 
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (API.noConsole(sender)) {
 			Player p = (Player) sender;
 			if (Main.getPlugin().getConfigs().contains("SpawnLocation")) {
 				if (Main.getPlugin().getConfigs().getBoolean("spawnWithDelay")) {
 					API.TIME.delay(Main.getPlugin().getConfigs().getInt("delayInSeconds")*20L,new Runnable() {
+						@Override
 						public void run() {
 							teleport(p);
 						}

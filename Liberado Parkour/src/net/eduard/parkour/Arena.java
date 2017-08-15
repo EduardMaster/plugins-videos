@@ -14,16 +14,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.API;
-import net.eduard.api.config.CS;
 import net.eduard.api.config.Config;
+import net.eduard.api.config.ConfigSection;
 import net.eduard.api.game.Potions;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Gui;
 import net.eduard.api.gui.Slot;
-import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.WorldAPI;
 import net.eduard.api.player.Score;
+import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.WorldAPI;
 import net.eduard.api.util.PlayerEffect;
 import net.eduard.api.util.Save;
 
@@ -291,6 +291,7 @@ public class Arena implements Save {
 	static {
 		new Click(setSpawnItem, new ClickEffect(){
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				Player p = e.getPlayer();
 				if (maps.containsKey(p)) {
@@ -300,6 +301,7 @@ public class Arena implements Save {
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				// TODO Auto-generated method stub
 
@@ -307,6 +309,7 @@ public class Arena implements Save {
 		});
 		new Click(setEndItem, new ClickEffect(){
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				Player p = e.getPlayer();
 				if (maps.containsKey(p)) {
@@ -316,6 +319,7 @@ public class Arena implements Save {
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				// TODO Auto-generated method stub
 
@@ -324,6 +328,7 @@ public class Arena implements Save {
 		new Click(addCheckpointItem, new ClickEffect(){
 			
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				Player p = e.getPlayer();
 				if (maps.containsKey(p)) {
@@ -333,6 +338,7 @@ public class Arena implements Save {
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				// TODO Auto-generated method stub
 
@@ -340,6 +346,7 @@ public class Arena implements Save {
 		});
 		new Click(confirmItem, new ClickEffect(){
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				Player p = e.getPlayer();
 				if (maps.containsKey(p)) {
@@ -351,6 +358,7 @@ public class Arena implements Save {
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				// TODO Auto-generated method stub
 
@@ -358,6 +366,7 @@ public class Arena implements Save {
 		});
 		new Click(cancelItem, new ClickEffect(){
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				Player p = e.getPlayer();
 				if (maps.containsKey(p)) {
@@ -368,6 +377,7 @@ public class Arena implements Save {
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				// TODO Auto-generated method stub
 
@@ -408,7 +418,7 @@ public class Arena implements Save {
 		STATS.saveConfig();
 	}
 
-	public void save(CS section, Object value) {
+	public void save(ConfigSection section, Object value) {
 		Arena arena = (Arena) value;
 		section.set("checker", arena.checker);
 		section.set("enabled", arena.enabled);
@@ -425,7 +435,7 @@ public class Arena implements Save {
 		}
 	}
 
-	public Object get(CS section) {
+	public Object get(ConfigSection section) {
 		Arena arena = new Arena();
 		arena.setChecker(
 				Material.valueOf(section.getString("checker").toUpperCase()));
@@ -435,7 +445,7 @@ public class Arena implements Save {
 		arena.setReward(section.getDouble("reward"));
 		arena.setName(section.getString("name"));
 		if (section.contains("Effects")) {
-			for (CS sec : section.getSection("Effects").getValues()) {
+			for (ConfigSection sec : section.getSection("Effects").getValues()) {
 				arena.effects.add((Potions) sec.getValue());
 			}
 		}

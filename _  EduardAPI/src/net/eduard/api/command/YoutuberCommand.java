@@ -16,6 +16,7 @@ public class YoutuberCommand extends CMD {
 		messages.add(API.SERVER_TAG+" - Requisitos para ser Youtuber - ");
 
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		for (String line : messages) {

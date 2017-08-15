@@ -19,11 +19,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Configs {
 
-	private JavaPlugin plugin;
+	private Plugin plugin;
 	private String name;
 	private File file;
 	private FileConfiguration config;
@@ -32,7 +33,7 @@ public class Configs {
 		return name;
 	}
 
-	public Configs setPlugin(JavaPlugin plugin) {
+	public Configs setPlugin(Plugin plugin) {
 		this.plugin = plugin;
 		return this;
 	}
@@ -44,7 +45,7 @@ public class Configs {
 		return config;
 	}
 
-	public Configs(String name, JavaPlugin plugin) {
+	public Configs(String name, Plugin plugin) {
 		this.plugin = plugin;
 		if (plugin == null)
 			this.plugin = JavaPlugin.getProvidingPlugin(getClass());

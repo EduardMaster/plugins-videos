@@ -23,7 +23,7 @@ import net.eduard.api.game.Sounds;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Sonic extends Kit {
 	public static ArrayList<Player> inEffect = new ArrayList<>();

@@ -1,12 +1,12 @@
 
 package net.eduard.api.command;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class FlyCommand extends CMD {
@@ -16,6 +16,7 @@ public class FlyCommand extends CMD {
 	public FlyCommand() {
 		super("fly");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {
@@ -24,18 +25,18 @@ public class FlyCommand extends CMD {
 				if (p.getAllowFlight()) {
 					p.setFlying(false);
 					p.setAllowFlight(false);
-					ConfigSection.chat(p, messageOff);
+					API.chat(p, messageOff);
 
 				} else {
 					p.setAllowFlight(true);
-					ConfigSection.chat(p, messageOn);
+					API.chat(p, messageOn);
 				}
 			}
 		} else {
 			String player = args[0];
 			if (API.existsPlayer(sender, player)) {
-				Player target = API.getPlayer(player);
-				ConfigSection.chat(sender,
+				Player target = Bukkit.getPlayer(player);
+				API.chat(sender,
 						messageTarget.replace("$player", target.getName()));
 
 			}

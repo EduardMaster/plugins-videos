@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class TeleportAllCommand extends CMD {
@@ -15,6 +14,7 @@ public class TeleportAllCommand extends CMD {
 	}
 	public String message = "§6Voce teleportou todos ate você!";
 	public String messageTarget = "§6Voce foi teleportado pelo jogador $player§6!";
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (API.onlyPlayer(sender)) {
@@ -23,10 +23,10 @@ public class TeleportAllCommand extends CMD {
 				if (d.equals(p))
 					continue;
 				d.teleport(p);
-				ConfigSection.chat(d,
+				API.chat(d,
 						messageTarget.replace("$player", p.getDisplayName()));
 			}
-			ConfigSection.chat(p,message);
+			API.chat(p,message);
 		}
 		return true;
 	}

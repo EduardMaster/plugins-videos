@@ -9,6 +9,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.material.MaterialData;
 
 import net.eduard.api.config.ConfigSection;
+import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.util.Save;
 
 public class Craft implements Save {
@@ -64,6 +65,7 @@ public class Craft implements Save {
 		return recipe;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 		Craft craft = (Craft) value;
 		section.set("result", craft.getResult());
@@ -78,6 +80,7 @@ public class Craft implements Save {
 		}
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		ItemStack result = section.getItem("result");
 		Craft craft = new Craft(result);
@@ -87,8 +90,8 @@ public class Craft implements Save {
 					String text = section.getString("slot" + i);
 					String[] split = text.split("-");
 					@SuppressWarnings("deprecation")
-					Material id = Material.getMaterial(ConfigSection.toInt(split[0]));
-					craft.set(i, id, ConfigSection.toInt(split[1]));
+					Material id = Material.getMaterial(ExtraAPI.toInt(split[0]));
+					craft.set(i, id, ExtraAPI.toInt(split[1]));
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

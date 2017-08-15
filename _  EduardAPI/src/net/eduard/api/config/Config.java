@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.manager.RexAPI;
+import net.eduard.api.setup.RexAPI;
 import net.eduard.api.util.Save;
 
 public class Config {
@@ -63,6 +63,7 @@ public class Config {
 	private File file;
 	private JavaPlugin plugin;
 	private String name;
+	private boolean autoSave;
 
 	List<String> lines;
 
@@ -181,6 +182,7 @@ public class Config {
 		return this;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -316,6 +318,7 @@ public class Config {
 		return root.getValues(path);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -340,7 +343,10 @@ public class Config {
 	private void save() {
 		root.save(this, -1);
 	}
-
+	public Config saveDefault() {
+		getFile().delete();
+		return saveConfig();
+	}
 	public Config saveConfig() {
 		lines.clear();
 		save();
@@ -374,8 +380,17 @@ public class Config {
 		return root.setIndent(amount);
 	}
 
+	@Override
 	public String toString() {
 		return "Config [plugin=" + plugin + ", name=" + name + "]";
+	}
+
+	public boolean isAutoSave() {
+		return autoSave;
+	}
+
+	public void setAutoSave(boolean autoSave) {
+		this.autoSave = autoSave;
 	}
 
 }

@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.manager.GameAPI;
 import net.eduard.api.manager.Manager;
+import net.eduard.api.setup.GameAPI;
 
 public class NoFall extends Manager {
 

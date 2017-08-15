@@ -14,6 +14,7 @@ public class Main extends JavaPlugin{
 	public static ConfigAPI config;
 	public static ConfigAPI messages;
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = new ConfigAPI("config.yml");

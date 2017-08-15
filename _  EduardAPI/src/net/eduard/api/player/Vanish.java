@@ -107,6 +107,7 @@ public class Vanish implements Runnable {
 	public void hide(Player player) {
 		players.add(player);
 	}
+	@Override
 	public void run() {
 		update();
 	}

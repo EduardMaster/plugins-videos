@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 public class ComandoStaffChat1 implements CommandExecutor{
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;

@@ -15,18 +15,14 @@ import net.eduard.spawn.event.SpawnEvent;
 
 /**
  * Preço: 12
- * Comandos 2
- * Eventos 2
- * Config 6
- * Sistema 1.75
  * @author Eduard-PC
- *
  */
 public class Main extends EduardPlugin {
 	public static Main getPlugin() {
 		return JavaPlugin.getPlugin(Main.class);
 	}
 
+	@Override
 	public void setup() {
 		Sounds sound = Sounds.create(Sound.ENDERMAN_TELEPORT);
 		messages.add("Spawn", "&6Voce foi teleportado para spawn!");
@@ -34,7 +30,7 @@ public class Main extends EduardPlugin {
 				"&bVoce vai ser teleportando em $time segundos!");
 		messages.add("NoSpawn", "&cO spawn ainda nao foi setado!");
 		messages.add("SetSpawn", "&bVoce setou o spawn!");
-		messages.saveDefault();
+		messages.saveConfig();
 		for (World world : Bukkit.getWorlds()) {
 			String name = world.getName().toLowerCase();
 			config.add("teleportOnRespawnInWorld." + name, false);
@@ -52,6 +48,7 @@ public class Main extends EduardPlugin {
 
 	}
 
+	@Override
 	public void onDisable() {
 
 	}

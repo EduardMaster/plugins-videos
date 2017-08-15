@@ -48,6 +48,7 @@ public class Hulk extends Kit {
 				}
 
 			}
+			@Override
 			public void effect(PlayerInteractEvent e) {
 
 			}

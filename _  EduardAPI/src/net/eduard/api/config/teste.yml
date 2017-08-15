@@ -1,0 +1,19 @@
+basico: 'valor'
+basico1: valor
+basico2: "valor"
+lista: [item1 , item2]
+lista2: 
+- item1
+- item2
+mapa: {key: valor}
+secao:
+  subsecao1: valor1
+  subsecao2: valor2
+tentandofazerainda1:
+- key: value
+- key:
+    key: value
+- {key:value}
+tentandofazerainda2:
+  entrada: key: valor
+    

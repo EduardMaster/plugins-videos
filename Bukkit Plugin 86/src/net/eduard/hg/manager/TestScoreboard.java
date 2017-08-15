@@ -16,6 +16,7 @@ public class TestScoreboard {
 	public TestScoreboard() {
 		new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				
 				Scoreboard score = Main.sm.getNewScoreboard();

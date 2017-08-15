@@ -1,4 +1,4 @@
-name: TutorialSpawn
+name: EMSpawn
 description: Tutorial Plugin de Spawn
 main: net.eduard.spawn.Main
 version: 1.0

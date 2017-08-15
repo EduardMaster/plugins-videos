@@ -1,0 +1,6 @@
+name: EMSpan
+description: Plugin de EduAntiSpan
+main: net.eduard.antispan.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD

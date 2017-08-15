@@ -1,4 +1,4 @@
-name: Spawn
+name: EMSpawn
 description: Sistema de Spawn configuravel
 main: net.eduard.spawn.Main
 version: 1.0

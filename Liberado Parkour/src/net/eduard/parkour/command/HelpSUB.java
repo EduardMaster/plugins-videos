@@ -7,6 +7,7 @@ import net.eduard.api.manager.CMD;
 
 public class HelpSUB extends CMD {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		sender.sendMessage("§b§l-=-=-=-=-=-=-=- §6§lHELP §b§l-=-=-=-=-=-=-=-=");
 		if (sender.hasPermission("parkour.admin")) {

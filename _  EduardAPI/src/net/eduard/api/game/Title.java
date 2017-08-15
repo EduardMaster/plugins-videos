@@ -3,7 +3,7 @@ package net.eduard.api.game;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.manager.RexAPI;
+import net.eduard.api.setup.RexAPI;
 import net.eduard.api.util.Save;
 
 public class Title implements Save, Cloneable {
@@ -86,13 +86,16 @@ public class Title implements Save, Cloneable {
 		return this;
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 
 	}
 
+	@Override
 	public Object get(ConfigSection section) {
 		return null;
 	}
+	@Override
 	public Title clone() {
 		try {
 			return (Title) super.clone();

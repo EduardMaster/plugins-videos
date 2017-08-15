@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements  Listener{	
+	@Override
 	public void onEnable() {Bukkit.getPluginManager().registerEvents(this, this);
 	
 	MysqlTest.criarTabela();

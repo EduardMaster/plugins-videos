@@ -1,6 +1,0 @@
-package net.eduard.api.minigame;
-
-public enum MinigameEventType {
-
-	GAME_START, GAME_END, GAME_OVER, GAME_RESTART, TIMER_CHANGE, TIMER_RESTART, GAME_FINISHED, INVULNERABILITY_OVER
-}

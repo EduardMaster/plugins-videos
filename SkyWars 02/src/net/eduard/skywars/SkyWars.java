@@ -153,6 +153,7 @@ public final class SkyWars extends BukkitRunnable {
 			.replace("$max", "" + getMaxPlayersAmount());
 	}
 
+	@Override
 	public void run() {
 
 		for (SkyWars skywar : Main.main.skywars) {

@@ -34,6 +34,16 @@ public class DisplayBoard {
 	protected Scoreboard score;
 	protected Objective board;
 	protected Objective health;
+	
+	public void hide() {
+		board.setDisplaySlot(null);
+	}
+	public boolean isShowing() {
+		return board.getDisplaySlot() == DisplaySlot.SIDEBAR;
+	}
+	public void show() {
+		board.setDisplaySlot(DisplaySlot.SIDEBAR);
+	}
 
 	public DisplayBoard() {
 		title = "§6§lScoreboard";
@@ -48,6 +58,7 @@ public class DisplayBoard {
 		return copy;
 
 	}
+	
 	protected void init() {
 		score = Bukkit.getScoreboardManager().getNewScoreboard();
 		for (int id = 1; id <= 15; id++) {
@@ -62,11 +73,13 @@ public class DisplayBoard {
 		build();
 		update();
 	}
+	
 
 	public void apply(Player player) {
 		player.setScoreboard(score);
+	}
+	public void updateHealthBar(Player player) {
 		player.setHealth(player.getMaxHealth()-1);
-
 	}
 	public void empty(int slot) {
 		set(slot, "");

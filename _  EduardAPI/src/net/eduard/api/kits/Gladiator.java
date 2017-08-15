@@ -17,9 +17,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
-import net.eduard.api.manager.WorldAPI;
-import net.eduard.api.util.LocationEffect;
+import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.LocationEffect;
+import net.eduard.api.setup.WorldAPI;
 
 public class Gladiator extends Kit {
 	
@@ -28,7 +28,7 @@ public class Gladiator extends Kit {
 	public static HashMap<Player, List<Location>> arenas = new HashMap<>();
 	public int high = 100;
 	public int size = 10;
-	public Material type = Material.GLASS;
+	public Material mat = Material.GLASS;
 	public int data = 0;
 	public int effectSeconds = 5;
 	public Gladiator() {
@@ -84,7 +84,7 @@ public class Gladiator extends Kit {
 			@SuppressWarnings("deprecation")
 			@Override
 			public boolean effect(Location location) {
-				location.getBlock().setType(type);
+				location.getBlock().setType(mat);
 				location.getBlock().setData((byte) data);
 				return true;
 			}
@@ -104,7 +104,7 @@ public class Gladiator extends Kit {
 	public void event(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (arenas.containsKey(p)) {
-			if (e.getBlock().getType() == type) {
+			if (e.getBlock().getType() == mat) {
 				e.setCancelled(true);
 			}
 		}

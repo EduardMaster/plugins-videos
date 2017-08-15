@@ -14,6 +14,7 @@ import net.eduard.template.Main;
 
 public class TemplateCommand implements CommandExecutor {
 	public static HashMap<Player, ItemStack[]> items = new HashMap<>();
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 		if (sender instanceof Player) {

@@ -16,12 +16,12 @@ import net.eduard.api.game.Sounds;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class C4 extends Kit {
 
 	
-	public Material type = Material.TNT;
+	public Material materialType = Material.TNT;
 	public static HashMap<Player, Item> bombs = new HashMap<>();
 
 	public C4() {
@@ -47,7 +47,7 @@ public class C4 extends Kit {
 							bombs.remove(p);
 						} else {
 							Item c4 = p.getWorld().dropItemNaturally(
-									p.getEyeLocation(), new ItemStack(type));
+									p.getEyeLocation(), new ItemStack(materialType));
 							c4.setPickupDelay(99999);
 							GameAPI.setDirection(c4, p);
 							jump(c4);

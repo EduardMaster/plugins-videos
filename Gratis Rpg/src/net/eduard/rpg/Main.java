@@ -22,6 +22,7 @@ import net.eduard.rpg.event.PvPManager;
 public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	public static FileConfiguration config;
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = plugin.getConfig();

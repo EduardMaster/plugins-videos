@@ -1,4 +1,4 @@
-name: WitherSpawn
+name: EMWitherSpawn
 description: Sistema de criacao de Wither automaticamente
 main: net.eduard.witherspawn.Main
 version: 1.0

@@ -3,16 +3,41 @@ package net.eduard.api.manager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-import net.eduard.api.config.Configs;
 
 public abstract class EduardPlugin extends JavaPlugin {
 
 	protected Manager time;
 
-	protected Configs messages;
+	protected Config messages;
 
 	protected Config config;
 
+
+	protected void configs() {
+	}
+	protected void commands() {
+	}
+	protected void events() {
+	}
+	protected void setup() {
+	}
+	public void save() {
+
+	}
+	public void reload() {
+	}
+
+	@Override
+	public void onEnable() {
+
+		config = new Config(this, "config.yml");
+		messages = new Config(this, "messages.yml");
+		time = new Manager();
+		configs();
+		setup();
+		commands();
+		events();
+	}
 	public boolean getBoolean(String path) {
 		return config.getBoolean(path);
 	}
@@ -20,42 +45,16 @@ public abstract class EduardPlugin extends JavaPlugin {
 		return messages.message(path);
 	}
 
-	protected void configs() {
-
-	}
-	protected void commands() {
-
-	}
-	protected void events() {
-
-	}
-	protected void setup() {
-
-	}
-	public void onEnable() {
-		
-		config = new Config(this,"config.yml");
-		config.saveConfig();
-		messages = new Configs("messages.yml", this);
-		messages.saveDefaultConfig();
-		configs();
-		time = new Manager();
-		setup();
-		commands();
-		events();
-
-	}
+	@Override
 	public void onDisable() {
 	}
-
 	public Manager getTime() {
 		return time;
 	}
-	public Configs getMessages() {
+	public Config getMessages() {
 		return messages;
 	}
 	public Config getConfigs() {
 		return config;
 	}
-
 }

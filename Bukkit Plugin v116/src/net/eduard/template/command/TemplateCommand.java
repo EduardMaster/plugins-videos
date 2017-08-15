@@ -11,6 +11,7 @@ public class TemplateCommand extends CMD {
 	public TemplateCommand() {
 		super("comando");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 	

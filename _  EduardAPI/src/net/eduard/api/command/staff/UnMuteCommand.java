@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class UnMuteCommand extends CMD {
@@ -14,8 +13,9 @@ public class UnMuteCommand extends CMD {
 	public String messageTarget = "§6O jogador §e$player §6foi desmutado por §a$sender";
 	public String message = "§aVoce foi desmutado!";
 	public UnMuteCommand() {
-		super("unmute","desmutar","demute");
+		super("unmute");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {
@@ -25,10 +25,10 @@ public class UnMuteCommand extends CMD {
 		if (API.existsPlayer(sender, args[0])) {
 			Player target = API.getPlayer(args[0]);
 			target.removeMetadata("muted", getPlugin());
-			ConfigSection.broadcast(
+			API.broadcast(
 					messageTarget.replace("$player", target.getDisplayName())
 							.replace("$sender", sender.getName()));
-			ConfigSection.chat(target, message);
+			API.chat(target, message);
 
 		}
 		return true;

@@ -74,10 +74,12 @@ public class Cuboid {
 			this.x = this.y = this.z = 0;
 		}
 
+		@Override
 		public boolean hasNext() {
 			return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
 		}
 
+		@Override
 		public Block next() {
 			Block b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
 			update();
@@ -94,10 +96,12 @@ public class Cuboid {
 			}
 		}
 
+		@Override
 		public void remove() {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return worldName + ", " + x1 + ", " + y1 + ", " + z1 + ", " + x2 + ", " + y2 + ", " + z2;
 	}

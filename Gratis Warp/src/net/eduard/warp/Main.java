@@ -26,6 +26,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	public static FileConfiguration config;
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = plugin.getConfig();
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static HashMap<String, Warp> warps = new HashMap<>();
 
+	@Override
 	public void onDisable() {
 		saveWarps();
 	}

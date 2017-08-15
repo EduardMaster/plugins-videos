@@ -26,6 +26,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin implements Listener {
 		return true;
 	}
 
+	@Override
 	public void onEnable() {
 
 		getCommand("clearchat").setPermission("chatclear.normal");
@@ -68,6 +70,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
+	@Override
 	public void onLoad() {
 
 		getConfig().addDefault("chat_limpo_mensagem",

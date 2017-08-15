@@ -1,6 +1,6 @@
-name: GroupMaster
+name: EMGroup
 description: Plugin de Permissao
-main: net.eduard.permission.GroupMaster
+main: net.eduard.permission.Main
 version: 0.2
 authors: [Eduard]
 website: https://www.youtube.com/user/EduTutoriaisHD

@@ -24,6 +24,7 @@ public class Main extends JavaPlugin {
 
 	public static ConsoleCommandSender console;
 
+	@Override
 	public void onEnable() {
 
 		Main.instance = this;
@@ -32,6 +33,7 @@ public class Main extends JavaPlugin {
 		if (Bukkit.getPluginManager() == null) {
 			new BukkitRunnable() {
 
+				@Override
 				public void run() {
 
 					Main.plugin = Bukkit.getPluginManager();

@@ -19,6 +19,7 @@ import net.eduard.tapetevoador.event.TapeteEvent;
 
 public class Main extends JavaPlugin {
 
+	@Override
 	public void onEnable() {
 
 		config = new Config(this);

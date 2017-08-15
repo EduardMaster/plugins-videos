@@ -21,6 +21,7 @@ public class Main extends JavaPlugin  {
 	public static Manager time;
 	
 	
+	@Override
 	public void onDisable() {
 		if (wither != null) {
 			wither.remove();
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin  {
 		}
 	}
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		config = new Config(this);

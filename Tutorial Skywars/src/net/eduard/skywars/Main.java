@@ -25,6 +25,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static Main plugin;
 	public static ConfigAPI messages;
+	@Override
 	public void onEnable() {
 		plugin = this;
 		messages = new ConfigAPI("messages.yml", this);
@@ -58,6 +59,7 @@ public class Main extends JavaPlugin implements Listener {
 		return item;
 	}
 
+	@Override
 	public void onDisable() {
 
 	}

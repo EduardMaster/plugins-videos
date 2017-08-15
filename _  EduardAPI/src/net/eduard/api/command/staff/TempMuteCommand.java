@@ -14,7 +14,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class TempMuteCommand extends CMD {
@@ -26,6 +25,7 @@ public class TempMuteCommand extends CMD {
 	public TempMuteCommand() {
 		super("tempban");
 	}
+	@Override
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
@@ -62,7 +62,7 @@ public class TempMuteCommand extends CMD {
 			target.kickPlayer(messageTarget.replace("$target", sender.getName())
 					.replace("$sender", sender.getName())
 					.replace("$time", text));
-			ConfigSection.broadcast(message.replace("$target", target.getDisplayName())
+			API.broadcast(message.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName()));
 		}
 

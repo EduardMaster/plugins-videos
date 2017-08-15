@@ -14,6 +14,7 @@ public class MapCommand extends CMD {
 		register(new MapLoadCommand());
 		register(new MapSaveCommand());
 		register(new MapWorldCommand());
+		register(new MapHelpCommand());
 	}
 
 }

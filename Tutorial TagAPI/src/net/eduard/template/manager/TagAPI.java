@@ -86,6 +86,7 @@ public final class TagAPI {
 		Plugin plugin = Bukkit.getPluginManager().getPlugins()[0];
 		new BukkitRunnable() {
 
+			@Override
 			public void run() {
 				update();
 			}

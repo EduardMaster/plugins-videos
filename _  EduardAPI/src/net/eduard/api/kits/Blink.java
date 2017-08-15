@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class Blink extends Kit {
 	public int distance = 7;
@@ -17,6 +17,7 @@ public class Blink extends Kit {
 		setIcon(Material.LEAVES, "§fTeleporte para perto numa distancia");
 		setClick(new Click(Material.NETHER_STAR, new ClickEffect() {
 			
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				
 			}
@@ -26,7 +27,7 @@ public class Blink extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						Location loc = GameAPI.getTarget(p, distance);
+						Location loc = GameAPI.getTargetLoc(p, distance);
 						GameAPI.teleport(p,loc.clone().add(0, 2, 0));
 						loc.getBlock().setType(Material.LEAVES);
 					}

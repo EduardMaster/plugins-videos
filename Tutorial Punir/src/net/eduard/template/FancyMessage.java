@@ -549,6 +549,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	}
 
 	// Doc copied from interface
+	@Override
 	public Map<String, Object> serialize() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("messageParts", messageParts);
@@ -575,6 +576,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	/**
 	 * <b>Internally called method. Not for API consumption.</b>
 	 */
+	@Override
 	public Iterator<MessagePart> iterator() {
 		return messageParts.iterator();
 	}

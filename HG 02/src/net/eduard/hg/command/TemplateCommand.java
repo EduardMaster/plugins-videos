@@ -14,6 +14,7 @@ public class TemplateCommand implements CommandExecutor {
 
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 

@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.eduard.api.gui.Click;
 import net.eduard.api.gui.ClickEffect;
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.GameAPI;
+import net.eduard.api.setup.GameAPI;
 
 public class Vaccum extends Kit {
 	public int range = 20;

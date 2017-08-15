@@ -9,9 +9,15 @@ import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.fake.command.FakeCommand;
 import net.eduard.fake.event.FakeEvent;
+/**
+ * Preço: 15
+ * @author Eduard-PC
+ *
+ */
 
 public class Main extends JavaPlugin {
 
+	@Override
 	public void onDisable() {
 		for (Player p : API.getPlayers()) {
 			FakeAPI.reset(p);
@@ -20,6 +26,7 @@ public class Main extends JavaPlugin {
 
 	public static Config config;
 
+	@Override
 	public void onEnable() {
 
 		config = new Config(this);
@@ -35,7 +42,7 @@ public class Main extends JavaPlugin {
 				"&aSeu nome foi resetado porque entrou um jogador com esse nome! &e$name");
 		config.saveConfig();
 		new FakeEvent().register(this);
-		new FakeCommand();
+		new FakeCommand().register();
 		for (Player p : API.getPlayers()) {
 			API.callEvent(new PlayerJoinEvent(p, null));
 		}

@@ -9,17 +9,19 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.gui.Kit;
-import net.eduard.api.manager.ItemAPI;
+import net.eduard.api.setup.ItemAPI;
 
 public class Archer extends Kit {
 	public Archer() {
-		setIcon(Material.BOW, "§fGanhe uma flecha ao você acertar ao player a flecha será teleportado até seu inventario.");
-		add(ItemAPI.addEnchant(new ItemStack(Material.BOW), Enchantment.ARROW_DAMAGE, 1));
+		setIcon(Material.BOW,
+				"§fGanhe uma flecha ao você acertar ao player a flecha será teleportado até seu inventario.");
+		add(ItemAPI.addEnchant(new ItemStack(Material.BOW),
+				Enchantment.ARROW_DAMAGE, 1));
 		add(new ItemStack(Material.ARROW, 10));
 
 	}
-	
-	
+
+	@Override
 	@EventHandler
 	public void event(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof Arrow) {

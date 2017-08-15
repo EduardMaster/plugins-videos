@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 
 public class PvPCommand extends CMD {
@@ -18,6 +17,7 @@ public class PvPCommand extends CMD {
 	public PvPCommand() {
 		super("pvp");
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length ==0 ){
@@ -36,10 +36,10 @@ public class PvPCommand extends CMD {
 				World world = Bukkit.getWorld(name);
 				if (world.getPVP()) {
 					world.setPVP(false);
-					ConfigSection.chat(sender,messageOff);
+					API.chat(sender,messageOff);
 				} else {
 					world.setPVP(true);
-					ConfigSection.chat(sender,messageOn);
+					API.chat(sender,messageOn);
 				}
 			}
 		}

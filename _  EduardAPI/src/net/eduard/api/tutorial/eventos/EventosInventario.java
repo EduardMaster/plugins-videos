@@ -15,14 +15,14 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-import net.eduard.api.config.ConfigSection;
+import net.eduard.api.API;
 import net.eduard.api.manager.Manager;
 
 public class EventosInventario extends Manager {
 
 	@EventHandler
 	public void InventoryCraft(CraftItemEvent e) {
-		ConfigSection.broadcast(e.getEventName());
+		API.broadcast(e.getEventName());
 	}
 	@EventHandler
 	public void InventoryAbre(InventoryOpenEvent e) {

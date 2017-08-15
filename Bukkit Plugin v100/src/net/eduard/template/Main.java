@@ -4,7 +4,6 @@ package net.eduard.template;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.TemplateEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Main plugin;
 	public static FileConfiguration config;
+	@Override
 	public void onEnable() {
 		plugin=this;
 		config = plugin.getConfig();
@@ -43,6 +43,7 @@ public class Main extends JavaPlugin {
 		commands();
 		
 	}
+	@Override
 	public void onDisable() {
 		
 	}

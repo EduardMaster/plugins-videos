@@ -18,6 +18,7 @@ public class AplicateCommand extends CMD {
 		messages.add(API .SERVER_TAG+"§a - Requisitos para ser STAFF - ");
 
 	}
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		for (String line : messages) {

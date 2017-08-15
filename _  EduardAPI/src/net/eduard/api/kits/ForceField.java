@@ -17,6 +17,7 @@ import net.eduard.api.gui.Kit;
 
 public class ForceField extends Kit{
 	
+	@Override
 	public void run() {
 		for (Player player : force){
 			field(player);
@@ -44,6 +45,7 @@ public class ForceField extends Kit{
 		}
 	}
 	public static ArrayList<Player> force = new ArrayList<>();
+	
 	public ForceField() {
 		setIcon(Material.NETHER_FENCE, "§fAtive Force Field nos Inimigos");
 		add(Material.NETHER_FENCE);
@@ -76,6 +78,7 @@ public class ForceField extends Kit{
 			}
 		}));
 	}
+	@Override
 	public void register(Plugin plugin) {
 		setPlugin(plugin);
 		timer(1,this);

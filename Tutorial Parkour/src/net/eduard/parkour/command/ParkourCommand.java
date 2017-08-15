@@ -13,6 +13,7 @@ import net.eduard.parkour.utils.Loc;
 
 public class ParkourCommand implements CommandExecutor {
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {

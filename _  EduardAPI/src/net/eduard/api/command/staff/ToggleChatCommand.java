@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import net.eduard.api.config.ConfigSection;
+import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
 
 public class ToggleChatCommand extends CMD {
@@ -23,14 +23,15 @@ public class ToggleChatCommand extends CMD {
 		super("chat");
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (chatEnabled) {
 			chatEnabled = false;
-			ConfigSection.broadcast(messageOff);
+			API.broadcast(messageOff);
 		} else {
 			chatEnabled = true;
-			ConfigSection.broadcast(messageOn);
+			API.broadcast(messageOn);
 		}
 		return true;
 	}
@@ -39,7 +40,7 @@ public class ToggleChatCommand extends CMD {
 		Player p = e.getPlayer();
 		if (!chatEnabled && !p.hasPermission(chatPerm)) {
 			e.setCancelled(true);
-			ConfigSection.chat(p,messageDisabled);
+			API.chat(p,messageDisabled);
 		}
 	}
 

@@ -57,6 +57,7 @@ public class HGEvents implements Listener {
 		e.setRespawnLocation(p.getLocation());
 		new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				spec(p);
 				

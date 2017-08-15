@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class HGScoreboard extends BukkitRunnable {
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public void run() {
 

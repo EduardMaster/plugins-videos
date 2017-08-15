@@ -20,6 +20,7 @@ public class Main extends JavaPlugin {
 
 	public static Main main;
 
+	@Override
 	public void onEnable() {
 		main = this;
 		
@@ -87,6 +88,7 @@ public class Main extends JavaPlugin {
 		return Lobby!=null;
 	}
 
+	@Override
 	public void onDisable() {
 
 		saveMaps();

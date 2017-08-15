@@ -18,6 +18,7 @@ public class Main extends JavaPlugin {
 	private static Map<String, Warp> warps = new HashMap<>();
 	private static FileConfiguration messages;
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		getCommand("warp").setExecutor(new WarpCommand());
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin {
 		saveResource("messages.yml", true);
 		reload();
 	}
+	@Override
 	public void onDisable() {
 		
 	}

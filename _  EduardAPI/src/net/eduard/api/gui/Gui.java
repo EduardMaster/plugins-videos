@@ -137,12 +137,14 @@ public class Gui extends Click {
 		this.inventory = API.newInventory(title, size * 9);
 		setClick(new ClickEffect() {
 
+			@Override
 			public void effect(PlayerInteractEvent e) {
 				if (open) {
 					open(e.getPlayer());
 				}
 			}
 
+			@Override
 			public void effect(PlayerInteractEntityEvent e) {
 				if (open) {
 					open(e.getPlayer());
@@ -151,6 +153,7 @@ public class Gui extends Click {
 		});
 	}
 
+	@Override
 	public void save(ConfigSection section, Object value) {
 		section.remove("Slots");
 		for (Entry<Integer, Slot> map : slots.entrySet()) {
@@ -161,6 +164,7 @@ public class Gui extends Click {
 		}
 
 	}
+	@Override
 	public Object get(ConfigSection section) {
 		if (inventory == null){
 			init();

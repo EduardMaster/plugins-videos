@@ -1,6 +1,6 @@
 package net.eduard.api.tutorial.armazenamento;
 
-import net.eduard.api.manager.VaultAPI;
+import net.eduard.api.setup.VaultAPI;
 
 public class ComoAdicionarCoisasNoPermissionEX {
 	public ComoAdicionarCoisasNoPermissionEX() {

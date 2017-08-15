@@ -11,6 +11,7 @@ import net.eduard.skywars.Skywars;
 
 public class SkywarsCommand implements CommandExecutor {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length == 0) {

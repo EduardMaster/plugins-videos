@@ -17,6 +17,7 @@ public class TimerStart {
 		Bukkit.broadcastMessage("§6HG vai começar em breve!");
 		new BukkitRunnable() {
 
+			@Override
 			public void run() {
 
 				time--;

@@ -24,6 +24,7 @@ public class MadMan extends Kit{
 		
 	}
 	 private HashMap<Player, Double> madman = new HashMap<>();
+	@Override
 	@SuppressWarnings("deprecation")
 	public void run() {
 		
@@ -34,16 +35,16 @@ public class MadMan extends Kit{
 		          for (Entity e : p.getNearbyEntities(20.0D, 20.0D, 20.0D)) {
 		            if ((e instanceof Player))
 		            {
-		              if (this.madman.containsKey((Player)e))
+		              if (this.madman.containsKey(e))
 		              {
-		                this.madman.put((Player)e, Double.valueOf(((Double)this.madman.get((Player)e)).doubleValue() + 0.01D));
+		                this.madman.put((Player)e, Double.valueOf(this.madman.get(e).doubleValue() + 0.01D));
 		              }
 		              else
 		              {
 		                this.madman.put((Player)e, Double.valueOf(0.01D));
 		                ((Player)e).sendMessage("\u00A7bTem um madman por perto!");
 		              }
-		              BarAPI.setMessage((Player)e, dm.format(((Double)this.madman.get((Player)e)).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
+		              BarAPI.setMessage((Player)e, dm.format(this.madman.get(e).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
 		            }
 		          }
 		        }
@@ -62,7 +63,7 @@ public class MadMan extends Kit{
 		            }
 		          }
 		          if (!hasMadMan)
-		            if (((Double)this.madman.get(p)).doubleValue() - 0.2D <= 0.0D)
+		            if (this.madman.get(p).doubleValue() - 0.2D <= 0.0D)
 		            {
 		              this.madman.remove(p);
 		              BarAPI.setMessage(p, "\u00A73Efeito do madman passou!");
@@ -70,8 +71,8 @@ public class MadMan extends Kit{
 		            }
 		            else
 		            {
-		              this.madman.put(p, Double.valueOf(((Double)this.madman.get(p)).doubleValue() - 0.2D));
-		              BarAPI.setMessage(p, dm.format(((Double)this.madman.get(p)).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
+		              this.madman.put(p, Double.valueOf(this.madman.get(p).doubleValue() - 0.2D));
+		              BarAPI.setMessage(p, dm.format(this.madman.get(p).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
 		            }
 		        }
 		      }
@@ -81,6 +82,7 @@ public class MadMan extends Kit{
 	
 	public double damage = 6;
 	
+	@Override
 	public void register(Plugin plugin) {
 		timer(20, this);
 		super.register(plugin);
@@ -100,7 +102,7 @@ public class MadMan extends Kit{
 	    {
 	      Player p = (Player)event.getEntity();
 	      if (this.madman.containsKey(p))
-	        event.setDamage(event.getDamage() + event.getDamage() * ((Double)this.madman.get(p)).doubleValue());
+	        event.setDamage(event.getDamage() + event.getDamage() * this.madman.get(p).doubleValue());
 	    }
 	  }
 }

@@ -20,6 +20,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	
 
+	@Override
 	public void onEnable() {
 		plugin = this;
 		pm.registerEvents(new HGEvents(), this);

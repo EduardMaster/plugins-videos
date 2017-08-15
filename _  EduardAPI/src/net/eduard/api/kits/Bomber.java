@@ -25,7 +25,7 @@ public class Bomber extends Kit {
 				Player p = e.getPlayer();
 				if (hasKit(p)) {
 					if (cooldown(p)) {
-						TNTPrimed tnt = (TNTPrimed) p.getWorld()
+						TNTPrimed tnt = p.getWorld()
 								.spawn(p.getLocation(), TNTPrimed.class);
 						tnt.setVelocity(p.getEyeLocation().getDirection()
 								.multiply(2.5D));

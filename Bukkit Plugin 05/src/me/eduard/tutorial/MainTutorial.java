@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MainTutorial extends JavaPlugin {
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 
@@ -38,11 +39,13 @@ public class MainTutorial extends JavaPlugin {
 		return false;
 	}
 
+	@Override
 	public void onDisable() {
 
 		getLogger().info("Esse plugin foi desabilitado!");
 	}
 
+	@Override
 	public void onEnable() {
 
 		getLogger().info("Esse plugin foi habilitado!");
