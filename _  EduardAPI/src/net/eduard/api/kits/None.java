@@ -1,9 +1,9 @@
 package net.eduard.api.kits;
 
-import net.eduard.api.gui.Kit;
-import net.eduard.api.gui.KitType;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.KitType;
 
-public class None extends Kit{
+public class None extends Ability{
 
 	public None() {
 		super("None",KitType.DEFAULT);

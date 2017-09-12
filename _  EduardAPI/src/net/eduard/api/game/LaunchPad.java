@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.EventsManager;
 import net.eduard.api.setup.WorldAPI;
 
-public class LaunchPad extends Manager {
+public class LaunchPad extends EventsManager {
 
 	public static final Map<World, Boolean> WORLDS = new HashMap<>();
 	public static final NoFall NO_FALL = new NoFall();
@@ -85,6 +85,18 @@ public class LaunchPad extends Manager {
 	}
 	public void setJump(Jump jump) {
 		this.jump = jump;
+	}
+
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

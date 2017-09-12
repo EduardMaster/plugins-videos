@@ -9,9 +9,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class CombatLog extends Manager{
+public class CombatLog extends TimeManager{
 	public static final HashMap<Player, Long> ON_COMBAT = new HashMap<>();
 	@EventHandler
 	public void Combat(EntityDamageByEntityEvent e) {

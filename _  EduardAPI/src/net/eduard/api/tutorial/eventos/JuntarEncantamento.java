@@ -10,9 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class JuntarEncantamento extends Manager{
+public class JuntarEncantamento extends TimeManager{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void enchantItem(InventoryClickEvent e) {

@@ -3,21 +3,21 @@ package net.eduard.api.kits;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Jump;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.setup.GameAPI;
 
-public class Kangaroo extends Kit {
+public class Kangaroo extends Ability {
 
 	public static ArrayList<Player> inEffect = new ArrayList<>();
 	public Jump front = new Jump( true, 2, 0.5,null);
@@ -26,27 +26,21 @@ public class Kangaroo extends Kit {
 	public Kangaroo() {
 		setIcon(Material.FIREWORK, "§fSe mova mais rapido");
 		add(Material.FIREWORK);
-		setClick(new Click(Material.FIREWORK, new ClickEffect() {
-
+		setClick(new PlayerClick(Material.FIREWORK,new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEntityEvent e) {
+			public void onClick(Player player, Block block, ItemStack item) {
 				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (!onCooldown(p)) {
-						if (!inEffect.contains(p)) {
-							if (GameAPI.isFlying(p)) {
-								inEffect.add(p);
+				if (hasKit(player)) {
+					if (!onCooldown(player)) {
+						if (!inEffect.contains(player)) {
+							if (GameAPI.isFlying(player)) {
+								inEffect.add(player);
 							}
-							if (p.isSneaking()) {
-								front.create(p);
+							if (player.isSneaking()) {
+								front.create(player);
 							} else {
-								high.create(p);
+								high.create(player);
 							}
 						}
 

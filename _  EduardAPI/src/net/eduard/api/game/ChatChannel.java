@@ -1,9 +1,15 @@
 package net.eduard.api.game;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import java.util.Map;
 
-public class ChatChannel implements Save{
+import net.eduard.api.setup.StorageAPI.Storable;
+
+/**
+ * Canal de Chat
+ * @author Eduard-PC
+ *
+ */
+public class ChatChannel implements Storable{
 	
 	private String name;
 	private String format;
@@ -51,13 +57,15 @@ public class ChatChannel implements Save{
 	public void setFormat(String format) {
 		this.format = format;
 	}
+
 	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public void save(ConfigSection section, Object value) {
+	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
 		
 	}

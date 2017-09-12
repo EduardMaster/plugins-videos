@@ -5,18 +5,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Snail extends Kit {
+public class Snail extends Ability {
 	public double chance = 0.35;
 
 	public Snail() {
 		setIcon(Material.SOUL_SAND, "§fDeixe seus inimigos lentos");
-		getPotions().add(new Potions(PotionEffectType.SLOW, 1, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.SLOW, 1, 20 * 5));
 	}
 
 	@Override

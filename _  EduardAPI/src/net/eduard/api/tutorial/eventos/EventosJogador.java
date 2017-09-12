@@ -47,9 +47,9 @@ import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.player.PlayerUnregisterChannelEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosJogador extends Manager  {
+public class EventosJogador extends TimeManager  {
 
 	@EventHandler
 	public void JogadorAnimacao(PlayerAnimationEvent e) {

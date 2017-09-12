@@ -1,12 +1,13 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Explosion implements Save{
+public class Explosion implements Storable{
 
 	private float power;
 	private boolean breakBlocks;
@@ -48,11 +49,13 @@ public class Explosion implements Save{
 		return this;
 	}
 	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public void save(ConfigSection section, Object value) {
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
 		
 	}
 	

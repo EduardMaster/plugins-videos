@@ -7,9 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Stomper extends Kit {
+public class Stomper extends Ability {
 
 	public int range = 3;
 	public double minDamage = 4;

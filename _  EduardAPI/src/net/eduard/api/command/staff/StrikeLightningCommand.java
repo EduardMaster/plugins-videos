@@ -21,6 +21,7 @@ public class StrikeLightningCommand extends CMD {
 		}
 		if (API.existsPlayer(sender, args[0])) {
 			Player target = API.getPlayer(args[0]);
+			target.getWorld().strikeLightning(target.getLocation());
 		}
 		
 		return true;

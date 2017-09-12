@@ -8,10 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.GameAPI;
 
-public class Switcher extends Kit {
+public class Switcher extends Ability {
 	public Switcher() {
 		setIcon(Material.SNOW_BALL,
 				"§fAo acertar uma Bolinha de Neve você sera teleportado ate ela!");

@@ -14,14 +14,15 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.setup.ExtraAPI;
 
-public abstract class CMD extends Manager
+public class CMD extends EventsManager
 		implements
 			TabCompleter,
 			CommandExecutor {
-
+	
+	private static Map<String, CMD> commandsRegistred = new HashMap<>();
+	
 	private transient PluginCommand command;
 
 	private transient Map<String, CMD> commands = new HashMap<>();
@@ -37,6 +38,10 @@ public abstract class CMD extends Manager
 	private String permissionMessage = API.NO_PERMISSION;
 
 	private String description = "Exemplo de descricao";
+	
+	public void sendPermissionMessage(CommandSender sender) {
+		sender.sendMessage(permissionMessage);
+	}
 
 	public String getCommandName() {
 
@@ -56,6 +61,9 @@ public abstract class CMD extends Manager
 		API.broadcast(message, permission);
 
 	}
+	public static CMD getCommand(String name) {
+		return commandsRegistred.get(name.toLowerCase());
+	}
 
 	public CMD() {
 		this("");
@@ -66,6 +74,7 @@ public abstract class CMD extends Manager
 			this.name = getCommandName();
 		}
 		preRegister();
+		
 	}
 	public void preRegister() {
 		command = Bukkit.getPluginCommand(name);
@@ -99,6 +108,10 @@ public abstract class CMD extends Manager
 	public void sendUsage(CommandSender sender) {
 		API.chat(sender, getUsage());
 	}
+	public void sendDescription(CommandSender sender) {
+		API.chat(sender, getDescription());
+	}
+	
 	public boolean register(CMD sub) {
 		if (commands.containsKey(sub.name)) {
 			return false;
@@ -115,6 +128,7 @@ public abstract class CMD extends Manager
 		ExtraAPI.consoleMessage("§bCommandAPI §fO subcomando §e" + sub.name
 				+ " §ffoi registrado no comando §a" + name
 				+ " §fpara o Plugin §b" + getPlugin().getName());
+		commandsRegistred.put(name.toLowerCase(), this);
 		return true;
 	}
 	public void update() {
@@ -159,7 +173,11 @@ public abstract class CMD extends Manager
 		int id = 0;
 		while (true) {
 			if (args.length == id) {
-				return cmd.onCommand(sender, command, label, args);
+				if (sender.hasPermission(cmd.getPermission())) {
+					return cmd.onCommand(sender, command, label, args);	
+				}
+				sendPermissionMessage(sender);
+				return true;
 			}
 			String arg = args[id];
 			CMD newCmd = null;
@@ -169,7 +187,7 @@ public abstract class CMD extends Manager
 					break;
 				}
 				if (sub.getAliases().contains(arg.toLowerCase())) {
-					newCmd = sub;
+					newCmd = sub;	
 					break;
 				}
 			}
@@ -177,7 +195,11 @@ public abstract class CMD extends Manager
 				if (cmd == this) {
 					return false;
 				}
-				return cmd.onCommand(sender, command, label, args);
+				if (sender.hasPermission(cmd.getPermission())) {
+					return cmd.onCommand(sender, command, label, args);	
+				}
+				sendPermissionMessage(sender);
+				return true;
 			} else {
 				cmd = newCmd;
 			}
@@ -186,6 +208,8 @@ public abstract class CMD extends Manager
 		}
 
 	}
+	
+
 	public PluginCommand getCommand() {
 		return command;
 	}
@@ -249,11 +273,27 @@ public abstract class CMD extends Manager
 		this.description = description;
 	}
 
-	@Override
-	public Object get(ConfigSection section) {
-		this.aliases = section.getStringList("aliases");
+	public static Map<String, CMD> getCommandsRegistred() {
+		return commandsRegistred;
+	}
 
+	public static void setCommandsRegistred(Map<String, CMD> commandsRegistred) {
+		CMD.commandsRegistred = commandsRegistred;
+	}
+
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
 
 }

@@ -21,9 +21,9 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosMundo extends Manager {
+public class EventosMundo extends TimeManager {
 
 	@EventHandler
 	public void ItemPendurado(HangingPlaceEvent e) {

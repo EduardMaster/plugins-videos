@@ -8,14 +8,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.WorldAPI;
 
-public class Magma extends Kit {
+public class Magma extends Ability {
 
 	public int effectSeconds = 5;
 	public double chance = 0.35;
@@ -23,8 +23,8 @@ public class Magma extends Kit {
 	public Magma() {
 		setIcon(Material.MAGMA_CREAM, "§fSeja invuneravel a Fogo e Lava");
 		setTime(1);
-		getPotions().add(new Potions(PotionEffectType.CONFUSION, 0, 20*5));
-		getPotions().add(new Potions(PotionEffectType.POISON, 0, 20*5));
+		getPotions().add(new PotionEffect(PotionEffectType.CONFUSION, 0, 20*5));
+		getPotions().add(new PotionEffect(PotionEffectType.POISON, 0, 20*5));
 	}
 
 	@Override

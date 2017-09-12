@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Effects;
-import net.eduard.api.gui.Kit;
 
-public class Critical extends Kit {
+public class Critical extends Ability {
 	public double chance = 0.3;
 	public double damage = 4;
 	public String critMessage = "§6Voce levou um critico";
@@ -19,7 +19,7 @@ public class Critical extends Kit {
 
 	public Critical() {
 		setIcon(Material.GOLDEN_APPLE, "§fCause criticos em seus inimigos");
-		setMessage("§6Voce causou critico");
+		message("§6Voce causou critico");
 	}
 
 	@Override

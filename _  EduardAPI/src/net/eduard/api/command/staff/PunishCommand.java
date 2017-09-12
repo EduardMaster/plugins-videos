@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.manager.CMD;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -68,13 +67,6 @@ public class PunishCommand extends CMD {
 			}
 		}
 		return true;
-	}
-	@Override
-	public Object get(ConfigSection section) {
-		this.messages = section.getMessages("messages");
-		this.commands = section.getStringList("commands");
-		this.hovers = section.getMessages("hovers");
-		return null;
 	}
 
 }

@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.eduard.api.util.FakeOfflinePlayer;
+import net.eduard.api.setup.StorageAPI.FakeOfflinePlayer;
 
 public class CriarScoreboard extends BukkitRunnable{
 

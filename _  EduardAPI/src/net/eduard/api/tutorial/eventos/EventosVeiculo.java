@@ -11,9 +11,9 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.vehicle.VehicleUpdateEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosVeiculo extends Manager {
+public class EventosVeiculo extends TimeManager {
 
 	@EventHandler
 	public void VehiculoBlocoColisao(VehicleBlockCollisionEvent e) {

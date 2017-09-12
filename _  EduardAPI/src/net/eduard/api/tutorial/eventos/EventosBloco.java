@@ -26,9 +26,9 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosBloco extends Manager {
+public class EventosBloco extends TimeManager {
 
 	@EventHandler
 	public void BlocoAparecerAosPoucos(BlockFormEvent e) {

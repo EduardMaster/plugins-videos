@@ -6,17 +6,17 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Poseidon extends Kit {
+public class Poseidon extends Ability {
 
 	public Poseidon() {
 		setIcon(Material.WATER_BUCKET, "§fFique mais forte na agua");
-		getPotions().add(new Potions(PotionEffectType.SPEED, 1, 20 * 5));
-		getPotions().add(new Potions(PotionEffectType.INCREASE_DAMAGE, 0, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.SPEED, 1, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 0, 20 * 5));
 	}
 
 	@EventHandler

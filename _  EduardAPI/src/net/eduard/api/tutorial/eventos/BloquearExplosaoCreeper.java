@@ -5,9 +5,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class BloquearExplosaoCreeper extends Manager{
+public class BloquearExplosaoCreeper extends TimeManager{
 	
 	
 	@EventHandler

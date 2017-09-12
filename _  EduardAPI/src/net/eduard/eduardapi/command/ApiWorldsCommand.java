@@ -9,7 +9,7 @@ import net.eduard.api.manager.CMD;
 public class ApiWorldsCommand extends CMD {
 
 	public ApiWorldsCommand() {
-		super("reload");
+		super("worlds");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

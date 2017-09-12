@@ -9,11 +9,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.GameAPI;
 
 
-public class Zeus extends Kit{
+public class Zeus extends Ability{
 	
 	public Zeus() {
 		setIcon(Material.BOW, "§fGanhe uma espada Melhor");

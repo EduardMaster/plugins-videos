@@ -1,34 +1,32 @@
 package net.eduard.api.config;
 
 import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.RexAPI;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.FileAPI;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Config {
+/**
+ * Primeiro Sistema de Configuração proprio com suporte a 4 itens de 1 vez,
+ * Lista, Mapa e Valor, Comentarios
+ * 
+ * @author Eduard
+ *
+ */
+public class Config implements Storable{
 
-	public static void save(ConfigSection section, Save save) throws Exception {
-		RexAPI.getResult(save, "save",
-				RexAPI.getParameters(section, Object.class), section, save);
-	}
-
-	public static void get(ConfigSection section, Save save) throws Exception {
-		RexAPI.getResult(save, "get", RexAPI.getParameters(section), section);
-	}
 	public static void saveConfigs() {
 		for (Config config : CONFIGS) {
 			config.saveConfig();
@@ -42,7 +40,6 @@ public class Config {
 	}
 	public static void saveConfigs(Plugin plugin) {
 		for (Config config : CONFIGS) {
-
 			if (config.getPlugin().equals(plugin)) {
 				config.saveConfig();
 			}
@@ -59,9 +56,10 @@ public class Config {
 	}
 
 	public final static List<Config> CONFIGS = new ArrayList<>();
-	private ConfigSection root;
-	private File file;
-	private JavaPlugin plugin;
+	
+	private transient ConfigSection root;
+	private transient File file;
+	private transient Plugin plugin;
 	private String name;
 	private boolean autoSave;
 
@@ -70,14 +68,20 @@ public class Config {
 	public Config() {
 		this("config.yml");
 	}
-
-	public Config(JavaPlugin plugin) {
+	public Config(String name) {
+		this(API.getAPI(), name);
+	}
+	public Config(Plugin plugin) {
 		this(plugin, "config.yml");
 	}
 
-	public Config(JavaPlugin plugin, String name) {
+	public Config(Plugin plugin, String name) {
 		this.name = name;
 		this.plugin = plugin;
+		init();
+
+	}
+	public void init() {
 		boolean contains = false;
 		for (Config config : CONFIGS) {
 			if (config.equals(this)) {
@@ -97,52 +101,57 @@ public class Config {
 			this.root.father = root;
 			reloadConfig();
 		}
-
 	}
-	public Config reloadConfig() {
+	private void saveDefaultFile() {
+		if (plugin.getResource(name) != null) {
+			try {
+//				Files.copy(plugin.getResource(name), file.toPath());
+				plugin.saveResource(name, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+			
+	}
+	public List<Integer> getIntList(String path) {
+		return root.getIntList(path);
+	}
+	public void saveDefaultConfig() {
+		saveDefaultFile();
+	}
+	public void saveConfig() {
+		lines.clear();
+		root.save(this, -1);
 		try {
+			if (!FileAPI.isDirectory(file)) {
+				FileAPI.writeLines(file, lines);	
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	public void reloadConfig() {
+		try {
+			file.getParentFile().mkdirs();
 			if (!file.exists()) {
-				if (name.endsWith("/") | name.endsWith("\\")
-						| name.endsWith(File.separator)) {
+				if (FileAPI.isDirectory(file)) {
 					file.mkdirs();
-				} else {
-					file.getParentFile().mkdirs();
-					try {
-						file.createNewFile();
-
-					} catch (Exception e) {
-					}
-					if (plugin.getResource(name) != null)
-						plugin.saveResource(name, true);
+				}else {
+					saveDefaultFile();
 				}
 
 			}
 			if (file.isFile()) {
-				try {
-					if (Charset.isSupported("UTF-8")) {
-						lines = Files.readAllLines(file.toPath(),
-								StandardCharsets.UTF_8);
-					} else {
-						lines = Files.readAllLines(file.toPath(),
-								Charset.defaultCharset());
-					}
-					root.reload(this);
-
-				} catch (Exception ex) {
-					lines = Files.readAllLines(file.toPath(),
-							Charset.defaultCharset());
-					root.reload(this);
-				}
+				lines = FileAPI.readLines(file);
+				root.reload(this);
 			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return this;
 	}
-	public Config(String name) {
-		this(API.getAPI(), name);
-	}
+	
 
 	public ConfigSection add(String path, Object value, String... comments) {
 		return root.add(path, value, comments);
@@ -152,34 +161,27 @@ public class Config {
 		return createConfig(name);
 	}
 
-	public Config addHeader(String... header) {
+	public void addHeader(String... header) {
 		if (header != null) {
-			if (root.comments.isEmpty()) {
-				for (String item : header) {
-					root.comments.add(item);
-				}
-			}
+			setHeader(header);
 		}
-		return this;
 	}
 
 	public boolean contains(String path) {
 		return root.contains(path);
 	}
 
-	public Config copy(Config config) {
+	public void copyContents(Config config) {
 		config.root.save(this, -1);
-		reload();
-		return this;
+//		reload();
 	}
 
 	public Config createConfig(String name) {
 		return new Config(getPlugin(), name);
 	}
 
-	public Config deleteConfig() {
+	public void deleteConfig() {
 		file.delete();
-		return this;
 	}
 
 	@Override
@@ -290,7 +292,7 @@ public class Config {
 		return name;
 	}
 
-	public JavaPlugin getPlugin() {
+	public Plugin getPlugin() {
 		return plugin;
 	}
 
@@ -331,53 +333,26 @@ public class Config {
 		return root.message(path);
 	}
 
-	private void reload() {
-		root.reload(this);
-	}
 
-	public Config remove(String path) {
+	public void remove(String path) {
 		root.remove(path);
-		return this;
 	}
 
-	private void save() {
-		root.save(this, -1);
-	}
-	public Config saveDefault() {
-		getFile().delete();
-		return saveConfig();
-	}
-	public Config saveConfig() {
-		lines.clear();
-		save();
-		try {
-			if (Charset.isSupported("UTF-8")) {
-				Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
-			} else {
-				Files.write(file.toPath(), lines, Charset.defaultCharset());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return this;
+	public ConfigSection set(String path, Object value) {
+		return root.set(path, value, new String[0]);
 	}
 
 	public ConfigSection set(String path, Object value, String... comments) {
 		return root.set(path, value, comments);
 	}
 
-	public Config setHeader(String... header) {
+	public void setHeader(String... header) {
 		if (header != null) {
 			root.comments.clear();
 			for (String item : header) {
 				root.comments.add(item);
 			}
 		}
-		return this;
-	}
-
-	public ConfigSection setIndent(int amount) {
-		return root.setIndent(amount);
 	}
 
 	@Override
@@ -391,6 +366,19 @@ public class Config {
 
 	public void setAutoSave(boolean autoSave) {
 		this.autoSave = autoSave;
+	}
+	public void setIndent(int amount) {
+		root.setIndent(amount);
+	}
+	@Override
+	public Object restore(Map<String, Object> map) {
+		plugin = Bukkit.getPluginManager().getPlugin(toStr(map.get("plugin")));
+		init();
+		return null;
+	}
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		map.put("plugin", plugin.getName());
 	}
 
 }

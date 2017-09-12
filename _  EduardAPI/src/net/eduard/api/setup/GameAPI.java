@@ -22,7 +22,9 @@ import org.bukkit.util.Vector;
 
 
 /**
- * Vector, Player, Entities, Game
+ * API de controle de Entidades, Localizações e muito mais
+ * @author Eduard
+ *
  */
 
 public final class GameAPI {

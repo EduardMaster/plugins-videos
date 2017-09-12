@@ -4,21 +4,20 @@ import java.util.HashMap;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
 import net.eduard.api.setup.GameAPI;
 
-public class C4 extends Kit {
+public class C4 extends Ability {
 
 	
 	public Material materialType = Material.TNT;
@@ -27,40 +26,34 @@ public class C4 extends Kit {
 	public C4() {
 		setIcon(Material.TNT, "§fPlante e Ative a C4");
 		add(Material.STONE_BUTTON);
-		setMessage("§6A bomba foi plantada!");
-		setJump(new Jump(false, 0.6, 0.5,
+		message("§6A bomba foi plantada!");
+		jump(new Jump(false, 0.6, 0.5,
 				Sounds.create(Sound.CLICK)));
-		setExplosion(new Explosion(4, false, false));
+		explosion(new Explosion(4, false, false));
 		setTime(2);
 		setTimes(2);
-		setClick(new Click(Material.STONE_BUTTON, new ClickEffect() {
-
+		setClick(new PlayerClick(Material.STONE_BUTTON,new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (cooldown(p)) {
-						if (bombs.containsKey(p)) {
-							Item c4 = bombs.get(p);
+			public void onClick(Player player, Block block, ItemStack item) {
+				if (hasKit(player)) {
+					if (cooldown(player)) {
+						if (bombs.containsKey(player)) {
+							Item c4 = bombs.get(player);
 							makeExplosion(c4);
 							c4.remove();
-							bombs.remove(p);
+							bombs.remove(player);
 						} else {
-							Item c4 = p.getWorld().dropItemNaturally(
-									p.getEyeLocation(), new ItemStack(materialType));
+							Item c4 = player.getWorld().dropItemNaturally(
+									player.getEyeLocation(), new ItemStack(materialType));
 							c4.setPickupDelay(99999);
-							GameAPI.setDirection(c4, p);
+							GameAPI.setDirection(c4, player);
 							jump(c4);
-							bombs.put(p, c4);
-							sendMessage(p);
+							bombs.put(player, c4);
+							sendMessage(player);
 						}
 					}
 				}
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-
 			}
 		}));
 	}

@@ -20,15 +20,11 @@ commands:
     usage: /<command> help
   economy: 
     description: Controle de Economia
-    aliases: [eco,dinheiro,economia]
+    aliases: [dinheiro,eco,money]
     usage: /<command> help
   goto:
     description: Teleportar para um Mundo
     aliases: [world,go,ir,irpara,mundo]
-    usage: /<command> <world>
-  worlds:
-    description: Listar os Mundos existentes
-    aliases: [mundos]
     usage: /<command> <world>
   config:
     description: Controle das Configs da API

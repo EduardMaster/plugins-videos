@@ -6,21 +6,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.gui.Kit;
 
-public class Berserker extends Kit {
+public class Berserker extends Ability {
 	public ItemStack soup = API.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	public Berserker() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
-		setMessage("§6Modo berseker ativado");
-		setSound(Sounds.create(Sound.AMBIENCE_THUNDER));
-		getPotions().add(new Potions(PotionEffectType.INCREASE_DAMAGE, 0, 20*30));
-		getPotions().add(new Potions(PotionEffectType.SPEED, 0, 20*30));
+		message("§6Modo berseker ativado");
+		sound(Sounds.create(Sound.AMBIENCE_THUNDER));
+		getPotions().add(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 0, 20*30));
+		getPotions().add(new PotionEffect(PotionEffectType.SPEED, 0, 20*30));
 	}
 	@EventHandler
 	public void event(EntityDeathEvent e) {

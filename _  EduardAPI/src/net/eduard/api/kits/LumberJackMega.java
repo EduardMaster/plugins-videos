@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.ItemAPI;
 
-public class LumberJackMega extends Kit{
+public class LumberJackMega extends Ability{
 	
 	public LumberJackMega() {
 		setIcon(Material.DIAMOND_AXE, "§fDestroi uma arvore gigante de uma so vez");

@@ -5,18 +5,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class DarkMage extends Kit {
+public class DarkMage extends Ability {
 	public double chance = 0.3;
 
 	public DarkMage() {
 		setIcon(Material.COAL, "§fSegue seus inimigos");
-		getPotions().add(new Potions(PotionEffectType.BLINDNESS, 0, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.BLINDNESS, 0, 20 * 5));
 	}
 
 	@Override

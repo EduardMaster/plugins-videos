@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.ItemAPI;
 
-public class Achilles extends Kit {
+public class Achilles extends Ability {
 
 	public double damageReduction = 2;
 	public double extraDamage = 4;

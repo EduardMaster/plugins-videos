@@ -22,6 +22,7 @@ public class SetSpawnCommand extends CMD {
 		if (API.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			config.set("spawn", p.getLocation());
+			config.saveConfig();
 			API.chat(p, message);
 		}
 

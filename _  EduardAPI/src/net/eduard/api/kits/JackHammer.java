@@ -4,35 +4,28 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.ClickType;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.ClickComparationType;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 
-public class JackHammer extends Kit{
+public class JackHammer extends Ability{
 	
 	public JackHammer() {
 		setIcon(Material.STONE_AXE, "§fCrie grandes buracos na terra");
 		add(Material.STONE_AXE);
 		setTime(20);
 		setTimes(8);
-		setClick(new Click(Material.STONE_AXE, new ClickEffect() {
+		PlayerClick clickEffect = new PlayerClick(Material.STONE_AXE,new PlayerClickEffect() {
 			
 			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				
-			}
-
-			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					e.setCancelled(false);
-					if (cooldown(p)) {
-						Block block = e.getClickedBlock();
+			public void onClick(Player player, Block block, ItemStack item) {
+				// TODO Auto-generated method stub
+				if (hasKit(player)) {
+//					e.setCancelled(false);
+					if (cooldown(player)) {
 						block.setType(Material.AIR);
 						double y = block.getY();
 						while(y>2) {
@@ -44,9 +37,10 @@ public class JackHammer extends Kit{
 					}
 					
 				}
+				
 			}
-
-		}));
-		getClick().setType(ClickType.BLOCK);
+		});
+		setClick(clickEffect);
+		clickEffect.setComparationType(ClickComparationType.ON_BLOCK);
 	}
 }

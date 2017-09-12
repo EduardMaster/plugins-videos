@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.eduard.api.manager.Manager;
-import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.setup.WorldAPI;
 import net.eduard.tapetevoador.Main;
 
 public class TapeteEvent extends Manager {

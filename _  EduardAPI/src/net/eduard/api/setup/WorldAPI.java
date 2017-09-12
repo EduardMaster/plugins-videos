@@ -17,11 +17,27 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 /**
- * Location , World
+ * API de controle e manipulação de Mundos e Localizações e Cuboids (Uma expecie de Bloco retangular) 
+ * @author Eduard
  *
  */
 public final class WorldAPI {
-	public enum Point
+	
+	/**
+	 * Efeito a fazer na localização
+	 * @author Eduard
+	 *
+	 */
+	public static interface LocationEffect {
+
+		boolean effect(Location location);
+	}
+	/**
+	 * Ponto de direção usado para fazer um RADAR
+	 * @author Eduard
+	 *
+	 */
+	public static enum Point
 	{
 	  N('N'), NE('/'), E('O'), SE('\\'), S('S'), SW('/'), W('L'), NW('\\');
 

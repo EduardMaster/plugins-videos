@@ -1,5 +1,7 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,10 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Warp implements Save {
+public class Warp implements Storable {
 
 	private String name;
 	private Location spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
@@ -110,12 +111,16 @@ public class Warp implements Save {
 		this.guiIcon = guiIcon;
 	}
 
-	public void save(ConfigSection section, Object value) {
-
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public Object get(ConfigSection section) {
-		return null;
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

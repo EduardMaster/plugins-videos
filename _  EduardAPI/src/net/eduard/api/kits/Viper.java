@@ -5,18 +5,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Viper extends Kit {
+public class Viper extends Ability {
 	public double chance = 0.3;
 
 	public Viper() {
 		setIcon(Material.SPIDER_EYE, "§fEnvene seus inimigos");
-		getPotions().add(new Potions(PotionEffectType.POISON, 0, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.POISON, 0, 20 * 5));
 	}
 
 	@Override

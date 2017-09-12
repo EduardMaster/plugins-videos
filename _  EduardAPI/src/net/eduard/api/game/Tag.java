@@ -1,9 +1,10 @@
 package net.eduard.api.game;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import java.util.Map;
 
-public class Tag implements Save {
+import net.eduard.api.setup.StorageAPI.Storable;
+
+public class Tag implements Storable {
 
 	private String prefix, suffix, name;
 	
@@ -18,9 +19,8 @@ public class Tag implements Save {
 		return prefix;
 	}
 
-	public Tag setPrefix(String prefix) {
+	public void setPrefix(String prefix) {
 		this.prefix = prefix;
-		return this;
 
 	}
 
@@ -28,29 +28,18 @@ public class Tag implements Save {
 		return suffix;
 	}
 
-	public Tag setSuffix(String suffix) {
+	public void setSuffix(String suffix) {
 		this.suffix = suffix;
-		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public Tag setName(String name) {
+	public void setName(String name) {
 		this.name = name;
-		return this;
 	}
 
-	@Override
-	public Object get(ConfigSection section) {
-		return null;
-	}
-
-	@Override
-	public void save(ConfigSection section, Object value) {
-
-	}
 
 	public int getRank() {
 		return rank;
@@ -58,6 +47,18 @@ public class Tag implements Save {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

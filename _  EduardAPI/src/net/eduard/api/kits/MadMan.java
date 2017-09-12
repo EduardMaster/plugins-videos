@@ -14,10 +14,10 @@ import org.bukkit.plugin.Plugin;
 
 import me.confuser.barapi.BarAPI;
 import net.eduard.api.API;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
 
-public class MadMan extends Kit{
+public class MadMan extends Ability{
 
 	public MadMan() {
 		setIcon(Material.REDSTONE, "§fEnfraqueça seus inimigos");

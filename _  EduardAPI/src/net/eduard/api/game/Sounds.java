@@ -1,14 +1,15 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Sounds implements Save {
+public class Sounds implements Storable {
 
 	private Sound sound;
 	private float volume;
@@ -29,6 +30,7 @@ public class Sounds implements Save {
 		this.pitch = pitch;
 	}
 
+	
 	public static Sounds create(Sound sound) {
 		try {
 			return new Sounds(sound);
@@ -74,13 +76,15 @@ public class Sounds implements Save {
 	}
 
 	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void save(ConfigSection section, Object value) {
-
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

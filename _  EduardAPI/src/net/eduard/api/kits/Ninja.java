@@ -8,10 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.GameAPI;
 
-public class Ninja extends Kit {
+public class Ninja extends Ability {
 
 	public static HashMap<Player, Player> targets = new HashMap<>();
 

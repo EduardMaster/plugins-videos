@@ -1,16 +1,38 @@
 
 save-worlds: true
 save-players: false
-auto-respawn: true
+
+server-tag: 
+
 no-join-message: true
-no-quit-message: true
-no-death-message: true
 custom-join-message: false
-custom-quit-message: false
 on-join-message: '&6O jogador &e$player &6entrou no server'
+
+no-quit-message: true
+custom-quit-message: false
 on-quit-message: '&6O jogador &e$player &6saiu do server'
-server-tag: Server
+
+no-death-message: true
+custom-death-message: false
+on-death-player-message: '&6O jogador &e$killer matou o jogador $player'
+
+
 custom-chat: false
 chat-format: '$player: $message'
-auto-save-configs: true
+# Precisa ser Spigot se for Craftbukkit vai dar erro
+chat-clicable: true
+
+custom-motd: false
+# -1 significa que está desativado
+custom-motd-amount: -1
+motd:
+- seja bem vindo
+- Ao meu servidor!
+
+auto-respawn: true
 auto-rejoin: false
+
+auto-tag: false
+tags-rank:
+- dono
+- membro

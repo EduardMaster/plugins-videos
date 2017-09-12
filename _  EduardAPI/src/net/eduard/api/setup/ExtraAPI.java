@@ -1,15 +1,18 @@
 package net.eduard.api.setup;
 
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -33,9 +36,25 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-
+import org.bukkit.scoreboard.Team;
+/**
+ * API extra cheia de funcionalidades que sempre será preciso de uma forma
+ * simplificada
+ * 
+ * @author Eduard
+ *
+ */
 public final class ExtraAPI {
+	public static interface Replacer {
+
+		Object getText(Player p);
+	}
+	public static void sendMessage(Object... objects) {
+		consoleMessage(objects);
+		broadcastMessage(objects);
+	}
 
 	public static Random RANDOM = new Random();
 	private static Map<String, Replacer> replacers = new HashMap<>();
@@ -48,7 +67,29 @@ public final class ExtraAPI {
 	public static final int DAY_IN_SECONDS = DAY_IN_MINUTES * 60;
 	public static final long DAY_IN_TICKS = DAY_IN_SECONDS * 20;
 	public static final long DAY_IN_LONG = DAY_IN_TICKS * 50;
+	public static void resetScoreboards() {
 
+		for (Team teams : getMainScoreboard().getTeams()) {
+			teams.unregister();
+		}
+		for (Objective objective : getMainScoreboard().getObjectives()) {
+			objective.unregister();
+		}
+		for (Player player : GameAPI.getPlayers()) {
+			player.setScoreboard(getMainScoreboard());
+			player.setMaxHealth(20);
+			player.setHealth(20);
+			player.setHealthScaled(false);
+		}
+	}
+
+	/**
+	 * Pega um Som baseado num Objeto (Texto)
+	 * 
+	 * @param object
+	 *            Objeto
+	 * @return Som
+	 */
 	public static Sound getSound(Object object) {
 		String str = object.toString().replace("_", "").trim();
 		for (Sound sound : Sound.values()) {
@@ -62,6 +103,128 @@ public final class ExtraAPI {
 		}
 		return null;
 	}
+
+	public static String formatTime(long time) {
+		if (time == 0L) {
+			return "never";
+		}
+		long day = TimeUnit.MILLISECONDS.toDays(time);
+		long hours = TimeUnit.MILLISECONDS.toHours(time) - day * 24L;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time)
+				- TimeUnit.MILLISECONDS.toHours(time) * 60L;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(time)
+				- TimeUnit.MILLISECONDS.toMinutes(time) * 60L;
+		StringBuilder sb = new StringBuilder();
+		if (day > 0L) {
+			sb.append(day).append(" ").append(day == 1L ? "dia" : "dias")
+					.append(" ");
+		}
+		if (hours > 0L) {
+			sb.append(hours).append(" ").append(hours == 1L ? "hora" : "horas")
+					.append(" ");
+		}
+		if (minutes > 0L) {
+			sb.append(minutes).append(" ")
+					.append(minutes == 1L ? "minuto" : "minutos").append(" ");
+		}
+		if (seconds > 0L) {
+			sb.append(seconds).append(" ")
+					.append(seconds == 1L ? "segundo" : "segundos");
+		}
+		String diff = sb.toString();
+		return diff.isEmpty() ? "agora" : diff;
+	}
+
+	public static String formatDiference(long timestamp) {
+		return formatTime(timestamp - System.currentTimeMillis());
+	}
+
+	public static long parseDateDiff(String time, boolean future)
+			throws Exception {
+		Pattern timePattern = Pattern.compile(
+				"(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
+				2);
+		Matcher m = timePattern.matcher(time);
+		int years = 0;
+		int months = 0;
+		int weeks = 0;
+		int days = 0;
+		int hours = 0;
+		int minutes = 0;
+		int seconds = 0;
+		boolean found = false;
+		while (m.find())
+			if ((m.group() != null) && (!m.group().isEmpty())) {
+				for (int i = 0; i < m.groupCount(); i++) {
+					if ((m.group(i) != null) && (!m.group(i).isEmpty())) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					if ((m.group(1) != null) && (!m.group(1).isEmpty())) {
+						years = Integer.parseInt(m.group(1));
+					}
+					if ((m.group(2) != null) && (!m.group(2).isEmpty())) {
+						months = Integer.parseInt(m.group(2));
+					}
+					if ((m.group(3) != null) && (!m.group(3).isEmpty())) {
+						weeks = Integer.parseInt(m.group(3));
+					}
+					if ((m.group(4) != null) && (!m.group(4).isEmpty())) {
+						days = Integer.parseInt(m.group(4));
+					}
+					if ((m.group(5) != null) && (!m.group(5).isEmpty())) {
+						hours = Integer.parseInt(m.group(5));
+					}
+					if ((m.group(6) != null) && (!m.group(6).isEmpty())) {
+						minutes = Integer.parseInt(m.group(6));
+					}
+					if ((m.group(7) == null) || (m.group(7).isEmpty()))
+						break;
+					seconds = Integer.parseInt(m.group(7));
+
+					break;
+				}
+			}
+		if (!found) {
+			throw new Exception("Illegal Date");
+		}
+		if (years > 20) {
+			throw new Exception("Illegal Date");
+		}
+		Calendar c = new GregorianCalendar();
+		if (years > 0) {
+			c.add(1, years * (future ? 1 : -1));
+		}
+		if (months > 0) {
+			c.add(2, months * (future ? 1 : -1));
+		}
+		if (weeks > 0) {
+			c.add(3, weeks * (future ? 1 : -1));
+		}
+		if (days > 0) {
+			c.add(5, days * (future ? 1 : -1));
+		}
+		if (hours > 0) {
+			c.add(11, hours * (future ? 1 : -1));
+		}
+		if (minutes > 0) {
+			c.add(12, minutes * (future ? 1 : -1));
+		}
+		if (seconds > 0) {
+			c.add(13, seconds * (future ? 1 : -1));
+		}
+		return c.getTimeInMillis();
+	}
+
+	/**
+	 * Pega uma lista de Entidades baseada em um Argumento (Texto)
+	 * 
+	 * @param argument
+	 *            Texto
+	 * @return Lista de Entidades
+	 */
 	public static List<String> getLivingEntities(String argument) {
 		List<String> list = new ArrayList<>();
 		argument = argument.trim().replace("_", "");
@@ -75,7 +238,7 @@ public final class ExtraAPI {
 					list.add(text);
 				}
 			}
-			
+
 		}
 		return list;
 	}
@@ -96,6 +259,7 @@ public final class ExtraAPI {
 		}
 		return null;
 	}
+
 	public static List<String> getEnchants(String argument) {
 		if (argument == null) {
 			argument = "";
@@ -223,12 +387,12 @@ public final class ExtraAPI {
 	@SafeVarargs
 	public static <E> E getRandom(E... objects) {
 		if (objects.length >= 1)
-			return objects[(RANDOM.nextInt(objects.length - 1))];
+			return objects[getRandomInt(1, objects.length) - 1];
 		return null;
 	}
 	public static <E> E getRandom(List<E> objects) {
 		if (objects.size() >= 1)
-			return objects.get((RANDOM.nextInt(objects.size() - 1)));
+			return objects.get(getRandomInt(1, objects.size()) - 1);
 		return null;
 	}
 	public static boolean isMultBy(int number1, int numer2) {
@@ -304,7 +468,9 @@ public final class ExtraAPI {
 		}
 		return false;
 	}
+
 	public static void callEvent(Event event) {
+
 		Bukkit.getPluginManager().callEvent(event);
 	}
 	public static void event(Listener event, Plugin plugin) {
@@ -630,124 +796,11 @@ public final class ExtraAPI {
 		}
 		return builder.toString();
 	}
-	public static List<String> toLines(String text, int size) {
 
-		List<String> lista = new ArrayList<>();
-
-		String x = text;
-
-		int id = 1;
-		while (x.length() >= size) {
-			String cut = x.substring(0, size);
-			x = text.substring(id * size);
-			id++;
-			lista.add(cut);
-		}
-		lista.add(x);
-		return lista;
-
-	}
 	public static void newWrapper(String wrap) {
 		if (!lineBreakers.contains(wrap))
 			lineBreakers.add(wrap);
 
-	}
-	public static String getComment(String line) {
-
-		String[] split = line.split("#");
-		if (split.length > 0)
-			return line.replaceFirst(split[0] + "#", "").replaceFirst(" ", "");
-		return line.replaceFirst("#", "").replaceFirst(" ", "");
-
-	}
-
-	public static List<String> getConfigLines(Path path) throws Exception {
-		return Files.readAllLines(path);
-	}
-
-	public static String getKey(String line, String space) {
-		line = line.replaceFirst(space, "");
-		return line.split(":")[0];
-
-	}
-
-	public static String getList(String line) {
-		String[] split = line.split("-");
-		if (split.length > 0)
-			return line.replaceFirst(split[0] + "-", "").replaceFirst(" ", "");
-		return line.replaceFirst("-", "");
-	}
-
-	public static String getPath(String path) {
-		if (path.startsWith("#")) {
-			path.replaceFirst("#", "$");
-		}
-		if (path.startsWith("-")) {
-			path.replaceFirst("-", "$");
-		}
-		if (path.contains(":")) {
-			path.replace(":", "$");
-		}
-		return path;
-	}
-
-	public static String getSpace(int id) {
-		String space = "";
-		for (int i = 0; i < id; i++) {
-			space += "  ";
-		}
-		return space;
-	}
-
-	public static int getTime(String line) {
-		int value = 0;
-		while (line.startsWith("  ")) {
-			line = line.replaceFirst("  ", "");
-			value++;
-		}
-		return value;
-	}
-
-	public static String getValue(String line, String space) {
-		line = line.replaceFirst(space, "");
-		if (line.endsWith(":")) {
-			return "";
-		}
-		String[] split = line.split(":");
-		String result = line.replaceFirst(split[0] + ":", "").replaceFirst(" ",
-				"");
-		return result;
-
-	}
-	public static String removeQuotes(String message) {
-		if (message.startsWith("'")) {
-			message = message.replaceFirst("'", "");
-		}
-		if (message.startsWith("\"")) {
-			message = message.replaceFirst("\"", "");
-		}
-		if (message.endsWith("'")) {
-			message = message.substring(0, message.length() - 1);
-		}
-		if (message.endsWith("\"")) {
-			message = message.substring(0, message.length() - 1);
-		}
-		return message;
-	}
-	public static void setConfigLines(Path path, List<String> lines)
-			throws Exception {
-		Files.write(path, lines);
-	}
-	public static boolean isComment(String line) {
-		return line.trim().startsWith("#");
-	}
-
-	public static boolean isList(String line) {
-		return line.trim().startsWith("-");
-	}
-
-	public static boolean isSection(String line) {
-		return !isList(line) & !isComment(line) & line.contains(":");
 	}
 
 	public static String getReplacers(String text, Player player) {
@@ -765,6 +818,23 @@ public final class ExtraAPI {
 
 		}
 		return text;
+	}
+	public static List<String> toLines(String text, int size) {
+
+		List<String> lista = new ArrayList<>();
+
+		String x = text;
+
+		int id = 1;
+		while (x.length() >= size) {
+			String cut = x.substring(0, size);
+			x = text.substring(id * size);
+			id++;
+			lista.add(cut);
+		}
+		lista.add(x);
+		return lista;
+
 	}
 	public static String[] wordWrap(String rawString, int lineLength) {
 		if (rawString == null) {
@@ -852,5 +922,79 @@ public final class ExtraAPI {
 
 		return (lines.toArray(new String[lines.size()]));
 	}
+	public static String formatColors(String str) {
+		char[] chars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a',
+				'b', 'c', 'd', 'e', 'f', 'n', 'r', 'l', 'k', 'o', 'm'};
+		char[] array = str.toCharArray();
+		for (int t = 0; t < array.length - 1; t++) {
+			if (array[t] == '&') {
+				for (char c : chars) {
+					if (c == array[(t + 1)]) {
+						array[t] = '§';
+					}
+				}
+			}
+		}
+		return new String(array);
+	}
+	public static void box(String[] paragraph, String title) {
+		ArrayList<String> buffer = new ArrayList<String>();
+		String at = "";
 
+		int side1 = (int) Math.round(25.0D - (title.length() + 4) / 2.0D);
+		int side2 = (int) (26.0D - (title.length() + 4) / 2.0D);
+		at = at + '+';
+		for (int t = 0; t < side1; t++) {
+			at = at + '-';
+		}
+		at = at + "{ ";
+		at = at + title;
+		at = at + " }";
+		for (int t = 0; t < side2; t++) {
+			at = at + '-';
+		}
+		at = at + '+';
+		buffer.add(at);
+		at = "";
+		buffer.add("|                                                   |");
+		String[] arrayOfString = paragraph;
+		int j = paragraph.length;
+		for (int i = 0; i < j; i++) {
+			String s = arrayOfString[i];
+			at = at + "| ";
+			int left = 49;
+			for (int t = 0; t < s.length(); t++) {
+				at = at + s.charAt(t);
+				left--;
+				if (left == 0) {
+					at = at + " |";
+					buffer.add(at);
+					at = "";
+					at = at + "| ";
+					left = 49;
+				}
+			}
+			while (left-- > 0) {
+				at = at + ' ';
+			}
+			at = at + " |";
+			buffer.add(at);
+			at = "";
+		}
+		buffer.add("|                                                   |");
+		buffer.add("+---------------------------------------------------+");
+
+		System.out.println(" ");
+		for (String line : buffer.toArray(new String[buffer.size()])) {
+			System.out.println(line);
+		}
+		System.out.println(" ");
+	}
+	public static List<String> toMessages(List<Object> list) {
+		List<String> lines = new ArrayList<String>();
+		for (Object line : list) {
+			lines.add(toChatMessage(line.toString()));
+		}
+		return lines;
+	}
 }

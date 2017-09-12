@@ -6,63 +6,57 @@ import org.bukkit.Color;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Jump;
-import net.eduard.api.game.Potions;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
 import net.eduard.api.setup.ItemAPI;
 
-public class Sonic extends Kit {
+public class Sonic extends Ability {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
 	public int effectSeconds = 5;
 	public int range = 5;
 	public Sonic() {
 		setIcon(Material.LAPIS_BLOCK, "§fGanha um boost para frente");
 		add(Material.LAPIS_BLOCK);
-		setDisplay( new Effects(Effect.SMOKE, 10));
-		setJump(new Jump(true, 0.5, 2,
+		display( new Effects(Effect.SMOKE, 10));
+		jump(new Jump(true, 0.5, 2,
 				Sounds.create(Sound.CLICK)));
-		getPotions().add(new Potions(PotionEffectType.POISON, 1, 20 * 5));
-		setClick(new Click(Material.LAPIS_BLOCK, new ClickEffect() {
-
+		getPotions().add(new PotionEffect(PotionEffectType.POISON, 1, 20 * 5));
+		setClick(new PlayerClick(Material.LAPIS_BLOCK, new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEntityEvent e) {
+			public void onClick(Player player, Block block, ItemStack item) {
 				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (cooldown(p)) {
-						ItemAPI.saveItems(p);
-						ItemAPI.setEquip(p, Color.BLUE, "§b" + getName());
-						inEffect.add(p);
+				if (hasKit(player)) {
+					if (cooldown(player)) {
+						ItemAPI.saveItems(player);
+						ItemAPI.setEquip(player, Color.BLUE, "§b" + getName());
+						inEffect.add(player);
 						API.TIME.delay(effectSeconds,new Runnable() {
 
 							@Override
 							public void run() {
-								if (hasKit(p)) {
-									ItemAPI.getArmours(p);
+								if (hasKit(player)) {
+									ItemAPI.getArmours(player);
 								}
-								inEffect.remove(p);
+								inEffect.remove(player);
 							}
 						});
-						jump(p);
+						jump(player);
 					}
 				}
 			}

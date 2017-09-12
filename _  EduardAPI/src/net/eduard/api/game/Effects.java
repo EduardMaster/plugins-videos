@@ -1,14 +1,15 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Effects implements Save {
+public class Effects implements Storable {
 
 	private int data;
 
@@ -76,15 +77,6 @@ public class Effects implements Save {
 	}
 
 	@Override
-	public void save(ConfigSection section, Object value) {
-	}
-
-	@Override
-	public Object get(ConfigSection section) {
-		return null;
-	}
-
-	@Override
 	public String toString() {
 		return "Effects [data=" + data + ", type=" + type + "]";
 	}
@@ -118,6 +110,18 @@ public class Effects implements Save {
 		if (type != other.type)
 			return false;
 		return true;
+	}
+
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

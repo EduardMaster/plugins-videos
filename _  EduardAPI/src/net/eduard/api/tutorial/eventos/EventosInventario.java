@@ -16,9 +16,9 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosInventario extends Manager {
+public class EventosInventario extends TimeManager {
 
 	@EventHandler
 	public void InventoryCraft(CraftItemEvent e) {

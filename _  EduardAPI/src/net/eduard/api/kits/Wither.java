@@ -5,18 +5,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Wither extends Kit {
+public class Wither extends Ability {
 	public double chance = 0.3;
 
-	public Wither() {
+	public Wither() {	
 		setIcon(Material.SKULL_ITEM,1, "§fEnvene seus inimigos com Wither");
-		getPotions().add(new Potions(PotionEffectType.WITHER, 0, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.WITHER, 0, 20 * 5));
 	}
 
 	@Override

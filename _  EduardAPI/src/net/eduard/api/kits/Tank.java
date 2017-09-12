@@ -7,14 +7,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
-import net.eduard.api.gui.Kit;
 
-public class Tank extends Kit {
+public class Tank extends Ability {
 
 	public Tank() {
 		setIcon(Material.TNT, "§fSeja um Terrista");
-		setExplosion(new Explosion(6, false, false));
+		explosion(new Explosion(6, false, false));
 	}
 
 	@EventHandler

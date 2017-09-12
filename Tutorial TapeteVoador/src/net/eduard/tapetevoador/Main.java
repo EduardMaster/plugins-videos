@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.WorldAPI;
+import net.eduard.api.setup.WorldAPI;
 import net.eduard.tapetevoador.command.TapeteCommand;
 import net.eduard.tapetevoador.event.TapeteEvent;
 

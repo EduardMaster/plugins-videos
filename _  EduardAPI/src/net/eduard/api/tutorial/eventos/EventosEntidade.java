@@ -39,9 +39,9 @@ import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class EventosEntidade extends Manager {
+public class EventosEntidade extends TimeManager {
 
 	@EventHandler
 	public void EntidadeAtiraComFlecha(EntityShootBowEvent e) {

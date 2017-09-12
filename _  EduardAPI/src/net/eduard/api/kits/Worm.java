@@ -4,17 +4,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Worm extends Kit {
+public class Worm extends Ability {
 
 
 	public Worm() {
 		setIcon(Material.DIRT, "§fQuebre terra mais facilmente");
-		getPotions().add(new Potions(PotionEffectType.REGENERATION, 0, 20 * 2));
+		getPotions().add(new PotionEffect(PotionEffectType.REGENERATION, 0, 20 * 2));
 	}
 
 	@EventHandler

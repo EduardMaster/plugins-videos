@@ -1,19 +1,18 @@
 package net.eduard.api.kits;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.setup.ItemAPI;
 
-public class Speacialist extends Kit {
+public class Speacialist extends Ability {
 
 	public int xpAmount = 1;
 
@@ -21,19 +20,13 @@ public class Speacialist extends Kit {
 		setIcon(Material.BOOK, "§fGanhe um Kit Aleatorio",
 				"§fA cada morte ganhe Xp para encantar seus itens");
 		add(Material.BOOK);
-		setClick(new Click(Material.BOOK, new ClickEffect() {
-
+		setClick(new PlayerClick(Material.BOOK,new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEntityEvent e) {
+			public void onClick(Player player, Block block, ItemStack item) {
 				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					p.openEnchanting(p.getLocation(), true);
+				if (hasKit(player)) {
+					player.openEnchanting(player.getLocation(), true);
 				}
 			}
 		}));

@@ -6,20 +6,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Turtle extends Kit {
+public class Turtle extends Ability {
 	public double chance = 0.3;
 	public double damage = 1;
 
 	public Turtle() {
 		setIcon(Material.LEATHER_CHESTPLATE, "§fAo estiver agaixado vai ficar quase invuneravel");
-		setMessage("§6Voce não pode bater enquanto estiver agaixando");
-		getPotions().add(new Potions(PotionEffectType.POISON, 0, 20 * 5));
+		message("§6Voce não pode bater enquanto estiver agaixando");
+		getPotions().add(new PotionEffect(PotionEffectType.POISON, 0, 20 * 5));
 	}
 
 	

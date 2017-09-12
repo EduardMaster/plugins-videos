@@ -2,6 +2,12 @@ package net.eduard.api.setup;
 
 import org.bukkit.ChatColor;
 
+/**
+ * API de manipulação de Cores e CHAT do Minecraft
+ * 
+ * @author Eduard
+ *
+ */
 public final class ChatAPI {
 
 	public static ChatColor SUCCESS = ChatColor.GREEN;
@@ -21,48 +27,52 @@ public final class ChatAPI {
 	public static ChatColor TITLE = ChatColor.DARK_BLUE;
 	public static ChatColor TEXT = ChatColor.BLUE;
 
-
-	
-	
-
+	/**
+	 * Pega um Coração vermelho
+	 * 
+	 * @return Simbolo Coração
+	 */
 	public static String getRedHeart() {
 		return ChatColor.RED + getHeart();
 	}
-	  public static String getHeart() {
-		    return "♥";
-		  }
+	 /**
+	  *  Pega um Coração normal
+	  * @return Simbolo Coração
+	  */
+	public static String getHeart() {
+		return "♥";
+	}
 
-		  public static String getArrow() {
-		    return "➵";
-		  }
+	public static String getArrow() {
+		return "➵";
+	}
 
-		  public static String getArrowRight() {
-		    return "››";
-		  }
+	public static String getArrowRight() {
+		return "››";
+	}
 
-		  public static String getArrowLeft() {
-		    return "‹‹";
-		  }
+	public static String getArrowLeft() {
+		return "‹‹";
+	}
 
-		  public static String getSquared() {
-		    return "❑";
-		  }
+	public static String getSquared() {
+		return "❑";
+	}
 
-		  public static String getInterrogation() {
-		    return "➁";
-		  }
+	public static String getInterrogation() {
+		return "➁";
+	}
 
-		
-		  public static String getALlSimbols() {
-		    return "❤❥✔✖✗✘❂⋆✢✣✤✥✦✩✪✫✬✭✵✴✳✲✱★✰✯✮✶✷✸✹✺✻✼❄❅✽✡☆❋❊❉❈❇❆✾✿❀❁❃✌♼♽✂➣➢⬇➟⬆⬅➡✈✄➤➥➦➧➨➚➘➙➛➶➵➴➳➲➸➞➝➜➷➹➹➺➻➼➽Ⓜ⬛⬜ℹ☕▌▄▆▜▀▛█";
-		  }
+	public static String getALlSimbols() {
+		return "❤❥✔✖✗✘❂⋆✢✣✤✥✦✩✪✫✬✭✵✴✳✲✱★✰✯✮✶✷✸✹✺✻✼❄❅✽✡☆❋❊❉❈❇❆✾✿❀❁❃✌♼♽✂➣➢⬇➟⬆⬅➡✈✄➤➥➦➧➨➚➘➙➛➶➵➴➳➲➸➞➝➜➷➹➹➺➻➼➽Ⓜ⬛⬜ℹ☕▌▄▆▜▀▛█";
+	}
 
-		  public static String getAllSimbols2() {
-		    return "™⚑⚐☃⚠⚔⚖⚒⚙⚜⚀⚁⚂⚃⚄⚅⚊⚋⚌⚍⚏⚎☰☱☲☳☴☵☶☷⚆⚇⚈⚉♿♩♪♫♬♭♮♯♠♡♢♗♖♕♔♧♛♦♥♤♣♘♙♚♛♜♝♞♟⚪➃➂➁➀➌➋➊➉➈➇➆➅➄☣☮☯⚫➌➋➊➉➈➇➆➅➄➍➎➏➐➑➒➓ⓐⓑⓚ";
-		  }
+	public static String getAllSimbols2() {
+		return "™⚑⚐☃⚠⚔⚖⚒⚙⚜⚀⚁⚂⚃⚄⚅⚊⚋⚌⚍⚏⚎☰☱☲☳☴☵☶☷⚆⚇⚈⚉♿♩♪♫♬♭♮♯♠♡♢♗♖♕♔♧♛♦♥♤♣♘♙♚♛♜♝♞♟⚪➃➂➁➀➌➋➊➉➈➇➆➅➄☣☮☯⚫➌➋➊➉➈➇➆➅➄➍➎➏➐➑➒➓ⓐⓑⓚ";
+	}
 
-		  public static String getAllSimbols3() {
-		    return "웃유♋♀♂❣¿⌚☑▲☠☢☿Ⓐ✍☤✉☒▼⌘⌛®©✎♒☁☼ツღ¡Σ☭✞℃℉ϟ☂¢£⌨⚛⌇☹☻☺☪½∞✆☎⌥⇧↩←→↑↓⚣⚢⌲♺☟☝☞☜➫❑❒◈◐◑«»‹›×±※⁂‽¶—⁄—–≈÷≠π†‡‡¥€‰●•·";
-		  }
+	public static String getAllSimbols3() {
+		return "웃유♋♀♂❣¿⌚☑▲☠☢☿Ⓐ✍☤✉☒▼⌘⌛®©✎♒☁☼ツღ¡Σ☭✞℃℉ϟ☂¢£⌨⚛⌇☹☻☺☪½∞✆☎⌥⇧↩←→↑↓⚣⚢⌲♺☟☝☞☜➫❑❒◈◐◑«»‹›×±※⁂‽¶—⁄—–≈÷≠π†‡‡¥€‰●•·";
+	}
 
 }

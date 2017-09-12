@@ -35,6 +35,7 @@ public class WarpTutorialSQL extends DBManager {
 	}
 	public Location getWarp(String name) {
 		name = name.toLowerCase();
+		Location location = null;
 		try {
 			ResultSet rs = select("select * from warps where name = ?", name);
 			if (rs.next()) {
@@ -44,30 +45,18 @@ public class WarpTutorialSQL extends DBManager {
 				float yaw = rs.getFloat("yaw");
 				float pitch = rs.getFloat("pitch");
 				World world = Bukkit.getWorld(rs.getString("world"));
-				Location location = new Location(world, x, y, z, yaw, pitch);
-				endQuery();
-				return location;
+				location = new Location(world, x, y, z, yaw, pitch);
+
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return null;
+		return location;
 
-		// 
+		//
 	}
 	public boolean hasWarp(String name) {
-		name = name.toLowerCase();
-		try {
-			ResultSet rs = select("select name from warps where name = ?",
-					name);
-			if (rs.next()) {
-				endQuery();
-				return true;
-			}
-		} catch (Exception e) {
-		}
-
-		return false;
+		return contains("select name from warps where name = ?", name.toLowerCase());
 	}
 
 }

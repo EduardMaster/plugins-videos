@@ -8,11 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
 
-public class Teleporter extends Kit {
+public class Teleporter extends Ability {
 	public Teleporter() {
 		setIcon(Material.BOW, "§fAo acertar a flecha você é teleportado até ela!");
 		add(ItemAPI.addEnchant(new ItemStack(Material.BOW), Enchantment.ARROW_DAMAGE, 1));

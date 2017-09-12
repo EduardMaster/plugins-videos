@@ -10,9 +10,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
-public class BlocoJumperEsponja extends Manager{
+public class BlocoJumperEsponja extends TimeManager{
 	@EventHandler
 	public void BlocoPulador(EntityDamageEvent e) {
 

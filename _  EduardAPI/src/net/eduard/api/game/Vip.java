@@ -1,10 +1,11 @@
 package net.eduard.api.game;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.setup.ExtraAPI;
-import net.eduard.api.util.Save;
+import java.util.Map;
 
-public class Vip implements Save{
+import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.StorageAPI.Storable;
+
+public class Vip implements Storable{
 
 	private int days;
 
@@ -55,12 +56,12 @@ public class Vip implements Save{
 		this.vipStart = vipStart;
 	}
 	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public void save(ConfigSection section, Object value) {
+	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
 		
 	}

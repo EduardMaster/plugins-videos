@@ -1,6 +1,8 @@
 package net.eduard.api.setup;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,25 +10,220 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.security.CodeSource;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import sun.net.www.protocol.file.FileURLConnection;
-
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+/**
+ * API de criação e manipulação de Arquivos do Computador
+ * 
+ * @author Eduard
+ *
+ */
 public final class FileAPI {
+	/**
+	 * Transforma um Texto em Vetor de Itens
+	 * 
+	 * @param data
+	 *            Texto
+	 * @return Vetor de Itens (Lista)
+	 * 
+	 */
+	public static ItemStack[] itemFromBase64(final String data) {
+		try {
+			final ByteArrayInputStream inputStream = new ByteArrayInputStream(
+					Base64Coder.decodeLines(data));
+			final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(
+					inputStream);
+			final ItemStack[] stacks = new ItemStack[dataInput.readInt()];
+			for (int i = 0; i < stacks.length; ++i) {
 
+				stacks[i] = (ItemStack) dataInput.readObject();
+
+			}
+			dataInput.close();
+			return stacks;
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/**
+	 * Transforma um Vetor de Itens em um Texto
+	 * 
+	 * @param contents
+	 *            Vetor de Itens
+	 * @return Texto
+	 */
+	public static String itemtoBase64(final ItemStack[] contents) {
+
+		try {
+			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			BukkitObjectOutputStream dataOutput;
+			dataOutput = new BukkitObjectOutputStream(outputStream);
+			dataOutput.writeInt(contents.length);
+			for (final ItemStack stack : contents) {
+				dataOutput.writeObject(stack);
+			}
+			dataOutput.close();
+			return Base64Coder.encodeLines(outputStream.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static boolean isDirectory(File file) {
+		try {
+			return (file.isDirectory());
+		} catch (Exception e) {
+			return isDirectory(file.getName());
+		}
+
+	}
+	public static boolean isDirectory(String name) {
+
+		if (name.endsWith(File.separator)) {
+			return true;
+		}
+		if (name.endsWith("/")) {
+			return true;
+		}
+		if (name.endsWith(File.pathSeparator)) {
+			return true;
+
+		}
+		return false;
+
+	}
+
+	public static List<String> readLines(File file) {
+		List<String> lines = new ArrayList<>();
+		ExtraAPI.consoleMessage(
+				"§bFileAPI §fLendo §a" + file.getName() + "§f em UTF-8");
+		try {
+			if (Charset.isSupported("UTF-8")) {
+				lines = Files.readAllLines(file.toPath(),
+						Charset.forName("UTF-8"));
+				return lines;
+			}
+		} catch (Exception e) {
+			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
+		}
+		ExtraAPI.consoleMessage("§bFileAPI §fLendo §a" + file.getName()
+				+ "§f em " + Charset.defaultCharset().toString().toUpperCase());
+		try {
+			lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+		} catch (Exception e) {
+			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
+		}
+		return lines;
+	}
+
+	public static void writeLines(File file, List<String> lines) {
+	
+		try {
+			file.getParentFile().mkdirs();
+			if (Charset.isSupported("UTF-8")) {
+				ExtraAPI.consoleMessage(
+						"§bFileAPI §fEscrevendo §a" + file.getName()+"§f em UTF-8");
+				Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
+			} else {
+				ExtraAPI.consoleMessage(
+						"§bFileAPI §fEscrevendo §a" + file.getName()+"§f em "+Charset.defaultCharset().toString().toUpperCase());
+				Files.write(file.toPath(), lines, Charset.defaultCharset());
+			}
+		} catch (Exception e) {
+			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
+		}
+
+	}
+	@SuppressWarnings("deprecation")
+	public static void setItem(ConfigurationSection section, ItemStack item) {
+		section.set("id", item.getTypeId());
+		section.set("data", item.getDurability());
+		if (item.hasItemMeta()) {
+			ItemMeta meta = item.getItemMeta();
+			if (meta.hasDisplayName()) {
+				section.set("name", meta.getDisplayName());
+			}
+			if (meta.hasLore()) {
+				List<String> lines = new ArrayList<>();
+				for (String line : meta.getLore()) {
+					lines.add(line);
+				}
+				section.set("lore", lines);
+			}
+		}
+		StringBuilder text = new StringBuilder();
+		for (Entry<Enchantment, Integer> enchant : item.getEnchantments()
+				.entrySet()) {
+			text.append(
+					enchant.getKey().getId() + "-" + enchant.getValue() + ",");
+		}
+		section.set("enchant", text.toString());
+	}
+
+	public static void setLocation(ConfigurationSection section,
+			Location location) {
+		section.set("x", location.getX());
+		section.set("y", location.getY());
+		section.set("z", location.getZ());
+		section.set("yaw", location.getYaw());
+		section.set("pitch", location.getPitch());
+	}
+
+	public static Location getLocation(ConfigurationSection section) {
+		World world = Bukkit.getWorld(section.getString("world"));
+		double x = section.getDouble("x");
+		double y = section.getDouble("y");
+		double z = section.getDouble("z");
+		float yaw = (float) section.getDouble("yaw");
+		float pitch = (float) section.getDouble("pitch");
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+
+	public static Location toLocation(String text) {
+		String[] split = text.split(",");
+		World world = Bukkit.getWorld(split[0]);
+		double x = Double.parseDouble(split[1]);
+		double y = Double.parseDouble(split[2]);
+		double z = Double.parseDouble(split[3]);
+		float yaw = Float.parseFloat(split[4]);
+		float pitch = Float.parseFloat(split[5]);
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+	public static String saveLocation(Location location) {
+		StringBuilder text = new StringBuilder();
+		text.append(location.getWorld().getName() + ",");
+		text.append(location.getX() + ",");
+		text.append(location.getY() + ",");
+		text.append(location.getZ() + ",");
+		text.append(location.getYaw() + ",");
+		text.append(location.getPitch());
+		return text.toString();
+	}
+	/**
+	 * Pega um Objecto serializavel do Arquivo
+	 * 
+	 * @param file
+	 *            Arquivo
+	 * @return Objeto
+	 */
 	public static Object getSerializable(File file) {
 		if (!file.exists()) {
 			return null;
@@ -45,6 +242,14 @@ public final class FileAPI {
 
 		return null;
 	}
+	/**
+	 * Salva um Objecto no Arquivo em forma de serialização Java
+	 * 
+	 * @param object
+	 *            Objeto (Dado)
+	 * @param file
+	 *            Arquivo
+	 */
 	public static void setSerializable(Object object, File file) {
 		try {
 			FileOutputStream saveStream = new FileOutputStream(file);
@@ -60,199 +265,15 @@ public final class FileAPI {
 		}
 
 	}
-	/**
-	 * Private helper method
-	 * 
-	 * @param directory
-	 *            The directory to start with
-	 * @param pckgname
-	 *            The package name to search for. Will be needed for getting the
-	 *            Class object.
-	 * @param classes
-	 *            if a file isn't loaded but still is in the directory
-	 * @throws ClassNotFoundException
-	 */
-	private static void checkDirectory(File directory, String pckgname,
-			ArrayList<Class<?>> classes) throws ClassNotFoundException {
-		File tmpDirectory;
-
-		if (directory.exists() && directory.isDirectory()) {
-			final String[] files = directory.list();
-
-			for (final String file : files) {
-				if (file.endsWith(".class")) {
-					try {
-						classes.add(Class.forName(pckgname + '.'
-								+ file.substring(0, file.length() - 6)));
-					} catch (final NoClassDefFoundError e) {
-						// do nothing. this class hasn't been found by the
-						// loader, and we don't care.
-					}
-				} else if ((tmpDirectory = new File(directory, file))
-						.isDirectory()) {
-					checkDirectory(tmpDirectory, pckgname + "." + file,
-							classes);
-				}
-			}
-		}
-	}
 
 	/**
-	 * Private helper method.
+	 * Desfazr o ZIP do Arquivo
 	 * 
-	 * @param connection
-	 *            the connection to the jar
-	 * @param pckgname
-	 *            the package name to search for
-	 * @param classes
-	 *            the current ArrayList of all classes. This method will simply
-	 *            add new classes.
-	 * @throws ClassNotFoundException
-	 *             if a file isn't loaded but still is in the jar file
-	 * @throws IOException
-	 *             if it can't correctly read from the jar file.
+	 * @param zipFilePath
+	 *            Arquivo
+	 * @param destDirectory
+	 *            Destino
 	 */
-	private static void checkJarFile(JarURLConnection connection,
-			String pckgname, ArrayList<Class<?>> classes)
-			throws ClassNotFoundException, IOException {
-		final JarFile jarFile = connection.getJarFile();
-		final Enumeration<JarEntry> entries = jarFile.entries();
-		String name;
-
-		for (JarEntry jarEntry = null; entries.hasMoreElements()
-				&& ((jarEntry = entries.nextElement()) != null);) {
-			name = jarEntry.getName();
-
-			if (name.contains(".class")) {
-				name = name.substring(0, name.length() - 6).replace('/', '.');
-
-				if (name.contains(pckgname)) {
-					classes.add(Class.forName(name));
-				}
-			}
-		}
-	}
-	public static ArrayList<Class<?>> getClassesForPackage(JavaPlugin plugin,
-			String pkgname) {
-		ArrayList<Class<?>> classes = new ArrayList<>();
-
-		CodeSource src = plugin.getClass().getProtectionDomain()
-				.getCodeSource();
-		if (src != null) {
-			URL resource = src.getLocation();
-			resource.getPath();
-			processJarfile(resource, pkgname, classes);
-		}
-		return classes;
-	}
-	/**
-	 * Attempts to list all the classes in the specified package as determined
-	 * by the context class loader
-	 * 
-	 * @param pckgname
-	 *            the package name to search
-	 * @return a list of classes that exist within that package
-	 * @throws ClassNotFoundException
-	 *             if something went wrong
-	 */
-	public static ArrayList<Class<?>> getClassesForPackage(String pckgname)
-			throws ClassNotFoundException {
-		final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-
-		try {
-			final ClassLoader cld = Thread.currentThread()
-					.getContextClassLoader();
-
-			if (cld == null)
-				throw new ClassNotFoundException("Can't get class loader.");
-
-			final Enumeration<URL> resources = cld
-					.getResources(pckgname.replace('.', '/'));
-			URLConnection connection;
-
-			for (URL url = null; resources.hasMoreElements()
-					&& ((url = resources.nextElement()) != null);) {
-				try {
-					connection = url.openConnection();
-
-					if (connection instanceof JarURLConnection) {
-						checkJarFile((JarURLConnection) connection, pckgname,
-								classes);
-					} else if (connection instanceof FileURLConnection) {
-						try {
-							checkDirectory(new File(
-									URLDecoder.decode(url.getPath(), "UTF-8")),
-									pckgname, classes);
-						} catch (final UnsupportedEncodingException ex) {
-							throw new ClassNotFoundException(
-									pckgname + " does not appear to be a valid package (Unsupported encoding)",
-									ex);
-						}
-					} else
-						throw new ClassNotFoundException(pckgname + " ("
-								+ url.getPath()
-								+ ") does not appear to be a valid package");
-				} catch (final IOException ioex) {
-					throw new ClassNotFoundException(
-							"IOException was thrown when trying to get all resources for "
-									+ pckgname,
-							ioex);
-				}
-			}
-		} catch (final NullPointerException ex) {
-			throw new ClassNotFoundException(
-					pckgname + " does not appear to be a valid package (Null pointer exception)",
-					ex);
-		} catch (final IOException ioex) {
-			throw new ClassNotFoundException(
-					"IOException was thrown when trying to get all resources for "
-							+ pckgname,
-					ioex);
-		}
-
-		return classes;
-	}
-
-	@SuppressWarnings("resource")
-	private static void processJarfile(URL resource, String pkgname,
-			ArrayList<Class<?>> classes) {
-		String relPath = pkgname.replace('.', '/');
-		String resPath = resource.getPath().replace("%20", " ");
-		String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar")
-				.replaceFirst("file:", "");
-		JarFile jarFile = null;
-		try {
-			jarFile = new JarFile(jarPath);
-		} catch (IOException e) {
-			throw new RuntimeException(
-					"Unexpected IOException reading JAR File '" + jarPath
-							+ "'. Do you have strange characters in your folders? Such as #?",
-					e);
-		}
-
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry entry = entries.nextElement();
-			String entryName = entry.getName();
-			String className = null;
-			if ((entryName.endsWith(".class"))
-					&& (entryName.startsWith(relPath))
-					&& (entryName.length() > relPath.length() + "/".length())) {
-				className = entryName.replace('/', '.').replace('\\', '.')
-						.replace(".class", "");
-			}
-			if (className != null) {
-				try {
-					Class<?> c = Class.forName(className);
-					if (c != null)
-						classes.add(c);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
 	public static void unzip(String zipFilePath, String destDirectory)
 
 	{
@@ -283,7 +304,14 @@ public final class FileAPI {
 		}
 
 	}
-
+	/**
+	 * Defaz o ZIP do Arquivo
+	 * 
+	 * @param zipIn
+	 *            Input Stream (Coneção de Algum Arquivo)
+	 * @param filePath
+	 *            Destino Arquivo
+	 */
 	public static void extractFile(ZipInputStream zipIn, String filePath) {
 		try {
 			BufferedOutputStream bos = new BufferedOutputStream(

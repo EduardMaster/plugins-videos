@@ -5,18 +5,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Potions;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 
-public class Crack extends Kit {
+public class Crack extends Ability {
 	public double chance = 0.25;
 
 	public Crack() {
 		setIcon(Material.SPIDER_EYE, "§fVicie seus inimigos");
-		getPotions().add(new Potions(PotionEffectType.CONFUSION, 0, 20 * 5));
+		getPotions().add(new PotionEffect(PotionEffectType.CONFUSION, 0, 20 * 5));
 	}
 
 	@Override

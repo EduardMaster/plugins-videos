@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.ItemAPI;
 
-public class Viking extends Kit {
+public class Viking extends Ability {
 	public double damage = 2;
 
 	public Viking() {

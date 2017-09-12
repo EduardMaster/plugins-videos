@@ -1,7 +1,5 @@
 package net.eduard.api.tutorial.armazenamento;
 
-import java.sql.ResultSet;
-
 import net.eduard.api.manager.DBManager;
 
 public class RankUpSQL extends DBManager {
@@ -19,17 +17,8 @@ public class RankUpSQL extends DBManager {
 		update("delete from ranks where name = ?", name.toLowerCase());
 	}
 	public boolean hasRank(String name) {
-		try {
-			ResultSet rs = select("select name from ranks where name = ?",
+		return contains("select name from ranks where name = ?",
 					name.toLowerCase());
-			if (rs.next()) {
-				endQuery();
-				return true;
-			}
-
-		} catch (Exception e) {
-		}
-		return false;
 	}
 	
 	

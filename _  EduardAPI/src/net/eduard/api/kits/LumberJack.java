@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.ItemAPI;
 
-public class LumberJack extends Kit {
+public class LumberJack extends Ability {
 	public LumberJack() {
 		setIcon(Material.WOOD_AXE, "§fQuebre uma arvore de uma só vez");
 		add(Material.WOOD_AXE);

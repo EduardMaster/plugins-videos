@@ -1,6 +1,5 @@
 package net.eduard.api;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,68 +34,203 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.config.Configs;
+import net.eduard.api.event.PlayerTargetEvent;
+import net.eduard.api.event.ScoreUpdateEvent;
+import net.eduard.api.event.TagUpdateEvent;
 import net.eduard.api.game.ChatChannel;
+import net.eduard.api.game.DisplayBoard;
+import net.eduard.api.game.EmptyWorldGenerator;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.gui.Slot;
-import net.eduard.api.manager.Arena;
+import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
+import net.eduard.api.server.Arena;
 import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
 import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.StorageAPI;
+import net.eduard.api.setup.StorageAPI.FakeOfflinePlayer;
+import net.eduard.api.setup.VaultAPI;
 import net.eduard.api.setup.WorldAPI;
-import net.eduard.api.util.EmptyWorld;
-import net.eduard.api.util.FakeOfflinePlayer;
 
+/**
+ * API principal da EduardAPI contendo muitos codigos bons e utilitarios Boolean
+ * = Teste
+ * 
+ * @author Eduard
+ *
+ */
 @SuppressWarnings("unchecked")
 public class API {
-
+	/**
+	 * Mapa de Arenas dos Jogadores
+	 */
+	public static Map<Player, Arena> MAPS = new HashMap<>();
+	private final static API INSTANCE = new API();
+	/**
+	 * Mapa de Arenas registradas
+	 */
+	public static Map<String, Arena> SCHEMATICS = new HashMap<>();
+	/**
+	 * Mapa das posições 1 dos jogadores
+	 */
+	public static Map<Player, Location> POSITION1 = new HashMap<>();
+	/**
+	 * Mapa das posições 2 dos jogadores
+	 */
+	public static Map<Player, Location> POSITION2 = new HashMap<>();
+	/**
+	 * Som do rosnar do gato
+	 */
 	public static final Sounds ROSNAR = Sounds.create(Sound.CAT_PURR);
 
+	/**
+	 * Mapa contendo todos os Canais de Chat
+	 */
 	public static Map<String, ChatChannel> CHATS = new HashMap<>();
-	public static ChatChannel CHAT;
-	public static boolean CUSTOM_CHAT = false;
-	public static String ONLY_PLAYER = "§cApenas jogadores pode fazer este comando!";
-	public static String WORLD_NOT_EXISTS = "§cEste mundo $world não existe!";
-	public static String PLAYER_NOT_EXISTS = "§cEste jogador $player não existe!";
-	public static String PLUGIN_NOT_EXITS = "§cEste plugin $plugin não exite!";
-	public static String NO_PERMISSION = "§cVoce não tem permissão para usar este comando!";
-	public static String ON_JOIN = "§6O jogador $player entrou no Jogo!";
-	public static String ON_QUIT = "§6O jogador $player saiu no Jogo!";
-	public static String USAGE = "§FDigite: §c";
+	/**
+	 * Mapa contendo todas Scoreboards dos Jogadores
+	 */
+	public static Map<Player, DisplayBoard> SCORES = new HashMap<>();
+	public static List<String> GROUPS_TAGS = new ArrayList<>();
+	public static Map<Player, Tag> TAGS = new HashMap<>();
 
+	public static Config MAPS_CONFIG;
+	/**
+	 * Ligar Sistema de Scoreboard
+	 */
+	public static boolean SCORE_ENABLED = false;
+	/**
+	 * Ligar Sistema de Tag
+	 */
+	public static boolean TAG_ENABLED = false;
+	/**
+	 * Score base
+	 */
+	public static DisplayBoard SCORE;
+	/**
+	 * Chat local
+	 */
+	public static ChatChannel CHAT;
+	/**
+	 * Ligar Sistema de Chat
+	 */
+	public static boolean CUSTOM_CHAT = false;
+	/**
+	 * Mensagem de quando console digita um comando
+	 */
+	public static String ONLY_PLAYER = "§cApenas jogadores pode fazer este comando!";
+	/**
+	 * Mensagem de quando o Mundo é invalido
+	 */
+	public static String WORLD_NOT_EXISTS = "§cEste mundo $world não existe!";
+	/**
+	 * Mensagem de quando o jogador é invalido
+	 */
+	public static String PLAYER_NOT_EXISTS = "§cEste jogador $player não existe!";
+	/**
+	 * Mensagem de quando plugin é invalido
+	 */
+	public static String PLUGIN_NOT_EXITS = "§cEste plugin $plugin não exite!";
+	/**
+	 * Mensagem de quando não tem permissão
+	 */
+	public static String NO_PERMISSION = "§cVoce não tem permissão para usar este comando!";
+	/**
+	 * Mensagem de quando Entrar no Servidor
+	 */
+	public static String ON_JOIN = "§6O jogador $player entrou no Jogo!";
+	/**
+	 * Mensagem de quando Sair do Servidor
+	 */
+	public static String ON_QUIT = "§6O jogador $player saiu no Jogo!";
+	/**
+	 * Prefixo de Ajuda dos Comandos
+	 */
+	public static String USAGE = "§FDigite: §c";
+	/**
+	 * Tag do Servidor
+	 */
 	public static String SERVER_TAG = "§b§lEduardAPI ";
+	/**
+	 * Lista de Comandos para efeito Positivo
+	 */
 	public static List<String> COMMANDS_ON = new ArrayList<>(
 			Arrays.asList("on", "ativar"));
+	/**
+	 * Lista de Comandos para efeito Negativo
+	 */
 	public static List<String> COMMANDS_OFF = new ArrayList<>(
 			Arrays.asList("off", "desativar"));
+	/**
+	 * Som para o Teleporte
+	 */
 	public static Sounds SOUND_TELEPORT = Sounds
 			.create(Sound.ENDERMAN_TELEPORT);
+	/**
+	 * Som para algum sucesso
+	 */
 	public static Sounds SOUND_SUCCESS = Sounds.create(Sound.LEVEL_UP);
+	/**
+	 * Som para algum erro
+	 */
 	public static Sounds SOUND_ERROR = Sounds.create(Sound.NOTE_BASS_DRUM);
+	/**
+	 * Desativar mensagem de morte
+	 */
 	public static boolean NO_DEATH_MESSAGE = true;
+	/**
+	 * Desativar mensagem de entrada
+	 */
 	public static boolean NO_JOIN_MESSAGE = true;
+	/**
+	 * Desativar mensagem de saida
+	 */
 	public static boolean NO_QUIT_MESSAGE = true;
+
+	/**
+	 * Velocidade minima de corrida
+	 */
 	public static double MIN_WALK_SPEED = 0.2;
+	/**
+	 * Velocidade minima de voo
+	 */
 	public static double MIN_FLY_SPEED = 0.1;
+	/**
+	 * Ligar sistema de Respawn Automatico
+	 */
 	public static boolean AUTO_RESPAWN = true;
+	/**
+	 * Ligar sistema de Chat para o Spigot
+	 */
 	public static boolean CHAT_SPIGOT = false;
-	public static Map<Player, Arena> MAPS = new HashMap<>();
-	public static Map<String, Arena> SCHEMATICS = new HashMap<>();
-	public static Map<Player, Location> POSITION1 = new HashMap<>();
-	public static Map<Player, Location> POSITION2 = new HashMap<>();
-	public static Manager TIME;
+
+	/**
+	 * Controlador de Tempo da API
+	 */
+	public static TimeManager TIME;
+	/**
+	 * Plugin da API
+	 */
 	public static JavaPlugin PLUGIN;
+	/**
+	 * Mapa dos Comandos do Servidor
+	 */
 	private static Map<String, Command> commands = new HashMap<>();
 
+	/**
+	 * Ligando algumas coisas
+	 */
 	static {
 		try {
 			PLUGIN = JavaPlugin.getProvidingPlugin(API.class);
-			TIME = new Manager(PLUGIN);
+			TIME = new TimeManager(PLUGIN);
+			MAPS_CONFIG = new Config(PLUGIN,"maps.yml");
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		try {
 			Object map = RexAPI.getValue(Bukkit.getServer().getPluginManager(),
@@ -109,49 +243,129 @@ public class API {
 		}
 
 	}
-	@SafeVarargs
-	public static void commands(ConfigSection section, CMD... cmds) {
-		for (CMD cmd : cmds) {
+	public static void setScore(Player player, DisplayBoard score) {
+		SCORES.put(player, score);
+		score.apply(player);
+	}
+	public static DisplayBoard getScore(Player player) {
+		return SCORES.get(player);
+
+	}
+
+	public static Tag getTag(Player player) {
+		return TAGS.get(player);
+	}
+
+	public static void resetTag(Player player) {
+		setTag(player, "");
+	}
+
+	public static void setTag(Player player, String prefix) {
+		setTag(player, prefix, "");
+	}
+
+	public static void setTag(Player player, String prefix, String suffix) {
+		setTag(player, new Tag(prefix, suffix));
+	}
+
+	public static void setTag(Player player, Tag tag) {
+		TAGS.put(player, tag);
+
+	}
+
+	public static void updateTagsScores() {
+		if (SCORE_ENABLED) {
+
 			try {
-
-				String name = cmd.getName();
-				if (section != null) {
-					if (section.contains(name)) {
-						cmd = (CMD) section.get(name);
-
+				for (Entry<Player, DisplayBoard> map : SCORES.entrySet()) {
+					DisplayBoard score = map.getValue();
+					Player player = map.getKey();
+					ScoreUpdateEvent event = new ScoreUpdateEvent(player, score);
+					if (!event.isCancelled()) {
+						score.update(player);	
 					}
-
-				}
-				cmd.register();
-				if (section != null) {
-					section.add(name, cmd);
-
 				}
 			} catch (Exception e) {
-				ExtraAPI.consoleMessage(cmd.getName());
+				Bukkit.getLogger().info(
+						"Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
 			}
+		}
+		if (TAG_ENABLED) {
+			Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
+
+			for (Player p : API.getPlayers()) {
+				Scoreboard score = p.getScoreboard();
+				if (score == null) {
+					p.setScoreboard(main);
+					score = main;
+					continue;
+				}
+				updateTags(score);
+
+			}
+			updateTags(main);
 		}
 	}
+	public static void updateTargets() {
+		for (Player p : API.getPlayers()) {
 
-	public static void loadMaps() {
-		Configs cf = new Configs("Maps/");
-		try {
-			cf.getFile().mkdirs();
-			for (File f : cf.getFile().listFiles()) {
-				SCHEMATICS.put(f.getName().replace(".map", ""), Arena.load(f));
-			}
-		} catch (Exception e) {
+			PlayerTargetEvent event = new PlayerTargetEvent(p,
+					GameAPI.getTarget(p,
+							GameAPI.getPlayerAtRange(p.getLocation(), 100)));
+			API.callEvent(event);
+
 		}
 	}
+	@SuppressWarnings("deprecation")
+	public static void updateTags(Scoreboard score) {
+		for (Entry<Player, Tag> map : TAGS.entrySet()) {
+			Tag tag = map.getValue();
+			Player player = map.getKey();
+			if (player == null)
+				continue;
+			String name = ExtraAPI.getText(tag.getRank() + player.getName());
+			Team team = score.getTeam(name);
+			if (team == null)
+				team = score.registerNewTeam(name);
+			TagUpdateEvent event = new TagUpdateEvent(tag,player);
+			API.callEvent(event);
+			if (!event.isCancelled())continue;
+			team.setPrefix(
+					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getPrefix())));
+			team.setSuffix(
+					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getSuffix())));
+			if (!team.hasPlayer(player))
+				team.addPlayer(player);
 
-	public static void saveMaps() {
-		try {
-			for (Entry<String, Arena> map : SCHEMATICS.entrySet()) {
-				map.getValue().save(new File(PLUGIN.getDataFolder(),
-						"Maps/" + map.getKey() + ".map"));
-			}
-		} catch (Exception e) {
 		}
+	}
+	public static void updateScoreboard(Player player) {
+		getScore(player).update(player);
+	}
+	public static void updateTagByRank(Player player) {
+		String group = VaultAPI.getPermission().getPrimaryGroup(player);
+		String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
+		String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
+		int id = 0;
+		for (String rank : GROUPS_TAGS) {
+			if (rank.equalsIgnoreCase(group)) {
+				Tag tag = new Tag(prefix, suffix);
+				tag.setName(player.getName());
+				tag.setRank(id);
+				setTag(player, tag);
+				break;
+			}
+			id++;
+		}
+
+	}
+
+	public static void removeScore(Player player) {
+		player.setScoreboard(API.getMainScoreboard());
+		TAGS.remove(player);
+	}
+	public static void removeTag(Player player) {
+		TAGS.remove(player);
 	}
 
 	public static Map<String, Command> getCommands() {
@@ -165,9 +379,6 @@ public class API {
 		cmd.setPermissionMessage(
 				API.NO_PERMISSION.replace("$permission", cmd.getPermission()));
 		return cmd;
-	}
-	public static void setSlot(Inventory inventory, Slot slot) {
-		inventory.setItem(slot.getSlot(), slot.getItem());
 	}
 
 	public static PluginCommand command(String commandName,
@@ -273,10 +484,33 @@ public class API {
 		return true;
 
 	}
+	@SafeVarargs
+	public static void commands(ConfigSection section, CMD... cmds) {
+		for (CMD cmd : cmds) {
+			try {
 
+				String name = cmd.getName();
+				if (section != null) {
+					if (section.contains(name)) {
+						cmd = (CMD) section.get(name);
+
+					}
+
+				}
+				cmd.register();
+				if (section != null) {
+					section.add(name, cmd);
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	public static World newEmptyWorld(String worldName) {
-		World world = Bukkit.createWorld(new WorldCreator(worldName)
-				.generateStructures(false).generator(new EmptyWorld()));
+		World world = Bukkit.createWorld(
+				new WorldCreator(worldName).generateStructures(false)
+						.generator(new EmptyWorldGenerator()));
 		world.getBlockAt(100, 100, 100).setType(Material.GLASS);
 		world.setSpawnLocation(100, 101, 100);
 		return world;
@@ -377,21 +611,6 @@ public class API {
 
 	}
 
-	public static void resetScoreboards() {
-
-		for (Team teams : getMainScoreboard().getTeams()) {
-			teams.unregister();
-		}
-		for (Objective objective : getMainScoreboard().getObjectives()) {
-			objective.unregister();
-		}
-		for (Player player : getPlayers()) {
-			player.setScoreboard(getMainScoreboard());
-			player.setMaxHealth(20);
-			player.setHealth(20);
-			player.setHealthScaled(false);
-		}
-	}
 
 	public static void addPermission(Player p, String permission) {
 		p.addAttachment(API.PLUGIN, permission, true);
@@ -491,6 +710,32 @@ public class API {
 	}
 	public static void runCommand(String command) {
 		ExtraAPI.runCommand(command);
+	}
+	
+	public static void loadMaps() {
+		if (MAPS_CONFIG.contains("MAPS")) {
+
+			try {
+				StorageAPI.restoreField(INSTANCE,
+						MAPS_CONFIG.getSection("MAPS").toMap(),
+						RexAPI.getField(INSTANCE, "MAPS"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+	public static void saveMaps() {
+
+		try {
+			Object value = StorageAPI.storeField(INSTANCE,
+					RexAPI.getField(INSTANCE, "MAPS"));
+			MAPS_CONFIG.set("MAPS", value);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		MAPS_CONFIG.saveConfig();
 	}
 
 }

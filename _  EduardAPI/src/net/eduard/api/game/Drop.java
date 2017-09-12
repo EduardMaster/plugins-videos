@@ -10,16 +10,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.gui.DropItem;
-import net.eduard.api.util.Save;
+import net.eduard.api.manager.EventsManager;
 
-public class Drop implements Save,Listener {
+public class Drop extends EventsManager{
 	
 	public static final Map<World, Map<EntityType, Drop>> ALL_DROPS = new HashMap<>();
 
@@ -70,12 +67,12 @@ public class Drop implements Save,Listener {
 
 	private int maxXp;
 
-	private List<DropItem> drops=new ArrayList<>();
+	private List<ItemRandom> drops=new ArrayList<>();
 
 	public Drop() {
 	}
 
-	public Drop(boolean enable, boolean drop, int min, int max, List<DropItem> drops) {
+	public Drop(boolean enable, boolean drop, int min, int max, List<ItemRandom> drops) {
 		setEnable(enable);
 		setNormalDrops(drop);
 		setMinXp(min);
@@ -96,7 +93,7 @@ public class Drop implements Save,Listener {
 				e.getDrops().clear();
 			}
 			e.setDroppedExp(drop.getRandomXp());
-			for (DropItem itemDrop : drop.getDrops()) {
+			for (ItemRandom itemDrop : drop.getDrops()) {
 				ItemStack item = itemDrop.create();
 				e.getDrops().add(item);
 			}
@@ -104,19 +101,11 @@ public class Drop implements Save,Listener {
 
 	}
 
-	@Override
-	public Object get(ConfigSection section) {
-		drops = new ArrayList<>();
-		for (ConfigSection sec : section.getSection("drops").getValues()) {
-			drops.add((DropItem) sec.getValue());
-		}
-		return null;
-	}
 
 	/*
 	 * Aew
 	 */
-	public List<DropItem> getDrops() {
+	public List<ItemRandom> getDrops() {
 
 		return drops;
 	}
@@ -146,12 +135,8 @@ public class Drop implements Save,Listener {
 		return normalDrops;
 	}
 
-	@Override
-	public void save(ConfigSection section, Object value) {
 
-	}
-
-	public void setDrops(List<DropItem> drops) {
+	public void setDrops(List<ItemRandom> drops) {
 
 		this.drops = drops;
 	}
@@ -174,6 +159,18 @@ public class Drop implements Save,Listener {
 	public void setNormalDrops(boolean normalDrops) {
 
 		this.normalDrops = normalDrops;
+	}
+
+	@Override
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

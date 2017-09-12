@@ -3,19 +3,19 @@ package net.eduard.api.kits;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 
 
-public class ForceField extends Kit{
+public class ForceField extends Ability{
 	
 	@Override
 	public void run() {
@@ -49,32 +49,26 @@ public class ForceField extends Kit{
 	public ForceField() {
 		setIcon(Material.NETHER_FENCE, "§fAtive Force Field nos Inimigos");
 		add(Material.NETHER_FENCE);
-		setMessage("§6Force field desativado!");
+		message("§6Force field desativado!");
 		setTime(30);
-		setClick(new Click(Material.NETHER_FENCE, new ClickEffect() {
+		setClick(new PlayerClick(Material.NETHER_FENCE,new PlayerClickEffect() {
 			
 			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)){
-					if (cooldown(p)){
-						force.add(p);
+			public void onClick(Player player, Block block, ItemStack item) {
+				// TODO Auto-generated method stub
+				if (hasKit(player)){
+					if (cooldown(player)){
+						force.add(player);
 						delay(effectSeconds*20, new Runnable() {
 							
 							@Override
 							public void run() {
-								force.remove(p);
-								sendMessage(p);
+								force.remove(player);
+								sendMessage(player);
 							}
 						});
 					}
 				}
-			}
-			
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		}));
 	}

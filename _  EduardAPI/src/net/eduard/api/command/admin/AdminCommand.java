@@ -9,25 +9,28 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Jump;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
+import net.eduard.api.game.PlayerClickEntity;
+import net.eduard.api.game.PlayerClickEntityEffect;
+import net.eduard.api.game.Slot;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Slot;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
@@ -43,8 +46,8 @@ public class AdminCommand extends CMD {
 		players.add(player);
 
 		Location loc = player.getLocation();
-		loc  = loc.add(0, 10, 0);
-	
+		loc = loc.add(0, 10, 0);
+
 		player.playSound(player.getLocation(), Sound.WITHER_SPAWN, 2, 1);
 		loc.clone().add(0, 0, 0).getBlock().setType(Material.BEDROCK);
 		loc.clone().add(0, 3, 0).getBlock().setType(Material.BEDROCK);
@@ -105,7 +108,7 @@ public class AdminCommand extends CMD {
 		testInfo.give(inv);
 		testAntKB.give(inv);
 		testPrison.give(inv);
-		
+
 		player.setGameMode(GameMode.CREATIVE);
 
 	}
@@ -115,128 +118,109 @@ public class AdminCommand extends CMD {
 		player.setGameMode(GameMode.SURVIVAL);
 		players.remove(player);
 	}
-	
-	
-	
-	
+
 	@Override
 	public void register(Plugin plugin) {
-		new Click(testNoFall.getItem(), new ClickEffect() {
+		new PlayerClickEntity(testNoFall.getItem(), new PlayerClickEntityEffect() {
 
 			@Override
-			public void effect(PlayerInteractEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				Player p = e.getPlayer();
-				if (players.contains(p)) {
-					jumpEffect.create(e.getRightClicked());
+			public void onClickAtEntity(Player player, Entity entity,
+					ItemStack item) {
+				if (players.contains(player)) {
+					jumpEffect.create(entity);
 				}
 			}
 		}).register(plugin);
-		new Click(testFF.getItem(), new ClickEffect() {
-
+		new PlayerClick(testFF.getItem(), new PlayerClickEffect() {
 			@Override
-			public void effect(PlayerInteractEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				Player p = e.getPlayer();
-				if (players.contains(p)) {
-					GameAPI.show(p);
-					GameAPI.makeInvunerable(p, 1);
-					API.chat(p,"§6Troca rapida ativada!");
+			public void onClick(Player player, Block block, ItemStack item) {
+				if (players.contains(player)) {
+					GameAPI.show(player);
+					GameAPI.makeInvunerable(player, 1);
+					API.chat(player, "§6Troca rapida ativada!");
 					API.TIME.delay(20, new Runnable() {
 
 						@Override
 						public void run() {
-							GameAPI.hide(p);
-							API.chat(p,"§6Troca rapida desativada!");
+							GameAPI.hide(player);
+							API.chat(player, "§6Troca rapida desativada!");
 						}
 					});
 				}
 			}
+
 		}).register(plugin);
-		new Click(testAutoSoup.getItem(), new ClickEffect() {
+		new PlayerClickEntity(testAutoSoup.getItem(), new PlayerClickEntityEffect() {
 
 			@Override
-			public void effect(PlayerInteractEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				Player p = e.getPlayer();
-				if (players.contains(p)) {
-					if (e.getRightClicked() instanceof Player) {
-						Player target = (Player) e.getRightClicked();
-						p.openInventory(target.getInventory());
+			public void onClickAtEntity(Player player, Entity entity,
+					ItemStack item) {
+				if (players.contains(player)) {
+					if (entity instanceof Player) {
+						Player target = (Player) entity;
+						player.openInventory(target.getInventory());
 
 					}
 				}
+				
 			}
 		}).register(plugin);
-		new Click(testInfo.getItem(), new ClickEffect() {
+		new PlayerClickEntity(testInfo.getItem(), new PlayerClickEntityEffect() {
+
 
 			@Override
-			public void effect(PlayerInteractEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				Player p = e.getPlayer();
-				if (players.contains(p)) {
-					if (e.getRightClicked() instanceof Player) {
-						Player target = (Player) e.getRightClicked();
-						p.sendMessage("§6Informações do §e" + target.getName());
-						p.sendMessage("§aGamemode: §2" + target.getGameMode());
-						p.sendMessage("§aKills: §2"
+			public void onClickAtEntity(Player player, Entity entity,
+					ItemStack item) {
+				if (players.contains(player)) {
+					if (entity instanceof Player) {
+						Player target = (Player) entity;
+						player.sendMessage("§6Informações do §e" + target.getName());
+						player.sendMessage("§aGamemode: §2" + target.getGameMode());
+						player.sendMessage("§aKills: §2"
 								+ target.getStatistic(Statistic.PLAYER_KILLS));
-						p.sendMessage("§aDeaths: §2"
+						player.sendMessage("§aDeaths: §2"
 								+ target.getStatistic(Statistic.DEATHS));
-						p.sendMessage("§aIP: §2" + RexAPI.getIp(p));
+						player.sendMessage("§aIP: §2" + RexAPI.getIp(player));
 						if (VaultAPI.hasVault() && VaultAPI.hasEconomy()) {
-							p.sendMessage("§aMoney: §2"
-									+ VaultAPI.getEconomy().getBalance(p));
+							player.sendMessage("§aMoney: §2"
+									+ VaultAPI.getEconomy().getBalance(player));
 						}
 
 					}
 				}
+				
 			}
 		}).register(plugin);
-		new Click(testPrison.getItem(), new ClickEffect() {
+		new PlayerClickEntity(testPrison.getItem(), new PlayerClickEntityEffect() {
 
 			@Override
-			public void effect(PlayerInteractEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				Player p = e.getPlayer();
-				if (players.contains(p)) {
-					if (e.getRightClicked() instanceof Player) {
-						Player target = (Player) e.getRightClicked();
+			public void onClickAtEntity(Player player, Entity entity,
+					ItemStack item) {
+				if (players.contains(player)) {
+					if (entity instanceof Player) {
+						Player target = (Player) entity;
 						Location loc = target.getLocation();
-						loc.clone().add(0, 10, 0).getBlock().setType(Material.BEDROCK);
-						loc.clone().add(0, 11, 1).getBlock().setType(Material.BEDROCK);
-						loc.clone().add(0, 11, -1).getBlock().setType(Material.BEDROCK);
-						loc.clone().add(1, 11, 0).getBlock().setType(Material.BEDROCK);
-						loc.clone().add(-1, 11, 0).getBlock().setType(Material.BEDROCK);
-						loc.clone().add(0, 13, 0).getBlock().setType(Material.BEDROCK);
-						target.teleport(loc.add(0,11,0));
+						loc.clone().add(0, 10, 0).getBlock()
+								.setType(Material.BEDROCK);
+						loc.clone().add(0, 11, 1).getBlock()
+								.setType(Material.BEDROCK);
+						loc.clone().add(0, 11, -1).getBlock()
+								.setType(Material.BEDROCK);
+						loc.clone().add(1, 11, 0).getBlock()
+								.setType(Material.BEDROCK);
+						loc.clone().add(-1, 11, 0).getBlock()
+								.setType(Material.BEDROCK);
+						loc.clone().add(0, 13, 0).getBlock()
+								.setType(Material.BEDROCK);
+						target.teleport(loc.add(0, 11, 0));
 
 					}
 				}
+				
 			}
 		}).register(plugin);
 
-		 super.register(plugin);
+		super.register(plugin);
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

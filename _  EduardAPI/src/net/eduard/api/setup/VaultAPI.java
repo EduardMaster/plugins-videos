@@ -7,49 +7,86 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 /**
- * API do Vault com um formato mais simples para Utilizar<br>
+ * API para o utilização do Vault com um formato mais simples de entender <br>
+ * 
  * @author Eduard
  *
  */
 public final class VaultAPI {
 
 	/**
-	 * Central de controle de permissão
+	 * Controle de permissões
 	 */
 	private static Permission permission = null;
 
 	/**
-	 * Central de controle
+	 * Controle da Economia
 	 */
 	private static Economy economy = null;
 
+	/**
+	 * Controle do Chat (Bate Papo do Jogo)
+	 */
 	private static Chat chat = null;
 
+	/**
+	 * Pega o Controlador das Permissões
+	 * 
+	 * @return Controlador
+	 */
 	public static Permission getPermission() {
 		return permission;
 	}
-
+	/**
+	 * Pega o Controlador das Chat
+	 * 
+	 * @return Controlador
+	 */
 	public static Chat getChat() {
 		return chat;
 	}
-
+	/**
+	 * Pega o Controlador da Economia
+	 * 
+	 * @return Controlador
+	 */
 	public static Economy getEconomy() {
 		return economy;
 	}
-
+	/**
+	 * Testa se o Vault esta instalado no Servidor
+	 * 
+	 * @return Se sim ou não
+	 */
 	public static boolean hasVault() {
 		return Bukkit.getPluginManager().getPlugin("Vault") != null;
 	}
+	/**
+	 * Testa se tem algum plugin de Economia
+	 * 
+	 * @return Se sim ou não
+	 */
 	public static boolean hasEconomy() {
 		return economy != null;
 	}
+	/**
+	 * Testa se tem algum plugin de Chat
+	 * @return Se sim ou não
+	 */
 	public static boolean hasChat() {
 		return chat != null;
 	}
+	/**
+	 * Teste se tem plugin de permissões
+	 * @return Se sim ou não
+	 */
 	public static boolean hasPermission() {
 		return permission != null;
 	}
-
+	/**
+	 * Tenta Ativar o Sistema de Chat
+	 * @return Se ativou ou não
+	 */
 	private static boolean setupChat() {
 
 		RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer()
@@ -61,7 +98,10 @@ public final class VaultAPI {
 
 		return (chat != null);
 	}
-
+	/**
+	 * Tenta Ativar o Sistema de Economia
+	 * @return Se ativou ou não
+	 */
 	private static boolean setupEconomy() {
 
 		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer()
@@ -70,11 +110,13 @@ public final class VaultAPI {
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 		}
-		
 
 		return (economy != null);
 	}
-
+	/**
+	 * Tenta ativar o Sistema de Permissões
+	 * @return Se Ativou ou não
+	 */
 	private static boolean setupPermissions() {
 
 		RegisteredServiceProvider<Permission> permissionProvider = Bukkit
@@ -85,17 +127,21 @@ public final class VaultAPI {
 		}
 		return (permission != null);
 	}
-
+	/**
+	 * Força o ativamento do Vault
+	 */
 	public static void setupVault() {
 
 		setupEconomy();
 		setupChat();
 		setupPermissions();
 	}
-	
-	static{
-		if (hasVault()){
+	/**
+	 * Se tiver o vault ele é ativado automaticamente
+	 */
+	static {
+		if (hasVault()) {
 			setupVault();
-		}	
+		}
 	}
 }

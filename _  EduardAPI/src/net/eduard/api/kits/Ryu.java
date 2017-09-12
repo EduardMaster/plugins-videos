@@ -7,19 +7,19 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 
-public class Ryu extends Kit {
+public class Ryu extends Ability {
 
 	public static List<Snowball> inEffect = new ArrayList<>();
 
@@ -28,38 +28,32 @@ public class Ryu extends Kit {
 	public Ryu() {
 		setIcon(Material.BEACON, "§fAtire seu Haduken");
 		add(Material.DIAMOND_BLOCK);
-		
-		setClick(new Click(Material.DIAMOND_BLOCK, new ClickEffect() {
-
+		setClick(new PlayerClick(Material.DIAMOND_BLOCK,new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (cooldown(p)) {
+			public void onClick(Player player, Block block, ItemStack item) {
+				// TODO Auto-generated method stub
+				if (hasKit(player)) {
+					if (cooldown(player)) {
 
-						Location location = p.getEyeLocation();
+						Location location = player.getEyeLocation();
 						BlockIterator blocksToAdd = new BlockIterator(location,
 								0.0D, 40);
 						while (blocksToAdd.hasNext()) {
 							Location blockToAdd = blocksToAdd.next()
 									.getLocation();
-							p.getWorld().playEffect(blockToAdd,
+							player.getWorld().playEffect(blockToAdd,
 									Effect.STEP_SOUND, Material.DIAMOND_BLOCK,
 									20);
-							p.playSound(blockToAdd, Sound.IRONGOLEM_THROW, 3.0F,
+							player.playSound(blockToAdd, Sound.IRONGOLEM_THROW, 3.0F,
 									3.0F);
 						}
-						Snowball project = p.launchProjectile(Snowball.class);
+						Snowball project = player.launchProjectile(Snowball.class);
 						inEffect.add(project);
-						project.setVelocity(p.getLocation().getDirection()
+						project.setVelocity(player.getLocation().getDirection()
 								.normalize().multiply(10));
 					}
 				}
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
 
 			}
 		}));

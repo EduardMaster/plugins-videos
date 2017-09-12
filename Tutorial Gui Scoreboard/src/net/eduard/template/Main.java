@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.config.Configs;
+import net.eduard.api.config.MasterConfig;
 import net.eduard.api.manager.Manager;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.TemplateEvent;
@@ -13,13 +13,13 @@ import net.eduard.template.event.TemplateEvent;
 public class Main extends JavaPlugin {
 	private static Main plugin;
 	private static Config config;
-	private static Configs messages;
+	private static Config messages;
 	private static Manager time;
 	
 	public static Main getInstance(){
 		return plugin;
 	}
-	public static Configs getMessages(){
+	public static Config getMessages(){
 		return messages;
 	}
 	public static Config getConfigs(){
@@ -33,8 +33,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		config = new Config(this);
 		config.saveConfig();
-		messages = new Configs("messages.yml");
-		messages.saveDefaultConfig();
+		messages = new Config("messages.yml");
 		time = new Manager(this);
 		API.event(new net.eduard.template.event.Teste());
 		commands();

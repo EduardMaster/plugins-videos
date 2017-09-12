@@ -1,46 +1,39 @@
 package net.eduard.api.kits;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 
-public class Bomber extends Kit {
+public class Bomber extends Ability {
 
 	public Bomber() {
 		setIcon(Material.TNT, "§fAtire bombas nos inimigos");
 		add(Material.TNT);
-		setClick(new Click(Material.TNT, new ClickEffect() {
-
+		setClick(new PlayerClick(Material.TNT, new PlayerClickEffect() {
+			
 			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (cooldown(p)) {
-						TNTPrimed tnt = p.getWorld()
-								.spawn(p.getLocation(), TNTPrimed.class);
-						tnt.setVelocity(p.getEyeLocation().getDirection()
+			public void onClick(Player player, Block block, ItemStack item) {
+				// TODO Auto-generated method stub
+				if (hasKit(player)) {
+					if (cooldown(player)) {
+						TNTPrimed tnt = player.getWorld()
+								.spawn(player.getLocation(), TNTPrimed.class);
+						tnt.setVelocity(player.getEyeLocation().getDirection()
 								.multiply(2.5D));
 						tnt.setFuseTicks(40);
-						p.getLocation().getWorld()
-								.createExplosion(p.getLocation(), 4.0F);
+						player.getLocation().getWorld()
+								.createExplosion(player.getLocation(), 4.0F);
 					}
 				}
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 		}));
 	}

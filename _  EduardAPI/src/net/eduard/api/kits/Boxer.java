@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.ItemAPI;
 
-public class Boxer extends Kit {
+public class Boxer extends Ability {
 	public double damageReduction = 1;
 	public double damage = 4;
 

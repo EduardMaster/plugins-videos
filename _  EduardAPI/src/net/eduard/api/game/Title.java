@@ -1,12 +1,14 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.entity.Player;
 
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.setup.RexAPI;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Copyable;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Title implements Save, Cloneable {
+public class Title implements Storable , Copyable {
 
 	private int fadeIn;
 
@@ -21,18 +23,16 @@ public class Title implements Save, Cloneable {
 		return title;
 	}
 
-	public Title setTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
-		return this;
 	}
 
 	public String getSubTitle() {
 		return subTitle;
 	}
 
-	public Title setSubTitle(String subTitle) {
+	public void setSubTitle(String subTitle) {
 		this.subTitle = subTitle;
-		return this;
 	}
 
 	public Title() {
@@ -68,40 +68,31 @@ public class Title implements Save, Cloneable {
 		return stay;
 	}
 
-	public Title setFadeIn(int fadeIn) {
+	public void setFadeIn(int fadeIn) {
 
 		this.fadeIn = fadeIn;
-		return this;
 	}
 
-	public Title setFadeOut(int fadeOut) {
+	public void setFadeOut(int fadeOut) {
 
 		this.fadeOut = fadeOut;
-		return this;
 	}
 
-	public Title setStay(int stay) {
+	public void setStay(int stay) {
 
 		this.stay = stay;
-		return this;
 	}
 
 	@Override
-	public void save(ConfigSection section, Object value) {
-
-	}
-
-	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public Title clone() {
-		try {
-			return (Title) super.clone();
-		} catch (Exception e) {
-		}
-		return null;
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

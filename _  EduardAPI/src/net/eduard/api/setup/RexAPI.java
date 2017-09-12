@@ -1,8 +1,5 @@
 package net.eduard.api.setup;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,15 +14,11 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 /**
  * 
- * API de Reflection para Minecraft desenvolvida por Eduard <br>
+ * API de Reflection para Minecraft<br>
  * Array = Vetor -> String[] ou String... <br>
  * Constructor"cons" = Iniciador -> public RexAPI(){}; <br>
  * Parameters = Parametros -> Class[] ou Object[]
@@ -34,8 +27,28 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
  *
  */
 public class RexAPI {
+	/**
+	 * Tipo de geração de Key
+	 * @author Eduard-PC
+	 *
+	 */
 	public enum KeyType {
-		UUID, LETTER, NUMERIC, ALPHANUMERIC;
+		/**
+		 * ID UNICO
+		 */
+		UUID, 
+		/**
+		 * LETRAS
+		 */
+		LETTER, 
+		/**
+		 * NUMEROS
+		 */
+		NUMERIC, 
+		/**
+		 * NUMEROS E LETRAS
+		 */
+		ALPHANUMERIC;
 	}
 
 	public static String mEntityPlayer = "#mEntityPlayer";
@@ -89,7 +102,10 @@ public class RexAPI {
 	public static int getCurrentTick() throws Exception {
 		return (int) RexAPI.getValue(RexAPI.mMinecraftServer, "currentTick");
 	}
-
+	/**
+	 * Pega o TPS do servidor uma expecie de calculador de LAG
+	 * @return TPS em forma de DOUBLE
+	 */
 	public static Double getTPS() {
 		try {
 			return Double.valueOf(
@@ -615,7 +631,11 @@ public class RexAPI {
 		}
 
 	}
-
+	/**
+	 * Cria um texto baseados no Vetor de objetos
+	 * @param objects Vetor de Objetos
+	 * @return Texto
+	 */
 	public static String getText(Object... objects) {
 		StringBuilder builder = new StringBuilder();
 		for (Object object : objects) {
@@ -707,6 +727,10 @@ public class RexAPI {
 		}
 
 	}
+	/**
+	 * Desabilita a Inteligencia da Entidade
+	 * @param entity Entidade
+	 */
 	public static void disableAI(Entity entity) {
 		try {
 			// net.minecraft.server.v1_8_R3.Entity NMS = ((CraftEntity)
@@ -725,10 +749,21 @@ public class RexAPI {
 		}
 
 	}
-	public static String getIp(Player p) {
-		return p.getAddress().getAddress().getHostAddress();
+	/**
+	 * Pega o Ip do Jogador atual
+	 * @param player Jogador
+	 * @return Ip do Jogador
+	 */
+	public static String getIp(Player player) {
+		return player.getAddress().getAddress().getHostAddress();
 	}
 
+	/**
+	 * Gera uma nova Key
+	 * @param type Tipo da Key
+	 * @param maxSize Tamanho da Key
+  	 * @return Key em forma de STRING
+	 */
 	public static String newKey(KeyType type, int maxSize) {
 
 		String key = "";
@@ -768,6 +803,10 @@ public class RexAPI {
 		return key;
 
 	}
+	/**
+	 * Pega o Ip do Coneção do Servidor
+	 * @return Ip do Servidor
+	 */
 	public static String getServerIp() {
 		try {
 			URLConnection connect = new URL("http://checkip.amazonaws.com/")
@@ -788,38 +827,6 @@ public class RexAPI {
 			return ip;
 		}
 	}
-	public static ItemStack[] itemFromBase64(final String data)
-			throws IOException {
-		try {
-			final ByteArrayInputStream inputStream = new ByteArrayInputStream(
-					Base64Coder.decodeLines(data));
-			final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(
-					inputStream);
-			final ItemStack[] stacks = new ItemStack[dataInput.readInt()];
-			for (int i = 0; i < stacks.length; ++i) {
-				stacks[i] = (ItemStack) dataInput.readObject();
-			}
-			dataInput.close();
-			return stacks;
-		} catch (ClassNotFoundException e) {
-			throw new IOException("Não foi possivel retornar os itens", e);
-		}
-	}
-	public static String itemtoBase64(final ItemStack[] contents) {
-		try {
-			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			final BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(
-					outputStream);
-			dataOutput.writeInt(contents.length);
-			for (final ItemStack stack : contents) {
-				dataOutput.writeObject(stack);
-			}
-			dataOutput.close();
-			return Base64Coder.encodeLines(outputStream.toByteArray());
-		} catch (Exception e) {
-			throw new IllegalStateException("Não foi possivel salvar os itens",
-					e);
-		}
-	}
+	
 	
 }

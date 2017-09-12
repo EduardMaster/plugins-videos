@@ -1,12 +1,13 @@
 package net.eduard.api.game;
 
+import java.util.Map;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.config.ConfigSection;
-import net.eduard.api.util.Save;
+import net.eduard.api.setup.StorageAPI.Storable;
 
-public class Jump implements Save {
+public class Jump implements Storable {
 	private boolean withHigh = true;
 	private boolean highFirst;
 	private double force = 2;
@@ -108,13 +109,16 @@ public class Jump implements Save {
 		this.vector = vector;
 	}
 
-	
+
 	@Override
-	public Object get(ConfigSection section) {
+	public Object restore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
-	public void save(ConfigSection section, Object value) {
+	public void store(Map<String, Object> map, Object object) {
+		// TODO Auto-generated method stub
 		
 	}
 

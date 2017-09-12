@@ -11,12 +11,12 @@ import org.bukkit.event.server.PluginDisableEvent;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
+import net.eduard.api.game.Delay;
+import net.eduard.api.game.PlayerEffect;
 import net.eduard.api.game.Title;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.player.Delay;
 import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.RexAPI;
-import net.eduard.api.util.PlayerEffect;
 
 public class WarpCommand extends CMD {
 	public WarpCommand() {

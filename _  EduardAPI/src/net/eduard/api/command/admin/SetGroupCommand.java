@@ -12,13 +12,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.config.ConfigSection;
 import net.eduard.api.game.Title;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.VaultAPI;
-import net.eduard.api.util.Save;
 
-public class SetGroupCommand extends CMD implements Save {
+public class SetGroupCommand extends CMD {
 	public List<String> messages = new ArrayList<>();
 	public Config config = new Config("group.yml");
 	public Title title = new Title(20, 20, 20, "$player", "$group");
@@ -47,7 +45,7 @@ public class SetGroupCommand extends CMD implements Save {
 			String group = args[1];
 			if (API.existsPlayer(sender, name)) {
 				Player target = API.getPlayer(name);
-				Title t = title.clone();
+				Title t = (Title) title.copy();
 				VaultAPI.getPermission().playerAddGroup(target, group);
 				VaultAPI.getPermission().playerRemoveGroup(target, getGroup(target));
 				config.set(target.getUniqueId().toString(), group);
@@ -63,12 +61,6 @@ public class SetGroupCommand extends CMD implements Save {
 			}
 		}
 		return true;
-	}
-	@Override
-	public Object get(ConfigSection section) {
-
-		messages = section.getMessages("messages");
-		return null;
 	}
 	public String getValues(String value, String name, String group) {
 		return value.replace("$player", name).replace("$group", group);

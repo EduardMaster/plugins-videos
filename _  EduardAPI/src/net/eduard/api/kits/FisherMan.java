@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
 
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
 import net.eduard.api.setup.GameAPI;
 
-public class FisherMan extends Kit {
+public class FisherMan extends Ability {
 
 	public FisherMan() {
 		setIcon(Material.FISHING_ROD, "§fPuxe seus inimigos ate voce");

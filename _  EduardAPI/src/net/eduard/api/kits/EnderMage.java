@@ -10,20 +10,19 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.api.API;
-import net.eduard.api.gui.Click;
-import net.eduard.api.gui.ClickEffect;
-import net.eduard.api.gui.ClickType;
-import net.eduard.api.gui.Kit;
+import net.eduard.api.game.Ability;
+import net.eduard.api.game.ClickComparationType;
+import net.eduard.api.game.PlayerClick;
+import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.setup.GameAPI;
 
-public class EnderMage extends Kit {
+public class EnderMage extends Ability {
 
-	public double range =2;
+	public double range = 2;
 	public double high = 100;
 	public int effectSeconds = 5;
 
@@ -31,37 +30,33 @@ public class EnderMage extends Kit {
 		setIcon(Material.ENDER_PORTAL_FRAME, "§fPuxe os seus inimigos");
 		add(Material.ENDER_PORTAL_FRAME);
 		setTime(5);
-		setMessage("§6Voce esta invuneravel por 5 segundos");
-		setClick(new Click(Material.ENDER_PORTAL, new ClickEffect() {
+		message("§6Voce esta invuneravel por 5 segundos");
+		
+		PlayerClick playerClick = new PlayerClick(Material.ACACIA_DOOR, new PlayerClickEffect() {
 
 			@Override
-			public void effect(PlayerInteractEntityEvent e) {
-
-			}
-
-			@Override
-			public void effect(PlayerInteractEvent e) {
-				Player p = e.getPlayer();
-				if (hasKit(p)) {
-					if (noAir(e.getClickedBlock())) {
+			public void onClick(Player player, Block block, ItemStack item) {
+				// TODO Auto-generated method stub
+				if (hasKit(player)) {
+					if (noAir(block)) {
 						return;
 					}
-					e.setCancelled(false);
-					BlockState state = e.getClickedBlock().getState();
+					BlockState state = block.getState();
 					state.getBlock().setType(Material.ENDER_PORTAL_FRAME);
-
-					p.setItemInHand(null);
-					API.TIME.timer(20,new BukkitRunnable() {
+					// e.setCanceled(false);
+					player.setItemInHand(null);
+					API.TIME.timer(20, new BukkitRunnable() {
 						int x = effectSeconds;
 						@Override
 						public void run() {
 							x--;
-							if (check(p, e.getClickedBlock().getLocation()
-									.add(0, 1, 0))) {
+							if (check(player,
+									block.getLocation().add(0, 1, 0))) {
 								x = 0;
 							}
 							if (x == 0) {
-								p.getInventory().addItem(getItems().get(0));
+								player.getInventory()
+										.addItem(getItems().get(0));
 								state.update(true, true);
 								cancel();
 							}
@@ -69,10 +64,10 @@ public class EnderMage extends Kit {
 					});
 
 				}
-
 			}
-
-		}).setType(ClickType.BLOCK));
+		});
+		setClick(playerClick);
+		playerClick.setComparationType(ClickComparationType.ON_BLOCK);
 	}
 
 	public boolean check(Player p, Location teleport) {

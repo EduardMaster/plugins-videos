@@ -11,18 +11,18 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
-import net.eduard.api.gui.Kit;
 import net.eduard.api.setup.WorldAPI;
 
-public class DemoMan extends Kit {
+public class DemoMan extends Ability {
 	
 	public static ArrayList<Location> inEffect = new ArrayList<>();
 
 	public DemoMan() {
 		setIcon(Material.GRAVEL, "§fExploda seus inimigos com armadilhas");
 		add(new ItemStack(Material.GRAVEL, 8));
-		setExplosion(new Explosion(6, false, false));
+		explosion(new Explosion(6, false, false));
 
 	}
 
