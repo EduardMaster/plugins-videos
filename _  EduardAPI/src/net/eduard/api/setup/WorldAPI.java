@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
+
 /**
  * API de controle e manipulação de Mundos e Localizações e Cuboids (Uma expecie de Bloco retangular) 
  * @author Eduard
@@ -126,7 +129,6 @@ public final class WorldAPI {
 					p.kickPlayer("§cRestarting Server!");
 				}
 			}
-
 		}
 		Bukkit.unloadWorld(name, true);
 		deleteFolder(new File(Bukkit.getWorldContainer(), name.toLowerCase()));
@@ -378,6 +380,89 @@ public final class WorldAPI {
 	    return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
 	  }
 
-	
+	  /**
+	   * Gerador de Mundo Vasio
+	   * @author Eduard
+	   *
+	   */
+	  public static class EmptyWorldGenerator extends ChunkGenerator {
+
+	  	@Override
+	  	public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
+	  			ChunkGenerator.BiomeGrid biomeGrid) {
+	  		byte[][] result = new byte[world.getMaxHeight() / 16][];
+	  		return result;
+	  	}
+
+	  	@Override
+	  	public Location getFixedSpawnLocation(World world, Random random) {
+	  		return new Location(world, 100, 100, 100);
+	  	}
+
+	  	public void setBlock(byte[][] result, int x, int y, int z, byte blockID) {
+	  		if (result[(y >> 4)] == null) {
+	  			result[(y >> 4)] = new byte[4096];
+	  		}
+	  		result[(y >> 4)][((y & 0xF) << 8 | z << 4 | x)] = blockID;
+	  	}
+
+	  	@SuppressWarnings("deprecation")
+	  	public byte getId(Material material) {
+	  		return (byte) material.getId();
+	  	}
+
+	  	public byte getId(Material material, short data) {
+	  		return 0;
+	  	}
+
+	  	public void setLayer(byte[][] result, int level, Material material) {
+	  		int x, z;
+	  		for (x = 0; x < 16; x++) {
+	  			for (z = 0; z < 16; z++) {
+	  				setBlock(result, x, level, z, getId(material));
+	  			}
+	  		}
+	  	}
+
+	  	public void setCorner(byte[][] result, int level, Material material) {
+	  		int x, z;
+	  		for (x = 0; x < 16; x++) {
+	  			setBlock(result, x, level, 0, getId(material));
+	  		}
+	  		for (z = 0; z < 16; z++) {
+	  			setBlock(result, 0, level, z, getId(material));
+	  		}
+	  	}
+
+
+	  	public void setLayer(byte[][] result, int minLevel, int maxLevel, Material material) {
+	  		int y;
+	  		for (y = minLevel; y <= maxLevel; y++) {
+	  			setLayer(result, y, material);
+	  		}
+	  	}
+	  }
+
+
+	  /**
+	   * Gerador de Mundo Plano
+	   * @author Eduard
+	   *
+	   */
+	  public static class FlatWorldGenerator extends EmptyWorldGenerator {
+
+	  	@Override
+	  	public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
+	  			ChunkGenerator.BiomeGrid biomeGrid) {
+	  		byte[][] result = new byte[world.getMaxHeight() / 16][];
+	  		setLayer(result, 0, Material.BEDROCK);
+	  		setLayer(result, 1, 3, Material.DIRT);
+	  		setLayer(result, 4, Material.GRASS);
+	  		setCorner(result, 8, Material.DIAMOND_BLOCK);
+	  		return result;
+	  	}
+
+	  }
+
 
 }

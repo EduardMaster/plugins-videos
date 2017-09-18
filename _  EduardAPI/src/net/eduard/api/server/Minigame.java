@@ -11,9 +11,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.api.API;
 import net.eduard.api.event.MinigameEvent;
-import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.manager.EventsManager;
 
-public abstract class Minigame implements Storable{
+public abstract class Minigame extends EventsManager{
 
 	private String name;
 	private Location lobby;

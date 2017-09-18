@@ -16,7 +16,6 @@ public abstract class EduardPlugin extends JavaPlugin {
 		config = new Config(this);
 		messages = new Config(this,"messages.yml");
 		time = new TimeManager(this);
-		
 	}
 	
 	public void save() {

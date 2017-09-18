@@ -5,7 +5,7 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.RefAPI;
 
 public class EnchantGlow extends EnchantmentWrapper {
 
@@ -51,7 +51,7 @@ public class EnchantGlow extends EnchantmentWrapper {
 		if (Enchantment.getByName("Glow") != null)
 			return Enchantment.getByName("Glow");
 		try {
-			RexAPI.setValue(Enchantment.class, "acceptingNew", true);
+			RefAPI.setValue(Enchantment.class, "acceptingNew", true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

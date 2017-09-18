@@ -9,6 +9,11 @@ import org.bukkit.World;
 
 import net.eduard.api.setup.StorageAPI.Storable;
 
+/**
+ * Mapa da Sala
+ * @author Eduard-PC
+ *
+ */
 public class GameMap implements Storable{
 	
 	private String name;

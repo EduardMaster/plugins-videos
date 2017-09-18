@@ -34,7 +34,6 @@ import net.eduard.api.game.Sounds;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.RexAPI;
 import net.eduard.api.setup.VaultAPI;
 
 public class AdminCommand extends CMD {
@@ -180,7 +179,7 @@ public class AdminCommand extends CMD {
 								+ target.getStatistic(Statistic.PLAYER_KILLS));
 						player.sendMessage("§aDeaths: §2"
 								+ target.getStatistic(Statistic.DEATHS));
-						player.sendMessage("§aIP: §2" + RexAPI.getIp(player));
+						player.sendMessage("§aIP: §2" + GameAPI.getIp(player));
 						if (VaultAPI.hasVault() && VaultAPI.hasEconomy()) {
 							player.sendMessage("§aMoney: §2"
 									+ VaultAPI.getEconomy().getBalance(player));

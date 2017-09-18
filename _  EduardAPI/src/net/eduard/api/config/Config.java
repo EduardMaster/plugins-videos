@@ -1,6 +1,7 @@
 package net.eduard.api.config;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +26,7 @@ import net.eduard.api.setup.StorageAPI.Storable;
  * @author Eduard
  *
  */
-public class Config implements Storable{
+public class Config implements Storable {
 
 	public static void saveConfigs() {
 		for (Config config : CONFIGS) {
@@ -56,7 +57,7 @@ public class Config implements Storable{
 	}
 
 	public final static List<Config> CONFIGS = new ArrayList<>();
-	
+
 	private transient ConfigSection root;
 	private transient File file;
 	private transient Plugin plugin;
@@ -102,31 +103,30 @@ public class Config implements Storable{
 			reloadConfig();
 		}
 	}
-	private void saveDefaultFile() {
-		if (plugin.getResource(name) != null) {
-			try {
-//				Files.copy(plugin.getResource(name), file.toPath());
-				plugin.saveResource(name, false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-			
-	}
 	public List<Integer> getIntList(String path) {
 		return root.getIntList(path);
 	}
 	public void saveDefaultConfig() {
-		saveDefaultFile();
+		if (!file.exists()) {
+			try {
+				InputStream is = FileAPI
+						.getResource(plugin.getClass().getClassLoader(), name);
+					FileAPI.copyAsUTF8(is, file);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 	public void saveConfig() {
 		lines.clear();
 		root.save(this, -1);
 		try {
 			if (!FileAPI.isDirectory(file)) {
-				FileAPI.writeLines(file, lines);	
+				FileAPI.writeLines(file, lines);
 			}
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -137,8 +137,8 @@ public class Config implements Storable{
 			if (!file.exists()) {
 				if (FileAPI.isDirectory(file)) {
 					file.mkdirs();
-				}else {
-					saveDefaultFile();
+				} else {
+					saveDefaultConfig();
 				}
 
 			}
@@ -151,7 +151,6 @@ public class Config implements Storable{
 			ex.printStackTrace();
 		}
 	}
-	
 
 	public ConfigSection add(String path, Object value, String... comments) {
 		return root.add(path, value, comments);
@@ -173,7 +172,7 @@ public class Config implements Storable{
 
 	public void copyContents(Config config) {
 		config.root.save(this, -1);
-//		reload();
+		// reload();
 	}
 
 	public Config createConfig(String name) {
@@ -332,7 +331,6 @@ public class Config implements Storable{
 	public String message(String path) {
 		return root.message(path);
 	}
-
 
 	public void remove(String path) {
 		root.remove(path);

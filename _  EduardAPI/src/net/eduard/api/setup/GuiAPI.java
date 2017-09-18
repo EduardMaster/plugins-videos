@@ -132,34 +132,35 @@ public final class GuiAPI {
 			public void onClick(InventoryClickEvent event, int page) {
 
 			}
-		};
-		public void unregister() {
-			HandlerList.unregisterAll(this);
-		}
-		public void register(Plugin plugin) {
-			unregister();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
-		}
+		};private transient Inventory[] inventories;
+	
 		private String name;
 		private int lines = 6;
 		private int pages = 10;
 		private String pagPrefix = " §8Página: ";
 		private String command = "abrirGuiExemplo";
 		private ItemStack item = new ItemStack(Material.COMPASS);
-
-		private transient Inventory[] inventories;
-		private ItemStack[] slots;
+		private boolean hasPageSystem = true;
+		
+		
 		private int nextPageSlot = 8;
 		private int previousPageSlot = 0;
 		private ItemStack nextPage = ItemAPI.newItem(Material.ARROW,
 				"§aPróxima Página");
+		
 		public SimpleGui copy() {
 			return copy(this);
+		}	public void unregister() {
+			HandlerList.unregisterAll(this);
+		}
+		public void register(Plugin plugin) {
+			unregister();
+			Bukkit.getPluginManager().registerEvents(this, plugin);
 		}
 		private ItemStack previosPage = ItemAPI.newItem(Material.ARROW,
 				"§aPágina Anterior");
-		private boolean hasPageSystem = false;
-
+		
+		private ItemStack[] slots;
 		public SimpleGui() {
 			resetInventories();
 		}
@@ -247,6 +248,7 @@ public final class GuiAPI {
 		public void openGui(Player player) {
 			openGui(player, 1);
 		}
+		
 		public boolean hasSlot(int page, int slot) {
 			return getSlot(page, slot) != null;
 		}

@@ -3,6 +3,7 @@ package net.eduard.api.game;
 import java.util.Map;
 
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ObjectAPI;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class Vip implements Storable{
@@ -26,10 +27,10 @@ public class Vip implements Storable{
 		this.days = 0;
 	}
 	public boolean isVip() {
-		return ExtraAPI.inCooldown(vipStart, days * ExtraAPI.DAY_IN_SECONDS);
+		return ExtraAPI.inCooldown(vipStart, days * ObjectAPI.DAY_IN_SECONDS);
 	}
 	public long getTimeLeft() {
-		return ExtraAPI.getCooldown(vipStart, days * ExtraAPI.DAY_IN_SECONDS);
+		return ExtraAPI.getCooldown(vipStart, days * ObjectAPI.DAY_IN_SECONDS);
 	}
 	public void setVipEternal() {
 		this.days = -1;

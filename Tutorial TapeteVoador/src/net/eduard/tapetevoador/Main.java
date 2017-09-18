@@ -15,7 +15,7 @@ import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.api.setup.WorldAPI;
 import net.eduard.tapetevoador.command.TapeteCommand;
-import net.eduard.tapetevoador.event.TapeteEvent;
+import net.eduard.tapetevoador.event.TapeteEvents;
 
 public class Main extends JavaPlugin {
 
@@ -28,8 +28,8 @@ public class Main extends JavaPlugin {
 		config.add("Enable", "&6Voce ativou o tapete voador!");
 		config.add("Disable", "&6Voce desativou o tapete voador!");
 		config.saveConfig();
-		new TapeteEvent().register(this);
-		new TapeteCommand();
+		API.event(new TapeteEvents());
+		new TapeteCommand().register();
 		API.timer(this, 3, new Runnable() {
 			
 			@Override

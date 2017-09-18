@@ -1,0 +1,6 @@
+name: AutoRespawn
+description: Se auto respawna sosinho
+main: net.eduard.autorespawn.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD

@@ -40,6 +40,7 @@ public class Gui extends SimpleGui implements Copyable {
 				}
 			}
 		});
+		effects.put(getIndex(page, slot), effect);
 	}
 	public void removeSlot(int page, int slot) {
 		super.removeSlot(page, slot);

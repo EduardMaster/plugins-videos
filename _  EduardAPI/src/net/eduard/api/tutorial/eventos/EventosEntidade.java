@@ -1,7 +1,9 @@
 
 package net.eduard.api.tutorial.eventos;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
@@ -38,184 +40,181 @@ import org.bukkit.event.entity.SheepDyeWoolEvent;
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.TimeManager;
-
-public class EventosEntidade extends TimeManager {
+public class EventosEntidade implements  Listener {
 
 	@EventHandler
 	public void EntidadeAtiraComFlecha(EntityShootBowEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeBlocoFormar(EntityBlockFormEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCarneiroTrocaCor(SheepDyeWoolEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCarneiroTrocaCor(SheepRegrowWoolEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCavaloPulo(HorseJumpEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCreaturaSpawn(CreatureSpawnEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCreeperPower(CreeperPowerEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeCriarPortal(EntityCreatePortalEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeDano(EntityDamageEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeDanoPorBloco(EntityDamageByBlockEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeDanoPorEntidade(EntityDamageByEntityEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeDesprender(EntityUnleashEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeExplode(EntityExplodeEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeExplosionPrime(ExplosionPrimeEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeFoodChange(FoodLevelChangeEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeInteragir(EntityInteractEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeItemSome(ItemDespawnEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeItemSpawn(ItemSpawnEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeMira(EntityTargetEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeMiraUnidadeViva(EntityTargetLivingEntityEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeMorrer(EntityDeathEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeMudarBloco(EntityChangeBlockEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePegandoFogoPorBloco(EntityCombustByBlockEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePegandoFogoPorEntidade(EntityCombustByEntityEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePegarFogo(EntityCombustEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePortal(EntityPortalEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePortalEntrar(EntityPortalEnterEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadePortalSair(EntityPortalExitEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeProjectileAcerta(ProjectileHitEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeProjectileLancar(ProjectileLaunchEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	// Entidade
 	@EventHandler
 	public void EntidadeQuebraPorta(EntityBreakDoorEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeRecuperaVida(EntityRegainHealthEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeSlimeMutiplica(SlimeSplitEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeTame(EntityTameEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void EntidadeTeleportar(EntityTeleportEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 }

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Rank;
-import net.eduard.api.setup.StorageAPI.FakeOfflinePlayer;
+import net.eduard.api.setup.ScoreAPI.FakeOfflinePlayer;
 import net.eduard.api.setup.StorageAPI.Storable;
 import net.eduard.api.setup.VaultAPI;
 

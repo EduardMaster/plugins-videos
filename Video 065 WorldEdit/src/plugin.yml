@@ -1,0 +1,11 @@
+name: WorldEditCopy
+description: Copia do WorldEdit basica
+main: net.eduard.worldedit.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  set:
+    aliases: [st]
+    usage: /<coomand>
+    description: Setar o Bloco igual do worldedit

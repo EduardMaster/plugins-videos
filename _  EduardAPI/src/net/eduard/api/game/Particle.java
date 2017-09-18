@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import net.eduard.api.setup.RefAPI;
 import net.eduard.api.setup.RexAPI;
 import net.eduard.api.setup.StorageAPI.Storable;
 
@@ -66,7 +67,7 @@ public class Particle implements Storable {
 
 	private Object getPacket() throws Exception {
 
-		return RexAPI.getNew(RexAPI.pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
+		return RefAPI.getNew(RexAPI.pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
 				(float) location.getY(), (float) location.getZ(), xRandom, yRandom, zRandom, speed, amount);
 	}
 

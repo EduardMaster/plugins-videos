@@ -1,7 +1,9 @@
 
 package net.eduard.api.tutorial.eventos;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
@@ -25,39 +27,36 @@ import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.TimeManager;
-
-public class EventosBloco extends TimeManager {
+public class EventosBloco implements Listener {
 
 	@EventHandler
 	public void BlocoAparecerAosPoucos(BlockFormEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoCairFolhas(LeavesDecayEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoColocar(BlockPlaceEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoDano(BlockDamageEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoDispensar(BlockDispenseEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoEstende(BlockPistonExtendEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	// PARA 1.8
@@ -71,82 +70,82 @@ public class EventosBloco extends TimeManager {
 
 	@EventHandler
 	public void BlocoFogaoCozinhar(FurnaceBurnEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoFogaoQueimar(FurnaceSmeltEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoMover(BlockFromToEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoNascer(BlockGrowEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoNotar(NotePlayEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoPegarFogo(BlockBurnEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoPegarFogo(BlockIgniteEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoPodeModificalo(BlockCanBuildEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 //	@EventHandler
 //	public void BlocoPysical(BlockPhysicsEvent e) {
-//		ChatAPI.broadcast(e.getEventName())
+//		ChatBukkit.broadcastMessage(e.getEventName())
 //	}
 
 	// Blocos
 	@EventHandler
 	public void BlocoQuebrar(BlockBreakEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoRedstone(BlockRedstoneEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoRetrai(BlockPistonRetractEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoSpread(BlockSpreadEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoSumirAosPoucos(BlockFadeEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoTrocarSign(SignChangeEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 
 	@EventHandler
 	public void BlocoXP(BlockExpEvent e) {
-		API.broadcast(e.getEventName());
+		Bukkit.broadcastMessage(e.getEventName());
 	}
 }

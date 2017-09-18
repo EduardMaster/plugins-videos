@@ -5,7 +5,7 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class ItemRandom implements Storable {
@@ -30,8 +30,8 @@ public class ItemRandom implements Storable {
 
 	public ItemStack create() {
 		ItemStack clone = item.clone();
-		int amount = API.getRandomInt(getMinAmount(), getMaxAmount());
-		if (API.getChance(chance)) {
+		int amount = ExtraAPI.getRandomInt(getMinAmount(), getMaxAmount());
+		if (ExtraAPI.getChance(chance)) {
 			clone.setAmount(amount);
 			return clone;
 		}

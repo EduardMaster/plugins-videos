@@ -1,15 +1,8 @@
 package net.eduard.api.setup;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -18,38 +11,13 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * 
- * API de Reflection para Minecraft<br>
- * Array = Vetor -> String[] ou String... <br>
- * Constructor"cons" = Iniciador -> public RexAPI(){}; <br>
- * Parameters = Parametros -> Class[] ou Object[]
+ * API de Reflection para Minecraft
  * 
  * @author Eduard
  *
  */
-public class RexAPI {
-	/**
-	 * Tipo de geração de Key
-	 * @author Eduard-PC
-	 *
-	 */
-	public enum KeyType {
-		/**
-		 * ID UNICO
-		 */
-		UUID, 
-		/**
-		 * LETRAS
-		 */
-		LETTER, 
-		/**
-		 * NUMEROS
-		 */
-		NUMERIC, 
-		/**
-		 * NUMEROS E LETRAS
-		 */
-		ALPHANUMERIC;
-	}
+public final class RexAPI {
+	
 
 	public static String mEntityPlayer = "#mEntityPlayer";
 	public static String cCraftPlayer = "#cCraftPlayer";
@@ -79,7 +47,9 @@ public class RexAPI {
 	public static String bBukkit = "#bBukkit";
 	public static String mChatComponentText = "#mChatComponentText";
 	public static String mMinecraftServer = "#mMinecraftServer";
-
+	static {
+		RefAPI.newReplacer("#v", getVersion());
+	}
 	/**
 	 * Envia o pacote para o jogador
 	 * 
@@ -92,7 +62,7 @@ public class RexAPI {
 	public static void sendPacket(Object packet, Player player)
 			throws Exception {
 
-		getResult(getConnection(player), "sendPacket", getParameters(pPacket),
+		RefAPI.getResult(getConnection(player), "sendPacket", RefAPI.getParameters(pPacket),
 				packet);
 	}
 	public static Plugin getPlugin(String plugin) {
@@ -100,7 +70,7 @@ public class RexAPI {
 	}
 
 	public static int getCurrentTick() throws Exception {
-		return (int) RexAPI.getValue(RexAPI.mMinecraftServer, "currentTick");
+		return (int) RefAPI.getValue(RexAPI.mMinecraftServer, "currentTick");
 	}
 	/**
 	 * Pega o TPS do servidor uma expecie de calculador de LAG
@@ -186,7 +156,7 @@ public class RexAPI {
 	 * 
 	 */
 	public static Object getIChatText2(String text) throws Exception {
-		return getNew(mChatComponentText, text);
+		return RefAPI.getNew(mChatComponentText, text);
 
 	}
 
@@ -212,7 +182,7 @@ public class RexAPI {
 	 */
 	public static Object getIChatBaseComponent(String component)
 			throws Exception {
-		return getResult(mChatSerializer, "a", component);
+		return RefAPI.getResult(mChatSerializer, "a", component);
 	}
 
 	/**
@@ -222,7 +192,7 @@ public class RexAPI {
 	 * @exception Exception
 	 */
 	public static Object getHandle(Player player) throws Exception {
-		return getResult(player, "getHandle");
+		return RefAPI.getResult(player, "getHandle");
 	}
 
 	/**
@@ -235,200 +205,7 @@ public class RexAPI {
 	 * @return Conexão do jogador
 	 */
 	public static Object getConnection(Player player) throws Exception {
-		return getValue(getHandle(player), "playerConnection");
-	}
-
-	/**
-	 * - Se for uma classe retorna a mesma<br>
-	 * - Se for um String retorna uma classe baseada no Texto<Br>
-	 * - Se for um objeto qualquer retorna object.getClass()<br>
-	 * 
-	 * @param object
-	 *            Objeto
-	 * @return Uma classe pelo objeto
-	 * @throws Exception
-	 */
-	public static Class<?> getClass(Object object) throws Exception {
-		if (object instanceof Class) {
-			return (Class<?>) object;
-		}
-		if (object instanceof String) {
-			String string = (String) object;
-			if (string.startsWith("#")) {
-				string = string.replace("#s", "org.spigotmc.");
-				string = string.replace("#a", "net.eduard.api.");
-				string = string.replace("#e", "net.eduard.eduardapi.");
-				string = string.replace("#k", "net.eduard.api.kits.");
-				string = string.replace("#p", "#mPacket");
-				string = string.replace("#m", "net.minecraft.server.#v.");
-				string = string.replace("#c", "org.bukkit.craftbukkit.#v.");
-				string = string.replace("#b", "org.bukkit.");
-				string = string.replace("#v", getVersion());
-				// string = string.replace("#v2", getVersion2());
-
-				return get(string);
-			}
-
-		}
-		try {
-			return (Class<?>) object.getClass().getField("TYPE").get(0);
-		} catch (Exception e) {
-		}
-		return object.getClass();
-	}
-	/**
-	 * Invoca um Metodo
-	 * 
-	 * @param object
-	 *            Objeto
-	 * @param name
-	 *            Nome do Metodo
-	 * @param objects
-	 *            Parametros
-	 * @return Valor do metodo
-	 * @throws Exception
-	 */
-	public static Object getResult(Object object, String name,
-			Object... objects) throws Exception {
-		Method method = getMethod(object, name, objects);
-		method.setAccessible(true);
-		return method.invoke(object, objects);
-	}
-	/**
-	 * Inicia um objeto
-	 * 
-	 * @param object
-	 *            Classe
-	 * @param objects
-	 *            Parametros
-	 * @return Novo Objeto iniciado
-	 * @throws Exception
-	 */
-	public static Object getNew(Object object, Object... objects)
-			throws Exception {
-		Constructor<?> constructor = getConstructor(object, objects);
-		constructor.setAccessible(true);
-		return constructor.newInstance(objects);
-	}
-	/**
-	 * Inicia um objeto
-	 * 
-	 * @param object
-	 *            Classe
-	 * @param parameters
-	 *            Parametros
-	 * @param objects
-	 *            Valores
-	 * @return Novo objeto iniciado
-	 * @throws Exception
-	 */
-	public static Object getNew(Object object, Object[] parameters,
-			Object... objects) throws Exception {
-		Constructor<?> constructor = getConstructor(object, parameters);
-		constructor.setAccessible(true);
-		return constructor.newInstance(objects);
-	}
-	/**
-	 * @param object
-	 *            Classe
-	 * @param objects
-	 *            Parametros
-	 * @return Construtor
-	 * @throws Exception
-	 */
-	public static Constructor<?> getConstructor(Object object,
-			Object... objects) throws Exception {
-		try {
-			return getClass(object)
-					.getDeclaredConstructor(getParameters(objects));
-		} catch (Exception ex) {
-			return getClass(object).getConstructor(getParameters(objects));
-		}
-	}
-	/**
-	 * Invoca um Metodo
-	 * 
-	 * @param object
-	 *            Classe
-	 * @param name
-	 *            Nome do Metodo
-	 * @param parameters
-	 *            Parametros
-	 * @param objects
-	 *            Valores
-	 * @return Valor do metodo
-	 * @throws Exception
-	 */
-	public static Object getResult(Object object, String name,
-			Object[] parameters, Object... objects) throws Exception {
-		Method method = getMethod(object, name, parameters);
-		method.setAccessible(true);
-		return method.invoke(object, objects);
-	}
-	/**
-	 * @param object
-	 *            Classe
-	 * @param name
-	 *            Nome da variavel
-	 * @return Valor da variavel
-	 * @throws Exception
-	 */
-	public static Object getValue(Object object, String name) throws Exception {
-		Field field = getField(object, name);
-		field.setAccessible(true);
-		return field.get(object);
-	}
-	/**
-	 * Modifica uma variavel
-	 * 
-	 * @param object
-	 *            Classe
-	 * @param name
-	 *            Nome da Variavel
-	 * @param value
-	 *            Valor
-	 * @throws Exception
-	 */
-	public static void setValue(Object object, String name, Object value)
-			throws Exception {
-		Field field = getField(object, name);
-		field.setAccessible(true);
-		field.set(object, value);
-	}
-	/**
-	 * @param object
-	 *            Classe
-	 * @param name
-	 *            Nome da variavel
-	 * @return Uma Variavel
-	 * @throws Exception
-	 */
-	public static Field getField(Object object, String name) throws Exception {
-		try {
-			return getClass(object).getDeclaredField(name);
-		} catch (Exception ex) {
-			return getClass(object).getField(name);
-		}
-	}
-	/**
-	 * @param object
-	 *            Classe
-	 * @param name
-	 *            Nome do Metodo
-	 * @param objects
-	 *            Parametros
-	 * @return Um Metodo
-	 * @throws Exception
-	 */
-	public static Method getMethod(Object object, String name,
-			Object... objects) throws Exception {
-		try {
-			return getClass(object).getDeclaredMethod(name,
-					getParameters(objects));
-
-		} catch (Exception ex) {
-			return getClass(object).getMethod(name, getParameters(objects));
-		}
+		return RefAPI.getValue(getHandle(player), "playerConnection");
 	}
 	/**
 	 * 
@@ -449,31 +226,7 @@ public class RexAPI {
 				.split("\\")[3];
 	}
 
-	/**
-	 * @param name
-	 *            Nome
-	 * @return Uma classe baseada no Nome
-	 * @throws Exception
-	 */
-	public static Class<?> get(String name) throws Exception {
-		return Class.forName(name);
-	}
-	/**
-	 * @param objects
-	 *            Valores"Parametros"
-	 * @return Uma Array de Classes"Parametros" pela Array de Objetos"Valores"
-	 * @throws Exception
-	 */
-	public static Class<?>[] getParameters(Object... objects) throws Exception {
-		Class<?>[] parameters = new Class[objects.length];
-		int index = 0;
-		for (Object parameter : objects) {
-			parameters[index] = getClass(parameter);
-			index++;
-		}
-		return parameters;
-	}
-
+	
 	/**
 	 * Modifica a TabList do Jogador
 	 * 
@@ -487,8 +240,8 @@ public class RexAPI {
 	public static void setTabList(Player player, String header, String footer) {
 		try {
 			if (isAbove1_8(player)) {
-				Object packet = getNew(sPacketTabHeader,
-						getParameters(mIChatBaseComponent, mIChatBaseComponent),
+				Object packet =RefAPI. getNew(sPacketTabHeader,
+						RefAPI.getParameters(mIChatBaseComponent, mIChatBaseComponent),
 						getIChatText(header), getIChatText(footer));
 				sendPacket(packet, player);
 				return;
@@ -497,17 +250,17 @@ public class RexAPI {
 		} catch (Exception e) {
 		}
 		try {
-			Object packet = getNew(pPlayOutPlayerListHeaderFooter,
-					getParameters(mIChatBaseComponent), getIChatText(header));
+			Object packet =RefAPI. getNew(pPlayOutPlayerListHeaderFooter,
+					RefAPI.getParameters(mIChatBaseComponent), getIChatText(header));
 
-			setValue(packet, "b", getIChatText(footer));
+			RefAPI.setValue(packet, "b", getIChatText(footer));
 			sendPacket(packet, player);
 		} catch (Exception e) {
 		}
 		try {
-			Object packet = getNew(pPlayOutPlayerListHeaderFooter,
-					getParameters(mIChatBaseComponent), getIChatText2(header));
-			setValue(packet, "b", getIChatText2(footer));
+			Object packet = RefAPI.getNew(pPlayOutPlayerListHeaderFooter,
+					RefAPI.getParameters(mIChatBaseComponent), getIChatText2(header));
+			RefAPI.setValue(packet, "b", getIChatText2(footer));
 			sendPacket(packet, player);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -521,8 +274,8 @@ public class RexAPI {
 	 */
 	public static boolean isAbove1_8(Player player) {
 		try {
-			return (int) getResult(
-					getValue(getConnection(player), "networkManager"),
+			return (int) RefAPI.getResult(
+					RefAPI.getValue(getConnection(player), "networkManager"),
 					"getVersion") == 47;
 
 		} catch (Exception ex) {
@@ -554,14 +307,14 @@ public class RexAPI {
 				// sendPacket(player, getNew(PacketTitle, getParameters(Action,
 				// int.class, int.class, int.class),
 				// getValue(Action, "TIMES"), fadeIn, stay, fadeOut));
-				sendPacket(player, getNew(sPacketTitle,
-						getValue(sAction, "TIMES"), fadeIn, stay, fadeOut));
-				sendPacket(player, getNew(sPacketTitle,
-						getParameters(sAction, mIChatBaseComponent),
-						getValue(sAction, "TITLE"), getIChatText(title)));
-				sendPacket(player, getNew(sPacketTitle,
-						getParameters(sAction, mIChatBaseComponent),
-						getValue(sAction, "SUBTITLE"), getIChatText(subTitle)));
+				sendPacket(player, RefAPI.getNew(sPacketTitle,
+						RefAPI.getValue(sAction, "TIMES"), fadeIn, stay, fadeOut));
+				sendPacket(player, RefAPI.getNew(sPacketTitle,
+						RefAPI.getParameters(sAction, mIChatBaseComponent),
+						RefAPI.getValue(sAction, "TITLE"), getIChatText(title)));
+				sendPacket(player, RefAPI.getNew(sPacketTitle,
+						RefAPI.getParameters(sAction, mIChatBaseComponent),
+						RefAPI.getValue(sAction, "SUBTITLE"), getIChatText(subTitle)));
 
 				return;
 			}
@@ -569,32 +322,32 @@ public class RexAPI {
 		} catch (Exception e) {
 		}
 		try {
-			sendPacket(player, getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
-			sendPacket(player, getNew(pPlayOutTitle,
-					getParameters(cEnumTitleAction, mIChatBaseComponent),
-					getValue(cEnumTitleAction, "TITLE"), getIChatText(title)));
+			sendPacket(player, RefAPI.getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
+			sendPacket(player, RefAPI.getNew(pPlayOutTitle,
+					RefAPI.getParameters(cEnumTitleAction, mIChatBaseComponent),
+					RefAPI.getValue(cEnumTitleAction, "TITLE"), getIChatText(title)));
 			sendPacket(player,
-					getNew(pPlayOutTitle,
-							getParameters(cEnumTitleAction,
+					RefAPI.	getNew(pPlayOutTitle,
+							RefAPI.getParameters(cEnumTitleAction,
 									mIChatBaseComponent),
-							getValue(cEnumTitleAction, "SUBTITLE"),
+							RefAPI.getValue(cEnumTitleAction, "SUBTITLE"),
 							getIChatText(subTitle)));
 			return;
 		} catch (Exception e) {
 		}
 		try {
-			sendPacket(player, getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
+			sendPacket(player, RefAPI.getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
 			sendPacket(player,
-					getNew(pPlayOutTitle,
-							getParameters(pEnumTitleAction2,
+					RefAPI.	getNew(pPlayOutTitle,
+							RefAPI.getParameters(pEnumTitleAction2,
 									mIChatBaseComponent),
-							getValue(pEnumTitleAction2, "TITLE"),
+							RefAPI.	getValue(pEnumTitleAction2, "TITLE"),
 							getIChatText2(title)));
 			sendPacket(player,
-					getNew(pPlayOutTitle,
-							getParameters(pEnumTitleAction2,
+					RefAPI.	getNew(pPlayOutTitle,
+							RefAPI.getParameters(pEnumTitleAction2,
 									mIChatBaseComponent),
-							getValue(pEnumTitleAction2, "SUBTITLE"),
+							RefAPI.	getValue(pEnumTitleAction2, "SUBTITLE"),
 							getIChatText2(subTitle)));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -611,8 +364,8 @@ public class RexAPI {
 	public static void sendActionBar(Player player, String text) {
 		try {
 			Object component = getIChatText(text);
-			Object packet = getNew(pPlayOutChat,
-					getParameters(mIChatBaseComponent, byte.class), component,
+			Object packet = RefAPI.getNew(pPlayOutChat,
+					RefAPI.getParameters(mIChatBaseComponent, byte.class), component,
 					(byte) 2);
 			sendPacket(player, packet);
 			return;
@@ -620,8 +373,8 @@ public class RexAPI {
 		}
 		try {
 			Object component = getIChatText2(text);
-			Object packet = getNew(pPlayOutChat,
-					getParameters(mIChatBaseComponent, byte.class), component,
+			Object packet = RefAPI.getNew(pPlayOutChat,
+					RefAPI.getParameters(mIChatBaseComponent, byte.class), component,
 					(byte) 2);
 			sendPacket(player, packet);
 		} catch (Exception e) {
@@ -632,26 +385,13 @@ public class RexAPI {
 
 	}
 	/**
-	 * Cria um texto baseados no Vetor de objetos
-	 * @param objects Vetor de Objetos
-	 * @return Texto
-	 */
-	public static String getText(Object... objects) {
-		StringBuilder builder = new StringBuilder();
-		for (Object object : objects) {
-			builder.append(object);
-
-		}
-		return builder.toString();
-	}
-	/**
 	 * @param player
 	 *            Jogador
 	 * @return Ping do jogador
 	 */
 	public static String getPing(Player player) {
 		try {
-			return getValue(getHandle(player), "ping").toString();
+			return RefAPI.getValue(getHandle(player), "ping").toString();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -664,7 +404,7 @@ public class RexAPI {
 		List<Player> list = new ArrayList<>();
 		try {
 
-			Object object = getResult(bBukkit, "getOnlinePlayers");
+			Object object =RefAPI. getResult(bBukkit, "getOnlinePlayers");
 			if (object instanceof Collection) {
 				Collection<?> players = (Collection<?>) object;
 				for (Object obj : players) {
@@ -692,15 +432,15 @@ public class RexAPI {
 	 */
 	public static void makeRespawn(Player player) {
 		try {
-			Object packet = getNew(pPlayInClientCommand,
-					getValue(mEnumClientCommand, "PERFORM_RESPAWN"));
-			getResult(getConnection(player), "a", packet);
+			Object packet = RefAPI.getNew(pPlayInClientCommand,
+					RefAPI.getValue(mEnumClientCommand, "PERFORM_RESPAWN"));
+			RefAPI.getResult(getConnection(player), "a", packet);
 
 		} catch (Exception ex) {
 			try {
-				Object packet = getNew(pPlayInClientCommand,
-						getValue(mEnumClientCommand2, "PERFORM_RESPAWN"));
-				getResult(getConnection(player), "a", packet);
+				Object packet = RefAPI.getNew(pPlayInClientCommand,
+						RefAPI.getValue(mEnumClientCommand2, "PERFORM_RESPAWN"));
+				RefAPI.getResult(getConnection(player), "a", packet);
 			} catch (Exception e) {
 			}
 
@@ -718,9 +458,9 @@ public class RexAPI {
 	public static void changeName(Player player, String displayName) {
 
 		try {
-			Object packet = getNew(pPlayOutNamedEntitySpawn,
-					getParameters(mEntityHuman), getHandle(player));
-			setValue(getValue(packet, "b"), "name", displayName);
+			Object packet = RefAPI.getNew(pPlayOutNamedEntitySpawn,
+					RefAPI.	getParameters(mEntityHuman), getHandle(player));
+			RefAPI.setValue(RefAPI.getValue(packet, "b"), "name", displayName);
 			sendPackets(packet, player);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -739,94 +479,16 @@ public class RexAPI {
 			// NMS.c(compound);
 			// compound.setByte("NoAI", (byte) 1);
 			// NMS.f(compound);
-			Object compound = getNew(mNBTTagCompound);
-			Object getHandle = getResult(entity, "getHandle");
-			getResult(getHandle, "c", compound);
-			getResult(compound, "setByte", "NoAI", (byte) 1);
-			getResult(getHandle, "f", compound);
+			Object compound = RefAPI.getNew(mNBTTagCompound);
+			Object getHandle = RefAPI.getResult(entity, "getHandle");
+			RefAPI.getResult(getHandle, "c", compound);
+			RefAPI.getResult(compound, "setByte", "NoAI", (byte) 1);
+			RefAPI.getResult(getHandle, "f", compound);
 
 		} catch (Exception e) {
 		}
 
 	}
-	/**
-	 * Pega o Ip do Jogador atual
-	 * @param player Jogador
-	 * @return Ip do Jogador
-	 */
-	public static String getIp(Player player) {
-		return player.getAddress().getAddress().getHostAddress();
-	}
 
-	/**
-	 * Gera uma nova Key
-	 * @param type Tipo da Key
-	 * @param maxSize Tamanho da Key
-  	 * @return Key em forma de STRING
-	 */
-	public static String newKey(KeyType type, int maxSize) {
-
-		String key = "";
-		if (type == KeyType.UUID) {
-			key = UUID.randomUUID().toString();
-		} else if (type == KeyType.LETTER) {
-			final StringBuffer buffer = new StringBuffer();
-			String characters = "";
-			characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			final int charactersLength = characters.length();
-			for (int i = 0; i < maxSize; ++i) {
-				final double index = Math.random() * charactersLength;
-				buffer.append(characters.charAt((int) index));
-			}
-			key = buffer.toString();
-		} else if (type == KeyType.NUMERIC) {
-			final StringBuffer buffer = new StringBuffer();
-			String characters = "";
-			characters = "0123456789";
-			final int charactersLength = characters.length();
-			for (int i = 0; i < maxSize; ++i) {
-				final double index = Math.random() * charactersLength;
-				buffer.append(characters.charAt((int) index));
-			}
-			key = buffer.toString();
-		} else if (type == KeyType.ALPHANUMERIC) {
-			final StringBuffer buffer = new StringBuffer();
-			String characters = "";
-			characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-			final int charactersLength = characters.length();
-			for (int i = 0; i < maxSize; ++i) {
-				final double index = Math.random() * charactersLength;
-				buffer.append(characters.charAt((int) index));
-			}
-			key = buffer.toString();
-		}
-		return key;
-
-	}
-	/**
-	 * Pega o Ip do Coneção do Servidor
-	 * @return Ip do Servidor
-	 */
-	public static String getServerIp() {
-		try {
-			URLConnection connect = new URL("http://checkip.amazonaws.com/")
-					.openConnection();
-			connect.addRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-			Scanner scan = new Scanner(connect.getInputStream());
-			StringBuilder sb = new StringBuilder();
-			while (scan.hasNext()) {
-				sb.append(scan.next());
-			}
-			scan.close();
-			return sb.toString();
-
-		} catch (Exception ex) {
-
-			String ip = null;
-			return ip;
-		}
-	}
-	
 	
 }

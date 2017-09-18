@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
@@ -33,8 +34,12 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 
 import net.eduard.api.API;
 import net.eduard.api.command.AplicateCommand;
@@ -42,6 +47,7 @@ import net.eduard.api.command.admin.AdminCommand;
 import net.eduard.api.command.staff.CheckIpCommand;
 import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
+import net.eduard.api.event.BungeeMessageEvent;
 import net.eduard.api.event.ChatMessageEvent;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.ChatChannel;
@@ -53,6 +59,7 @@ import net.eduard.api.server.Arena;
 import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.ExtraAPI.Replacer;
 import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.SpigotAPI;
 import net.eduard.api.setup.StorageAPI;
 import net.eduard.api.setup.VaultAPI;
 import net.eduard.eduardapi.command.ApiCommand;
@@ -84,7 +91,10 @@ import net.md_5.bungee.api.chat.TextComponent;
  * @author Eduard-PC
  *
  */
-public class EduardAPI extends JavaPlugin implements Listener {
+public class EduardAPI extends JavaPlugin
+		implements
+			Listener,
+			PluginMessageListener {
 	private static JavaPlugin plugin;
 	private TimeManager time;
 
@@ -115,11 +125,53 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		return config;
 	}
 	@Override
+	public void onPluginMessageReceived(String channel, Player player,
+			byte[] message) {
+		if (!channel.equals("BungeeCord")) {
+			return;
+		}
+		ByteArrayDataInput in = ByteStreams.newDataInput(message);
+		API.callEvent(new BungeeMessageEvent(player, in));
+	}
+	@EventHandler
+	public void event(AsyncPlayerChatEvent e) {
+		// String message = ChatColor.translateAlternateColorCodes('&',
+		// e.getPlayer().getName()
+		// +
+		// "&aoiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+		// " + e.getMessage());
+		String message = ChatColor.translateAlternateColorCodes('&',
+				e.getMessage());
+		String format = "§b" + e.getPlayer().getName() + ": ";
+		e.setCancelled(true);
+		// e.getPlayer().spigot().sendMessage(new TextComponent(
+		// ChatColor.translateAlternateColorCodes('&', message)));
+
+		TextComponent text = SpigotAPI.getTextCorrect(format);
+		text.addExtra(SpigotAPI
+				.getTextCorrect(ChatColor.getLastColors(format) + message));
+		text.setHoverEvent(new HoverEvent(
+				net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+				new ComponentBuilder("aaaaaaaaaaaaaaaaaaaaa").create()));
+		// e.getPlayer().sendRawMessage(message);
+
+		e.getPlayer().spigot().sendMessage(text);
+		// ChatColor.translateAlternateColorCodes('&', message))
+		// .create());
+	}
+
+	@Override
 	public void onEnable() {
 		plugin = this;
+		StorageAPI.init();
 		config = new Config(this, "config.yml");
 		messages = new Config(this, "messages.yml");
 		time = new TimeManager(this);
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this,
+				"BungeeCord");
+		this.getServer().getMessenger().registerIncomingPluginChannel(this,
+				"BungeeCord", this);
+
 		StorageAPI.registerPackage(AplicateCommand.class);
 		StorageAPI.registerPackage(AdminCommand.class);
 		StorageAPI.registerPackage(CheckIpCommand.class);
@@ -200,7 +252,6 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		}
 
 		ExtraAPI.consoleMessage("§bEduardAPI §acarregado!");
-
 	}
 	public static void sendMessage(Player player, String message,
 			ChatChannel channel) {

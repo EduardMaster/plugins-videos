@@ -1,0 +1,12 @@
+name: EduClickTest
+description: Sistema de testar quantos cliques voce consegue fazer
+main: net.eduard.clickcounter.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  clicktest:
+    aliases: [testarcliques,contarcliques,clickcounter,testclick,testarcliques]
+    usage: /<command>
+    description: Ativar e desativar e contador de cliques

@@ -28,6 +28,14 @@ import org.bukkit.util.Vector;
  */
 
 public final class GameAPI {
+	/**
+	 * Pega o Ip do Jogador atual
+	 * @param player Jogador
+	 * @return Ip do Jogador
+	 */
+	public static String getIp(Player player) {
+		return player.getAddress().getAddress().getHostAddress();
+	}
 	public static List<LivingEntity> getNearbyEntities(LivingEntity player,
 			double x, double y, double z, EntityType... types) {
 		List<LivingEntity> list = new ArrayList<>();
@@ -80,6 +88,7 @@ public final class GameAPI {
 
 		List<Player> players = new ArrayList<>();
 		for (Player p : location.getWorld().getPlayers()) {
+			if (!location.getWorld().equals(p.getWorld()))continue;
 			if (p.getLocation().distance(location) <= range) {
 				players.add(p);
 			}
@@ -129,7 +138,7 @@ public final class GameAPI {
 
 
 	public static void makeInvunerable(Player player) {
-		player.setNoDamageTicks(ExtraAPI.DAY_IN_SECONDS * 20);
+		player.setNoDamageTicks(ObjectAPI.DAY_IN_SECONDS * 20);
 
 	}
 
@@ -289,7 +298,7 @@ public final class GameAPI {
 				.setDirection(entity.getLocation().getDirection()));
 	}
 	public static boolean isFalling(Entity entity) {
-		return entity.getVelocity().getY() < ExtraAPI.WALKING_VELOCITY;
+		return entity.getVelocity().getY() < ObjectAPI.WALKING_VELOCITY;
 	}
 	public static List<Player> getOnlinePlayers() {
 		return getPlayers();

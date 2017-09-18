@@ -2,6 +2,7 @@
 package net.eduard.api.tutorial.eventos;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
@@ -11,9 +12,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.vehicle.VehicleUpdateEvent;
 
-import net.eduard.api.manager.TimeManager;
-
-public class EventosVeiculo extends TimeManager {
+public class EventosVeiculo implements  Listener {
 
 	@EventHandler
 	public void VehiculoBlocoColisao(VehicleBlockCollisionEvent e) {

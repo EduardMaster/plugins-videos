@@ -40,8 +40,6 @@ import net.eduard.api.event.PlayerTargetEvent;
 import net.eduard.api.event.ScoreUpdateEvent;
 import net.eduard.api.event.TagUpdateEvent;
 import net.eduard.api.game.ChatChannel;
-import net.eduard.api.game.DisplayBoard;
-import net.eduard.api.game.EmptyWorldGenerator;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
@@ -50,11 +48,13 @@ import net.eduard.api.server.Arena;
 import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.RefAPI;
+import net.eduard.api.setup.ScoreAPI.DisplayBoard;
+import net.eduard.api.setup.ScoreAPI.FakeOfflinePlayer;
 import net.eduard.api.setup.StorageAPI;
-import net.eduard.api.setup.StorageAPI.FakeOfflinePlayer;
 import net.eduard.api.setup.VaultAPI;
 import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.WorldAPI.EmptyWorldGenerator;
 
 /**
  * API principal da EduardAPI contendo muitos codigos bons e utilitarios Boolean
@@ -233,10 +233,10 @@ public class API {
 			e.printStackTrace();
 		}
 		try {
-			Object map = RexAPI.getValue(Bukkit.getServer().getPluginManager(),
+			Object map = RefAPI.getValue(Bukkit.getServer().getPluginManager(),
 					"commandMap");
 
-			commands = (Map<String, Command>) RexAPI.getValue(map,
+			commands = (Map<String, Command>) RefAPI.getValue(map,
 					"knownCommands");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -718,7 +718,7 @@ public class API {
 			try {
 				StorageAPI.restoreField(INSTANCE,
 						MAPS_CONFIG.getSection("MAPS").toMap(),
-						RexAPI.getField(INSTANCE, "MAPS"));
+						RefAPI.getField(INSTANCE, "MAPS"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -729,7 +729,7 @@ public class API {
 
 		try {
 			Object value = StorageAPI.storeField(INSTANCE,
-					RexAPI.getField(INSTANCE, "MAPS"));
+					RefAPI.getField(INSTANCE, "MAPS"));
 			MAPS_CONFIG.set("MAPS", value);
 
 		} catch (Exception e) {

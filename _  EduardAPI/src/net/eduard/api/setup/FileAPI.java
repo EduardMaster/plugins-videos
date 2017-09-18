@@ -1,18 +1,27 @@
 package net.eduard.api.setup;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -110,45 +119,82 @@ public final class FileAPI {
 		return false;
 
 	}
+	public static InputStream getResource(ClassLoader loader, String name)
+			throws IOException {
+		URL url = loader.getResource(name);
+		if (url == null)return null;
+		URLConnection connection = url.openConnection();
+		connection.setUseCaches(false);
+		return connection.getInputStream();
+	}
+	public static void copyAsUTF8(InputStream is, File file)
+			throws IOException {
+		if (is == null)return;
+		InputStreamReader in = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(in);
+		// OutputStream os = new FileOutputStream(file);
+		// OutputStreamWriter out = new OutputStreamWriter(os,
+		// Charset.forName("UTF-8"));
+		List<String> lines = new ArrayList<>();
+		String line;
+		while ((line = br.readLine()) != null) {
+			lines.add(line);
+		}
+		Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
+		br.close();
+		in.close();
+		is.close();
+	}
+	public static void copyAsUTF8(Path path, File file) throws IOException {
+
+		List<String> lines = Files.readAllLines(path);
+		Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
+	}
 
 	public static List<String> readLines(File file) {
-		List<String> lines = new ArrayList<>();
-		ExtraAPI.consoleMessage(
-				"§bFileAPI §fLendo §a" + file.getName() + "§f em UTF-8");
+		Path path = file.toPath();
 		try {
-			if (Charset.isSupported("UTF-8")) {
-				lines = Files.readAllLines(file.toPath(),
-						Charset.forName("UTF-8"));
-				return lines;
-			}
+			return Files.readAllLines(path);
 		} catch (Exception e) {
-			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
 		}
-		ExtraAPI.consoleMessage("§bFileAPI §fLendo §a" + file.getName()
-				+ "§f em " + Charset.defaultCharset().toString().toUpperCase());
 		try {
-			lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+			return Files.readAllLines(path, Charset.defaultCharset());
 		} catch (Exception e) {
-			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
+		}
+		List<String> lines = new ArrayList<>();
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line;
+			while((line = reader.readLine()) != null) {
+				lines.add(line);
+			}
+			reader.close();
+			
+		} catch (Exception e) {
 		}
 		return lines;
+		
 	}
 
 	public static void writeLines(File file, List<String> lines) {
-	
+		Path path = file.toPath();
 		try {
-			file.getParentFile().mkdirs();
-			if (Charset.isSupported("UTF-8")) {
-				ExtraAPI.consoleMessage(
-						"§bFileAPI §fEscrevendo §a" + file.getName()+"§f em UTF-8");
-				Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
-			} else {
-				ExtraAPI.consoleMessage(
-						"§bFileAPI §fEscrevendo §a" + file.getName()+"§f em "+Charset.defaultCharset().toString().toUpperCase());
-				Files.write(file.toPath(), lines, Charset.defaultCharset());
-			}
+			Files.write(path, lines, StandardCharsets.UTF_8);
+			return;
 		} catch (Exception e) {
-			ExtraAPI.consoleMessage("§bFileAPI §cFALHA");
+		}
+		try {
+			Files.write(path, lines, Charset.defaultCharset());
+		} catch (Exception e) {
+		}
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			for (String line : lines) {
+				writer.write(line+"\n");
+			}
+			writer.close();
+		} catch (Exception e) {
 		}
 
 	}

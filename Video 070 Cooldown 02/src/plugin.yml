@@ -1,0 +1,7 @@
+name: CooldownSimples
+description: Sistema simples de Cooldown com minha API
+main: net.eduard.cooldown.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD

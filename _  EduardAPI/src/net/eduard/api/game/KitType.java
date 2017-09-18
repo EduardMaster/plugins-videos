@@ -1,7 +1,7 @@
 package net.eduard.api.game;
 
 import net.eduard.api.setup.ExtraAPI;
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.RefAPI;
 
 public enum KitType {
 
@@ -22,7 +22,7 @@ public enum KitType {
 	}
 	public Ability getNewAbility() {
 		try {
-			return (Ability) RexAPI.getNew("#k" + ExtraAPI.toTitle(name(), ""));
+			return (Ability) RefAPI.getNew("#k" + ExtraAPI.toTitle(name(), ""));
 		} catch (Exception e) {
 			return null;
 		}

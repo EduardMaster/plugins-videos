@@ -1,5 +1,5 @@
 name: EduardAPI
 description: A melhor API ja criada pelo Eduard
-main: net.eduard.eduardapi.Eduard
+main: net.eduard.eduardapi.Main
 version: 1.0
-authors: [Eduard]
+author: Eduard

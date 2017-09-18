@@ -3,19 +3,15 @@ package net.eduard.api.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import net.eduard.api.setup.StorageAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -42,18 +38,18 @@ public class BungeeConfig {
 	}
 
 	public BungeeConfig(String name, Plugin plugin) {
+		this.plugin = plugin;
 		file = new File(plugin.getDataFolder(), name);
 		this.name = name;
 		reloadConfig();
 	}
-	
-	
-	
+
 	public void reloadConfig() {
 		try {
 			saveDefaultConfig();
-			getProvider().load(file);
+			config = getProvider().load(file);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	public void saveDefaultConfig() {
@@ -62,19 +58,19 @@ public class BungeeConfig {
 				plugin.getDataFolder().mkdir();
 
 			if (!file.exists()) {
-				InputStream in = plugin.getResourceAsStream(name);
-				Files.copy(in, file.toPath());
+				InputStream stream = plugin.getResourceAsStream(name);
+				if (stream != null) {
+					Files.copy(stream, file.toPath());
+				}
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	private ConfigurationProvider getProvider() {
 		return ConfigurationProvider.getProvider(YamlConfiguration.class);
 	}
-
-
 
 	public BungeeConfig saveConfig() {
 		try {
@@ -91,128 +87,16 @@ public class BungeeConfig {
 				getConfig().getString(path));
 	}
 
-
 	public void remove(String path) {
 		config.set(path, null);
-	}
-
-
-	public void setItem(String path, ItemStack item) {
-		setItem(create(path), item);
-	}
-	public ItemStack getItem(String path) {
-		return getItem(getSection(path));
-	}
-	public void setLocation(String path, Location location) {
-		setLocation(create(path), location);
-	}
-	public Location getLocation(String path) {
-		return getLocation(getSection(path));
-	}
-	@SuppressWarnings("deprecation")
-	public static void setItem(Configuration section, ItemStack item) {
-		section.set("id", item.getTypeId());
-		section.set("data", item.getDurability());
-		if (item.hasItemMeta()) {
-			ItemMeta meta = item.getItemMeta();
-			if (meta.hasDisplayName()) {
-				section.set("name", meta.getDisplayName());
-			}
-			if (meta.hasLore()) {
-				List<String> lines = new ArrayList<>();
-				for (String line : meta.getLore()) {
-					lines.add(line);
-				}
-				section.set("lore", lines);
-			}
-		}
-		StringBuilder text = new StringBuilder();
-		for (Entry<Enchantment, Integer> enchant : item.getEnchantments()
-				.entrySet()) {
-			text.append(
-					enchant.getKey().getId() + "-" + enchant.getValue() + ",");
-		}
-		section.set("enchant", text.toString());
-	}
-
-	public static void setLocation(Configuration section,
-			Location location) {
-		section.set("world", location.getWorld().getName());
-		section.set("x", location.getX());
-		section.set("y", location.getY());
-		section.set("z", location.getZ());
-		section.set("yaw", location.getYaw());
-		section.set("pitch", location.getPitch());
-	}
-
-	public static Location getLocation(Configuration section) {
-		World world = Bukkit.getWorld(section.getString("world"));
-		double x = section.getDouble("x");
-		double y = section.getDouble("y");
-		double z = section.getDouble("z");
-		float yaw = (float) section.getDouble("yaw");
-		float pitch = (float) section.getDouble("pitch");
-		return new Location(world, x, y, z, yaw, pitch);
-	}
-
-	public static Location toLocation(String text) {
-		String[] split = text.split(",");
-		World world = Bukkit.getWorld(split[0]);
-		double x = Double.parseDouble(split[1]);
-		double y = Double.parseDouble(split[2]);
-		double z = Double.parseDouble(split[3]);
-		float yaw = Float.parseFloat(split[4]);
-		float pitch = Float.parseFloat(split[5]);
-		return new Location(world, x, y, z, yaw, pitch);
 	}
 
 	public static String toChatMessage(String text) {
 		return ChatColor.translateAlternateColorCodes('&', text);
 	}
-	public static String saveLocation(Location location) {
-		StringBuilder text = new StringBuilder();
-		text.append(location.getWorld().getName() + ",");
-		text.append(location.getX() + ",");
-		text.append(location.getY() + ",");
-		text.append(location.getZ() + ",");
-		text.append(location.getYaw() + ",");
-		text.append(location.getPitch());
-		return text.toString();
-	}
 
-	public  String toConfigMessage(String text) {
+	public String toConfigMessage(String text) {
 		return text.replace("§", "&");
-	}
-
-	@SuppressWarnings("deprecation")
-	public static ItemStack getItem(Configuration section) {
-		ItemStack item = new ItemStack(section.getInt("id"),
-				section.getInt("data"));
-		ItemMeta meta = item.getItemMeta();
-		if (section.contains("name")) {
-			meta.setDisplayName(toChatMessage(section.getString("name")));
-		}
-		if (section.contains("lore")) {
-			List<String> lines = new ArrayList<>();
-			for (String line : meta.getLore()) {
-				lines.add(toChatMessage(line));
-			}
-		}
-		if (section.contains("enchant")) {
-			for (String value : section.getString("enchant").split(",")) {
-				if (value == null)
-					continue;
-				if (value.isEmpty())
-					continue;
-				if (value.contains("-")) {
-					String[] split = value.split("-");
-					item.addUnsafeEnchantment(
-							Enchantment.getById(Integer.valueOf(split[0])),
-							Integer.valueOf(split[1]));
-				}
-			}
-		}
-		return item;
 	}
 
 	public boolean delete() {
@@ -223,7 +107,6 @@ public class BungeeConfig {
 		return file.exists();
 	}
 
-
 	public boolean contains(String path) {
 		return config.contains(path);
 	}
@@ -233,13 +116,50 @@ public class BungeeConfig {
 	}
 
 	public Object get(String path) {
-		return config.get(path);
-	}
+		Object obj = config.get(path);
+		if (obj instanceof Configuration) {
+			obj = toMap(path);
+		}
+		if (obj instanceof Map) {
 
+		}
+		return StorageAPI.restoreValue(obj);
+	}
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> getValues(Configuration config) {
+		try {
+			Field field = config.getClass().getDeclaredField("self");
+			field.setAccessible(true);
+			Map<String, Object> map = (Map<String, Object>) field.get(config);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public Map<String, Object> toMap(Configuration config) {
+		Map<String, Object> sec = getValues(config);
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		for (Entry<String, Object> entry : sec.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			if (value instanceof Configuration) {
+				Configuration configuration = (Configuration) value;
+				map.put(key, toMap(configuration));
+			} else {
+				map.put(key, value);
+			}
+		}
+		return map;
+	}
+	public Map<String, Object> toMap(String path) {
+
+		return toMap(getSection(path));
+
+	}
 	public boolean getBoolean(String path) {
 		return config.getBoolean(path);
 	}
-
 
 	public double getDouble(String path) {
 		return config.getDouble(path);
@@ -251,10 +171,6 @@ public class BungeeConfig {
 
 	public List<Integer> getIntegerList(String path) {
 		return config.getIntList(path);
-	}
-
-	public ItemStack getItemStack(String path) {
-		return getItemStack(path);
 	}
 
 	public Collection<String> getKeys() {
@@ -273,7 +189,6 @@ public class BungeeConfig {
 		return config.getLongList(path);
 	}
 
-
 	public String getString(String path) {
 		return config.getString(path);
 	}
@@ -287,7 +202,7 @@ public class BungeeConfig {
 	}
 
 	public void set(String path, Object value) {
-		config.set(path, value);
+		config.set(path, StorageAPI.storeValue(value));
 	}
 
 }

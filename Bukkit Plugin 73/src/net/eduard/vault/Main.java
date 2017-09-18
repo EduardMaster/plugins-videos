@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.gui.Gui;
-import net.eduard.api.gui.Slot;
-import net.eduard.api.util.PlayerEffect;
+import net.eduard.api.game.Gui;
+import net.eduard.api.game.PlayerEffect;
+import net.eduard.api.game.Slot;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -27,10 +27,10 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
-		Gui loja = new Gui(3, "§8Loja");
+		Gui loja = new Gui("§8Loja", 3);
 		loja.setItem(new ItemStack(Material.BONE));
-		loja.set((Slot) new Slot(new ItemStack(Material.DIAMOND), 5)
-				.setEffect(new PlayerEffect() {
+		loja.addSlot(1, (Slot) new Slot(new ItemStack(Material.DIAMOND), 5)
+				.newEffect(new PlayerEffect() {
 
 					@SuppressWarnings("deprecation")
 					@Override
@@ -49,7 +49,8 @@ public class Main extends JavaPlugin {
 						}
 						p.setNoDamageTicks(20 * 10);
 					}
-				})).register(this);
+				}));
+		loja.register(this);
 	}
 
 	@Override

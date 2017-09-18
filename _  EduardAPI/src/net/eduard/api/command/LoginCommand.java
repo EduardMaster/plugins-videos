@@ -25,7 +25,7 @@ import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.api.game.Title;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.WorldAPI;
 
 public class LoginCommand extends CMD {
@@ -194,7 +194,7 @@ public class LoginCommand extends CMD {
 							titleSuccess.create(p);
 							API.SOUND_SUCCESS.create(p);
 							config.set(p.getUniqueId().toString() + ".last-ip",
-									RexAPI.getIp(p));
+									GameAPI.getIp(p));
 						} else {
 							int fails = 0;
 							if (FAILS_LOGINS.containsKey(p))
@@ -209,7 +209,7 @@ public class LoginCommand extends CMD {
 									p.setBanned(true);
 								}
 								if (banIpOnMaxFails) {
-									Bukkit.banIP(RexAPI.getIp(p));
+									Bukkit.banIP(GameAPI.getIp(p));
 								}
 								FAILS_LOGINS.remove(p);
 							}

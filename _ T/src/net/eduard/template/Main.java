@@ -15,7 +15,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		Bukkit.getPluginManager().registerEvents(new Evento(), plugin);
+		Bukkit.getPluginManager().registerEvents(new Eventos(), plugin);
 	}
 
 }
