@@ -13,10 +13,10 @@ import org.bukkit.event.server.PluginDisableEvent;
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.api.game.Delay;
-import net.eduard.api.game.PlayerEffect;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.game.Title;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.setup.PlayerAPI.PlayerEffect;
 
 public class SpawnCommand extends CMD {
 

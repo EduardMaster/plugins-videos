@@ -22,7 +22,7 @@ import net.eduard.api.setup.VaultAPI;
  */
 public class RankManager implements Storable{
 
-	private NavigableMap<String, Rank> ranks = new TreeMap<>();
+	private Map<String, Rank> ranks = new TreeMap<>();
 	private Map<UUID, Rank> players = new HashMap<>();
 	public void updatePermissions() {
 		for (Entry<String, Rank> map : ranks.entrySet()) {
@@ -46,19 +46,13 @@ public class RankManager implements Storable{
 		}
 	}
 	
-	public NavigableMap<String, Rank> getRanks() {
+	public Map<String, Rank> getRanks() {
 		return ranks;
 	}
 	public void setRanks(NavigableMap<String, Rank> ranks) {
 		this.ranks = ranks;
 	}
 
-	public Rank getLastRank() {
-		return ranks.lastEntry().getValue();
-	}
-	public Rank getFirstRank() {
-		return ranks.firstEntry().getValue();
-	}
 	public Rank getRank(Player player) {
 		return players.get(player.getUniqueId());
 	}
@@ -97,6 +91,13 @@ public class RankManager implements Storable{
 	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
 		
+	}
+	public Rank getLastRank() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Rank getFirstRank() {
+		return null;
 	}
 
 }

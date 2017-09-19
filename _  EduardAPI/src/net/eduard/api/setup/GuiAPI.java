@@ -322,9 +322,10 @@ public final class GuiAPI {
 		public void onOpenGui(PlayerCommandPreprocessEvent event) {
 			Player player = event.getPlayer();
 			String message = event.getMessage();
+			String cmd = ExtraAPI.getCmd(message);
 			if (command == null)
 				return;
-			if (ExtraAPI.commandStartWith(message, command)) {
+			if (ExtraAPI.startWith(cmd, "/"+command)) {
 				event.setCancelled(true);
 				openGui(player);
 			}

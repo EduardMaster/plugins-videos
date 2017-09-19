@@ -12,15 +12,327 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Criterias;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import net.eduard.api.API;
 import net.eduard.api.setup.StorageAPI.Copyable;
 import net.eduard.api.setup.StorageAPI.Storable;
 public final class ScoreAPI {
+	
+	public static class ScoreListener implements Listener {
+		@EventHandler
+		public void onQuit(PlayerQuitEvent e) {
+			Player p = e.getPlayer();
+
+			removeScore(p);
+			removeTag(p);
+		}
+		@EventHandler
+		public void onKick(PlayerKickEvent e) {
+			Player p = e.getPlayer();
+			removeScore(p);
+			removeTag(p);
+		}
+
+		@EventHandler
+		public void onJoin(PlayerJoinEvent e) {
+			Player p = e.getPlayer();
+			if (scoresEnabled) {
+				setScore(e.getPlayer(), scoreDefault.copy());
+			}
+			if (tagsEnabled) {
+				updateTagByRank(p);
+			}
+
+		}
+
+	}
+
+	public static void enable(Plugin plugin) {
+		disable();
+		updater = new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				updateTagsScores();
+			}
+		};
+		updater.runTaskTimer(plugin, 20, 20);
+		Bukkit.getPluginManager().registerEvents(listener, plugin);
+	}
+	public static void disable() {
+		if (updater != null) {
+			updater.cancel();
+			updater = null;
+		}
+		HandlerList.unregisterAll(listener);
+	}
+	private static boolean tagsEnabled;
+	private static boolean scoresEnabled;
+	private static Tag tagDefault;
+	private static DisplayBoard scoreDefault;
+	private static List<String> tagsGroups = new ArrayList<>();
+	private static Map<Player, Tag> playersTags = new HashMap<>();
+	private static Map<Player, DisplayBoard> playersScores = new HashMap<>();
+	private static BukkitRunnable updater;
+	private static ScoreListener listener = new ScoreListener();
+	
+	@SuppressWarnings("deprecation")
+	public static void updateTags(Scoreboard score) {
+		for (Entry<Player, Tag> map : playersTags.entrySet()) {
+			Tag tag = map.getValue();
+			Player player = map.getKey();
+			if (player == null)
+				continue;
+			String name = ExtraAPI.getText(tag.getRank() + player.getName());
+			Team team = score.getTeam(name);
+			if (team == null)
+				team = score.registerNewTeam(name);
+			TagUpdateEvent event = new TagUpdateEvent(tag, player);
+			API.callEvent(event);
+			if (!event.isCancelled())
+				continue;
+			team.setPrefix(
+					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getPrefix())));
+			team.setSuffix(
+					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getSuffix())));
+			if (!team.hasPlayer(player))
+				team.addPlayer(player);
+
+		}
+	}
+	public static void updateScoreboard(Player player) {
+		getScore(player).update(player);
+	}
+	public static void updateTagByRank(Player player) {
+		String group = VaultAPI.getPermission().getPrimaryGroup(player);
+		String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
+		String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
+		int id = 0;
+		for (String rank : tagsGroups) {
+			if (rank.equalsIgnoreCase(group)) {
+				Tag tag = new Tag(prefix, suffix);
+				tag.setName(player.getName());
+				tag.setRank(id);
+				setTag(player, tag);
+				break;
+			}
+			id++;
+		}
+
+	}
+	public static void setScore(Player player, DisplayBoard score) {
+		playersScores.put(player, score);
+		score.apply(player);
+	}
+	public static DisplayBoard getScore(Player player) {
+		return playersScores.get(player);
+
+	}
+
+	public static Tag getTag(Player player) {
+		return playersTags.get(player);
+	}
+
+	public static void resetTag(Player player) {
+		setTag(player, "");
+	}
+
+	public static void setTag(Player player, String prefix) {
+		setTag(player, prefix, "");
+	}
+
+	public static void setTag(Player player, String prefix, String suffix) {
+		setTag(player, new Tag(prefix, suffix));
+	}
+
+	public static void setTag(Player player, Tag tag) {
+		playersTags.put(player, tag);
+
+	}
+
+	public static void updateTagsScores() {
+		if (scoresEnabled) {
+
+			try {
+				for (Entry<Player, DisplayBoard> map : playersScores.entrySet()) {
+					DisplayBoard score = map.getValue();
+					Player player = map.getKey();
+					ScoreUpdateEvent event = new ScoreUpdateEvent(player,
+							score);
+					if (!event.isCancelled()) {
+						score.update(player);
+					}
+				}
+			} catch (Exception e) {
+				Bukkit.getLogger().info(
+						"Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
+			}
+		}
+		if (tagsEnabled) {
+			Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
+
+			for (Player p : API.getPlayers()) {
+				Scoreboard score = p.getScoreboard();
+				if (score == null) {
+					p.setScoreboard(main);
+					score = main;
+					continue;
+				}
+				updateTags(score);
+
+			}
+			updateTags(main);
+		}
+	}
+	public static void removeScore(Player player) {
+		player.setScoreboard(ExtraAPI.getMainScoreboard());
+		playersTags.remove(player);
+	}
+	public static void removeTag(Player player) {
+		playersTags.remove(player);
+	}
+
+	public static class TagUpdateEvent extends PlayerEvent
+			implements
+				Cancellable {
+
+		private Tag tag;
+		private boolean cancelled;
+
+		public boolean isCancelled() {
+			return cancelled;
+		}
+		public void setCancelled(boolean cancelled) {
+			this.cancelled = cancelled;
+		}
+		@Override
+		public HandlerList getHandlers() {
+			return handlers;
+		}
+		public static HandlerList getHandlerList() {
+			return handlers;
+		}
+		private static final HandlerList handlers = new HandlerList();
+
+		public TagUpdateEvent(Tag tag, Player who) {
+			super(who);
+			setTag(tag);
+		}
+		public Tag getTag() {
+			return tag;
+		}
+		public void setTag(Tag tag) {
+			this.tag = tag;
+		}
+	}
+	public static class Tag implements Storable {
+
+		private String prefix, suffix, name;
+
+		private int rank;
+
+		public Tag(String prefix, String suffix) {
+			this.prefix = prefix;
+			this.suffix = suffix;
+		}
+public Tag() {
+	// TODO Auto-generated constructor stub
+}
+		public String getPrefix() {
+			return prefix;
+		}
+
+		public void setPrefix(String prefix) {
+			this.prefix = prefix;
+
+		}
+
+		public String getSuffix() {
+			return suffix;
+		}
+
+		public void setSuffix(String suffix) {
+			this.suffix = suffix;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public int getRank() {
+			return rank;
+		}
+
+		public void setRank(int rank) {
+			this.rank = rank;
+		}
+
+		@Override
+		public Object restore(Map<String, Object> map) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void store(Map<String, Object> map, Object object) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+	public static class ScoreUpdateEvent extends PlayerEvent
+			implements
+				Cancellable {
+		private DisplayBoard score;
+		private boolean cancelled;
+
+		@Override
+		public HandlerList getHandlers() {
+			return handlers;
+		}
+		public static HandlerList getHandlerList() {
+			return handlers;
+		}
+		private static final HandlerList handlers = new HandlerList();
+
+		public ScoreUpdateEvent(Player who, DisplayBoard score) {
+			super(who);
+			setScore(score);
+		}
+		public DisplayBoard getScore() {
+			return score;
+		}
+		public void setScore(DisplayBoard score) {
+			this.score = score;
+		}
+		public boolean isCancelled() {
+			return cancelled;
+		}
+		public void setCancelled(boolean cancelled) {
+			this.cancelled = cancelled;
+		}
+
+	}
+
 	@SuppressWarnings("deprecation")
 	public static Scoreboard applyScoreboard(Player player, String title,
 			String... lines) {
@@ -203,18 +515,19 @@ public final class ScoreAPI {
 			update();
 		}
 		public List<String> getDisplayLines() {
-			List<String>list = new ArrayList<>();
+			List<String> list = new ArrayList<>();
 			for (Entry<Integer, OfflinePlayer> entry : players.entrySet()) {
 				Integer id = entry.getKey();
 				Team team = teams.get(id);
-				list.add(team.getPrefix()+entry.getValue().getName()+team.getSuffix());
+				list.add(team.getPrefix() + entry.getValue().getName()
+						+ team.getSuffix());
 			}
 			return list;
 		}
 		public DisplayBoard update(Player player) {
 			int id = 15;
 			for (String line : this.lines) {
-				set(id,ExtraAPI.getReplacers(line, player));
+				set(id, ExtraAPI.getReplacers(line, player));
 				id--;
 			}
 			setDisplay(ExtraAPI.getReplacers(title, player));
@@ -236,8 +549,6 @@ public final class ScoreAPI {
 			}
 			return this;
 		}
-
-
 
 		public DisplayBoard apply(Player player) {
 			player.setScoreboard(score);
@@ -277,8 +588,10 @@ public final class ScoreAPI {
 			String center = "";
 			String prefix = "";
 			String suffix = "";
-			if (text.length() > PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT) {
-				text = cut(text, PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT);
+			if (text.length() > PLAYER_NAME_LIMIT + PREFIX_LIMIT
+					+ SUFFIX_LIMIT) {
+				text = cut(text,
+						PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT);
 			}
 			if (text.length() <= PLAYER_NAME_LIMIT) {
 				center = text;
@@ -314,8 +627,8 @@ public final class ScoreAPI {
 			if (text.isEmpty()) {
 				return new FakeOfflinePlayer(ChatColor.values()[id].toString());
 			}
-			return new FakeOfflinePlayer(ChatColor.translateAlternateColorCodes('&',
-					cut(text, PLAYER_NAME_LIMIT)));
+			return new FakeOfflinePlayer(ChatColor.translateAlternateColorCodes(
+					'&', cut(text, PLAYER_NAME_LIMIT)));
 		}
 		protected int id(int slot) {
 			return slot <= 0 ? 1 : slot > 15 ? 15 : slot;
@@ -338,8 +651,6 @@ public final class ScoreAPI {
 			return text.length() > size ? text.substring(0, size) : text;
 		}
 
-		
-		
 		public List<String> getLines() {
 			return lines;
 		}
@@ -375,7 +686,7 @@ public final class ScoreAPI {
 		@Override
 		public void onCopy() {
 			init().build();
-			
+
 		}
 		@Override
 		public void store(Map<String, Object> map, Object object) {
@@ -385,4 +696,46 @@ public final class ScoreAPI {
 
 	}
 
+	public static boolean isTagsEnabled() {
+		return tagsEnabled;
+	}
+	public static void setTagsEnabled(boolean tagsEnabled) {
+		ScoreAPI.tagsEnabled = tagsEnabled;
+	}
+	public static boolean isScoresEnabled() {
+		return scoresEnabled;
+	}
+	public static void setScoresEnabled(boolean scoresEnabled) {
+		ScoreAPI.scoresEnabled = scoresEnabled;
+	}
+	public static Tag getTagDefault() {
+		return tagDefault;
+	}
+	public static void setTagDefault(Tag tagDefault) {
+		ScoreAPI.tagDefault = tagDefault;
+	}
+	public static DisplayBoard getScoreDefault() {
+		return scoreDefault;
+	}
+	public static void setScoreDefault(DisplayBoard scoreDefault) {
+		ScoreAPI.scoreDefault = scoreDefault;
+	}
+	public static List<String> getTagsGroups() {
+		return tagsGroups;
+	}
+	public static void setTagsGroups(List<String> tagsGroups) {
+		ScoreAPI.tagsGroups = tagsGroups;
+	}
+	public static Map<Player, Tag> getPlayersTags() {
+		return playersTags;
+	}
+	public static void setPlayersTags(Map<Player, Tag> playersTags) {
+		ScoreAPI.playersTags = playersTags;
+	}
+	public static Map<Player, DisplayBoard> getPlayersScores() {
+		return playersScores;
+	}
+	public static void setPlayersScores(Map<Player, DisplayBoard> playersScores) {
+		ScoreAPI.playersScores = playersScores;
+	}
 }

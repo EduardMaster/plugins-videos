@@ -7,9 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ScoreAPI.Tag;
 
 public class TagsCommand extends CMD {
 	public List<Tag> tags = new ArrayList<Tag>();

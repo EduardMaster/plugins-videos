@@ -15,10 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.API;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.KitType;
 import net.eduard.api.game.Slot;
+import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.GuiAPI.SimpleClick;
 import net.eduard.api.setup.GuiAPI.SimpleGui;
@@ -37,10 +38,10 @@ public class KitManager extends EventsManager {
 	private SimpleGui kitsGui = new SimpleGui("§8Seus  Kits", 6);;
 	private Map<String, Ability> kits = new HashMap<>();
 	private List<ItemStack> globalItems = new ArrayList<>();
-	private ItemStack soup = API.newItem("§6Sopa", Material.MUSHROOM_SOUP);
-	private ItemStack emptySlotItem = API.newItem(" ",
+	private ItemStack soup = ItemAPI.newItem("§6Sopa", Material.MUSHROOM_SOUP);
+	private ItemStack emptySlotItem = ItemAPI.newItem(" ",
 			Material.STAINED_GLASS_PANE, 15);
-	private ItemStack hotBarItem = API.newItem("§6§lKit§f§lPvP",
+	private ItemStack hotBarItem = ItemAPI.newItem("§6§lKit§f§lPvP",
 			Material.STAINED_GLASS_PANE, 10);
 
 	private boolean kitsEnabled = true;
@@ -213,9 +214,10 @@ public class KitManager extends EventsManager {
 				kit.setPrice(defaultKitPrice);
 			}
 		}
-		API.event(kitsGui);
-		API.event(shopGui);
+	
 		super.register(plugin);
+		ExtraAPI.event(kitsGui,getPlugin());
+		ExtraAPI.event(shopGui,getPlugin());
 	}
 
 	public void reloadDefaults() {

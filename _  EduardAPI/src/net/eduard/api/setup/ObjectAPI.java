@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * API de 
+ * API de
  * 
  * @author Eduard-PC
  *
@@ -157,17 +157,14 @@ public final class ObjectAPI {
 
 	public static boolean getChance(double chance) {
 
-		return Math.random()<=chance;
+		return Math.random() <= chance;
 	}
 
-	public static boolean commandEquals(String message, String cmd) {
+	public static String getCmd(String message) {
 		String command = message;
 		if (message.contains(" "))
 			command = message.split(" ")[0];
-		return command.equalsIgnoreCase(cmd);
-	}
-	public static boolean commandStartWith(String message, String cmd) {
-		return startWith(message, "/" + cmd);
+		return command;
 	}
 
 	/**
@@ -605,6 +602,7 @@ public final class ObjectAPI {
 	}
 	/**
 	 * Tipo de geração de Key
+	 * 
 	 * @author Eduard-PC
 	 *
 	 */
@@ -612,15 +610,15 @@ public final class ObjectAPI {
 		/**
 		 * ID UNICO
 		 */
-		UUID, 
+		UUID,
 		/**
 		 * LETRAS
 		 */
-		LETTER, 
+		LETTER,
 		/**
 		 * NUMEROS
 		 */
-		NUMERIC, 
+		NUMERIC,
 		/**
 		 * NUMEROS E LETRAS
 		 */
@@ -629,9 +627,12 @@ public final class ObjectAPI {
 
 	/**
 	 * Gera uma nova Key
-	 * @param type Tipo da Key
-	 * @param maxSize Tamanho da Key
-  	 * @return Key em forma de STRING
+	 * 
+	 * @param type
+	 *            Tipo da Key
+	 * @param maxSize
+	 *            Tamanho da Key
+	 * @return Key em forma de STRING
 	 */
 	public static String newKey(KeyType type, int maxSize) {
 
@@ -674,6 +675,7 @@ public final class ObjectAPI {
 	}
 	/**
 	 * Pega o Ip do Coneção do Servidor
+	 * 
 	 * @return Ip do Servidor
 	 */
 	public static String getServerIp() {
@@ -696,5 +698,5 @@ public final class ObjectAPI {
 			return ip;
 		}
 	}
-	
+
 }

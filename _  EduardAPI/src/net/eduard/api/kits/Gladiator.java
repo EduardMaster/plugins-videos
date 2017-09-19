@@ -15,9 +15,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.game.PlayerClickEntity;
-import net.eduard.api.game.PlayerClickEntityEffect;
 import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEntity;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEntityEffect;
 import net.eduard.api.setup.WorldAPI;
 import net.eduard.api.setup.WorldAPI.LocationEffect;
 

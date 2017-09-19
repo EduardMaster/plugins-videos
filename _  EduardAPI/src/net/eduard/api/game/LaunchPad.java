@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.manager.EventsManager;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 import net.eduard.api.setup.WorldAPI;
 
 public class LaunchPad extends EventsManager {

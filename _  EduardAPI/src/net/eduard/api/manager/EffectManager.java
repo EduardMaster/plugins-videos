@@ -14,9 +14,9 @@ import org.bukkit.potion.PotionEffect;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
-import net.eduard.api.game.PlayerEffect;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerEffect;
 public class EffectManager extends TimeManager implements PlayerEffect {
 	private List<PotionEffect> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();

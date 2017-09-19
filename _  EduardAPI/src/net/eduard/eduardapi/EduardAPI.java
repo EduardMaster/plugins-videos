@@ -5,10 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
@@ -24,22 +22,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 
 import net.eduard.api.API;
 import net.eduard.api.command.AplicateCommand;
@@ -47,21 +38,25 @@ import net.eduard.api.command.admin.AdminCommand;
 import net.eduard.api.command.staff.CheckIpCommand;
 import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.event.BungeeMessageEvent;
-import net.eduard.api.event.ChatMessageEvent;
 import net.eduard.api.game.Ability;
-import net.eduard.api.game.ChatChannel;
 import net.eduard.api.game.Drop;
 import net.eduard.api.kits.Achilles;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.manager.TimeManager;
-import net.eduard.api.server.Arena;
+import net.eduard.api.setup.ChatAPI;
+import net.eduard.api.setup.ChatAPI.ChatChannel;
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.GuiAPI;
 import net.eduard.api.setup.ExtraAPI.Replacer;
+import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.MinigameAPI;
+import net.eduard.api.setup.PlayerAPI;
 import net.eduard.api.setup.RexAPI;
-import net.eduard.api.setup.SpigotAPI;
+import net.eduard.api.setup.ScoreAPI;
 import net.eduard.api.setup.StorageAPI;
 import net.eduard.api.setup.VaultAPI;
+import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.WorldAPI.Arena;
 import net.eduard.eduardapi.command.ApiCommand;
 import net.eduard.eduardapi.command.EnchantCommand;
 import net.eduard.eduardapi.command.GotoCommand;
@@ -71,11 +66,6 @@ import net.eduard.eduardapi.command.config.ConfigCommand;
 import net.eduard.eduardapi.command.lag.LagCommand;
 import net.eduard.eduardapi.command.map.MapCommand;
 import net.eduard.eduardapi.command.permission.PermissionCommand;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 /**
  * // Nomes para os Meus Plugins // MasterPlugin (Minigames , Eventos, Grandes)
  * // ePlugin (Economia, Loja, Dinheiro, GUI) // EduPlugin (Geral) // EMPlugin
@@ -91,10 +81,7 @@ import net.md_5.bungee.api.chat.TextComponent;
  * @author Eduard-PC
  *
  */
-public class EduardAPI extends JavaPlugin
-		implements
-			Listener,
-			PluginMessageListener {
+public class EduardAPI extends JavaPlugin implements Listener {
 	private static JavaPlugin plugin;
 	private TimeManager time;
 
@@ -124,41 +111,6 @@ public class EduardAPI extends JavaPlugin
 	public Config getConfigs() {
 		return config;
 	}
-	@Override
-	public void onPluginMessageReceived(String channel, Player player,
-			byte[] message) {
-		if (!channel.equals("BungeeCord")) {
-			return;
-		}
-		ByteArrayDataInput in = ByteStreams.newDataInput(message);
-		API.callEvent(new BungeeMessageEvent(player, in));
-	}
-	@EventHandler
-	public void event(AsyncPlayerChatEvent e) {
-		// String message = ChatColor.translateAlternateColorCodes('&',
-		// e.getPlayer().getName()
-		// +
-		// "&aoiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-		// " + e.getMessage());
-		String message = ChatColor.translateAlternateColorCodes('&',
-				e.getMessage());
-		String format = "§b" + e.getPlayer().getName() + ": ";
-		e.setCancelled(true);
-		// e.getPlayer().spigot().sendMessage(new TextComponent(
-		// ChatColor.translateAlternateColorCodes('&', message)));
-
-		TextComponent text = SpigotAPI.getTextCorrect(format);
-		text.addExtra(SpigotAPI
-				.getTextCorrect(ChatColor.getLastColors(format) + message));
-		text.setHoverEvent(new HoverEvent(
-				net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-				new ComponentBuilder("aaaaaaaaaaaaaaaaaaaaa").create()));
-		// e.getPlayer().sendRawMessage(message);
-
-		e.getPlayer().spigot().sendMessage(text);
-		// ChatColor.translateAlternateColorCodes('&', message))
-		// .create());
-	}
 
 	@Override
 	public void onEnable() {
@@ -167,10 +119,6 @@ public class EduardAPI extends JavaPlugin
 		config = new Config(this, "config.yml");
 		messages = new Config(this, "messages.yml");
 		time = new TimeManager(this);
-		this.getServer().getMessenger().registerOutgoingPluginChannel(this,
-				"BungeeCord");
-		this.getServer().getMessenger().registerIncomingPluginChannel(this,
-				"BungeeCord", this);
 
 		StorageAPI.registerPackage(AplicateCommand.class);
 		StorageAPI.registerPackage(AdminCommand.class);
@@ -179,6 +127,13 @@ public class EduardAPI extends JavaPlugin
 		StorageAPI.registerPackage(Ability.class);
 		StorageAPI.registerPackage(CMD.class);
 		StorageAPI.registerPackage(Arena.class);
+		StorageAPI.registerClasses(WorldAPI.class);
+		StorageAPI.registerClasses(MinigameAPI.class);
+		StorageAPI.registerClasses(PlayerAPI.class);
+		StorageAPI.registerClasses(ScoreAPI.class);
+		StorageAPI.registerClasses(ChatAPI.class);
+		StorageAPI.registerClasses(ItemAPI.class);
+		StorageAPI.registerClasses(GuiAPI.class);
 
 		ExtraAPI.resetScoreboards();
 		ExtraAPI.consoleMessage("§bEduardAPI §fScoreboard resetadas!");
@@ -187,10 +142,10 @@ public class EduardAPI extends JavaPlugin
 
 			@Override
 			public void run() {
-				API.updateTagsScores();
 				API.updateTargets();
 			}
 		});
+		ScoreAPI.enable(this);
 		new GotoCommand().register();
 		new ApiCommand().register();
 		new SoundCommand().register();
@@ -210,6 +165,9 @@ public class EduardAPI extends JavaPlugin
 		ExtraAPI.consoleMessage("§bEduardAPI §fBase ativado!");
 		API.loadMaps();
 		ExtraAPI.consoleMessage("§bEduardAPI §fMapas §acarregados!");
+		ChatAPI.setEnabled(config.getBoolean("custom-chat"));
+		if (ChatAPI.isEnabled())
+			ChatAPI.enable(this);
 		config.add("chat-default", "local");
 
 		config.add("sound-teleport", API.SOUND_TELEPORT);
@@ -228,23 +186,22 @@ public class EduardAPI extends JavaPlugin
 		API.NO_JOIN_MESSAGE = config.getBoolean("no-join-message");
 		API.NO_QUIT_MESSAGE = config.getBoolean("no-quit-message");
 		API.NO_DEATH_MESSAGE = config.getBoolean("no-death-message");
-		API.CUSTOM_CHAT = config.getBoolean("custom-chat");
+
 		API.ON_JOIN = config.message("on-join-message");
 		API.ON_QUIT = config.message("on-quit-message");
 		API.SERVER_TAG = config.message("server-tag");
 		API.SOUND_TELEPORT = config.getSound("sound-teleport");
 		API.SOUND_ERROR = config.getSound("sound-error");
 		API.SOUND_SUCCESS = config.getSound("sound-success");
-		API.CHAT_SPIGOT = config.getBoolean("chat-clicable");
-		API.TAG_ENABLED = config.getBoolean("auto-tag");
-		API.GROUPS_TAGS = config.getStringList("tags-rank");
+		ScoreAPI.setTagsEnabled(config.getBoolean("auto-tag"));
+		ScoreAPI.setTagsGroups(config.getStringList("tags-rank"));
+		ScoreAPI.enable(this);
 		for (ConfigSection sec : config.getValues("chats")) {
 			ChatChannel chat = (ChatChannel) sec.getValue();
-			API.CHATS.put(chat.getName(), chat);
+			ChatAPI.getChannels().put(chat.getName(), chat);
 		}
-
-		API.CHAT = API.CHATS.getOrDefault(config.getString("chat-default"),
-				local);
+		ChatAPI.setChatDefault(ChatAPI.getChannels()
+				.getOrDefault(config.getString("chat-default"), local));
 		if (config.getBoolean("auto-rejoin")) {
 			for (Player p : API.getPlayers()) {
 				API.callEvent(new PlayerJoinEvent(p, null));
@@ -252,46 +209,6 @@ public class EduardAPI extends JavaPlugin
 		}
 
 		ExtraAPI.consoleMessage("§bEduardAPI §acarregado!");
-	}
-	public static void sendMessage(Player player, String message,
-			ChatChannel channel) {
-		ChatMessageEvent chat = new ChatMessageEvent(player, channel, message);
-		API.callEvent(chat);
-		if (!chat.isCancelled()) {
-			String permission = "chat." + chat.getChannel().getName();
-			message = chat.getFormat();
-			for (Entry<String, String> map : chat.getTags().entrySet()) {
-				message = message.replaceAll(map.getKey(), map.getValue());
-			}
-			message = chat.getFormat()
-					.replace("$chat_prefix", chat.getChannel().getPrefix())
-					.replace("$chat_suffix", chat.getChannel().getSuffix())
-					.replace("$message", chat.getMessage())
-					.replace("$player", player.getName());
-			if (API.CHAT_SPIGOT) {
-				TextComponent text = new TextComponent(message);
-				if (chat.getOnClickCommand() != null) {
-					text.setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND,
-							chat.getOnClickCommand()));
-				}
-				if (chat.getOnHoverText() != null) {
-					ComponentBuilder builder = new ComponentBuilder("");
-					for (String line : chat.getOnHoverText()) {
-						builder.append(line + "\n");
-					}
-					text.setHoverEvent(new HoverEvent(
-							HoverEvent.Action.SHOW_TEXT, builder.create()));
-				}
-
-				for (Player p : API.getPlayers()) {
-					if (p.hasPermission(permission)) {
-						p.spigot().sendMessage(text);
-					}
-				}
-			} else {
-				API.broadcast(message, permission);
-			}
-		}
 	}
 	@Override
 	public void onDisable() {
@@ -326,41 +243,6 @@ public class EduardAPI extends JavaPlugin
 			}
 		}
 	}
-	@EventHandler
-	public void onCommand(PlayerCommandPreprocessEvent e) {
-		Player p = e.getPlayer();
-		if (API.CUSTOM_CHAT) {
-
-			for (ChatChannel channel : API.CHATS.values()) {
-				if (ExtraAPI.commandEquals(e.getMessage(),
-						"/" + channel.getName())) {
-					e.setCancelled(true);
-					sendMessage(p, e.getMessage().replaceFirst("/", ""),
-							channel);
-					break;
-				}
-				if (ExtraAPI.commandEquals(e.getMessage(),
-						"/" + channel.getCommand())) {
-					e.setCancelled(true);
-					sendMessage(p, e.getMessage().replaceFirst("/", ""),
-							channel);
-					break;
-				}
-			}
-
-		}
-
-	}
-
-	@EventHandler
-	public void onChat(AsyncPlayerChatEvent e) {
-		if (API.CUSTOM_CHAT) {
-			Player player = e.getPlayer();
-			e.setCancelled(true);
-			sendMessage(player, e.getMessage(), API.CHAT);
-		}
-
-	}
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
@@ -385,7 +267,7 @@ public class EduardAPI extends JavaPlugin
 
 		}
 		if (API.NO_DEATH_MESSAGE) {
-			e.setDeathMessage("");
+			e.setDeathMessage(null);
 		}
 	}
 
@@ -413,25 +295,11 @@ public class EduardAPI extends JavaPlugin
 		if (API.NO_QUIT_MESSAGE) {
 			e.setQuitMessage("");
 		}
-		API.removeScore(e.getPlayer());
-		API.removeTag(e.getPlayer());
-	}
-	@EventHandler
-	public void onKick(PlayerKickEvent e) {
-		API.removeScore(e.getPlayer());
-		API.removeTag(e.getPlayer());
 	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if (API.SCORE_ENABLED) {
-			API.setScore(e.getPlayer(), API.SCORE.copy());
-		}
-		if (API.TAG_ENABLED) {
-			API.updateTagByRank(p);
-		}
-
 		if (config.getBoolean("save-players")) {
 			saveObject("Players/" + p.getName() + " " + p.getUniqueId(), p);
 		}

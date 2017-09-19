@@ -14,6 +14,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,9 +23,14 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import net.eduard.api.setup.StorageAPI.Storable;
 
 /**
  * API relacionada a criação e manipulação de Itens do Minecraft
@@ -32,6 +39,80 @@ import org.bukkit.inventory.meta.SkullMeta;
  *
  */
 public final class ItemAPI {
+
+	public static class EnchantGlow extends EnchantmentWrapper {
+
+		private static Enchantment glow;
+
+		public EnchantGlow(int id) {
+			super(id);
+		}
+
+		@Override
+		public boolean canEnchantItem(ItemStack item) {
+			return false;
+		}
+
+		@Override
+		public boolean conflictsWith(Enchantment other) {
+			return false;
+		}
+
+		@Override
+		public EnchantmentTarget getItemTarget() {
+			return null;
+		}
+
+		@Override
+		public int getMaxLevel() {
+			return 10;
+		}
+
+		@Override
+		public String getName() {
+			return "Glow";
+		}
+
+		@Override
+		public int getStartLevel() {
+			return 1;
+		}
+
+		public static Enchantment getGlow() {
+			if (glow != null)
+				return glow;
+			if (Enchantment.getByName("Glow") != null)
+				return Enchantment.getByName("Glow");
+			try {
+				RefAPI.setValue(Enchantment.class, "acceptingNew", true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			glow = new EnchantGlow(255);
+			Enchantment.registerEnchantment(glow);
+			return glow;
+		}
+
+		public static ItemStack addGlow(ItemStack item) {
+			Enchantment glow = getGlow();
+
+			if (!item.containsEnchantment(glow))
+				item.addUnsafeEnchantment(glow, 1);
+
+			return item;
+		}
+
+		public static ItemStack removeGlow(ItemStack item) {
+			Enchantment glow = getGlow();
+
+			if (item.containsEnchantment(glow))
+				item.removeEnchantment(glow);
+
+			return item;
+		}
+
+	}
 
 	/**
 	 * Mapa que armazena as Armaduras dos jogadores
@@ -840,14 +921,13 @@ public final class ItemAPI {
 	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(int id, String name, int amount,
-			int data, String... lore) {
+	public static ItemStack newItem(int id, String name, int amount, int data,
+			String... lore) {
 
 		@SuppressWarnings("deprecation")
-		ItemStack item = new ItemStack(id,amount,(short)data);
+		ItemStack item = new ItemStack(id, amount, (short) data);
 		ItemMeta meta = item.getItemMeta();
-		if (meta != null)
-		{
+		if (meta != null) {
 			meta.setDisplayName(name);
 			meta.setLore(Arrays.asList(lore));
 			item.setItemMeta(meta);
@@ -869,14 +949,13 @@ public final class ItemAPI {
 	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(int id, String name, int amount,
-			int data, List<String> lore) {
+	public static ItemStack newItem(int id, String name, int amount, int data,
+			List<String> lore) {
 
 		@SuppressWarnings("deprecation")
-		ItemStack item = new ItemStack(id,amount,(short)data);
+		ItemStack item = new ItemStack(id, amount, (short) data);
 		ItemMeta meta = item.getItemMeta();
-		if (meta != null)
-		{
+		if (meta != null) {
 			meta.setDisplayName(name);
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -930,5 +1009,152 @@ public final class ItemAPI {
 	public static ItemStack newItem(String name, Material material, int amount,
 			int data, String... lore) {
 		return newItem(material, name, amount, data, lore);
+	}
+	public static interface RecipeBuilder {
+
+		public Recipe getRecipe();
+		public default boolean addRecipe() {
+			;
+			if (getResult() == null)
+				return false;
+			return Bukkit.addRecipe(getRecipe());
+		}
+		public ItemStack getResult();
+		public void setResult(ItemStack result);
+
+	}
+
+	public static class SimpleRecipe implements Storable, RecipeBuilder {
+
+		private ItemStack result = null;
+		private List<ItemStack> items = new ArrayList<>();
+
+		public SimpleRecipe(ItemStack result) {
+			setResult(result);
+		}
+
+		public SimpleRecipe add(Material material) {
+			return add(new ItemStack(material));
+		}
+		public SimpleRecipe add(Material material, int data) {
+			return add(new ItemStack(material, 1, (short) data));
+		}
+		public SimpleRecipe add(ItemStack item) {
+			items.add(item);
+			return this;
+		}
+		public SimpleRecipe remove(ItemStack item) {
+			items.remove(item);
+			return this;
+		}
+
+		public ItemStack getResult() {
+
+			return result;
+		}
+
+		public ShapelessRecipe getRecipe() {
+			if (result == null)
+				return null;
+			ShapelessRecipe recipe = new ShapelessRecipe(result);
+			for (ItemStack item : items) {
+				recipe.addIngredient(item.getData());
+			}
+			return recipe;
+		}
+
+		@Override
+		public Object restore(Map<String, Object> map) {
+			return null;
+		}
+
+		@Override
+		public void store(Map<String, Object> map, Object object) {
+		}
+
+		public void setResult(ItemStack result) {
+			this.result = result;
+		}
+
+	}
+
+	public static class NormalRecipe implements Storable, RecipeBuilder {
+
+		private Map<Integer, ItemStack> items = new HashMap<>();
+		private ItemStack result = null;
+
+		public NormalRecipe set(int slot, ItemStack item) {
+			items.put(slot, item);
+			return this;
+		}
+		public NormalRecipe remove(int slot) {
+			items.remove(slot);
+			return this;
+		}
+		public ItemStack getIngridient(int slot) {
+			return items.get(slot);
+		}
+
+		public ShapedRecipe getRecipe() {
+			if (result == null)
+				return null;
+			ShapedRecipe recipe = new ShapedRecipe(result);
+			recipe.shape("789", "456", "123");
+
+			for (Entry<Integer, ItemStack> entry : items.entrySet()) {
+				try {
+					recipe.setIngredient(getSlot(entry.getKey()),
+							entry.getValue().getData());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+			return recipe;
+		}
+
+		public NormalRecipe(ItemStack craftResult) {
+			setResult(craftResult);
+		}
+
+		@SuppressWarnings("unused")
+		private char getSlot2(int slot) {
+			char x = 'A';
+			slot--;
+			for (int id = 1; id <= slot; id++) {
+				x++;
+			}
+			return x;
+		}
+
+		private char getSlot(int slot) {
+
+			return Character.forDigit(slot, 10);
+		}
+
+		@Override
+		public Object restore(Map<String, Object> map) {
+			return null;
+		}
+
+		@Override
+		public void store(Map<String, Object> map, Object object) {
+		}
+
+		public Map<Integer, ItemStack> getItems() {
+			return items;
+		}
+
+		public void setItems(Map<Integer, ItemStack> items) {
+			this.items = items;
+		}
+
+		public ItemStack getResult() {
+			return result;
+		}
+
+		public void setResult(ItemStack result) {
+			this.result = result;
+		}
 	}
 }

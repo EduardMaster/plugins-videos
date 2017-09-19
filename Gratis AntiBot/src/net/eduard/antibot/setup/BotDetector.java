@@ -6,9 +6,9 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.antibot.Main;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.EventsManager;
 
-public class BotDetector extends Manager {
+public class BotDetector extends EventsManager {
 
 	public BotDetector() {
 		Main.time.timer(20,new BukkitRunnable() {

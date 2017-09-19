@@ -22,15 +22,19 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import net.eduard.api.setup.StorageAPI.Storable;
 /**
  * API extra cheia de funcionalidades que sempre será preciso de uma forma
  * simplificada
@@ -39,6 +43,87 @@ import org.bukkit.scoreboard.Team;
  *
  */
 public final class ExtraAPI {
+	/**
+	 * Controlador de Eventos (Listener)
+	 * @author Eduard-PC
+	 *
+	 */
+	public static abstract class EventsManager implements Listener ,Storable{
+		/**
+		 * Se o Listener esta registrado
+		 */
+		private transient boolean registred;
+		/**
+		 * Plugin
+		 */
+		private transient Plugin plugin;
+		/**
+		 * Construtor base deixando Plugin automatico
+		 */
+		public EventsManager() {
+			setPlugin(defaultPlugin());
+		}
+		public Plugin defaultPlugin() {
+			return JavaPlugin.getProvidingPlugin(getClass());
+		}
+		/**
+		 * Construtor pedindo um Plugin
+		 * @param plugin Plugin
+		 */
+		public EventsManager(Plugin plugin) {
+			register(plugin);
+		}
+		/**
+		 * Registra o Listener para o Plugin
+		 * @param plugin Plugin
+		 */
+		public void register(Plugin plugin) {
+			unregisterListener();
+			this.registred = true;
+			setPlugin(plugin);
+			Bukkit.getPluginManager().registerEvents(this, plugin);
+		}
+		@Override
+		public Object restore(Map<String, Object> map) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void store(Map<String, Object> map, Object object) {
+			// TODO Auto-generated method stub
+			
+		}
+		/**
+		 * Desregistra o Listener
+		 */
+		public void unregisterListener() {
+			HandlerList.unregisterAll(this);
+			this.registred = false;
+		}
+		
+		/**
+		 * @return Se a Listener esta registrado
+		 */
+		public boolean isRegistered() {
+			return registred;
+		}
+		/**
+		 * 
+		 * @return Plugin
+		 */
+		public Plugin getPlugin() {
+			return plugin;
+		}
+		/**
+		 * Seta o Plugin
+		 * @param plugin Plugin
+		 */
+		public void setPlugin(Plugin plugin) {
+			this.plugin = plugin;
+		}
+
+	}
 	private static Map<String, Replacer> replacers = new HashMap<>();
 	public static interface Replacer {
 
@@ -218,16 +303,12 @@ public final class ExtraAPI {
 		cmd.setPermissionMessage(permissionMessage);
 		return cmd;
 	}
-	public static boolean commandEquals(String message, String cmd) {
-		return ObjectAPI.commandEquals(message, cmd);
-	}
-	public static boolean commandStartWith(String message, String cmd) {
-		return ObjectAPI.startWith(message, "/" + cmd);
-	}
 	public static boolean hasPlugin(String plugin) {
 		return Bukkit.getPluginManager().getPlugin(plugin) != null;
 	}
-
+	public static String getCmd(String message) {
+		return ObjectAPI.getCmd(message);
+	}
 	/**
 	 * Retorna se (now < (seconds + before));
 	 * 

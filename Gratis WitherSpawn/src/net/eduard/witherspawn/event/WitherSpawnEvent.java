@@ -4,10 +4,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.EventsManager;
 import net.eduard.witherspawn.Main;
 
-public class WitherSpawnEvent extends Manager {
+public class WitherSpawnEvent extends EventsManager {
 	
 	
 	public WitherSpawnEvent() {

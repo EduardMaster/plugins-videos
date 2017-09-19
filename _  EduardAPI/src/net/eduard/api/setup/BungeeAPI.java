@@ -9,8 +9,11 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
@@ -24,6 +27,64 @@ import net.md_5.bungee.api.ChatColor;
  *
  */
 public final class BungeeAPI {
+	public static class BungeeMessageListener implements PluginMessageListener{
+		@Override
+		public void onPluginMessageReceived(String channel, Player player,
+				byte[] message) {
+			if (!channel.equals("BungeeCord")) {
+				return;
+			}
+			ByteArrayDataInput in = ByteStreams.newDataInput(message);
+			ExtraAPI.callEvent(new BungeeMessageEvent(player, in));
+		}
+	}
+	public static boolean enabled;
+	private static BungeeMessageListener listener;
+	static {
+		listener = new BungeeMessageListener();
+	}
+	public static void enable(Plugin plugin) {
+		Bukkit.getMessenger().registerOutgoingPluginChannel(plugin,
+				"BungeeCord");
+		Bukkit.getMessenger().registerIncomingPluginChannel(plugin,
+				"BungeeCord", listener);
+	}
+	public static void disable() {
+		
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public static  class BungeeMessageEvent extends Event {
+		private static final HandlerList handlers = new HandlerList();
+		@Override
+		public HandlerList getHandlers() {
+			return handlers;
+		}
+		public static HandlerList getHandlerList() {
+			return handlers;
+		}
+		public BungeeMessageEvent(Player player, ByteArrayDataInput data) {
+			this.player = player;
+			this.data = data;
+			this.request = data.readUTF();
+		}
+		public ByteArrayDataInput getData() {
+			return data;
+		}
+		public Player getPlayer() {
+			return player;
+		}
+		public String getRequest() {
+			return request;
+		}
+		private ByteArrayDataInput data;
+		private Player player;
+		private String request;
+		
+	}
+
 	public static Plugin getInstance() {
 		return JavaPlugin.getProvidingPlugin(BungeeAPI.class);
 	}

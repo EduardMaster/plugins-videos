@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.EventsManager;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 
 public class Drop extends EventsManager{
 	

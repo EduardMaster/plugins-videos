@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.game.PlayerClick;
-import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClick;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
 
 public class BuildTower extends Ability {
 	public int size = 65;

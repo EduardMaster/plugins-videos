@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CMD;
-import net.eduard.api.server.Arena;
+import net.eduard.api.setup.WorldAPI.Arena;
 
 public class MapCopyCommand extends CMD {
 

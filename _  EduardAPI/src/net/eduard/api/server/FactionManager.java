@@ -15,7 +15,7 @@ import net.eduard.api.setup.StorageAPI.Storable;
 public class FactionManager implements Storable {
 
 	private Map<String, Faction> factions = new HashMap<>();
-	private Map<UUID, FactionMember> members = new HashMap<>();
+	private Map<UUID, FactionPlayer> members = new HashMap<>();
 	private RankManager ranks = new RankManager();
 	private Faction warZone;
 	private Faction protectedZone;
@@ -40,19 +40,19 @@ public class FactionManager implements Storable {
 	public Map<String, Faction> getFactions() {
 		return factions;
 	}
-	public FactionMember getMember(Player player) {
-		FactionMember member = members.get(player.getUniqueId());
+	public FactionPlayer getMember(Player player) {
+		FactionPlayer member = members.get(player.getUniqueId());
 		if (member == null) {
-			member = new FactionMember();
+			member = new FactionPlayer();
 			members.put(player.getUniqueId(), member);
 		}
 		return member;
 
 	}
-	public FactionMember getPlayer(Player player) {
+	public FactionPlayer getPlayer(Player player) {
 		return members.get(player.getUniqueId());
 	}
-	public Map<UUID, FactionMember> getMembers() {
+	public Map<UUID, FactionPlayer> getMembers() {
 		return members;
 	}
 	public boolean hasFaction(Player player) {
@@ -97,15 +97,15 @@ public class FactionManager implements Storable {
 	public boolean isClaimed(Location location) {
 		return getClaim(location).getFaction() != null;
 	}
-	public void factionJoin(FactionMember member, Faction faction) {
+	public void factionJoin(FactionPlayer member, Faction faction) {
 		faction.getMembers().add(member);
 		member.setFaction(faction);
 	}
 	public void factionLeave(Player player) {
-		FactionMember member = getMember(player);
+		FactionPlayer member = getMember(player);
 		member.getFaction().getMembers().remove(member);
 		member.setFaction(null);
-		member.setRank(ranks.getFirstRank());
+//		member.setRank(ranks.getFirstRank());
 	}
 	public void factionClaim(Player player) {
 		Faction fac = getFaction(player);
@@ -121,9 +121,9 @@ public class FactionManager implements Storable {
 	}
 	public void deleteFaction(Faction faction) {
 
-		for (FactionMember member : faction.getMembers()) {
+		for (FactionPlayer member : faction.getMembers()) {
 			member.setFaction(null);
-			member.setRank(ranks.getFirstRank());
+//			member.setRank(ranks.getFirstRank());
 		}
 		for (Faction fac : faction.getAllies()) {
 			fac.getAllies().remove(faction);
@@ -138,7 +138,7 @@ public class FactionManager implements Storable {
 		this.factions = factions;
 	}
 
-	public void setMembers(Map<UUID, FactionMember> members) {
+	public void setMembers(Map<UUID, FactionPlayer> members) {
 		this.members = members;
 	}
 

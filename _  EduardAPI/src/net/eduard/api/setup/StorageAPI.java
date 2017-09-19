@@ -592,6 +592,14 @@ public final class StorageAPI {
 		}
 		return store;
 	}
+	public static void registerClasses(Class<?> claz) {
+		for (Class<?> clazz : claz.getDeclaredClasses()) {
+			if (isStorable(clazz)) {
+				register((Class<? extends Storable>)clazz);
+			}
+		}
+	}
+	
 	public static void addObject(int id, Object object) {
 		objects.put(id, object);
 	}
@@ -640,7 +648,7 @@ public final class StorageAPI {
 	public static void autoRegisterAlias(String alias) {
 		if (isRegistred(alias))
 			return;
-		System.out.println(alias);
+//		System.out.println(alias);
 		Class<?> claz = null;
 		for (String pack : packages) {
 			String name = pack + "." + alias;
@@ -1104,5 +1112,6 @@ public final class StorageAPI {
 		}
 
 	}
+
 	
 }

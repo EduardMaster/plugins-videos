@@ -1,18 +1,13 @@
 package net.eduard.api.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.protocol.packet.Chat;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
 /**
  * API para utilização de metodos do Spigot com mais facilidade
  * 

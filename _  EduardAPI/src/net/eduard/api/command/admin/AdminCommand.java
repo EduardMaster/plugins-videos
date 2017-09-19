@@ -25,15 +25,15 @@ import org.bukkit.util.Vector;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Jump;
-import net.eduard.api.game.PlayerClick;
-import net.eduard.api.game.PlayerClickEffect;
-import net.eduard.api.game.PlayerClickEntity;
-import net.eduard.api.game.PlayerClickEntityEffect;
 import net.eduard.api.game.Slot;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClick;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEntity;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEntityEffect;
 import net.eduard.api.setup.VaultAPI;
 
 public class AdminCommand extends CMD {

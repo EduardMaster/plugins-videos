@@ -12,10 +12,10 @@ import org.bukkit.event.server.PluginDisableEvent;
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.api.game.Delay;
-import net.eduard.api.game.PlayerEffect;
 import net.eduard.api.game.Title;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerEffect;
 import net.eduard.api.setup.RexAPI;
 
 public class WarpCommand extends CMD {
@@ -71,7 +71,7 @@ public class WarpCommand extends CMD {
 		String msg = e.getMessage();
 		Set<String> warps = config.getKeys();
 		for (String warp : warps) {
-			if (ExtraAPI.commandEquals(msg, "/" + warp)) {
+			if (ExtraAPI.startWith(msg, "/" + warp)) {
 				e.setMessage("/warp " + warp);
 				break;
 			}

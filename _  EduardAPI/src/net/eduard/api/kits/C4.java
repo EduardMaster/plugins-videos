@@ -12,10 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
-import net.eduard.api.game.PlayerClick;
-import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClick;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
 
 public class C4 extends Ability {
 

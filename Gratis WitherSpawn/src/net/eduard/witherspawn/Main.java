@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 import net.eduard.witherspawn.command.WitherCommand;
 import net.eduard.witherspawn.event.WitherSpawnEvent;
 
@@ -18,7 +18,7 @@ public class Main extends JavaPlugin  {
 	public static Config config;
 	public static Wither wither;
 	public static JavaPlugin plugin;
-	public static Manager time;
+	public static TimeManager time;
 	
 	
 	@Override
@@ -33,7 +33,7 @@ public class Main extends JavaPlugin  {
 	public void onEnable() {
 		plugin = this;
 		config = new Config(this);
-		time = new Manager(this);
+		time = new TimeManager(this);
 		config.add("Spawned", "&cO Boss Wither ja esta vivo!");
 		config.add("NoSpawn", "&6O spawn do Boss Wither nao foi setado!");
 		config.add("SetSpawn", "&bO spawn do Boss Wither setado!");

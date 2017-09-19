@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 
 /**
  * Controlador de Tempo, classe que controla e ajuda na criação de temporarizador (Timer)<br>

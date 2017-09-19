@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.API;
 import net.eduard.api.manager.Cooldown;
 import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerInteract;
 
 public class Ability extends Cooldown {
 

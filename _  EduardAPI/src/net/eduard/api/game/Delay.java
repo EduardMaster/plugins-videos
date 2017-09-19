@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
+import net.eduard.api.setup.PlayerAPI.PlayerEffect;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class Delay implements Storable {

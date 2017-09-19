@@ -19,11 +19,9 @@ on-death-player-message: '&6O jogador &e$killer matou o jogador $player'
 
 custom-chat: false
 chat-format: '$player: $message'
-# Precisa ser Spigot se for Craftbukkit vai dar erro
-chat-clicable: true
 
 custom-motd: false
-# -1 significa que está desativado
+
 custom-motd-amount: -1
 motd:
 - seja bem vindo

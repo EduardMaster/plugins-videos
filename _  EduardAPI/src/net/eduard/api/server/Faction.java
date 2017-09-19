@@ -17,10 +17,10 @@ public class Faction implements Storable{
 	private String prefix;
 	private String suffix;
 	private Location base;
-	private FactionMember leader;
+	private FactionPlayer leader;
 	private List<FactionClaim> claims = new ArrayList<>();
-	private List<FactionMember> members = new ArrayList<>();
-	private List<FactionMember> invites = new ArrayList<>();
+	private List<FactionPlayer> members = new ArrayList<>();
+	private List<FactionPlayer> invites = new ArrayList<>();
 	private List<Faction> allies = new ArrayList<>();
 	private List<Faction> rivals = new ArrayList<>();
 	public Faction(String name, String prefix) {
@@ -31,7 +31,7 @@ public class Faction implements Storable{
 		return claims;
 	}
 	public void sendMessage(String message) {
-		for (FactionMember member : getMembers()) {
+		for (FactionPlayer member : getMembers()) {
 			member.sendMessage(message);
 		}
 	}
@@ -40,16 +40,16 @@ public class Faction implements Storable{
 				message.replace("$tag", prefix).replace("$name", name));
 	}
 
-	public List<FactionMember> getInvites() {
+	public List<FactionPlayer> getInvites() {
 		return invites;
 	}
 
 
 
-	public FactionMember getLeader() {
+	public FactionPlayer getLeader() {
 		return leader;
 	}
-	public List<FactionMember> getMembers() {
+	public List<FactionPlayer> getMembers() {
 		return members;
 	}
 	public String getName() {
@@ -67,15 +67,15 @@ public class Faction implements Storable{
 	}
 
 
-	public void setInvites(List<FactionMember> invites) {
+	public void setInvites(List<FactionPlayer> invites) {
 		this.invites = invites;
 	}
 
-	public void setLeader(FactionMember leader) {
+	public void setLeader(FactionPlayer leader) {
 		this.leader = leader;
 	}
 
-	public void setMembers(List<FactionMember> members) {
+	public void setMembers(List<FactionPlayer> members) {
 		this.members = members;
 	}
 
@@ -156,7 +156,7 @@ public class Faction implements Storable{
 	public double getKillPerDeath() {
 		int kill = 0;
 		int death = 0;
-		for (FactionMember member : members) {
+		for (FactionPlayer member : members) {
 			kill+=member.getKills();
 			death+= member.getDeaths();
 		}

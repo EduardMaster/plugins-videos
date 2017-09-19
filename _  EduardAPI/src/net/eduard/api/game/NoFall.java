@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.manager.EventsManager;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 import net.eduard.api.setup.GameAPI;
 /**
  * Anti dano de queda dos Jogadores

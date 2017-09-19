@@ -2,8 +2,6 @@ package net.eduard.internet.hologram;
 
 import java.lang.reflect.Field;
 
-import net.eduard.api.minecraft.reflection.Reflection;
-
 public abstract class NMUClass {
 
 	private static boolean initialized = false;

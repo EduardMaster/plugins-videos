@@ -2,7 +2,7 @@ package net.eduard.api.tutorial;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.util.ParticleEffect;
+import net.eduard.api.minecraft.reflection.ParticleEffect;
 
 public class CriarParticle {
 

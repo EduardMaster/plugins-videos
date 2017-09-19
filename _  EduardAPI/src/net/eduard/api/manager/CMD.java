@@ -15,6 +15,7 @@ import org.bukkit.command.TabCompleter;
 
 import net.eduard.api.API;
 import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.ExtraAPI.EventsManager;
 
 public class CMD extends EventsManager
 		implements

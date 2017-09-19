@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,28 +31,21 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
 import net.eduard.api.event.PlayerTargetEvent;
-import net.eduard.api.event.ScoreUpdateEvent;
-import net.eduard.api.event.TagUpdateEvent;
-import net.eduard.api.game.ChatChannel;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
 import net.eduard.api.manager.TimeManager;
-import net.eduard.api.server.Arena;
 import net.eduard.api.setup.ExtraAPI;
 import net.eduard.api.setup.GameAPI;
 import net.eduard.api.setup.ItemAPI;
 import net.eduard.api.setup.RefAPI;
-import net.eduard.api.setup.ScoreAPI.DisplayBoard;
 import net.eduard.api.setup.ScoreAPI.FakeOfflinePlayer;
 import net.eduard.api.setup.StorageAPI;
-import net.eduard.api.setup.VaultAPI;
 import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.WorldAPI.Arena;
 import net.eduard.api.setup.WorldAPI.EmptyWorldGenerator;
 
 /**
@@ -87,38 +79,9 @@ public class API {
 	 */
 	public static final Sounds ROSNAR = Sounds.create(Sound.CAT_PURR);
 
-	/**
-	 * Mapa contendo todos os Canais de Chat
-	 */
-	public static Map<String, ChatChannel> CHATS = new HashMap<>();
-	/**
-	 * Mapa contendo todas Scoreboards dos Jogadores
-	 */
-	public static Map<Player, DisplayBoard> SCORES = new HashMap<>();
-	public static List<String> GROUPS_TAGS = new ArrayList<>();
-	public static Map<Player, Tag> TAGS = new HashMap<>();
-
 	public static Config MAPS_CONFIG;
-	/**
-	 * Ligar Sistema de Scoreboard
-	 */
-	public static boolean SCORE_ENABLED = false;
-	/**
-	 * Ligar Sistema de Tag
-	 */
-	public static boolean TAG_ENABLED = false;
-	/**
-	 * Score base
-	 */
-	public static DisplayBoard SCORE;
-	/**
-	 * Chat local
-	 */
-	public static ChatChannel CHAT;
-	/**
-	 * Ligar Sistema de Chat
-	 */
-	public static boolean CUSTOM_CHAT = false;
+
+	
 	/**
 	 * Mensagem de quando console digita um comando
 	 */
@@ -203,10 +166,6 @@ public class API {
 	 * Ligar sistema de Respawn Automatico
 	 */
 	public static boolean AUTO_RESPAWN = true;
-	/**
-	 * Ligar sistema de Chat para o Spigot
-	 */
-	public static boolean CHAT_SPIGOT = false;
 
 	/**
 	 * Controlador de Tempo da API
@@ -243,69 +202,7 @@ public class API {
 		}
 
 	}
-	public static void setScore(Player player, DisplayBoard score) {
-		SCORES.put(player, score);
-		score.apply(player);
-	}
-	public static DisplayBoard getScore(Player player) {
-		return SCORES.get(player);
 
-	}
-
-	public static Tag getTag(Player player) {
-		return TAGS.get(player);
-	}
-
-	public static void resetTag(Player player) {
-		setTag(player, "");
-	}
-
-	public static void setTag(Player player, String prefix) {
-		setTag(player, prefix, "");
-	}
-
-	public static void setTag(Player player, String prefix, String suffix) {
-		setTag(player, new Tag(prefix, suffix));
-	}
-
-	public static void setTag(Player player, Tag tag) {
-		TAGS.put(player, tag);
-
-	}
-
-	public static void updateTagsScores() {
-		if (SCORE_ENABLED) {
-
-			try {
-				for (Entry<Player, DisplayBoard> map : SCORES.entrySet()) {
-					DisplayBoard score = map.getValue();
-					Player player = map.getKey();
-					ScoreUpdateEvent event = new ScoreUpdateEvent(player, score);
-					if (!event.isCancelled()) {
-						score.update(player);	
-					}
-				}
-			} catch (Exception e) {
-				Bukkit.getLogger().info(
-						"Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
-			}
-		}
-		if (TAG_ENABLED) {
-			Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
-
-			for (Player p : API.getPlayers()) {
-				Scoreboard score = p.getScoreboard();
-				if (score == null) {
-					p.setScoreboard(main);
-					score = main;
-					continue;
-				}
-				updateTags(score);
-
-			}
-			updateTags(main);
-		}
-	}
 	public static void updateTargets() {
 		for (Player p : API.getPlayers()) {
 
@@ -315,57 +212,6 @@ public class API {
 			API.callEvent(event);
 
 		}
-	}
-	@SuppressWarnings("deprecation")
-	public static void updateTags(Scoreboard score) {
-		for (Entry<Player, Tag> map : TAGS.entrySet()) {
-			Tag tag = map.getValue();
-			Player player = map.getKey();
-			if (player == null)
-				continue;
-			String name = ExtraAPI.getText(tag.getRank() + player.getName());
-			Team team = score.getTeam(name);
-			if (team == null)
-				team = score.registerNewTeam(name);
-			TagUpdateEvent event = new TagUpdateEvent(tag,player);
-			API.callEvent(event);
-			if (!event.isCancelled())continue;
-			team.setPrefix(
-					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getPrefix())));
-			team.setSuffix(
-					ExtraAPI.toText(ExtraAPI.toChatMessage(tag.getSuffix())));
-			if (!team.hasPlayer(player))
-				team.addPlayer(player);
-
-		}
-	}
-	public static void updateScoreboard(Player player) {
-		getScore(player).update(player);
-	}
-	public static void updateTagByRank(Player player) {
-		String group = VaultAPI.getPermission().getPrimaryGroup(player);
-		String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
-		String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
-		int id = 0;
-		for (String rank : GROUPS_TAGS) {
-			if (rank.equalsIgnoreCase(group)) {
-				Tag tag = new Tag(prefix, suffix);
-				tag.setName(player.getName());
-				tag.setRank(id);
-				setTag(player, tag);
-				break;
-			}
-			id++;
-		}
-
-	}
-
-	public static void removeScore(Player player) {
-		player.setScoreboard(API.getMainScoreboard());
-		TAGS.remove(player);
-	}
-	public static void removeTag(Player player) {
-		TAGS.remove(player);
 	}
 
 	public static Map<String, Command> getCommands() {

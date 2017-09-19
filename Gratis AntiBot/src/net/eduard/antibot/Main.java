@@ -11,17 +11,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.eduard.antibot.setup.BotDetector;
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.Manager;
+import net.eduard.api.manager.TimeManager;
 
 public class Main extends JavaPlugin {
 
 	public static List<String> ips_proxy;
 	public static Config config;
-	public static Manager time;
+	public static TimeManager time;
 	@Override
 	public void onEnable() {
 		config = new Config(this);
-		time = new Manager(this);
+		time = new TimeManager(this);
 		config.add("Bot",
 			"&cSuspeita de Bot! $enter §aPor favor relogue em alguns segundos!");
 		config.saveConfig();

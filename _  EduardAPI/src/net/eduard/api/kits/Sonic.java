@@ -20,10 +20,10 @@ import net.eduard.api.API;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Jump;
-import net.eduard.api.game.PlayerClick;
-import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClick;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
 
 public class Sonic extends Ability {
 	public static ArrayList<Player> inEffect = new ArrayList<>();

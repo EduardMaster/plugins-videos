@@ -5,8 +5,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.game.Tag;
 import net.eduard.api.manager.CMD;
+import net.eduard.api.setup.ScoreAPI;
+import net.eduard.api.setup.ScoreAPI.Tag;
 
 public class TagCommand extends CMD
 {
@@ -23,7 +24,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
       for (Tag tag : TagsCommand.getTags().tags) {
         if (tag.getName().equalsIgnoreCase(args[0])) {
           if (p.hasPermission("Tag." + tag.getName())) {
-           	API.setTag(p, tag);
+           	ScoreAPI.setTag(p, tag);
             p.sendMessage(
               "§6Sua tag foi alterada para " + tag.getName());
             return true;

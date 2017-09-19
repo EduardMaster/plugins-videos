@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Ability;
-import net.eduard.api.game.PlayerClick;
-import net.eduard.api.game.PlayerClickEffect;
 import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.PlayerAPI.PlayerClick;
+import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
 
 
 public class Backpacker extends Ability{
