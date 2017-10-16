@@ -16,14 +16,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.setup.Mine;
 
 public class RegenerarArenas implements Listener{
 	public static final ItemStack REGENERAR =
-			API.newItem(Material.APPLE,"§6Regenerar");
+			Mine.newItem(Material.APPLE,"§6Regenerar");
 
 		public static final ItemStack RESETAR =
-				API.newItem(Material.ARROW,"§6Resetar");
+				Mine.newItem(Material.ARROW,"§6Resetar");
 		@EventHandler
 		public void ResetarBlocos(BlockBurnEvent e) {
 

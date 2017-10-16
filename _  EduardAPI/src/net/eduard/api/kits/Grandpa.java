@@ -4,12 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Grandpa extends Ability{
 
 	public Grandpa() {
 		setIcon(Material.STICK, "§fJogue seus inimigos para longe");
-		ItemAPI.addEnchant(add(Material.STICK), Enchantment.KNOCKBACK, 2);
+		Mine.addEnchant(add(Material.STICK), Enchantment.KNOCKBACK, 2);
 	}
 }

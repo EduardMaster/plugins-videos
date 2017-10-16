@@ -3,7 +3,7 @@ package net.eduard.money;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.eduardapi.EduardPlugin;
+import net.eduard.api.EduardPlugin;
 import net.eduard.money.command.TemplateCommand;
 import net.eduard.money.event.TemplateEvent;
 

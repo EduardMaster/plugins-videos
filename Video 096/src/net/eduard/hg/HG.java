@@ -1,9 +1,9 @@
 package net.eduard.hg;
 
+import java.util.ArrayList;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
 
 public class HG {
 	public static ArrayList<BlockState> blocks = new ArrayList<>();

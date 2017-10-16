@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 import net.eduard.witherspawn.Main;
 
-public class SetSpawn extends CMD {
+public class SetSpawn extends CommandManager {
 	public SetSpawn() {
 		super("setspawn","setarspawn");
 		// TODO Auto-generated constructor stub

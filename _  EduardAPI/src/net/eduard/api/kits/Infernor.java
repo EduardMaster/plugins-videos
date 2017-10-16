@@ -13,13 +13,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.click.PlayerClickEntity;
+import net.eduard.api.click.PlayerClickEntityEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntity;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntityEffect;
-import net.eduard.api.setup.WorldAPI;
-import net.eduard.api.setup.WorldAPI.LocationEffect;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.LocationEffect;
 
 public class Infernor extends Ability {
 	
@@ -62,8 +60,8 @@ public class Infernor extends Ability {
 					targets.put(target, player);
 					arenas.put(player, arena);
 					arenas.put(target, arena);
-					GameAPI.makeInvunerable(player, effectSeconds);
-					GameAPI.makeInvunerable(target, effectSeconds);
+					Mine.makeInvunerable(player, effectSeconds);
+					Mine.makeInvunerable(target, effectSeconds);
 					player.teleport(loc.clone().add(size - 2, 1, 2 - size)
 							.setDirection(player.getLocation().getDirection()));
 					target.teleport(loc.clone().add(2 - size, 1, size - 2)
@@ -79,7 +77,7 @@ public class Infernor extends Ability {
 	}
 	public List<Location> createArena(Player p){
 		Location x = p.getLocation().add(0, 100, 0);
-		List<Location> locs = WorldAPI.getBox(x, size, size, size, new LocationEffect() {
+		List<Location> locs = Mine.getBox(x, size, size, size, new LocationEffect() {
 			
 			@SuppressWarnings("deprecation")
 			@Override
@@ -90,12 +88,12 @@ public class Infernor extends Ability {
 				return true;
 			}
 		});
-		WorldAPI.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
+		Mine.getBox(p.getLocation().add(0, 100, 0), size-1, size-1, size-1, new LocationEffect() {
 			
 			@Override
 			public boolean effect(Location location) {
 				location.getBlock().setType(Material.AIR);
-				if (API.getChance(chance)){
+				if (Mine.getChance(chance)){
 					location.getBlock().setType(Material.FIRE);
 				}
 				

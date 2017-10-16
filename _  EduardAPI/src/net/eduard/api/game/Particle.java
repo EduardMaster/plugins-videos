@@ -5,8 +5,8 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.setup.RefAPI;
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.Extra;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class Particle implements Storable {
@@ -57,7 +57,7 @@ public class Particle implements Storable {
 
 	public Particle create() {
 		try {
-			RexAPI.sendPackets(getPacket());
+			Mine.sendPackets(getPacket());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,14 +67,14 @@ public class Particle implements Storable {
 
 	private Object getPacket() throws Exception {
 
-		return RefAPI.getNew(RexAPI.pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
+		return Extra.getNew(Mine.pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
 				(float) location.getY(), (float) location.getZ(), xRandom, yRandom, zRandom, speed, amount);
 	}
 
 	public Particle create(Player p) {
 
 		try {
-			RexAPI.sendPacket(getPacket(), p);
+			Mine.sendPacket(getPacket(), p);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

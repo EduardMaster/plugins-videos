@@ -3,7 +3,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.setup.ConfigAPI;
-import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.Mine;
 public class CooldownConfig extends ConfigAPI {
 
 	private String tag = "Cooldowns.";
@@ -29,7 +29,7 @@ public class CooldownConfig extends ConfigAPI {
 	}
 
 	public String getTime(Player player, String cooldown) {
-		return ExtraAPI.formatTime(getCooldown(player, cooldown));
+		return Mine.formatTime(getCooldown(player, cooldown));
 	}
 
 	public long getCooldown(Player player, String cooldown) {

@@ -1,0 +1,15 @@
+
+On Warp: 'Voce foi teleportado para <warp>'
+
+Warp set: 'Voce setou o warp <warp>'
+
+Invalid Warp: '&cNao existe este warp'
+
+Warp delete: '&cVoce deletou a warp <warp>'
+
+Warp list: '&aAs warps disponiveis são: $warps'
+
+
+Warps:
+  nome1:
+  nome2:

@@ -1,15 +1,15 @@
 
 package net.eduard.skywars;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main extends JavaPlugin {
 

@@ -6,10 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class BuildTower extends Ability {
 	public int size = 65;
@@ -30,7 +30,7 @@ public class BuildTower extends Ability {
 							loc.getBlock().setType(type);
 						}
 						loc.add(0, 1, 0);
-						GameAPI.teleport(player, loc);
+						Mine.teleport(player, loc);
 					}
 				}
 			}

@@ -14,11 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.api.API;
+import net.eduard.api.click.ClickComparationType;
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.ClickComparationType;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class EnderMage extends Ability {
 
@@ -80,10 +80,10 @@ public class EnderMage extends Ability {
 				if (livingEntity instanceof Player) {
 					Player player = (Player) entity;
 					sendMessage(player);
-					GameAPI.makeInvunerable(player, effectSeconds);
-					GameAPI.makeInvunerable(p, effectSeconds);
+					Mine.makeInvunerable(player, effectSeconds);
+					Mine.makeInvunerable(p, effectSeconds);
 					pulled = true;
-					GameAPI.teleport(entity, teleport);
+					Mine.teleport(entity, teleport);
 				}
 			}
 
@@ -91,8 +91,8 @@ public class EnderMage extends Ability {
 
 		if (pulled) {
 			sendMessage(p);
-			GameAPI.makeInvunerable(p, effectSeconds);
-			GameAPI.teleport(p, teleport);
+			Mine.makeInvunerable(p, effectSeconds);
+			Mine.teleport(p, teleport);
 		}
 
 		return pulled;

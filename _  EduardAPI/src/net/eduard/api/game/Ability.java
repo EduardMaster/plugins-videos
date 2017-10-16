@@ -13,11 +13,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.Cooldown;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerInteract;
+import net.eduard.api.click.PlayerInteract;
+import net.eduard.api.manager.CooldownManager;
+import net.eduard.api.setup.Mine;
 
-public class Ability extends Cooldown {
+public class Ability extends CooldownManager {
 
 	private String name;
 	private double price;
@@ -45,7 +45,7 @@ public class Ability extends Cooldown {
 	}
 
 	public ItemStack add(ItemStack item) {
-		getItems().add(ItemAPI.setName(item, "§b" + name));
+		getItems().add(Mine.setName(item, "§b" + name));
 		return item;
 	}
 
@@ -154,9 +154,9 @@ public class Ability extends Cooldown {
 
 	public Ability setIcon(Material material, int data, String... lore) {
 		icon = new ItemStack(material);
-		ItemAPI.setName(icon, "§6Kit " + name);
-		ItemAPI.setLore(icon, lore);
-		ItemAPI.addEnchant(icon, Enchantment.DURABILITY, 10);
+		Mine.setName(icon, "§6Kit " + name);
+		Mine.setLore(icon, lore);
+		Mine.addEnchant(icon, Enchantment.DURABILITY, 10);
 		return this;
 	}
 

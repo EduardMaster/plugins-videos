@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import net.eduard.api.click.PlayerClickEntity;
+import net.eduard.api.click.PlayerClickEntityEffect;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntity;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntityEffect;
 
 public class Hulk extends Ability {
 

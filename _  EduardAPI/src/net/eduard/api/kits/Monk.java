@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import net.eduard.api.click.PlayerClickEntity;
+import net.eduard.api.click.PlayerClickEntityEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntity;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEntityEffect;
 
 public class Monk extends Ability {
 

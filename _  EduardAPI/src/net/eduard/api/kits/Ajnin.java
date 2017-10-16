@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
 
 public class Ajnin extends Ability {
 
@@ -47,7 +47,7 @@ public class Ajnin extends Ability {
 					if (target != null) {
 						if (target.getLocation().distance(p.getLocation()) <= maxDistance) {
 							if (cooldown(p)) {
-								GameAPI.teleport(target, p.getLocation());
+								Mine.teleport(target, p.getLocation());
 								e.setCancelled(true);
 
 							}

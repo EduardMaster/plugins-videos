@@ -3,9 +3,9 @@ package net.eduard.clickcounter;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.api.EduardPlugin;
 import net.eduard.clickcounter.command.TestClickCommand;
 import net.eduard.clickcounter.event.CPSCounter;
-import net.eduard.eduardapi.EduardPlugin;
 
 public class Main extends EduardPlugin {
 	private static Main plugin;

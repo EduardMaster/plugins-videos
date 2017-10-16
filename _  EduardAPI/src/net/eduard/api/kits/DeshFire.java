@@ -15,13 +15,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class DeshFire extends Ability {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -41,8 +41,8 @@ public class DeshFire extends Ability {
 				// TODO Auto-generated method stub
 				if (hasKit(player)) {
 					if (cooldown(player)) {
-						ItemAPI.saveArmours(player);
-						ItemAPI.setEquip(player, Color.RED, "§c" + getName());
+						Mine.saveArmours(player);
+						Mine.setEquip(player, Color.RED, "§c" + getName());
 						inEffect.add(player);
 						player.setAllowFlight(true);
 						API.TIME.delay(effectSeconds, new Runnable() {
@@ -50,7 +50,7 @@ public class DeshFire extends Ability {
 							@Override
 							public void run() {
 								if (hasKit(player)) {
-									ItemAPI.getArmours(player);
+									Mine.getArmours(player);
 									inEffect.remove(player);
 								}
 							}

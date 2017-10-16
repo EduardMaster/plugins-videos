@@ -16,7 +16,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.Mine;
+
 
 @SuppressWarnings("deprecation")
 public class EstacarMobs3 implements Listener{
@@ -88,7 +89,7 @@ public class EstacarMobs3 implements Listener{
 		}
 	}
 	public void stack(LivingEntity entity,int stack) {
-		entity.setCustomName("§6"+ExtraAPI.toTitle(entity.getType().name())+" §ex"+stack);
+		entity.setCustomName("§6"+Mine.toTitle(entity.getType().name())+" §ex"+stack);
 		entity.setCustomNameVisible(true);
 		stacks.put(entity, stack);
 	}

@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.API;
 import net.eduard.api.game.Ability;
+import net.eduard.api.setup.Mine;
 
 public class DarkMage extends Ability {
 	public double chance = 0.3;
@@ -27,7 +27,7 @@ public class DarkMage extends Ability {
 			if (hasKit(p)) {
 				if (p.getItemInHand() == null)
 					return;
-				if (API.getChance(chance)) 
+				if (Mine.getChance(chance)) 
 					if (e.getEntity() instanceof LivingEntity) {
 						LivingEntity livingEntity = (LivingEntity) e.getEntity();
 						givePotions(livingEntity);

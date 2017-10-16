@@ -1,13 +1,13 @@
 
 package net.eduard.skywars;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
 
 public final class SkyWars extends BukkitRunnable {
 

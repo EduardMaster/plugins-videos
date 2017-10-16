@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.Mine;
 import net.eduard.tapetevoador.Main;
 
 public class TapeteEvents implements Listener {
@@ -78,7 +78,7 @@ public class TapeteEvents implements Listener {
 
 		Player p = e.getPlayer();
 
-		if (!WorldAPI.equals(e.getTo(), e.getFrom())) {
+		if (!Mine.equals(e.getTo(), e.getFrom())) {
 			if (Main.players.contains(p)) {
 				if (p.isDead()) {
 					return;

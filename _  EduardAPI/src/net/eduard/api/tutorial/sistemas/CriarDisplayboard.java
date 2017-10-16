@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import net.eduard.api.setup.ScoreAPI.DisplayBoard;
+import net.eduard.api.setup.Mine.DisplayBoard;
 
 public class CriarDisplayboard {
 

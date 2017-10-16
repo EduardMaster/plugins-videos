@@ -1,9 +1,9 @@
 
 package net.eduard.witherspawn.command;
 
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 
-public class WitherCommand extends CMD {
+public class WitherCommand extends CommandManager {
 	
 	public WitherCommand() {
 		super("wither");

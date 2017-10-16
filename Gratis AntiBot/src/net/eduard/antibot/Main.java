@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.eduard.antibot.setup.BotDetector;
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.TimeManager;
+import net.eduard.api.setup.Mine.TimeManager;
 
 public class Main extends JavaPlugin {
 

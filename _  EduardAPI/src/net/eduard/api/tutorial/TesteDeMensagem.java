@@ -4,29 +4,29 @@ import net.eduard.api.API;
 
 public class TesteDeMensagem {
 	public TesteDeMensagem() {
-		API.all("§6Tudo bem amo §evoces");
-		API.all("§eTudo bem amo §6voces");
-		API.all(" ");
-		API.all("§2Tudo bem amo §avoces");
-		API.all("§aTudo bem amo §2voces");
-		API.all(" ");
-		API.all("§dTudo bem amo §5voces");
-		API.all("§5Tudo bem amo §dvoces");
-		API.all(" ");
-		API.all("§bTudo bem amo §3voces");
-		API.all("§3Tudo bem amo §bvoces");
-		API.all(" ");
-		API.all("§8Tudo bem amo §7voces");
-		API.all("§7Tudo bem amo §8voces");
-		API.all(" ");
-		API.all("§cTudo bem amo §4voces");
-		API.all("§4Tudo bem amo §cvoces");
-		API.all(" ");
-		API.all("§1Tudo bem amo §9voces");
-		API.all("§9Tudo bem amo §1voces");
-		API.all(" ");
-		API.all("§0Tudo bem amo §Fvoces");
-		API.all("§FTudo bem amo §0voces");
+		API.broadcast("§6Tudo bem amo §evoces");
+		API.broadcast("§eTudo bem amo §6voces");
+		API.broadcast(" ");
+		API.broadcast("§2Tudo bem amo §avoces");
+		API.broadcast("§aTudo bem amo §2voces");
+		API.broadcast(" ");
+		API.broadcast("§dTudo bem amo §5voces");
+		API.broadcast("§5Tudo bem amo §dvoces");
+		API.broadcast(" ");
+		API.broadcast("§bTudo bem amo §3voces");
+		API.broadcast("§3Tudo bem amo §bvoces");
+		API.broadcast(" ");
+		API.broadcast("§8Tudo bem amo §7voces");
+		API.broadcast("§7Tudo bem amo §8voces");
+		API.broadcast(" ");
+		API.broadcast("§cTudo bem amo §4voces");
+		API.broadcast("§4Tudo bem amo §cvoces");
+		API.broadcast(" ");
+		API.broadcast("§1Tudo bem amo §9voces");
+		API.broadcast("§9Tudo bem amo §1voces");
+		API.broadcast(" ");
+		API.broadcast("§0Tudo bem amo §Fvoces");
+		API.broadcast("§FTudo bem amo §0voces");
 		
 		
 		

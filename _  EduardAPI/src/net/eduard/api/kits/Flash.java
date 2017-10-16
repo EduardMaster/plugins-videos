@@ -5,10 +5,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Flash extends Ability {
 
@@ -25,7 +25,7 @@ public class Flash extends Ability {
 				// TODO Auto-generated method stub
 				if (hasKit(player)) {
 					if (cooldown(player)) {
-						GameAPI.teleport(player, distance);
+						Mine.teleport(player, distance);
 					}
 				}
 			}

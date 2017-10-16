@@ -9,11 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.API;
+import net.eduard.api.click.PlayerEffect;
 import net.eduard.api.game.Gui;
 import net.eduard.api.game.Slot;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.PlayerAPI.PlayerEffect;
+import net.eduard.api.setup.Mine;
 
 public class Main extends JavaPlugin implements Listener {
 	public Gui gui;
@@ -21,7 +21,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
-		gui.setItem(API.newItem("§4Abrir Gui Custom", Material.DIAMOND));
+		gui.setItem(Mine.newItem("§4Abrir Gui Custom", Material.DIAMOND));
 		gui = new Gui("§8Trocar velocidade", 3);
 		for (int i = 0; i < 5; i++) {
 			Material boot = null;
@@ -45,7 +45,7 @@ public class Main extends JavaPlugin implements Listener {
 					break;
 			}
 			final int id = i;
-			Slot slot = new Slot(API.newItem(boot, "§6Nivel " + (i + 1)),
+			Slot slot = new Slot(Mine.newItem(boot, "§6Nivel " + (i + 1)),
 					11 + i);
 			slot.newEffect(new PlayerEffect() {
 
@@ -62,7 +62,7 @@ public class Main extends JavaPlugin implements Listener {
 			gui.addSlot(1, slot);
 		}
 		gui.register(this);
-		API.event(this);
+		Mine.event(this,this);
 	}
 
 	@EventHandler

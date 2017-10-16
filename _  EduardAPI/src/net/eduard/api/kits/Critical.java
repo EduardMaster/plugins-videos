@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.API;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Effects;
+import net.eduard.api.setup.Mine;
 
 public class Critical extends Ability {
 	public double chance = 0.3;
@@ -28,7 +28,7 @@ public class Critical extends Ability {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
 			if (hasKit(p)) {
-				if (API.getChance(chance)) {
+				if (Mine.getChance(chance)) {
 					e.setDamage(e.getDamage() + damage);
 					effect.create(p, 10);
 					p.sendMessage(getMessage());

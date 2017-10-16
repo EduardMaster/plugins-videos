@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Speacialist extends Ability {
 
@@ -39,7 +39,7 @@ public class Speacialist extends Ability {
 		if (e.getEntity().getKiller() != null) {
 			Player killer = e.getEntity().getKiller();
 			if (hasKit(p)) {
-				ItemAPI.drop(killer, new ItemStack(Material.EXP_BOTTLE, xpAmount));
+				Mine.drop(killer, new ItemStack(Material.EXP_BOTTLE, xpAmount));
 			}
 		}
 	}

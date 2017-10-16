@@ -11,10 +11,8 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerChannelEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -70,10 +68,10 @@ public class EventosJogador implements  Listener  {
 
 	}
 
-	@EventHandler
-	public void JogadorBalde(PlayerBucketEvent e) {
-
-	}
+//	@EventHandler
+//	public void JogadorBalde(PlayerBucketEvent e) {
+//
+//	}
 
 	@EventHandler
 	public void JogadorBaldeEncher(PlayerBucketFillEvent e) {
@@ -85,10 +83,10 @@ public class EventosJogador implements  Listener  {
 
 	}
 
-	@EventHandler
-	public void JogadorCanal(PlayerChannelEvent e) {
-
-	}
+//	@EventHandler
+//	public void JogadorCanal(PlayerChannelEvent e) {
+//
+//	}
 
 	@EventHandler
 	public void JogadorChatTabCompletar(PlayerChatTabCompleteEvent e) {

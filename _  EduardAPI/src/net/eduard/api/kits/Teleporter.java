@@ -9,13 +9,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Teleporter extends Ability {
 	public Teleporter() {
 		setIcon(Material.BOW, "§fAo acertar a flecha você é teleportado até ela!");
-		add(ItemAPI.addEnchant(new ItemStack(Material.BOW), Enchantment.ARROW_DAMAGE, 1));
+		add(Mine.addEnchant(new ItemStack(Material.BOW), Enchantment.ARROW_DAMAGE, 1));
 		add(new ItemStack(Material.ARROW, 10));
 
 	}
@@ -27,7 +26,7 @@ public class Teleporter extends Ability {
 			if (arrow.getShooter() instanceof Player) {
 				Player p = (Player) arrow.getShooter();
 				if (hasKit(p)) {
-					GameAPI.teleport(p, arrow.getLocation());
+					Mine.teleport(p, arrow.getLocation());
 				}
 
 			}

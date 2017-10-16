@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.api.click.PlayerEffect;
 import net.eduard.api.game.Gui;
 import net.eduard.api.game.Slot;
-import net.eduard.api.setup.PlayerAPI.PlayerEffect;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;

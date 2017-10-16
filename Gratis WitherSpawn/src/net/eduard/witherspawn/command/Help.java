@@ -2,9 +2,9 @@ package net.eduard.witherspawn.command;
 
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 
-public class Help extends CMD {
+public class Help extends CommandManager {
 	 
 	public Help() {
 		super("help","ajuda");

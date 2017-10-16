@@ -11,9 +11,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.API;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.Mine;
 
 public class Magma extends Ability {
 
@@ -33,7 +32,7 @@ public class Magma extends Ability {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			if (hasKit(p)) {
-				if (API.getChance(chance))
+				if (Mine.getChance(chance))
 					e.getDamager().setFireTicks(20 * effectSeconds);
 			}
 
@@ -59,7 +58,7 @@ public class Magma extends Ability {
 	public void event(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
-			if (!WorldAPI.equals2(e.getFrom(), e.getTo())) {
+			if (!Mine.equals2(e.getFrom(), e.getTo())) {
 				Material type = p.getLocation().getBlock()
 						.getRelative(BlockFace.DOWN).getType();
 				if (type == Material.WATER

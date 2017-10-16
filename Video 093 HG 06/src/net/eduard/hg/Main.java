@@ -1,8 +1,7 @@
 
 package net.eduard.hg;
 
-import net.eduard.hg.event.HGEvent;
-import net.eduard.hg.manager.TestScoreboard;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -13,7 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import java.util.ArrayList;
+import net.eduard.hg.event.HGEvent;
+import net.eduard.hg.manager.TestScoreboard;
 
 
 public class Main extends JavaPlugin implements Listener {

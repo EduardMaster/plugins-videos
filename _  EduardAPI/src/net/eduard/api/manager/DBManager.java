@@ -1,15 +1,19 @@
 package net.eduard.api.manager;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import net.eduard.api.setup.StorageAPI.Storable;
 
@@ -110,6 +114,7 @@ public class DBManager implements Storable {
 	}
 	/**
 	 * Cria uma connecção com a Database
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -181,7 +186,7 @@ public class DBManager implements Storable {
 	 *            Host
 	 */
 	public DBManager(String user, String pass, String host) {
-		this(user, pass, host, "");
+		this(user, pass, host, "mine");
 	}
 	/**
 	 * Contrutor pedindo Usuario, Senha, Host, Database
@@ -261,7 +266,8 @@ public class DBManager implements Storable {
 	 *            Objetos
 	 */
 	public void insert(String table, Object... objects) {
-		update("INSERT INTO " + table + " values (default, "+ inters(objects.length) + " )", objects);
+		update("INSERT INTO " + table + " values (default, "
+				+ inters(objects.length) + " )", objects);
 	}
 	/**
 	 * Deleta um registro
@@ -313,6 +319,12 @@ public class DBManager implements Storable {
 		update("ALTER TABLE " + table + " ADD FOREIGN KEY (" + key
 				+ ") REFERENCES " + references);
 	}
+	public void createView(String view, String select) {
+		update("CREATE OR REPLACE VIEW " + view + " AS " + select);
+	}
+	public void deleteView(String view) {
+		update("DROP VIEW " + view);
+	}
 	/**
 	 * Renomeia a Tabela para uma Nova Tabela
 	 * 
@@ -338,7 +350,7 @@ public class DBManager implements Storable {
 		alter(table, "modify column " + column + " " + modification);
 	}
 	/**
-	 * Adiciona chave primaria na tablea
+	 * Adiciona chave primaria na tabela
 	 * 
 	 * @param table
 	 *            Tabela
@@ -369,7 +381,7 @@ public class DBManager implements Storable {
 	 * @param values
 	 *            Valores
 	 */
-	public void change(String table,  String edit,String where,
+	public void change(String table, String edit, String where,
 			Object... values) {
 		update("UPDATE " + table + " SET " + edit + " WHERE " + where, values);
 	}
@@ -381,16 +393,16 @@ public class DBManager implements Storable {
 	 *            Tabela
 	 * @param joinTable
 	 *            Tabela2
-	 * @param on
+	 * @param onClause
 	 *            Comparador
 	 * @param select
 	 *            Select completo
 	 * @return ResultSet
 	 */
-	public ResultSet join(String table, String joinTable, String on,
+	public ResultSet join(String table, String joinTable, String onClause,
 			String select) {
-		return get(
-				select + " FROM " + table + " JOIN " + joinTable + " ON " + on);
+		return select(select + " FROM " + table + " JOIN " + joinTable + " ON "
+				+ onClause);
 	}
 
 	/**
@@ -402,6 +414,7 @@ public class DBManager implements Storable {
 	public void deleteTable(String table) {
 		update("DROP TABLE " + table);
 	}
+
 	/**
 	 * Limpa a tabela removendo todos registros
 	 * 
@@ -431,8 +444,7 @@ public class DBManager implements Storable {
 	 *            Objetos
 	 * @return Lista de Mapa
 	 */
-	public List<Map<String, String>> selectAll(String query,
-			Object... replacers) {
+	public List<Map<String, String>> getAll(String query, Object... replacers) {
 		List<Map<String, String>> list = new ArrayList<>();
 		try {
 			ResultSet rs = select(query);
@@ -511,11 +523,17 @@ public class DBManager implements Storable {
 			int id = 1;
 			for (Object replacer : replacers) {
 				if (replacer == null) {
-					state.setObject(id, replacer);	
-				}else {
-					state.setString(id, ""+replacer);
+					state.setObject(id, replacer);
+				}else if (replacer instanceof Date) {
+					state.setDate(id, (Date) replacer);
+				}else if (replacer instanceof Time) {
+					state.setTime(id, (Time) replacer);
+				}else if (replacer instanceof Timestamp) {
+					state.setTimestamp(id, (Timestamp) replacer);
+				} else {
+					state.setString(id, "" + replacer);
 				}
-					
+
 				id++;
 			}
 			return statement = state;
@@ -524,36 +542,55 @@ public class DBManager implements Storable {
 		}
 		return null;
 	}
-
-	/**
-	 * Executa um Select e volta se tem algum registro<br>
-	 * Adiciona "SELECT" no começo da Query
-	 * 
-	 * @param query
-	 *            Query
-	 * @param replacers
-	 *            Objetos
-	 * @return Se tem ou não registro com esta Query
-	 */
-	public boolean has(String query, Object... replacers) {
-		return contains("SELECT " + query, replacers);
+	public String getString(String table, String column, String where,
+			Object... replacers) {
+		String result = "";
+		ResultSet rs = selectAll(table, where, replacers);
+		try {
+			if (rs.next()) {
+				result = rs.getString(column);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		closeSelect();
+		return result;
 	}
-	/**
-	 * 
-	 * Executa um Query e volta um ResultSet<br>
-	 * Adiciona "SELECT" no começo da query
-	 * 
-	 * @param query
-	 *            Pesquisa
-	 * @param replacers
-	 *            Objetos
-	 * @return ResultSet (Resultado da Query)
-	 */
-	public ResultSet get(String query, Object... replacers) {
-		return select("SELECT " + query, replacers);
+	public UUID getUUID(String table, String column, String where,
+			Object... replacers) {
+		return UUID.fromString(getString(table, column, where, replacers));
 	}
-	public ResultSet getAll(String table, String where, Object... replacers) {
-		return get("* FROM " + table + " WHERE " + where, replacers);
+	public int getInt(String table, String column, String where,
+			Object... replacers) {
+		int result = -1;
+		ResultSet rs = selectAll(table, where, replacers);
+		try {
+			if (rs.next()) {
+				result = rs.getInt(column);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		closeSelect();
+		return result;
+	}
+	public double getDouble(String table, String column, String where,
+			Object... replacers) {
+		double result = -1;
+		ResultSet rs = selectAll(table, where, replacers);
+		try {
+			if (rs.next()) {
+				result = rs.getDouble(column);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		closeSelect();
+		return result;
+	}
+	public ResultSet selectAll(String table, String where,
+			Object... replacers) {
+		return select("SELECT * FROM " + table + " WHERE " + where, replacers);
 	}
 	/**
 	 * Executa um Query e volta um ResultSet
@@ -571,7 +608,9 @@ public class DBManager implements Storable {
 			e.printStackTrace();
 			return null;
 		}
+		
 	}
+
 	public String getUser() {
 		return user;
 	}
@@ -648,6 +687,35 @@ public class DBManager implements Storable {
 					System.currentTimeMillis());
 		}
 	}
+
+	public void setStatusServer(String server, int status) {
+		change("servers", "status = ?", "name = ?", status, server);
+	}
+	public boolean isOnServer(String server, String playerName) {
+		return contains("players", "name = ? and server = ?", playerName,
+				server);
+	}
+	public String getPlayerServer(UUID playerId) {
+		return getString("players", "server", "uuid = ?", playerId);
+	}
+
+	public boolean playersContains(String name) {
+		return contains("players", "name = ?", name);
+	}
+	public boolean playersContains(UUID playerId) {
+		return contains("players", "uuid = ?", playerId);
+	}
+	public boolean serversContains(String name) {
+		return contains("servers", "name = ?", name);
+	}
+	public void setPlayersAmount(String server, int amount) {
+		change("servers", "players = ?", "name = ?", amount, server);
+	}
+
+	public int getPlayersAmount(String server) {
+		return getInt("servers", "players", "name = ?", server);
+	}
+
 	/**
 	 * Gera um texto com "?" baseado na quantidade<br< Exemplo 5 = "? , ?,?,?,?"
 	 * 

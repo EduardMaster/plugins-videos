@@ -1,12 +1,12 @@
 package net.eduard.hg.event;
 
-import net.eduard.hg.HG;
-import net.eduard.hg.HGState;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import net.eduard.hg.HG;
+import net.eduard.hg.HGState;
 
 public class HGWorldBorder implements Listener{
 

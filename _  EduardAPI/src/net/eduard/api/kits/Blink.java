@@ -6,10 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Blink extends Ability {
 	public int distance = 7;
@@ -21,8 +21,8 @@ public class Blink extends Ability {
 			public void onClick(Player player, Block block, ItemStack item) {
 				if (hasKit(player)) {
 					if (cooldown(player)) {
-						Location loc = GameAPI.getTargetLoc(player, distance);
-						GameAPI.teleport(player,loc.clone().add(0, 2, 0));
+						Location loc = Mine.getTargetLoc(player, distance);
+						Mine.teleport(player,loc.clone().add(0, 2, 0));
 						loc.getBlock().setType(Material.LEAVES);
 					}
 				}

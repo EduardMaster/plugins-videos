@@ -16,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.FileAPI;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 /**
@@ -109,9 +109,9 @@ public class Config implements Storable {
 	public void saveDefaultConfig() {
 		if (!file.exists()) {
 			try {
-				InputStream is = FileAPI
+				InputStream is = Mine
 						.getResource(plugin.getClass().getClassLoader(), name);
-					FileAPI.copyAsUTF8(is, file);
+					Mine.copyAsUTF8(is, file);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -123,8 +123,8 @@ public class Config implements Storable {
 		lines.clear();
 		root.save(this, -1);
 		try {
-			if (!FileAPI.isDirectory(file)) {
-				FileAPI.writeLines(file, lines);
+			if (!Mine.isDirectory(file)) {
+				Mine.writeLines(file, lines);
 			}
 
 		} catch (Exception ex) {
@@ -135,7 +135,7 @@ public class Config implements Storable {
 		try {
 			file.getParentFile().mkdirs();
 			if (!file.exists()) {
-				if (FileAPI.isDirectory(file)) {
+				if (Mine.isDirectory(file)) {
 					file.mkdirs();
 				} else {
 					saveDefaultConfig();
@@ -143,7 +143,7 @@ public class Config implements Storable {
 
 			}
 			if (file.isFile()) {
-				lines = FileAPI.readLines(file);
+				lines = Mine.readLines(file);
 				root.reload(this);
 			}
 
@@ -370,7 +370,7 @@ public class Config implements Storable {
 	}
 	@Override
 	public Object restore(Map<String, Object> map) {
-		plugin = Bukkit.getPluginManager().getPlugin(toStr(map.get("plugin")));
+		plugin = Bukkit.getPluginManager().getPlugin(Mine.toString(map.get("plugin")));
 		init();
 		return null;
 	}

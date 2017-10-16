@@ -1,9 +1,6 @@
 
 package net.eduard.hg;
 
-import net.eduard.hg.event.HGWorldRegeneration;
-import net.eduard.hg.manager.Kit;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -12,6 +9,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
+
+import net.eduard.hg.event.HGWorldRegeneration;
+import net.eduard.hg.manager.Kit;
 
 
 public class Main extends JavaPlugin implements Listener {

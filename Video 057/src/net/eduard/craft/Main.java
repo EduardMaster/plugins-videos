@@ -1,6 +1,8 @@
 
 package net.eduard.craft;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
@@ -13,8 +15,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
-
-import java.util.Arrays;
 
 public class Main extends JavaPlugin {
 

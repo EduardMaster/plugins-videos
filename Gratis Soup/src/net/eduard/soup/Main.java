@@ -19,10 +19,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Config;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.Mine;
 import net.eduard.soup.command.SoupCommand;
 
 
@@ -50,7 +49,7 @@ public class Main extends JavaPlugin implements Listener {
 		Sounds sound = Sounds.create(Sound.BURP);
 		config.add("soup", "&6Voce ganhou varias sopas!");
 		config.add("soup-name", "§6Soup");
-		soup = API.newItem(Material.MUSHROOM_SOUP,config.message("SoupName"));
+		soup = Mine.newItem(Material.MUSHROOM_SOUP,config.message("SoupName"));
 		config.add("empty-soup-name", "§6Soup Empty");
 		config.add("create-sign", "&6Voce criou uma placa de sopas!");
 		config.add("sign-name", "&c&lSopas gratis!");
@@ -72,7 +71,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (e.getLine(0).toLowerCase().contains("soup")) {
 			int id = 0;
 			for (String text : Main.config.getMessages("sign")) {
-				e.setLine(id, ExtraAPI.toText(text));
+				e.setLine(id, Mine.removeBrackets(text));
 				id++;
 			}
 			p.sendMessage(Main.config.message("create-sign"));
@@ -85,8 +84,8 @@ public class Main extends JavaPlugin implements Listener {
 			if (e.getClickedBlock().getState() instanceof Sign) {
 				Sign sign = (Sign) e.getClickedBlock().getState();
 				if (sign.getLine(0).equalsIgnoreCase(
-						ExtraAPI.toText(Main.config.getMessages("sign").get(0)))) {
-					Inventory inv = API
+						Mine.removeBrackets(Main.config.getMessages("sign").get(0)))) {
+					Inventory inv = Mine
 							.newInventory(Main.config.message("sign-name"), 6*9);
 
 					for (ItemStack item : inv) {

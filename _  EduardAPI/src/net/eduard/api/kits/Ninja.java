@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
 
 public class Ninja extends Ability {
 
@@ -44,7 +44,7 @@ public class Ninja extends Ability {
 				if (targets.containsKey(p)) {
 					if (cooldown(p)) {
 						Player target = targets.get(p);
-						GameAPI.teleport(p, target.getLocation());
+						Mine.teleport(p, target.getLocation());
 						e.setCancelled(true);
 					}
 				}

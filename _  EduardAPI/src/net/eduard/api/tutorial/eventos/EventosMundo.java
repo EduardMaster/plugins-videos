@@ -7,14 +7,11 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.server.MapInitializeEvent;
-import org.bukkit.event.server.PluginEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.event.server.ServiceEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.SpawnChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -45,10 +42,10 @@ public class EventosMundo implements Listener {
 	}
 
 	// Mundo
-	@EventHandler
-	public void MundoChuck(ChunkEvent e) {
-
-	}
+//	@EventHandler
+//	public void MundoChuck(ChunkEvent e) {
+//
+//	}
 
 	@EventHandler
 	public void MundoChuvaTroca(WeatherChangeEvent e) {
@@ -106,13 +103,13 @@ public class EventosMundo implements Listener {
 
 	}
 
-	@EventHandler
-	public void ServerPlugin(PluginEvent e) {
-
-	}
-
-	@EventHandler
-	public void ServerServico(ServiceEvent e) {
-
-	}
+//	@EventHandler
+//	public void ServerPlugin(PluginEvent e) {
+//
+//	}
+//
+//	@EventHandler
+//	public void ServerServico(ServiceEvent e) {
+//
+//	}
 }

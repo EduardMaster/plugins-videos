@@ -71,6 +71,7 @@ public final class VaultAPI {
 	}
 	/**
 	 * Testa se tem algum plugin de Chat
+	 * 
 	 * @return Se sim ou não
 	 */
 	public static boolean hasChat() {
@@ -78,6 +79,7 @@ public final class VaultAPI {
 	}
 	/**
 	 * Teste se tem plugin de permissões
+	 * 
 	 * @return Se sim ou não
 	 */
 	public static boolean hasPermission() {
@@ -85,6 +87,7 @@ public final class VaultAPI {
 	}
 	/**
 	 * Tenta Ativar o Sistema de Chat
+	 * 
 	 * @return Se ativou ou não
 	 */
 	private static boolean setupChat() {
@@ -100,6 +103,7 @@ public final class VaultAPI {
 	}
 	/**
 	 * Tenta Ativar o Sistema de Economia
+	 * 
 	 * @return Se ativou ou não
 	 */
 	private static boolean setupEconomy() {
@@ -115,6 +119,7 @@ public final class VaultAPI {
 	}
 	/**
 	 * Tenta ativar o Sistema de Permissões
+	 * 
 	 * @return Se Ativou ou não
 	 */
 	private static boolean setupPermissions() {
@@ -136,6 +141,7 @@ public final class VaultAPI {
 		setupChat();
 		setupPermissions();
 	}
+
 	/**
 	 * Se tiver o vault ele é ativado automaticamente
 	 */

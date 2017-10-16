@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Copyable;
 import net.eduard.api.setup.StorageAPI.Storable;
 
@@ -49,7 +49,7 @@ public class Title implements Storable , Copyable {
 	}
 
 	public Title create(Player player) {
-		RexAPI.sendTitle(player, title, subTitle, fadeIn, stay, fadeOut);
+		Mine.sendTitle(player, title, subTitle, fadeIn, stay, fadeOut);
 		return this;
 	}
 

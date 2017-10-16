@@ -1,10 +1,6 @@
 
 package net.eduard.hg.event;
 
-import net.eduard.hg.HGState;
-import net.eduard.hg.Main;
-import net.eduard.hg.manager.TimerStart;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +13,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import net.eduard.hg.HGState;
+import net.eduard.hg.Main;
+import net.eduard.hg.manager.TimerStart;
 
 public class HGEvent implements Listener {
 

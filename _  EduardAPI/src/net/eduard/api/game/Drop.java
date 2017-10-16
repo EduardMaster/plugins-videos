@@ -13,8 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.setup.ExtraAPI.EventsManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.EventsManager;
 
 public class Drop extends EventsManager{
 	
@@ -122,7 +122,7 @@ public class Drop extends EventsManager{
 
 	public int getRandomXp() {
 
-		return API.getRandomInt(getMinXp(), getMaxXp());
+		return Mine.getRandomInt(getMinXp(), getMaxXp());
 	}
 
 	public boolean isEnable() {

@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 import net.eduard.clickcounter.event.CPSCounter;
 
-public class TestClickCommand extends CMD {
+public class TestClickCommand extends CommandManager {
 
 	public TestClickCommand() {
 		super("clicktest");

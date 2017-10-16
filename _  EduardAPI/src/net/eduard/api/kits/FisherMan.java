@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
 
 public class FisherMan extends Ability {
 
@@ -20,7 +20,7 @@ public class FisherMan extends Ability {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
 			if (e.getCaught() != null) {
-				GameAPI.teleport(e.getCaught(), p.getLocation());
+				Mine.teleport(e.getCaught(), p.getLocation());
 			}
 		}
 	}

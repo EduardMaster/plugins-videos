@@ -9,13 +9,13 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class C4 extends Ability {
 
@@ -47,7 +47,7 @@ public class C4 extends Ability {
 							Item c4 = player.getWorld().dropItemNaturally(
 									player.getEyeLocation(), new ItemStack(materialType));
 							c4.setPickupDelay(99999);
-							GameAPI.setDirection(c4, player);
+							Mine.setDirection(c4, player);
 							jump(c4);
 							bombs.put(player, c4);
 							sendMessage(player);

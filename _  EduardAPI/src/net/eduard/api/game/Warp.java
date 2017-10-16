@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class Warp implements Storable {
@@ -25,7 +26,7 @@ public class Warp implements Storable {
 
 	public Warp(String name) {
 		this.name = name;
-		guiIcon = API.newItem(Material.ENDER_PEARL, "§bTeleporte para " + name);
+		guiIcon = Mine.newItem(Material.ENDER_PEARL, "§bTeleporte para " + name);
 
 	}
 

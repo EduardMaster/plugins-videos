@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.eduard.api.manager.RankManager;
-import net.eduard.api.setup.VaultAPI;
-import net.eduard.api.setup.StorageAPI.Reference;
 import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.setup.VaultAPI;
 
 public class Rank implements Storable{
 
-	@Reference
-	private RankManager manager;
 	private String name;
 	private String prefix;
 	private String suffix;
@@ -21,12 +17,7 @@ public class Rank implements Storable{
 	private double price;
 	private int position;
 	private List<String> permissions = new ArrayList<>();
-	
-	public Rank getRankUp() {
-		return manager.getRank(nextRank);
-	}
-	public Rank getRankDown() {
-		return manager.getRank(previousRank);
+	public Rank() {
 	}
 	public void updatePermissions() {
 		for (String permission : permissions) {
@@ -88,13 +79,6 @@ public class Rank implements Storable{
 		this.nextRank = nextRank;
 	}
 
-	public RankManager getManager() {
-		return manager;
-	}
-
-	public void setManager(RankManager manager) {
-		this.manager = manager;
-	}
 	@Override
 	public Object restore(Map<String, Object> map) {
 		// TODO Auto-generated method stub

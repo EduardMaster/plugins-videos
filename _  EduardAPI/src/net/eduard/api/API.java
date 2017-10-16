@@ -2,7 +2,6 @@ package net.eduard.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,24 +9,15 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -36,17 +26,14 @@ import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
 import net.eduard.api.event.PlayerTargetEvent;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.manager.CMD;
-import net.eduard.api.manager.TimeManager;
-import net.eduard.api.setup.ExtraAPI;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.RefAPI;
-import net.eduard.api.setup.ScoreAPI.FakeOfflinePlayer;
+import net.eduard.api.manager.CommandManager;
+import net.eduard.api.minigame.Schematic;
+import net.eduard.api.setup.Arena;
+import net.eduard.api.setup.Extra;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.FakeOfflinePlayer;
+import net.eduard.api.setup.Mine.TimeManager;
 import net.eduard.api.setup.StorageAPI;
-import net.eduard.api.setup.WorldAPI;
-import net.eduard.api.setup.WorldAPI.Arena;
-import net.eduard.api.setup.WorldAPI.EmptyWorldGenerator;
 
 /**
  * API principal da EduardAPI contendo muitos codigos bons e utilitarios Boolean
@@ -115,10 +102,6 @@ public class API {
 	 */
 	public static String USAGE = "§FDigite: §c";
 	/**
-	 * Tag do Servidor
-	 */
-	public static String SERVER_TAG = "§b§lEduardAPI ";
-	/**
 	 * Lista de Comandos para efeito Positivo
 	 */
 	public static List<String> COMMANDS_ON = new ArrayList<>(
@@ -179,7 +162,16 @@ public class API {
 	 * Mapa dos Comandos do Servidor
 	 */
 	private static Map<String, Command> commands = new HashMap<>();
-
+	
+	public static boolean hasPos1(Player p) {
+		return POSITION1.get(p) != null;
+	}
+	public static boolean hasPos2(Player p) {
+		return POSITION2.get(p) != null;
+	}
+	public static Schematic getSchematic(Player player) {
+		return new Schematic(player.getLocation(), POSITION1.get(player), POSITION2.get(player));
+	}
 	/**
 	 * Ligando algumas coisas
 	 */
@@ -188,14 +180,15 @@ public class API {
 			PLUGIN = JavaPlugin.getProvidingPlugin(API.class);
 			TIME = new TimeManager(PLUGIN);
 			MAPS_CONFIG = new Config(PLUGIN,"maps.yml");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
-			Object map = RefAPI.getValue(Bukkit.getServer().getPluginManager(),
+			Object map = Extra.getValue(Bukkit.getServer().getPluginManager(),
 					"commandMap");
 
-			commands = (Map<String, Command>) RefAPI.getValue(map,
+			commands = (Map<String, Command>) Extra.getValue(map,
 					"knownCommands");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -207,9 +200,9 @@ public class API {
 		for (Player p : API.getPlayers()) {
 
 			PlayerTargetEvent event = new PlayerTargetEvent(p,
-					GameAPI.getTarget(p,
-							GameAPI.getPlayerAtRange(p.getLocation(), 100)));
-			API.callEvent(event);
+					Mine.getTarget(p,
+							Mine.getPlayerAtRange(p.getLocation(), 100)));
+			Mine.callEvent(event);
 
 		}
 	}
@@ -236,26 +229,6 @@ public class API {
 		cmd.setPermissionMessage(
 				API.NO_PERMISSION.replace("$permission", cmd.getPermission()));
 		return cmd;
-	}
-
-	public static boolean isIpProxy(String ip) {
-		return ExtraAPI.isIpProxy(ip);
-	}
-
-	public static BukkitTask delay(Plugin plugin, long ticks, Runnable run) {
-		return ExtraAPI.delay(plugin, ticks, run);
-	}
-	public static BukkitTask delays(Plugin plugin, long ticks, Runnable run) {
-		return ExtraAPI.delays(plugin, ticks, run);
-	}
-
-	public static void event(Listener event) {
-
-		event(event, getAPI());
-	}
-
-	public static void event(Listener event, Plugin plugin) {
-		ExtraAPI.event(event, plugin);
 	}
 
 	public static boolean existsPlayer(CommandSender sender, String player) {
@@ -299,26 +272,11 @@ public class API {
 
 	public static boolean hasAPI() {
 
-		return hasPlugin("EduardAPI");
-	}
-
-	public static boolean hasPlugin(String plugin) {
-		return ExtraAPI.hasPlugin(plugin);
-	}
-
-	public static boolean getChance(double chance) {
-
-		return ExtraAPI.getChance(chance);
-	}
-	public static Player getPlayer(String name) {
-		return Bukkit.getPlayerExact(name);
-	}
-	public static World getWorld(String name) {
-		return Bukkit.getWorld(name);
+		return Mine.hasPlugin("EduardAPI");
 	}
 
 	public static List<Player> getPlayers() {
-		return GameAPI.getPlayers();
+		return Mine.getPlayers();
 	}
 
 	public static boolean hasPerm(CommandSender sender, String permission) {
@@ -331,14 +289,14 @@ public class API {
 
 	}
 	@SafeVarargs
-	public static void commands(ConfigSection section, CMD... cmds) {
-		for (CMD cmd : cmds) {
+	public static void commands(ConfigSection section, CommandManager... cmds) {
+		for (CommandManager cmd : cmds) {
 			try {
 
 				String name = cmd.getName();
 				if (section != null) {
 					if (section.contains(name)) {
-						cmd = (CMD) section.get(name);
+						cmd = (CommandManager) section.get(name);
 
 					}
 
@@ -353,61 +311,7 @@ public class API {
 			}
 		}
 	}
-	public static World newEmptyWorld(String worldName) {
-		World world = Bukkit.createWorld(
-				new WorldCreator(worldName).generateStructures(false)
-						.generator(new EmptyWorldGenerator()));
-		world.getBlockAt(100, 100, 100).setType(Material.GLASS);
-		world.setSpawnLocation(100, 101, 100);
-		return world;
-	}
 
-	public static ItemStack newItem(Material material, String name) {
-		ItemStack item = new ItemStack(material);
-		ItemAPI.setName(item, name);
-		return item;
-	}
-
-	public static ItemStack newItem(Material material, String name,
-			int amount) {
-		return newItem(material, name, amount, 0);
-	}
-
-	public static ItemStack newItem(Material material, String name, int amount,
-			int data, String... lore) {
-
-		ItemStack item = newItem(material, name);
-		ItemAPI.setLore(item, lore);
-		item.setAmount(amount);
-		item.setDurability((short) data);
-		return item;
-	}
-
-	public static ItemStack newItem(String name, Material material) {
-		ItemStack item = new ItemStack(material);
-		ItemAPI.setName(item, name);
-		return item;
-	}
-
-	public static ItemStack newItem(String name, Material material, int data) {
-		return newItem(material, name, 1, data);
-	}
-
-	public static ItemStack newItem(String name, Material material, int amount,
-			int data, String... lore) {
-		return newItem(material, name, amount, data, lore);
-	}
-
-	public static Scoreboard newScoreboard() {
-		return Bukkit.getScoreboardManager().getNewScoreboard();
-
-	}
-
-	public static World newWorld(String world, Environment environment,
-			WorldType worldType) {
-		return new WorldCreator(world).environment(environment).type(worldType)
-				.createWorld();
-	}
 
 	public static boolean noConsole(CommandSender sender) {
 
@@ -422,6 +326,14 @@ public class API {
 		return noConsole(sender);
 	}
 
+	
+	public static void console(String message) {
+		Mine.console(message);
+	}
+	public static void broadcast(String message) {
+		Mine.broadcast(message);
+	}
+	
 	public static void removeAliaseFromCommand(PluginCommand cmd,
 			String aliase) {
 		String cmdName = cmd.getName().toLowerCase();
@@ -491,72 +403,7 @@ public class API {
 		return applyScoreboard(player, title, lines);
 	}
 
-	public static int getRandomInt(int minValue, int maxValue) {
-		return ExtraAPI.getRandomInt(minValue, maxValue);
-	}
-	public static void chat(CommandSender sender, Object... objects) {
-		sender.sendMessage(API.SERVER_TAG + ExtraAPI.getMessage(objects));
-	}
-	public static void all(Object... objects) {
 
-		broadcast(objects);
-		console(objects);
-	}
-
-	public static void broadcast(Object... objects) {
-
-		for (Player p : API.getPlayers()) {
-			chat(p, objects);
-		}
-	}
-
-	public static void broadcast(String message, String permision) {
-		for (Player p : API.getPlayers()) {
-			if (p.hasPermission(permision)) {
-				chat(p, message);
-			}
-		}
-	}
-
-	public static void console(Object... objects) {
-
-		chat(Bukkit.getConsoleSender(), objects);
-	}
-	public static void send(Collection<Player> players, Object... objects) {
-		for (Player player : players) {
-			chat(player, objects);
-		}
-
-	}
-
-	public static long getNow() {
-		return ExtraAPI.getNow();
-	}
-
-	public static void callEvent(Event event) {
-		ExtraAPI.callEvent(event);
-	}
-
-	public static Scoreboard getMainScoreboard() {
-		return ExtraAPI.getMainScoreboard();
-	}
-
-	public static BukkitTask timer(Plugin plugin, long ticks, Runnable run) {
-		return ExtraAPI.timer(plugin, ticks, run);
-	}
-
-	public static Inventory newInventory(String title, int size) {
-		return ItemAPI.newInventory(title, size);
-	}
-	public static Inventory createInventory(String title, int size) {
-		return ItemAPI.newInventory(title, size);
-	}
-	public static Location getSpawn() {
-		return WorldAPI.getSpawn();
-	}
-	public static void runCommand(String command) {
-		ExtraAPI.runCommand(command);
-	}
 	
 	public static void loadMaps() {
 		if (MAPS_CONFIG.contains("MAPS")) {
@@ -564,7 +411,7 @@ public class API {
 			try {
 				StorageAPI.restoreField(INSTANCE,
 						MAPS_CONFIG.getSection("MAPS").toMap(),
-						RefAPI.getField(INSTANCE, "MAPS"));
+						Extra.getField(INSTANCE, "MAPS"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -575,13 +422,22 @@ public class API {
 
 		try {
 			Object value = StorageAPI.storeField(INSTANCE,
-					RefAPI.getField(INSTANCE, "MAPS"));
+					Extra.getField(INSTANCE, "MAPS"));
 			MAPS_CONFIG.set("MAPS", value);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		MAPS_CONFIG.saveConfig();
+	}
+	public static void chat(CommandSender sender, String message) {
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			sender.sendMessage(Mine.getReplacers(message, player));	
+		}else {
+			sender.sendMessage(message);;
+		}
+		
 	}
 
 }

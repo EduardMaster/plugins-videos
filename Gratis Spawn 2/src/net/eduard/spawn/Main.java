@@ -6,8 +6,8 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.api.EduardPlugin;
 import net.eduard.api.game.Sounds;
-import net.eduard.eduardapi.EduardPlugin;
 import net.eduard.spawn.command.SetSpawnCommand;
 import net.eduard.spawn.command.SpawnCommand;
 import net.eduard.spawn.event.SpawnEvent;

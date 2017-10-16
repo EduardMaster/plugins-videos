@@ -1,9 +1,6 @@
 
 package net.eduard.hg;
 
-import net.eduard.hg.manager.Kit;
-import net.eduard.hg.manager.KitType;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -21,6 +18,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import net.eduard.hg.manager.Kit;
+import net.eduard.hg.manager.KitType;
 
 public class HGEvents implements Listener {
 	

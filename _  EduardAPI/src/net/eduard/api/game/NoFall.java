@@ -10,8 +10,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.setup.ExtraAPI.EventsManager;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.EventsManager;
 /**
  * Anti dano de queda dos Jogadores
  * @author Eduard
@@ -46,7 +46,7 @@ public class NoFall extends EventsManager {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 		if (event.getTo().getBlock().equals(event.getTo().getBlock().getLocation())) {
-			if (GameAPI.isOnGround(p) && !GameAPI.isFalling(p)) {
+			if (Mine.isOnGround(p) && !Mine.isFalling(p)) {
 				players.remove(p);
 			}
 		}

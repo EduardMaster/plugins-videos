@@ -1,14 +1,14 @@
 package net.eduard.hg.manager;
 
-import net.eduard.hg.HGState;
-import net.eduard.hg.Main;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import net.eduard.hg.HGState;
+import net.eduard.hg.Main;
 
 public class ScoreboardSetup {
 

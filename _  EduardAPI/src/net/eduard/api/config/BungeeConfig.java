@@ -47,16 +47,17 @@ public class BungeeConfig {
 	public void reloadConfig() {
 		try {
 			saveDefaultConfig();
-			config = getProvider().load(file);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+				config = getProvider().load(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	public void saveDefaultConfig() {
 		try {
-			if (!plugin.getDataFolder().exists())
-				plugin.getDataFolder().mkdir();
-
+			file.getParentFile().mkdirs();
 			if (!file.exists()) {
 				InputStream stream = plugin.getResourceAsStream(name);
 				if (stream != null) {

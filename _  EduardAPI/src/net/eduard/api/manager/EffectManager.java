@@ -11,12 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import net.eduard.api.click.PlayerEffect;
 import net.eduard.api.game.Effects;
 import net.eduard.api.game.Explosion;
 import net.eduard.api.game.Jump;
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerEffect;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.TimeManager;
 public class EffectManager extends TimeManager implements PlayerEffect {
 	private List<PotionEffect> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();
@@ -109,19 +110,19 @@ public class EffectManager extends TimeManager implements PlayerEffect {
 	}
 	public EffectManager clearInventory(Player p) {
 		if (clearInventory) {
-			ItemAPI.clearInventory(p);
+			Mine.clearInventory(p);
 		}
 		return this;
 	}
 	public EffectManager clearItems(LivingEntity livingEntity) {
 		if (clearItems) {
-			ItemAPI.clearItens(livingEntity);
+			Mine.clearItens(livingEntity);
 		}
 		return this;
 	}
 	public EffectManager clearArmours(LivingEntity livingEntity) {
 		if (clearArmours) {
-			ItemAPI.clearArmours(livingEntity);
+			Mine.clearArmours(livingEntity);
 		}
 		return this;
 
@@ -129,12 +130,12 @@ public class EffectManager extends TimeManager implements PlayerEffect {
 	public EffectManager clearHotBar(Player p) {
 
 		if (clearHotBar) {
-			ItemAPI.clearHotBar(p);
+			Mine.clearHotBar(p);
 		}
 		return this;
 	}
 	public EffectManager giveItems(Player p) {
-		ItemAPI.give(items, p.getInventory());
+		Mine.give(items, p.getInventory());
 		return this;
 	}
 	public EffectManager givePotions(LivingEntity entity) {

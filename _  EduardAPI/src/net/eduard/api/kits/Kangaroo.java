@@ -11,11 +11,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Jump;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Kangaroo extends Ability {
 
@@ -34,7 +34,7 @@ public class Kangaroo extends Ability {
 				if (hasKit(player)) {
 					if (!onCooldown(player)) {
 						if (!inEffect.contains(player)) {
-							if (GameAPI.isFlying(player)) {
+							if (Mine.isFlying(player)) {
 								inEffect.add(player);
 							}
 							if (player.isSneaking()) {
@@ -70,7 +70,7 @@ public class Kangaroo extends Ability {
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
-		if (GameAPI.isOnGround(p)) {
+		if (Mine.isOnGround(p)) {
 			inEffect.remove(p);
 		}
 	}

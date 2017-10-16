@@ -18,12 +18,10 @@ import org.bukkit.plugin.Plugin;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.KitType;
 import net.eduard.api.game.Slot;
-import net.eduard.api.setup.ExtraAPI;
-import net.eduard.api.setup.ExtraAPI.EventsManager;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.GuiAPI.SimpleClick;
-import net.eduard.api.setup.GuiAPI.SimpleGui;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.Mine.SimpleClick;
+import net.eduard.api.setup.Mine.SimpleGui;
 import net.eduard.api.setup.VaultAPI;
 
 public class KitManager extends EventsManager {
@@ -31,17 +29,17 @@ public class KitManager extends EventsManager {
 	private transient Map<Player, SimpleGui> kitsGuis = new HashMap<>();
 	private transient Map<Player, SimpleGui> shopsGuis = new HashMap<>();
 	private Slot openKits = new Slot(
-			ItemAPI.newItem(Material.CHEST, "§6§lSelecionar Kit"), 0);
+			Mine.newItem(Material.CHEST, "§6§lSelecionar Kit"), 0);
 	private Slot openShop = new Slot(
-			ItemAPI.newItem(Material.EMERALD, "§6§lComprar Kit"), 8);
+			Mine.newItem(Material.EMERALD, "§6§lComprar Kit"), 8);
 	private SimpleGui shopGui = new SimpleGui("§8Loja de Kits", 6);
 	private SimpleGui kitsGui = new SimpleGui("§8Seus  Kits", 6);;
 	private Map<String, Ability> kits = new HashMap<>();
 	private List<ItemStack> globalItems = new ArrayList<>();
-	private ItemStack soup = ItemAPI.newItem("§6Sopa", Material.MUSHROOM_SOUP);
-	private ItemStack emptySlotItem = ItemAPI.newItem(" ",
+	private ItemStack soup = Mine.newItem("§6Sopa", Material.MUSHROOM_SOUP);
+	private ItemStack emptySlotItem = Mine.newItem(" ",
 			Material.STAINED_GLASS_PANE, 15);
-	private ItemStack hotBarItem = ItemAPI.newItem("§6§lKit§f§lPvP",
+	private ItemStack hotBarItem = Mine.newItem("§6§lKit§f§lPvP",
 			Material.STAINED_GLASS_PANE, 10);
 
 	private boolean kitsEnabled = true;
@@ -58,8 +56,6 @@ public class KitManager extends EventsManager {
 	private String noKitBuyed = "§§Voce nao tem dinheiro para comprar o kit §e$kit";
 	private String guiShopTitle = "§cKit §4§l$kit §cseu preço: §a§l$price";
 
-	
-
 	public KitManager() {
 		globalItems.add(new ItemStack(Material.STONE_SWORD));
 		kitsGui.setItem(null);
@@ -74,10 +70,12 @@ public class KitManager extends EventsManager {
 					Player player = (Player) event.getWhoClicked();
 					ItemStack item = event.getCurrentItem();
 					if (kitsGui.getNextPage().equals(item)) {
-						if (page == kitsGui.getPages())return;
+						if (page == kitsGui.getPages())
+							return;
 						openKitSelector(player, ++page);
 					} else if (kitsGui.getPreviosPage().equals(item)) {
-						if (page == 1)return;
+						if (page == 1)
+							return;
 						openKitSelector(player, --page);
 					} else {
 						for (Ability kit : kits.values()) {
@@ -134,7 +132,7 @@ public class KitManager extends EventsManager {
 		openShop.give(inv);
 		openKits.give(inv);
 		if (fillHotBar) {
-			ItemAPI.addHotBar(player, hotBarItem);
+			Mine.addHotBar(player, hotBarItem);
 		}
 
 	}
@@ -146,7 +144,7 @@ public class KitManager extends EventsManager {
 			return;
 		Ability kit = playersKits.get(player);
 		removeKits(player);
-		GameAPI.refreshAll(player);
+		Mine.refreshAll(player);
 		PlayerInventory inv = player.getInventory();
 		for (ItemStack item : kit.getItems()) {
 			inv.addItem(item);
@@ -163,8 +161,8 @@ public class KitManager extends EventsManager {
 			inv.addItem(item);;
 		}
 		if (giveSoups) {
-			ItemAPI.fill(inv, soup);
-			ItemAPI.setEquip(player, Color.GREEN, "§4§lINSANE");
+			Mine.fill(inv, soup);
+			Mine.setEquip(player, Color.GREEN, "§4§lINSANE");
 		}
 		player.sendMessage(kitGived.replace("$kit", kit.getName()));
 	}
@@ -214,16 +212,15 @@ public class KitManager extends EventsManager {
 				kit.setPrice(defaultKitPrice);
 			}
 		}
-	
+
 		super.register(plugin);
-		ExtraAPI.event(kitsGui,getPlugin());
-		ExtraAPI.event(shopGui,getPlugin());
+		Mine.event(kitsGui, getPlugin());
+		Mine.event(shopGui, getPlugin());
 	}
 
 	public void reloadDefaults() {
 		registerKits(KitType.values());
 	}
-
 
 	public void removeKits(Player player) {
 		playersKits.remove(player);
@@ -257,7 +254,7 @@ public class KitManager extends EventsManager {
 		kitsGuis.remove(player);
 		shopsGuis.remove(player);
 	}
-	
+
 	public Map<Player, Ability> getPlayersKits() {
 		return playersKits;
 	}
@@ -405,10 +402,11 @@ public class KitManager extends EventsManager {
 	public void buyKit(Player player, Ability kit) {
 		if (VaultAPI.hasVault()) {
 			if (VaultAPI.getEconomy().has(player, kit.getPrice())) {
-
 				VaultAPI.getEconomy().withdrawPlayer(player, kit.getPrice());
-
+				VaultAPI.getPermission().playerAdd(player, kit.getPermission());
+				player.sendMessage(kitBuyed.replace("$kit", kit.getName()));
 			} else {
+				player.sendMessage(noKitBuyed.replace("$kit", kit.getName()));
 
 			}
 		}

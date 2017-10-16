@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Viking extends Ability {
 	public double damage = 2;
@@ -21,7 +21,7 @@ public class Viking extends Ability {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
 			if (hasKit(p)) {
-				if (ItemAPI.isUsing(p, "_AXE")) {
+				if (Mine.isUsing(p, "_AXE")) {
 					e.setDamage(e.getDamage() + damage);
 				}
 			}

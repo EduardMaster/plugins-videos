@@ -7,10 +7,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Vaccum extends Ability {
 	public int range = 20;
@@ -30,7 +30,7 @@ public class Vaccum extends Ability {
 										range, range - 5, range)) {
 									if (entity instanceof LivingEntity) {
 										LivingEntity livingEntity = (LivingEntity) entity;
-										GameAPI.moveTo(livingEntity,
+										Mine.moveTo(livingEntity,
 												player.getLocation(), -0.2);
 									}
 								}

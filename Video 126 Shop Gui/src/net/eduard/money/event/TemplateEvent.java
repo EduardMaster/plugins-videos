@@ -11,10 +11,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.manager.TimeManager;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.TimeManager;
 import net.eduard.api.setup.VaultAPI;
-import net.milkbowl.vault.Vault;
 
 public class TemplateEvent extends TimeManager {
 
@@ -34,22 +33,22 @@ public class TemplateEvent extends TimeManager {
 	public static void abrirMenu(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 9 * 1, "§8Loja de Itens");
 		{
-			ItemStack item = ItemAPI.newItem(Material.IRON_INGOT, "§aFerro", 1,
+			ItemStack item = Mine.newItem(Material.IRON_INGOT, "§aFerro", 1,
 					0,
 
 					"§aClique Direito para Comprar",
 					"§aClique Esquerdo para Vender");
 
-			inv.setItem(ItemAPI.getPosition(1, 5), item);
+			inv.setItem(Mine.getPosition(1, 5), item);
 		}
 		{
-			ItemStack item = ItemAPI.newItem(Material.GOLD_INGOT, "§aOuro", 1,
+			ItemStack item = Mine.newItem(Material.GOLD_INGOT, "§aOuro", 1,
 					0,
 
 					"§aClique Direito para Comprar",
 					"§aClique Esquerdo para Vender");
 
-			inv.setItem(ItemAPI.getPosition(1, 7), item);
+			inv.setItem(Mine.getPosition(1, 7), item);
 		}
 		p.openInventory(inv);
 	}
@@ -59,7 +58,7 @@ public class TemplateEvent extends TimeManager {
 			Player p = (Player) e.getWhoClicked();
 			if (e.getInventory().getTitle().equals("§8Loja de Itens")) {
 				e.setCancelled(true);
-				if (e.getRawSlot() == ItemAPI.getPosition(1, 5)) {
+				if (e.getRawSlot() == Mine.getPosition(1, 5)) {
 					int priceBuy = 200;
 					int priceSell = 50;
 					if (e.getClick() == ClickType.RIGHT) {
@@ -78,9 +77,9 @@ public class TemplateEvent extends TimeManager {
 
 					} else if (e.getClick() == ClickType.LEFT) {
 
-						if (ItemAPI.contains(p.getInventory(),
+						if (Mine.contains(p.getInventory(),
 								new ItemStack(Material.IRON_INGOT), 1)) {
-							ItemAPI.remove(p.getInventory(),
+							Mine.remove(p.getInventory(),
 									new ItemStack(Material.IRON_INGOT), 1);
 							
 							VaultAPI.getEconomy().depositPlayer(p, priceSell);
@@ -92,9 +91,9 @@ public class TemplateEvent extends TimeManager {
 						}
 
 					} else if (e.getClick() == ClickType.SHIFT_LEFT) {
-						if (ItemAPI.contains(p.getInventory(),
+						if (Mine.contains(p.getInventory(),
 								new ItemStack(Material.IRON_INGOT), 64)) {
-							ItemAPI.remove(p.getInventory(),
+							Mine.remove(p.getInventory(),
 									new ItemStack(Material.IRON_INGOT), 64);
 							
 							VaultAPI.getEconomy().depositPlayer(p, priceSell*64);

@@ -1,6 +1,8 @@
 
 package me.eduard.kitpvp;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,8 +19,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class KitSelector extends KitPvP implements Listener {

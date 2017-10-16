@@ -12,7 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Sounds;
-import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI;
 
 public class ConfigSection {
@@ -179,7 +179,7 @@ public class ConfigSection {
 		if (object.equals("[]")) {
 			return getList();
 		}
-		if (object.equals("{}")) { 
+		if (object.equals("{}")) {
 			return getMap();
 		}
 		return object;
@@ -190,7 +190,7 @@ public class ConfigSection {
 	}
 
 	public boolean getBoolean() {
-		return ExtraAPI.toBoolean(object);
+		return Mine.toBoolean(object);
 	}
 
 	public boolean getBoolean(String path) {
@@ -198,7 +198,7 @@ public class ConfigSection {
 	}
 
 	public Double getDouble() {
-		return ExtraAPI.toDouble(object);
+		return Mine.toDouble(object);
 	}
 
 	public Double getDouble(String path) {
@@ -206,7 +206,7 @@ public class ConfigSection {
 	}
 
 	public Float getFloat() {
-		return ExtraAPI.toFloat(object);
+		return Mine.toFloat(object);
 	}
 
 	public Float getFloat(String path) {
@@ -218,7 +218,7 @@ public class ConfigSection {
 	}
 
 	public Integer getInt() {
-		return ExtraAPI.toInt(object);
+		return Mine.toInt(object);
 	}
 
 	public Integer getInt(String path) {
@@ -228,7 +228,7 @@ public class ConfigSection {
 	public List<Integer> getIntList() {
 		ArrayList<Integer> list = new ArrayList<>();
 		for (Object item : getList()) {
-			list.add(ExtraAPI.toInt(item));
+			list.add(Mine.toInt(item));
 		}
 		return list;
 	}
@@ -271,7 +271,7 @@ public class ConfigSection {
 	}
 
 	public Long getLong() {
-		return ExtraAPI.toLong(object);
+		return Mine.toLong(object);
 	}
 
 	public Long getLong(String path) {
@@ -280,13 +280,13 @@ public class ConfigSection {
 
 	public String getMessage() {
 
-		return ExtraAPI.toChatMessage(getString());
+		return Mine.toChatMessage(getString());
 	}
 
 	public ArrayList<String> getMessages() {
 		ArrayList<String> list = new ArrayList<>();
 		for (String text : getStringList()) {
-			list.add(ExtraAPI.toChatMessage(text));
+			list.add(Mine.toChatMessage(text));
 		}
 		return list;
 	}
@@ -324,7 +324,8 @@ public class ConfigSection {
 	}
 
 	public String getString() {
-		return ExtraAPI.getWraps(removeQuotes(ExtraAPI.toString(object)));
+		return removeQuotes(Mine.toString(object)).replace("/*", "\n")
+				.replace("\\n", "\n").replace("<br>", "\n").replace("/n", "\n");
 	}
 
 	public String getString(String path) {
@@ -334,7 +335,7 @@ public class ConfigSection {
 	public List<String> getStringList() {
 		ArrayList<String> list = new ArrayList<>();
 		for (Object item : getList()) {
-			list.add(removeQuotes(ExtraAPI.toString(item)));
+			list.add(removeQuotes(Mine.toString(item)));
 		}
 		return list;
 	}
@@ -344,7 +345,7 @@ public class ConfigSection {
 	}
 
 	public Object getValue() {
-		return StorageAPI.restoreValue(isMap()?toMap():get());
+		return StorageAPI.restoreValue(isMap() ? toMap() : get());
 
 	}
 	public Map<String, Object> toMap() {
@@ -366,12 +367,14 @@ public class ConfigSection {
 	}
 	@SuppressWarnings("unchecked")
 	public void toSections(Map<Object, Object> map) {
-		for (Entry<Object,Object> entry : map.entrySet()) {
+		for (Entry<Object, Object> entry : map.entrySet()) {
 			String key = entry.getKey().toString();
 			Object value = entry.getValue();
 			if (value instanceof Map) {
-				getSection(key).toSections((Map<Object, Object>) value);
-			}else if (value instanceof List) {
+				ConfigSection sec = getSection(key);
+				sec.getMap().clear();
+				sec.toSections((Map<Object, Object>) value);
+			} else if (value instanceof List) {
 				getSection(key).set(value);
 			} else {
 				set(key, value);
@@ -380,6 +383,7 @@ public class ConfigSection {
 	}
 	public ConfigSection set(String path, Object value, String... comments) {
 		ConfigSection sec = getSection(path);
+
 		sec.set(StorageAPI.storeValue(value));
 		sec.setComments(comments);
 		return sec;
@@ -388,7 +392,7 @@ public class ConfigSection {
 	public ConfigSection set(Object value) {
 		if (value instanceof Map) {
 
-			toSections((Map<Object,Object>) value);
+			toSections((Map<Object, Object>) value);
 		} else {
 			this.object = value;
 		}
@@ -420,7 +424,7 @@ public class ConfigSection {
 			}
 		} else if (isMap()) {
 			if (spaceId != -1) {
-				config.lines.add(space + key + ": {}");	
+				config.lines.add(space + key + ": {}");
 			}
 			for (ConfigSection section : getMap().values()) {
 				section.save(config, spaceId + 1);
@@ -429,7 +433,8 @@ public class ConfigSection {
 				}
 			}
 		} else {
-			if (spaceId == -1) return;
+			if (spaceId == -1)
+				return;
 			config.lines.add(space + key + ": " + object);
 
 		}
@@ -492,8 +497,6 @@ public class ConfigSection {
 		return object instanceof Map;
 	}
 
-
-
 	public void setComments(List<String> list) {
 		this.comments = list;
 	}
@@ -502,7 +505,7 @@ public class ConfigSection {
 		if (comments != null & comments.length > 0) {
 			this.comments.clear();
 			for (Object value : comments) {
-				this.comments.add(ExtraAPI.toString(value));
+				this.comments.add(Mine.toString(value));
 			}
 		}
 	}

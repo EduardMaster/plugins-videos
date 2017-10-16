@@ -9,13 +9,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Archer extends Ability {
 	public Archer() {
 		setIcon(Material.BOW,
 				"§fGanhe uma flecha ao você acertar ao player a flecha será teleportado até seu inventario.");
-		add(ItemAPI.addEnchant(new ItemStack(Material.BOW),
+		add(Mine.addEnchant(new ItemStack(Material.BOW),
 				Enchantment.ARROW_DAMAGE, 1));
 		add(new ItemStack(Material.ARROW, 10));
 

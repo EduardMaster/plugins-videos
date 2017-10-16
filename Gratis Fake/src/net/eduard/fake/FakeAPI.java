@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.setup.RexAPI;
+import net.eduard.api.setup.Mine;
 
 public final class FakeAPI {
 	
@@ -26,7 +26,7 @@ public final class FakeAPI {
 		data.put(player, name);
 		player.setDisplayName(name);
 		player.setPlayerListName(name); 
-		RexAPI .changeName(player, name);
+		Mine .changeName(player, name);
 	}
 	public static void reset(Player player){
 		fake(player,original.get(player));

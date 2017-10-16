@@ -10,7 +10,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
 
 
 public class Zeus extends Ability{
@@ -41,7 +41,7 @@ public class Zeus extends Ability{
 				Player p = (Player) arrow.getShooter();
 				if (hasKit(p)){
 					if (cooldown(p)){
-						GameAPI.strike(arrow.getLocation());
+						Mine.strike(arrow.getLocation());
 					}
 				}
 				

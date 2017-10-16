@@ -6,16 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 
 public class Backpacker extends Ability{
 	
-	public ItemStack soup = API.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
+	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	
 	public Backpacker() {
 		setIcon(Material.LAPIS_BLOCK, "§fGanhe uma espada Melhor");
@@ -26,8 +25,8 @@ public class Backpacker extends Ability{
 			public void onClick(Player player, Block block, ItemStack item) {
 				if (hasKit(player)){
 					if (cooldown(player)){
-						Inventory inv = API.newInventory("§7Backpacker", 6*9);
-						ItemAPI.fill(inv, soup);
+						Inventory inv = Mine.newInventory("§7Backpacker", 6*9);
+						Mine.fill(inv, soup);
 						player.openInventory(inv);
 					}
 				}

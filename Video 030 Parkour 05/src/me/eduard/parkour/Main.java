@@ -1,6 +1,9 @@
 
 package me.eduard.parkour;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,9 +19,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends JavaPlugin implements Listener {
 

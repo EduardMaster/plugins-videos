@@ -1,7 +1,7 @@
 package net.eduard.api.game;
 
-import net.eduard.api.setup.ExtraAPI;
-import net.eduard.api.setup.RefAPI;
+import net.eduard.api.setup.Extra;
+import net.eduard.api.setup.Mine;
 
 public enum KitType {
 
@@ -11,18 +11,18 @@ public enum KitType {
 	private KitType() {
 		ability = getNewAbility();
 		if (ability == null) {
-			ExtraAPI.consoleMessage(
+			Mine.console(
 					"§bKitType §eFalha ao tentar ligar o Kit §f" + name());
 		} else {
 
-			ExtraAPI.consoleMessage("§bKitType §fKit §a" + name() +"§f carregado com sucesso!");
+			Mine.console("§bKitType §fKit §a" + name() +"§f carregado com sucesso!");
 
 		}
 
 	}
 	public Ability getNewAbility() {
 		try {
-			return (Ability) RefAPI.getNew("#k" + ExtraAPI.toTitle(name(), ""));
+			return (Ability) Extra.getNew("#k" + Mine.toTitle(name(), ""));
 		} catch (Exception e) {
 			return null;
 		}

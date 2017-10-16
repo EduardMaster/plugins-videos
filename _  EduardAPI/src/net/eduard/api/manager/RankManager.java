@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
-import java.util.TreeMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Rank;
-import net.eduard.api.setup.ScoreAPI.FakeOfflinePlayer;
+import net.eduard.api.setup.Mine.FakeOfflinePlayer;
 import net.eduard.api.setup.StorageAPI.Storable;
 import net.eduard.api.setup.VaultAPI;
 
@@ -22,14 +21,54 @@ import net.eduard.api.setup.VaultAPI;
  */
 public class RankManager implements Storable{
 
-	private Map<String, Rank> ranks = new TreeMap<>();
-	private Map<UUID, Rank> players = new HashMap<>();
+	private Map<String, Rank> ranks = new HashMap<>();
+	
+	private Map<UUID, String> players = new HashMap<>();
+	
+	private String first;
+	
+	private String last;
+	
+	
+	public void promote(Player player) {
+		Rank rank = getRank(player);
+		Rank next = getRank(rank.getNextRank());
+		players.put(player.getUniqueId(), next.getName().toLowerCase());
+		
+	}
+	
+	public void demote(Player player) {
+		Rank rank = getRank(player);
+		Rank next = getRank(rank.getPreviousRank());
+		players.put(player.getUniqueId(), next.getName().toLowerCase());
+	}
+	
 	public void updatePermissions() {
 		for (Entry<String, Rank> map : ranks.entrySet()) {
 			Rank rank = map.getValue();
 			rank.updatePermissions();
 		}
 	}
+	public Rank getFirstRank() {
+		return ranks.get(first);
+	}
+	public Rank getLastRank() {
+		return ranks.get(last);
+	}
+	
+	
+	public Map<UUID, String> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Map<UUID, String> players) {
+		this.players = players;
+	}
+
+	public void setRanks(Map<String, Rank> ranks) {
+		this.ranks = ranks;
+	}
+
 	public void updateGroups()
 	{
 		for (Entry<String, Rank> map : ranks.entrySet()) {
@@ -38,8 +77,8 @@ public class RankManager implements Storable{
 				VaultAPI.getPermission().playerRemoveGroup(p, rank.getName());
 			}
 		}
-		for (Entry<UUID, Rank> map: players.entrySet()) {
-			Rank rank = map.getValue();
+		for (Entry<UUID, String> map: players.entrySet()) {
+			Rank rank = ranks.get(map.getValue());
 			UUID id = map.getKey();
 			FakeOfflinePlayer fake = new FakeOfflinePlayer(null,id);
 			VaultAPI.getPermission().playerAddGroup(null,fake, rank.getName());
@@ -54,24 +93,16 @@ public class RankManager implements Storable{
 	}
 
 	public Rank getRank(Player player) {
-		return players.get(player.getUniqueId());
+		return ranks.getOrDefault(players.get(player.getUniqueId()),getFirstRank());
 	}
 
-	public Map<UUID, Rank> getPlayers() {
-		return players;
-	}
-	public void setPlayers(Map<UUID, Rank> players) {
-		this.players = players;
-	}
 
 	public void rankUp(Player p) {
-
-	}
-	public void rankDown(Player p) {
-
+		Rank rank = getRank(p);
+		VaultAPI.getEconomy().withdrawPlayer(p, rank.getPrice());
 	}
 	public boolean canRankUp(Player p) {
-		return false;
+		return VaultAPI.getEconomy().has(p, getRank(p).getPrice());
 
 	}
 
@@ -92,12 +123,21 @@ public class RankManager implements Storable{
 		// TODO Auto-generated method stub
 		
 	}
-	public Rank getLastRank() {
-		// TODO Auto-generated method stub
-		return null;
+
+	public String getLast() {
+		return last;
 	}
-	public Rank getFirstRank() {
-		return null;
+
+	public void setLast(String last) {
+		this.last = last;
+	}
+
+	public String getFirst() {
+		return first;
+	}
+
+	public void setFirst(String first) {
+		this.first = first;
 	}
 
 }

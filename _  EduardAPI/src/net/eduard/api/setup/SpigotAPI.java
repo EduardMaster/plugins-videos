@@ -1,10 +1,12 @@
 package net.eduard.api.setup;
 
-import org.bukkit.ChatColor;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,58 +17,68 @@ import net.md_5.bungee.api.chat.TextComponent;
  *
  */
 public final class SpigotAPI {
-	/**
-	 * Envia uma mensagem clicavel para o Jogador
-	 * 
-	 * @param player
-	 *            Jogador
-	 * @param clickMessage
-	 *            Mensagem
-	 * @param hoverMessage
-	 *            Mensagem ao passar o Mouse
-	 * @param command
-	 *            Comando executado ao clicar
-	 */
-	public static void sendClickable(Player player, String clickMessage,
-			String hoverMessage, String command) {
-		player.spigot()
-				.sendMessage(getClickable(clickMessage, hoverMessage, command));
+	public static void sendMessage(Player player, String message,
+			String hoverMessage, String clickCommand) {
+		sendMessage(Arrays.asList(player), message, hoverMessage, clickCommand);
 	}
-	/**
-	 * Cria um Componente
-	 * 
-	 * @param message
-	 *            Mensagem
-	 * @param hoverMessage
-	 *            Mensagem ao passar o Mouse
-	 * @param command
-	 *            Comando executado ao clicar
-	 * @return Componente
-	 */
-	public static TextComponent getClickable(String message,
-			String hoverMessage, String command) {
-		TextComponent text = new TextComponent(message);
-		text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				new ComponentBuilder(hoverMessage).create()));
-		text.setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
-		return text;
+	public static void sendMessage(Collection<Player> players, String message,
+			String hoverMessage, String clickCommand) {
+		sendMessage(players, message, Arrays.asList(hoverMessage),
+				clickCommand);
 	}
-	public static TextComponent getTextCorrect(String text) {
-		String test = text;
-		String lastColor = "";
-		TextComponent result = new TextComponent("");
-		while (test.length() > 55) {
-			int var = 55 - lastColor.length();
-			String line = test.substring(0, var);
-			result.addExtra(lastColor + line);
+	public static void sendMessage(Collection<Player> players, String message,
+			List<String> hoverMessages, String clickCommand) {
+		sendMessage(players, message, hoverMessages, clickCommand, true);
+	}
+	public static void sendMessage(Collection<Player> players, String message,
+			List<String> hoverMessages, String clickCommand,
+			boolean runCommand) {
 
-			String color = ChatColor.getLastColors(line);
-			test = test.substring(var);
-			if (!color.isEmpty()) {
-				lastColor = color;
-			}
+		String lastColor = "";
+		String msg = message;
+		ComponentBuilder builder = new ComponentBuilder("");
+		for (String line : hoverMessages) {
+			builder.append(line + "\n");
 		}
-		result.addExtra(lastColor + test);
-		return result;
+		HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+				builder.create());
+		ClickEvent clickEvent = new ClickEvent(runCommand
+				? ClickEvent.Action.RUN_COMMAND
+				: ClickEvent.Action.SUGGEST_COMMAND, clickCommand);
+		boolean stop = false;
+		while (!stop) {
+			String send = "";
+			if (msg.length() > 55) {
+				send = msg.substring(0, 55);
+				String color = getLastColor(send);
+				lastColor = color;
+				msg = lastColor + msg.substring(55);
+			} else {
+				send = msg;
+				stop = true;
+			}
+			TextComponent spigotMessage = new TextComponent(send);
+			spigotMessage.setClickEvent(clickEvent);
+			spigotMessage.setHoverEvent(hoverEvent);
+			for (Player player : players) {
+				player.spigot().sendMessage(spigotMessage);
+			}
+
+		}
+
+	}
+	public static String getLastColor(String text) {
+		char[] array = text.toLowerCase().toCharArray();
+		String lastColor = "";
+		String lastFormat = "";
+		char lastChar = 0;
+		for (int i = 0; i < array.length; i++) {
+			char c = array[i];
+			if (lastChar == '§') {
+				lastColor = "§" + c;
+			}
+			lastChar = c;
+		}
+		return lastColor + lastFormat;
 	}
 }

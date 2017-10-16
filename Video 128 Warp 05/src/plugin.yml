@@ -1,0 +1,11 @@
+name: Warp
+description: Tutorial do Plugin de Warp
+main: net.eduard.warp.Main
+version: 1.0
+authors: [Eduard]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  warp:
+    usage: /<command> help
+    aliases: [delwarp,setwarp,warps]
+    permission: warp.use

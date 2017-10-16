@@ -7,9 +7,9 @@ import org.bukkit.entity.Wither;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.TimeManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.TimeManager;
 import net.eduard.witherspawn.command.WitherCommand;
 import net.eduard.witherspawn.event.WitherSpawnEvent;
 
@@ -72,7 +72,7 @@ public class Main extends JavaPlugin  {
 		if (canSpawnWither()) {
 			spawnWither();
 		}
-		API.delay(this,20,new BukkitRunnable() {
+		Mine.delay(this,20,new BukkitRunnable() {
 			
 			@Override
 			public void run() {
@@ -99,7 +99,7 @@ public class Main extends JavaPlugin  {
 					long death_time = config.getLong("WitherDeathTime");
 					long respawn_time =
 						config.getLong("RespawnTime") * 1000L;
-					long now_time = API.getNow();
+					long now_time = Mine.getNow();
 					long form = now_time - death_time;
 					return form > respawn_time;
 				} else {

@@ -7,8 +7,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.EventsManager;
+import net.eduard.api.setup.Mine;
 import net.eduard.fake.FakeAPI;
 import net.eduard.fake.Main;
 
@@ -29,7 +28,7 @@ public class FakeEvent implements Listener  {
 			e.setKickMessage(Main.config.message("kick_by_player_exist").replace("$name", name));
 				e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
 		}else if (FakeAPI.getData().containsValue(name)){
-			Player p = API.getPlayer(name);
+			Player p = Mine.getPlayer(name);
 			FakeAPI.reset(p);
 			p.sendMessage(Main.config.message("name_reset_by_other")
 					.replace("$name", name));

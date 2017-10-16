@@ -1,21 +1,20 @@
 
 package net.eduard.parkour;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
 /**
  * Preço: 35
+ * 
  * @author Eduard-PC
  *
  */
 public class Main extends JavaPlugin {
 	private static Main plugin;
 	private Config config;
-	public static Map<String, ParkourJogo> jogos = new HashMap<>();
+	private Parkour parkour;
+
 	public Config config() {
 		return config;
 	}
@@ -25,7 +24,9 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+
 		config = new Config(this);
+		setParkour(new Parkour(this));
 		config.add("Create", "&bO Parkour $arena foi criado!");
 		config.add("Delete", "&bO Parkour $arena foi deletado!");
 		config.add("SetSpawn", "&bO Spawn do Parkour $arena foi setado!");
@@ -43,12 +44,19 @@ public class Main extends JavaPlugin {
 		config.add("Quit", "&6Voce desistiu do Parkour $arena");
 		config.add("OnlyAdmin", "&cPrecisa da permissao parkour.admin");
 		config.add("Win", "&6Voce terminou o Parkour &e$player &2(&a$money&2)");
-		config.add("WinBroadcast", "&6O jogador &e$player &6venceu o Parkour &e$arena &2(&a$money&2)");
+		config.add("WinBroadcast",
+				"&6O jogador &e$player &6venceu o Parkour &e$arena &2(&a$money&2)");
 		config.saveConfig();
 	}
 
 	@Override
 	public void onDisable() {
+	}
+	public Parkour getParkour() {
+		return parkour;
+	}
+	public void setParkour(Parkour parkour) {
+		this.parkour = parkour;
 	}
 
 }

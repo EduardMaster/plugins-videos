@@ -8,10 +8,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.manager.TimeManager;
-
-public class CombatLog extends TimeManager{
+public class CombatLog extends BukkitRunnable{
 	public static final HashMap<Player, Long> ON_COMBAT = new HashMap<>();
 	@EventHandler
 	public void Combat(EntityDamageByEntityEvent e) {
@@ -66,5 +65,11 @@ public class CombatLog extends TimeManager{
 				p.setHealth(0);
 			}
 		}
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

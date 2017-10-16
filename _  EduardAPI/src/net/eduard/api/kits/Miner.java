@@ -9,15 +9,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Miner extends Ability {
 
 	public Miner() {
 		setIcon(Material.STONE_PICKAXE, "§fMinere muito rapido");
 		ItemStack item = new ItemStack(Material.STONE_PICKAXE);
-		ItemAPI.addEnchant(item, Enchantment.DURABILITY, 2);
-		ItemAPI.addEnchant(item, Enchantment.DIG_SPEED, 2);
+		Mine.addEnchant(item, Enchantment.DURABILITY, 2);
+		Mine.addEnchant(item, Enchantment.DIG_SPEED, 2);
 		add(item);
 	}
 
@@ -44,7 +44,7 @@ public class Miner extends Ability {
 	public void event(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
-			if (ItemAPI.isUsing(p, "PICKAXE")) {
+			if (Mine.isUsing(p, "PICKAXE")) {
 				check(e.getBlock().getLocation(),p.getItemInHand());
 			}
 		}

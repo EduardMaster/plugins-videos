@@ -1,8 +1,5 @@
 package net.eduard.hg.event;
 
-import net.eduard.hg.HG;
-import net.eduard.hg.HGState;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -10,6 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+
+import net.eduard.hg.HG;
+import net.eduard.hg.HGState;
 
 public class HGWorldRegeneration implements Listener{
 	@EventHandler

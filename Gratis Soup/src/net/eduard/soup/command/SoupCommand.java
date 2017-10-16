@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 import net.eduard.soup.Main;
 
-public class SoupCommand extends CMD {
+public class SoupCommand extends CommandManager {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

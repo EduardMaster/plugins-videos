@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.API;
+import net.eduard.api.click.PlayerClick;
+import net.eduard.api.click.PlayerClickEffect;
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
-import net.eduard.api.setup.PlayerAPI.PlayerClick;
-import net.eduard.api.setup.PlayerAPI.PlayerClickEffect;
+import net.eduard.api.setup.Mine;
 
 public class Phantom extends Ability {
 	public int effectSeconds = 5;
@@ -27,8 +27,8 @@ public class Phantom extends Ability {
 				if (hasKit(player)) {
 
 					if (cooldown(player)) {
-						ItemAPI.saveArmours(player);
-						ItemAPI.setEquip(player, Color.WHITE, "§b" + getName());
+						Mine.saveArmours(player);
+						Mine.setEquip(player, Color.WHITE, "§b" + getName());
 						player.setAllowFlight(true);
 						API.TIME.delay(effectSeconds*20,new Runnable() {
 							
@@ -36,7 +36,7 @@ public class Phantom extends Ability {
 							public void run() {
 								// TODO Auto-generated method stub
 								if (hasKit(player)) {
-									ItemAPI.getArmours(player);
+									Mine.getArmours(player);
 									sendMessage(player);
 								}
 								player.setAllowFlight(false);

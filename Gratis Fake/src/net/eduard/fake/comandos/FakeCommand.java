@@ -5,12 +5,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.CMD;
-import net.eduard.api.setup.ExtraAPI;
+import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
 import net.eduard.fake.FakeAPI;
 import net.eduard.fake.Main;
 
-public class FakeCommand extends CMD {
+public class FakeCommand extends CommandManager {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
@@ -23,7 +23,7 @@ public class FakeCommand extends CMD {
 				} else
 					return false;
 			} else {
-				String name = ExtraAPI.toText(args[0]);
+				String name = Mine.removeBrackets(args[0]);
 				if (FakeAPI.getData().containsValue(name)
 						|| FakeAPI.getOriginal().containsValue(name)) {
 					p.sendMessage(Main.config.message("name_exist_exeption")

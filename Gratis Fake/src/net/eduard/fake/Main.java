@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.API;
 import net.eduard.api.config.Config;
+import net.eduard.api.setup.Mine;
 import net.eduard.fake.comandos.FakeCommand;
 import net.eduard.fake.event.FakeEvent;
 /**
@@ -45,7 +46,7 @@ public class Main extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new FakeEvent(), this);
 		new FakeCommand().register();
 		for (Player p : API.getPlayers()) {
-			API.callEvent(new PlayerJoinEvent(p, null));
+			Mine.callEvent(new PlayerJoinEvent(p, null));
 		}
 	}
 }

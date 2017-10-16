@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Boxer extends Ability {
 	public double damageReduction = 1;
@@ -23,7 +23,7 @@ public class Boxer extends Ability {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
 			if (hasKit(p)) {
-				if (ItemAPI.isUsing(p, Material.AIR)) {
+				if (Mine.isUsing(p, Material.AIR)) {
 					e.setDamage(damage);
 				}
 			}

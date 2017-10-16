@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.ItemAPI;
+import net.eduard.api.setup.Mine;
 
 public class Achilles extends Ability {
 
@@ -26,7 +26,7 @@ public class Achilles extends Ability {
 			if (hasKit(p)) {
 				if (e.getDamager() instanceof LivingEntity) {
 					LivingEntity livingEntity = (LivingEntity) e.getDamager();
-					if (ItemAPI.isUsing(livingEntity, "WOOD")) {
+					if (Mine.isUsing(livingEntity, "WOOD")) {
 						e.setDamage(e.getDamage() + extraDamage);
 					} else {
 						double red = e.getDamage() - damageReduction;

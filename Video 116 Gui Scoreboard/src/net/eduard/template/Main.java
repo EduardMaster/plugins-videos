@@ -3,8 +3,8 @@ package net.eduard.template;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Config;
+import net.eduard.api.setup.Mine;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.Teste;
 
@@ -16,7 +16,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		config = new Config(this);
 		config.saveConfig();
-		API.event(new Teste(this));
+		Mine.event(new Teste(this),this);
 	}
 
 	@Override

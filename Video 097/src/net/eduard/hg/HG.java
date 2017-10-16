@@ -1,12 +1,12 @@
 package net.eduard.hg;
 
-import net.eduard.hg.manager.KitType;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import net.eduard.hg.manager.KitType;
 
 public class HG {
 	public static ArrayList<BlockState> blocks = new ArrayList<>();

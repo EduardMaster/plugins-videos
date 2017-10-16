@@ -2,8 +2,6 @@
 save-worlds: true
 save-players: false
 
-server-tag: 
-
 no-join-message: true
 custom-join-message: false
 on-join-message: '&6O jogador &e$player &6entrou no server'

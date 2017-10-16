@@ -1,6 +1,6 @@
 package net.eduard.hg.manager;
 
-import net.eduard.hg.HG;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
+import net.eduard.hg.HG;
 
 public class Kit implements Listener{
 

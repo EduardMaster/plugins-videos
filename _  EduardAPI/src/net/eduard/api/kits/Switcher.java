@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
-import net.eduard.api.setup.GameAPI;
+import net.eduard.api.setup.Mine;
 
 public class Switcher extends Ability {
 	public Switcher() {
@@ -30,8 +30,8 @@ public class Switcher extends Ability {
 				if (hasKit(p)) {
 					Location loc = snowball.getLocation();
 					Location ploc = p.getLocation();
-					GameAPI.teleport(p, loc);
-					GameAPI.teleport(e.getEntity(), ploc);
+					Mine.teleport(p, loc);
+					Mine.teleport(e.getEntity(), ploc);
 				}
 
 			}

@@ -3,10 +3,10 @@ package net.eduard.witherspawn.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 import net.eduard.witherspawn.Main;
 
-public class Spawn extends CMD {
+public class Spawn extends CommandManager {
 	public Spawn() {
 		super("spawn");
 		// TODO Auto-generated constructor stub

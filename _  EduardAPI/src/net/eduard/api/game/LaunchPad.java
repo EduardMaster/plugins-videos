@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.setup.ExtraAPI.EventsManager;
-import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.EventsManager;
 
 public class LaunchPad extends EventsManager {
 
@@ -45,7 +45,7 @@ public class LaunchPad extends EventsManager {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
-		if (!WorldAPI.equals2(e.getFrom(), e.getTo())) {
+		if (!Mine.equals2(e.getFrom(), e.getTo())) {
 			Player p = e.getPlayer();
 			Block block = e.getTo().getBlock().getRelative(0, blockHigh, 0);
 			if (blockData != -1 && blockData != block.getData())

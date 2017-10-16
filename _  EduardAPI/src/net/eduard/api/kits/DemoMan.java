@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Explosion;
-import net.eduard.api.setup.WorldAPI;
+import net.eduard.api.setup.Mine;
 
 public class DemoMan extends Ability {
 	
@@ -45,9 +45,9 @@ public class DemoMan extends Ability {
 
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
-		if (!WorldAPI.equals(e.getFrom(), e.getTo())) {
+		if (!Mine.equals(e.getFrom(), e.getTo())) {
 			for (Location loc : inEffect) {
-				if (WorldAPI.equals(loc, e.getTo().subtract(0, 1, 0))) {
+				if (Mine.equals(loc, e.getTo().subtract(0, 1, 0))) {
 					inEffect.remove(loc);
 					getExplosion().create(loc);
 					break;

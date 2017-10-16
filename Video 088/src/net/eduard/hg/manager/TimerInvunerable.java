@@ -1,11 +1,11 @@
 
 package net.eduard.hg.manager;
 
-import net.eduard.hg.HGState;
-import net.eduard.hg.Main;
-
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import net.eduard.hg.HGState;
+import net.eduard.hg.Main;
 
 public class TimerInvunerable {
 

@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
-import net.eduard.api.manager.CMD;
+import net.eduard.api.manager.CommandManager;
 import net.eduard.spawn.Main;
 
-public class SetSpawnCommand extends CMD {
+public class SetSpawnCommand extends CommandManager {
 	public SetSpawnCommand() {
 		super("setspawn");
 		getCommand().setPermission("spawn.set");

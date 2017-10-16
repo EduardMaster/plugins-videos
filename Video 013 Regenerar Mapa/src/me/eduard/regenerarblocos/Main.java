@@ -1,6 +1,9 @@
 
 package me.eduard.regenerarblocos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -14,9 +17,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends JavaPlugin implements Listener {
 

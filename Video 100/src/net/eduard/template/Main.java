@@ -1,9 +1,6 @@
 
 package net.eduard.template;
 
-import net.eduard.template.command.TemplateCommand;
-import net.eduard.template.event.TemplateEvent;
-
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -11,6 +8,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import net.eduard.template.command.TemplateCommand;
+import net.eduard.template.event.TemplateEvent;
 
 public class Main extends JavaPlugin {
 	public static Main plugin;

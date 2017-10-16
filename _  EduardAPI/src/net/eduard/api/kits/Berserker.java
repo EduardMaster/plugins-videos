@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.API;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.Sounds;
+import net.eduard.api.setup.Mine;
 
 public class Berserker extends Ability {
-	public ItemStack soup = API.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
+	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	public Berserker() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
 		message("§6Modo berseker ativado");
