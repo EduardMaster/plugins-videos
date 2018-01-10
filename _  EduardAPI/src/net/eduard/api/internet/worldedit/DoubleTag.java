@@ -36,7 +36,7 @@ package net.eduard.api.internet.worldedit;
 /**
  * The <code>TAG_Double</code> tag.
  * @author Graham Edgecombe
- *
+ * 
  */
 public final class DoubleTag extends Tag {
 	

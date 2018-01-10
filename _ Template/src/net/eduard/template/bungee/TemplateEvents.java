@@ -9,7 +9,7 @@ public class TemplateEvents implements Listener{
 
 	@EventHandler
 	public void onMessage(PluginMessageEvent e) {
-		if (Main.getPlugin().getDescription().getName().equals(e.getTag())) {
+		if (Template.getPlugin().getDescription().getName().equals(e.getTag())) {
 
 			
 		}

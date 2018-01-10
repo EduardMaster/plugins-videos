@@ -1,5 +1,8 @@
 package net.eduard.api.internet.hologram;
 
+import java.util.Collections;
+import java.util.LinkedList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -7,9 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-
-import java.util.Collections;
-import java.util.LinkedList;
 
 public class HologramListeners implements Listener {
 

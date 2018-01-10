@@ -18,12 +18,19 @@ public class Main extends EduardPlugin  {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		reload();
 		new TemplateEvents().register(this);
 		new TemplateCommand().register();
 	}
-
+	public void save() {
+		
+	}
+	public void reload() {
+		
+	}
 	@Override
 	public void onDisable() {
+		save();
 	}
 
 }

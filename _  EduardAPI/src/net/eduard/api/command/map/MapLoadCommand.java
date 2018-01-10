@@ -24,7 +24,7 @@ public class MapLoadCommand extends CommandManager {
 			if (API.onlyPlayer(sender)) {
 				Player p = (Player) sender;
 				if (API.SCHEMATICS.containsKey(args[1].toLowerCase())) {
-					API.MAPS.put(p, API.SCHEMATICS.get(args[1].toLowerCase()));
+//					API.MAPS.put(p, API.SCHEMATICS.get(args[1].toLowerCase()));
 					p.sendMessage("§bEduardAPI §6Mapa carregado com sucesso!");
 				} else {
 					p.sendMessage("§bEduardAPI §cMapa invalido: §f" + args[1]);

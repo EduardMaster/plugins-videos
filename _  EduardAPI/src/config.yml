@@ -1,6 +1,10 @@
 
+
+debug-plugin-messages: true
+
 save-worlds: true
 save-players: false
+
 
 no-join-message: true
 custom-join-message: false
@@ -25,10 +29,5 @@ motd:
 - seja bem vindo
 - Ao meu servidor!
 
-auto-respawn: true
+auto-respawn: false
 auto-rejoin: false
-
-auto-tag: false
-tags-rank:
-- dono
-- membro

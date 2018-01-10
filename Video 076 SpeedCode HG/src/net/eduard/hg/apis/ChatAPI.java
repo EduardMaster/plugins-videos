@@ -33,19 +33,19 @@ public final class ChatAPI {
 	 * @return Simbolo Coração
 	 */
 	public static String getRedHeart() {
-		return ChatColor.RED + getHeart();
-	}
+		return   ChatColor.RED + ""+getHeart();
+	} 
 	 /**
 	  *  Pega um Coração normal
 	  * @return Simbolo Coração
 	  */
 	public static String getHeart() {
 		return "♥";
-	}
+	} 
 
 	public static String getArrow() {
-		return "➵";
-	}
+		return "➵"; 
+	} 
 
 	public static String getArrowRight() {
 		return "››";

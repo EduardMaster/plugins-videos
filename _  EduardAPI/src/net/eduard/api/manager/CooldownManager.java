@@ -9,27 +9,32 @@ import org.bukkit.entity.Player;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.TimeManager;
 
-
 public class CooldownManager extends EffectManager {
 
 	private Map<UUID, TimeManager> playersInCooldown = new HashMap<>();
 	private String onCooldownMessage = "§6Voce esta em Cooldown!";
 	private String overCooldownMessage = "§6Voce saiu do Cooldown!";
 	private String startCooldownMessage = "§6Voce usou a Habilidade!";
-	
+
+	public CooldownManager() {
+	}
 
 	public String getOnCooldownMessage() {
 		return onCooldownMessage;
 	}
+
 	public void setOnCooldownMessage(String onCooldownMessage) {
 		this.onCooldownMessage = onCooldownMessage;
 	}
+
 	public String getStartCooldownMessage() {
 		return startCooldownMessage;
 	}
+
 	public void setStartCooldownMessage(String startCooldownMessage) {
 		this.startCooldownMessage = startCooldownMessage;
 	}
+
 	public boolean cooldown(Player player) {
 		if (onCooldown(player)) {
 			sendOnCooldown(player);
@@ -39,6 +44,7 @@ public class CooldownManager extends EffectManager {
 		sendStartCooldown(player);
 		return true;
 	}
+
 	public CooldownManager stopCooldown(Player player) {
 		UUID id = player.getUniqueId();
 		playersInCooldown.get(id).getTask().cancel();
@@ -49,22 +55,23 @@ public class CooldownManager extends EffectManager {
 	public boolean onCooldown(Player player) {
 		return getResult(player) > 0;
 	}
+
 	public CooldownManager sendOnCooldown(Player player) {
-		player.sendMessage(onCooldownMessage);	
+		player.sendMessage(onCooldownMessage);
 		return this;
-		
-		
+
 	}
 
 	public CooldownManager sendStartCooldown(Player player) {
 		player.sendMessage(startCooldownMessage);
 		return this;
 	}
+
 	public CooldownManager setOnCooldown(Player player) {
 		if (onCooldown(player)) {
 			stopCooldown(player);
 		}
-		
+
 		TimeManager cd = new TimeManager() {
 			@Override
 			public void run() {
@@ -78,7 +85,7 @@ public class CooldownManager extends EffectManager {
 
 	}
 
-	public CooldownManager sendOverCooldown(Player player){
+	public CooldownManager sendOverCooldown(Player player) {
 		player.sendMessage(overCooldownMessage);
 		return this;
 	}
@@ -98,14 +105,16 @@ public class CooldownManager extends EffectManager {
 		}
 		return 0;
 	}
-	public int getCooldown(Player player){
-		
-		
-		return (int) ((getResult(player)/20));
+
+	public int getCooldown(Player player) {
+
+		return (int) ((getResult(player) / 20));
 	}
+
 	public String getOverCooldownMessage() {
 		return overCooldownMessage;
 	}
+
 	public CooldownManager setOverCooldownMessage(String overCooldownMessage) {
 		this.overCooldownMessage = overCooldownMessage;
 		return this;

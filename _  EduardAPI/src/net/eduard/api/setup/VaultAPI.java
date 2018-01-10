@@ -7,9 +7,11 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 /**
- * API para o utilização do Vault com um formato mais simples de entender <br>
+ * API para a utilização do Vault com um formato mais simples de entender <br>
  * 
  * @author Eduard
+ * @version 1.0
+ * @since 1.0
  *
  */
 public final class VaultAPI {
@@ -17,6 +19,8 @@ public final class VaultAPI {
 	/**
 	 * Controle de permissões
 	 */
+	
+	@Deprecated
 	private static Permission permission = null;
 
 	/**

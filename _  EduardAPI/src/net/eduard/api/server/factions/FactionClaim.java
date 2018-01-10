@@ -22,7 +22,21 @@ public class FactionClaim implements Storable{
 	public FactionClaim(Location location) {
 		this(location.getChunk());
 	}
-
+	public boolean isSafeZone() {
+		return faction.isSafeZone();
+	}
+	public boolean isFreeZone() {
+		return !isDomined()||faction.isFreeZone();
+	}
+	public boolean isWarZone() {
+		return faction.isWarZone();
+	}
+	public boolean isDomined() {
+		return faction != null;
+	}
+	public boolean claimed() {
+		return faction != null;
+	}
 		
 	public Faction getFaction() {
 		return faction;

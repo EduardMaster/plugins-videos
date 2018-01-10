@@ -24,6 +24,7 @@ public class ConfigSection {
 		return line.replaceFirst("#", "").replaceFirst(" ", "");
 
 	}
+
 	private static String getKey(String line, String space) {
 		line = line.replaceFirst(space, "");
 		return line.split(":")[0];
@@ -79,11 +80,11 @@ public class ConfigSection {
 			return "";
 		}
 		String[] split = line.split(":");
-		String result = line.replaceFirst(split[0] + ":", "").replaceFirst(" ",
-				"");
+		String result = line.replaceFirst(split[0] + ":", "").replaceFirst(" ", "");
 		return result;
 
 	}
+
 	private static String removeQuotes(String message) {
 		if (message.startsWith("'")) {
 			message = message.replaceFirst("'", "");
@@ -99,12 +100,13 @@ public class ConfigSection {
 		}
 		return message;
 	}
+
 	private static boolean isComment(String line) {
-		return line.trim().startsWith("#");
+		return line.replace(" ", "").startsWith("#");
 	}
 
 	private static boolean isList(String line) {
-		return line.trim().startsWith("-");
+		return line.replace(" ", "").startsWith("-");
 	}
 
 	private static boolean isSection(String line) {
@@ -133,6 +135,7 @@ public class ConfigSection {
 		father.getMap().put(key, this);
 
 	}
+
 	public Map<String, ConfigSection> getMap() {
 
 		if (object != null) {
@@ -150,9 +153,11 @@ public class ConfigSection {
 		this.object = value;
 		this.key = key;
 	}
+
 	public ConfigSection add(String path, Object value) {
 		return add(path, value, new String[0]);
 	}
+
 	public ConfigSection add(String path, Object value, String... comments) {
 		ConfigSection sec = getSection(path);
 		if (!contains(path)) {
@@ -171,6 +176,7 @@ public class ConfigSection {
 		}
 		return contains;
 	}
+
 	public List<Integer> getIntList(String path) {
 		return getSection(path).getIntList();
 	}
@@ -324,8 +330,8 @@ public class ConfigSection {
 	}
 
 	public String getString() {
-		return removeQuotes(Mine.toString(object)).replace("/*", "\n")
-				.replace("\\n", "\n").replace("<br>", "\n").replace("/n", "\n");
+		return removeQuotes(Mine.toString(object)).replace("/*", "\n").replace("\\n", "\n").replace("<br>", "\n")
+				.replace("/n", "\n");
 	}
 
 	public String getString(String path) {
@@ -348,6 +354,7 @@ public class ConfigSection {
 		return StorageAPI.restoreValue(isMap() ? toMap() : get());
 
 	}
+
 	public Map<String, Object> toMap() {
 		Map<String, Object> map = new LinkedHashMap<>();
 
@@ -365,6 +372,7 @@ public class ConfigSection {
 		}
 		return map;
 	}
+
 	@SuppressWarnings("unchecked")
 	public void toSections(Map<Object, Object> map) {
 		for (Entry<Object, Object> entry : map.entrySet()) {
@@ -381,13 +389,19 @@ public class ConfigSection {
 			}
 		}
 	}
+
 	public ConfigSection set(String path, Object value, String... comments) {
 		ConfigSection sec = getSection(path);
+		if (value == null) {
+			sec.remove();
+			return sec;
+		}
 
 		sec.set(StorageAPI.storeValue(value));
 		sec.setComments(comments);
 		return sec;
 	}
+
 	@SuppressWarnings("unchecked")
 	public ConfigSection set(Object value) {
 		if (value instanceof Map) {
@@ -398,6 +412,7 @@ public class ConfigSection {
 		}
 		return this;
 	}
+
 	public Collection<ConfigSection> getValues() {
 		return getMap().values();
 	}
@@ -409,6 +424,7 @@ public class ConfigSection {
 	public String message(String path) {
 		return getSection(path).getMessage();
 	}
+
 	void save(Config config, int spaceId) {
 		String space = getSpace(spaceId);
 		for (String comment : comments) {
@@ -440,17 +456,24 @@ public class ConfigSection {
 		}
 
 	}
+
 	void reload(Config config) {
 		int spaceId = 0;
 		ConfigSection path = this;
 		boolean headerSeted = false;
 		List<String> currentComments = new ArrayList<>();
+//		int index = 0;
 		for (String line : config.lines) {
+			// System.err.println("-> " + line);
 			String space = getSpace(spaceId);
-			if (!headerSeted && line.isEmpty()) {
+			if (!headerSeted
+					&& (line.isEmpty() || (line.length() == 1 && !Character.isLetter(line.toCharArray()[0])))) {
 				headerSeted = true;
+//				System.out.println("index " + index);
+//				index++;
+				continue;
 			}
-			if (!headerSeted & isComment(line)) {
+			if (!headerSeted && isComment(line)) {
 				comments.add(getComment(line));
 			}
 			if (headerSeted) {
@@ -480,6 +503,7 @@ public class ConfigSection {
 
 				}
 			}
+//			index++;
 		}
 
 	}
@@ -487,12 +511,15 @@ public class ConfigSection {
 	public void remove(String path) {
 		getSection(path).remove();
 	}
+
 	public void remove() {
 		father.getMap().remove(key);
 	}
+
 	public boolean isList() {
 		return object instanceof List;
 	}
+
 	public boolean isMap() {
 		return object instanceof Map;
 	}

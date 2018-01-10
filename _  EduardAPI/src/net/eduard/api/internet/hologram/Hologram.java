@@ -1,12 +1,13 @@
 package net.eduard.api.internet.hologram;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
+import java.util.Collection;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 
 public abstract interface Hologram {
 	boolean isSpawned();

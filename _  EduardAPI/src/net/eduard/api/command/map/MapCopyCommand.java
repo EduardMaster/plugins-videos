@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CommandManager;
-import net.eduard.api.setup.Arena;
 
 public class MapCopyCommand extends CommandManager {
 
@@ -28,8 +27,8 @@ public class MapCopyCommand extends CommandManager {
 				return true;
 			}
 			
-			API.MAPS.put(p, new Arena(API.POSITION1.get(p),
-					API.POSITION2.get(p), p.getLocation()));
+//			API.MAPS.put(p, new Arena(API.POSITION1.get(p),
+//					API.POSITION2.get(p), p.getLocation()));
 			p.sendMessage("§bEduardAPI §6Mapa copiado!");
 		}
 		return true;

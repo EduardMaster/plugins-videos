@@ -18,6 +18,8 @@ import net.eduard.api.game.Jump;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.TimeManager;
+
+
 public class EffectManager extends TimeManager implements PlayerEffect {
 	private List<PotionEffect> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();
@@ -36,7 +38,9 @@ public class EffectManager extends TimeManager implements PlayerEffect {
 	private boolean clearHotBar;
 	private boolean clearArmours;
 	private boolean clearItems;
-
+public EffectManager() {
+	// TODO Auto-generated constructor stub
+}
 	@Override
 	public EffectManager clone() {
 		try {

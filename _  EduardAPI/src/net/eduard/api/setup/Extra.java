@@ -1,13 +1,22 @@
 package net.eduard.api.setup;
+
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.CodeSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,23 +26,214 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 /**
- * API de
+ * API contendo cosias relacionado a Textos e Numeros mais Database
  * 
  * @author Eduard-PC
  *
  */
 public final class Extra {
+	
+	
+
+
+	public static Class<?> loadClass(String name) {
+		Class<?> claz = null;
+		try {
+			claz = Class.forName(name);
+		} catch (Exception e) {
+		}
+		return claz;
+	}
+	/**
+	 * Pega uma lista de classes de uma package
+	 * 
+	 * @param plugin
+	 *            Plugin
+	 * @param pkgname
+	 *            Package
+	 * @return Lista de Classes
+	 */
+	public static ArrayList<Class<?>> getClassesForPackage(
+			String pkgname) {
+		ArrayList<Class<?>> classes = new ArrayList<>();
+
+		CodeSource src = Extra.class.getProtectionDomain()
+				.getCodeSource();
+		if (src != null) {
+			URL resource = src.getLocation();
+			resource.getPath();
+			Extra.processJarfile(resource, pkgname, classes);
+		}
+		return classes;
+	}
+	
+	@SuppressWarnings("resource")
+	public static void processJarfile(URL resource, String pkgname, ArrayList<Class<?>> classes) {
+		String relPath = pkgname.replace('.', '/');
+		String resPath = resource.getPath().replace("%20", " ");
+		String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+		JarFile jarFile;
+		try {
+			jarFile = new JarFile(jarPath);
+		} catch (IOException e) {
+			throw new RuntimeException("Unexpected IOException reading JAR File '" + jarPath + "'", e);
+		}
+
+		Enumeration<JarEntry> entries = jarFile.entries();
+		while (entries.hasMoreElements()) {
+			JarEntry entry = (JarEntry) entries.nextElement();
+			String entryName = entry.getName();
+			String className = null;
+			if ((entryName.endsWith(".class")) && (entryName.startsWith(relPath))
+					&& (entryName.length() > relPath.length() + "/".length())) {
+				className = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
+			}
+			if (className != null)
+				classes.add(loadClass(className));
+		}
+	}
+	
+	/***
+	 * ----------------------------------------------------------
+	 * 
+	 */
+	
+	
+	
+	
+	public static class DBConnector {
+
+		private String userName;
+		private String password;
+		private String host = "locahost";
+		private int port = 3306;
+		private String database;
+		private String databasePath;
+
+		private Connection connection;
+
+		public DBConnector(String pathName) {
+			this.databasePath = pathName;
+		}
+
+		public DBConnector(String userName, String password, String database) {
+			this.userName = userName;
+			this.password = password;
+			this.database = database;
+		}
+
+		public Connection newMySQLConnection() {
+			try {
+				return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, userName,
+						password);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		public Connection newSQLiteConnection() {
+			try {
+				return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		public void openMySQLConnection() {
+			closeConnection();
+			this.connection = newMySQLConnection();
+		}
+
+		public void openSQLiteConnection() {
+			closeConnection();
+			this.connection = newSQLiteConnection();
+		}
+
+		public void closeConnection() {
+			try {
+
+				if (connection != null) {
+					if (!connection.isClosed()) {
+						connection.close();
+					}
+
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		}
+
+		public boolean hasConnection() {
+
+			if (connection == null)
+				return false;
+			try {
+				return !connection.isClosed();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+			}
+			return false;
+
+		}
+
+		public PreparedStatement state(String sintax) {
+			PreparedStatement state = null;
+			if (hasConnection()) {
+				try {
+					if (!sintax.endsWith(";")) {
+						sintax += ";";
+					}
+					state = connection.prepareStatement(sintax);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return state;
+		}
+
+		public ResultSet query(String sintax) {
+			ResultSet rs = null;
+			if (hasConnection()) {
+				PreparedStatement state = state(sintax);
+				try {
+					rs = state.executeQuery();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			return rs;
+		}
+
+	}
+
 	private static Map<String, String> replacers = new LinkedHashMap<>();
+
 	public static String getReplacer(String key) {
 		return replacers.get(key);
 	}
+
 	public static void newReplacer(String key, String replacer) {
 		replacers.put(key, replacer);
 	}
+
 	static {
 		replacers.put("#b", "org.bukkit.");
 		replacers.put("#s", "org.spigotmc.");
@@ -45,10 +245,11 @@ public final class Extra {
 		replacers.put("#c", "org.bukkit.craftbukkit.#v.");
 		replacers.put("#s", "org.bukkit.");
 	}
-	public static void setValue(Object object, String name, Object value)
-			throws Exception {
+
+	public static void setValue(Object object, String name, Object value) throws Exception {
 		getField(object, name).set(object, value);
 	}
+
 	public static Field getField(Object object, String name) throws Exception {
 		Class<?> claz = get(object);
 		try {
@@ -63,12 +264,10 @@ public final class Extra {
 
 	}
 
-	public static Method getMethod(Object object, String name,
-			Object... parameters) throws Exception {
+	public static Method getMethod(Object object, String name, Object... parameters) throws Exception {
 		Class<?> claz = get(object);
 		try {
-			Method method = claz.getDeclaredMethod(name,
-					getParameters(parameters));
+			Method method = claz.getDeclaredMethod(name, getParameters(parameters));
 			method.setAccessible(true);
 			return method;
 		} catch (Exception e) {
@@ -78,8 +277,8 @@ public final class Extra {
 		}
 
 	}
-	public static boolean equalsArray(Class<?>[] firstArray,
-			Class<?>[] secondArray) {
+
+	public static boolean equalsArray(Class<?>[] firstArray, Class<?>[] secondArray) {
 		if (firstArray.length == secondArray.length) {
 			for (int i = 0; i < secondArray.length; i++) {
 				if (!firstArray[i].equals(secondArray[i])) {
@@ -90,8 +289,8 @@ public final class Extra {
 		}
 		return false;
 	}
-	public static Class<?>[] getParameters(Object... parameters)
-			throws Exception {
+
+	public static Class<?>[] getParameters(Object... parameters) throws Exception {
 		Class<?>[] objects = new Class<?>[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
 			objects[i] = get(parameters[i]);
@@ -99,50 +298,49 @@ public final class Extra {
 		return objects;
 
 	}
-	public static Constructor<?> getConstructor(Object object,
-			Object... parameters) throws Exception {
+
+	public static Constructor<?> getConstructor(Object object, Object... parameters) throws Exception {
 
 		Class<?> claz = get(object);
 		try {
-			Constructor<?> cons = claz
-					.getDeclaredConstructor(getParameters(parameters));
+			Constructor<?> cons = claz.getDeclaredConstructor(getParameters(parameters));
 			cons.setAccessible(true);
 			return cons;
 		} catch (Exception e) {
-			Constructor<?> cons = claz
-					.getConstructor(getParameters(parameters));
+			Constructor<?> cons = claz.getConstructor(getParameters(parameters));
 			cons.setAccessible(true);
 			return cons;
 		}
 
 	}
-	public static Object getNew(Object object, Object... values)
-			throws Exception {
+
+	public static Object getNew(Object object, Object... values) throws Exception {
 		return getConstructor(object, values).newInstance(values);
 
 	}
-	public static Object getNew(Object object, Object[] parameters,
-			Object... values) throws Exception {
+
+	public static Object getNew(Object object, Object[] parameters, Object... values) throws Exception {
 		return getConstructor(object, parameters).newInstance(values);
 	}
 
 	public static Object getValue(Object object, String name) throws Exception {
 		return getField(object, name).get(object);
 	}
-	public static Object getResult(Object object, String name, Object... values)
-			throws Exception {
+
+	public static Object getResult(Object object, String name, Object... values) throws Exception {
 
 		return getMethod(object, name, values).invoke(object, values);
 	}
-	public static Object getResult(Object object, String name,
-			Object[] parameters, Object... values) throws Exception {
+
+	public static Object getResult(Object object, String name, Object[] parameters, Object... values) throws Exception {
 		try {
-			return getMethod(object, name, parameters).invoke(object, values);	
+			return getMethod(object, name, parameters).invoke(object, values);
 		} catch (InvocationTargetException e) {
 			return null;
 		}
-		
+
 	}
+
 	public static Class<?> get(Object object) throws Exception {
 		if (object instanceof Class) {
 			return (Class<?>) object;
@@ -162,9 +360,11 @@ public final class Extra {
 		}
 		return object.getClass();
 	}
+
 	public static String toChatMessage(String text) {
 		return text.replace("&", "§");
 	}
+
 	public static List<String> toMessages(List<Object> list) {
 		List<String> lines = new ArrayList<String>();
 		for (Object line : list) {
@@ -172,6 +372,7 @@ public final class Extra {
 		}
 		return lines;
 	}
+
 	public static Random RANDOM = new Random();
 	public static final float TNT = 4F;
 	public static final float CREEPER = 3F;
@@ -188,37 +389,37 @@ public final class Extra {
 		}
 		long day = TimeUnit.MILLISECONDS.toDays(time);
 		long hours = TimeUnit.MILLISECONDS.toHours(time) - day * 24L;
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(time)
-				- TimeUnit.MILLISECONDS.toHours(time) * 60L;
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(time)
-				- TimeUnit.MILLISECONDS.toMinutes(time) * 60L;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.MILLISECONDS.toHours(time) * 60L;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MILLISECONDS.toMinutes(time) * 60L;
 		StringBuilder sb = new StringBuilder();
 		if (day > 0L) {
-			sb.append(day).append(" ").append(day == 1L ? "dia" : "dias")
-					.append(" ");
+			sb.append(day).append(" ").append(day == 1L ? "dia" : "dias").append(" ");
 		}
 		if (hours > 0L) {
-			sb.append(hours).append(" ").append(hours == 1L ? "hora" : "horas")
-					.append(" ");
+			sb.append(hours).append(" ").append(hours == 1L ? "hora" : "horas").append(" ");
 		}
 		if (minutes > 0L) {
-			sb.append(minutes).append(" ")
-					.append(minutes == 1L ? "minuto" : "minutos").append(" ");
+			sb.append(minutes).append(" ").append(minutes == 1L ? "minuto" : "minutos").append(" ");
 		}
 		if (seconds > 0L) {
-			sb.append(seconds).append(" ")
-					.append(seconds == 1L ? "segundo" : "segundos");
+			sb.append(seconds).append(" ").append(seconds == 1L ? "segundo" : "segundos");
 		}
 		String diff = sb.toString();
 		return diff.isEmpty() ? "agora" : diff;
 	}
 
+	/**
+	 * Formata o resultado da subtração de *numero antigo - numero atual)
+	 * 
+	 * @param timestamp
+	 *            Numero Antigo
+	 * @return Texto do numero formatado
+	 */
 	public static String formatDiference(long timestamp) {
 		return formatTime(timestamp - System.currentTimeMillis());
 	}
 
-	public static long parseDateDiff(String time, boolean future)
-			throws Exception {
+	public static long parseDateDiff(String time, boolean future) throws Exception {
 		Pattern timePattern = Pattern.compile(
 				"(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
 				2);
@@ -324,6 +525,7 @@ public final class Extra {
 		return now <= (cooldown + before);
 
 	}
+
 	public static long getCooldown(long before, long seconds) {
 
 		long now = System.currentTimeMillis();
@@ -338,17 +540,20 @@ public final class Extra {
 	public static long getNow() {
 		return System.currentTimeMillis();
 	}
+
 	@SafeVarargs
 	public static <E> E getRandom(E... objects) {
 		if (objects.length >= 1)
 			return objects[getRandomInt(1, objects.length) - 1];
 		return null;
 	}
+
 	public static <E> E getRandom(List<E> objects) {
 		if (objects.size() >= 1)
 			return objects.get(getRandomInt(1, objects.size()) - 1);
 		return null;
 	}
+
 	public static boolean isMultBy(int number1, int numer2) {
 
 		return number1 % numer2 == 0;
@@ -356,14 +561,13 @@ public final class Extra {
 
 	public static double getRandomDouble(double minValue, double maxValue) {
 
-		double min = Math.min(minValue, maxValue),
-				max = Math.max(minValue, maxValue);
+		double min = Math.min(minValue, maxValue), max = Math.max(minValue, maxValue);
 		return min + (max - min) * RANDOM.nextDouble();
 	}
+
 	public static int getRandomInt(int minValue, int maxValue) {
 
-		int min = Math.min(minValue, maxValue),
-				max = Math.max(minValue, maxValue);
+		int min = Math.min(minValue, maxValue), max = Math.max(minValue, maxValue);
 		return min + RANDOM.nextInt(max - min + 1);
 	}
 
@@ -481,6 +685,7 @@ public final class Extra {
 		}
 		return toTitle(name);
 	}
+
 	public static boolean contains(String message, String text) {
 		return message.toLowerCase().contains(text.toLowerCase());
 	}
@@ -587,6 +792,7 @@ public final class Extra {
 		}
 
 	}
+
 	public static Boolean toBoolean(Object obj) {
 
 		if (obj == null) {
@@ -604,6 +810,7 @@ public final class Extra {
 
 	/**
 	 * Transforma um objeto em byte
+	 * 
 	 * @param object
 	 * @return
 	 */
@@ -626,19 +833,21 @@ public final class Extra {
 		}
 
 	}
-/**
- * Transforma um objeto em texto
- * @param object
- * @return
- */
+
+	/**
+	 * Transforma um objeto em texto
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public static String toString(Object object) {
 
 		return object == null ? "" : object.toString();
 	}
 
-	
 	/**
 	 * Transforma uma array de objeto em texto
+	 * 
 	 * @param objects
 	 * @return
 	 */
@@ -648,12 +857,13 @@ public final class Extra {
 			builder.append(object);
 
 		}
-		
+
 		return builder.toString();
 	}
 
 	/**
 	 * Transforma o Texto em uma Lista de Texto
+	 * 
 	 * @param text
 	 * @param size
 	 * @return
@@ -675,14 +885,16 @@ public final class Extra {
 		return lista;
 
 	}
+
 	/**
 	 * Formata o texto aplicando as cores do CHAT_COLOR
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public static String formatColors(String text) {
-		char[] chars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a',
-				'b', 'c', 'd', 'e', 'f', 'n', 'r', 'l', 'k', 'o', 'm'};
+		char[] chars = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'n', 'r', 'l',
+				'k', 'o', 'm' };
 		char[] array = text.toCharArray();
 		for (int t = 0; t < array.length - 1; t++) {
 			if (array[t] == '&') {
@@ -695,8 +907,10 @@ public final class Extra {
 		}
 		return new String(array);
 	}
+
 	/**
 	 * Centraliza a Array
+	 * 
 	 * @param paragraph
 	 * @param title
 	 */
@@ -753,6 +967,7 @@ public final class Extra {
 		}
 		System.out.println(" ");
 	}
+
 	/**
 	 * Tipo de geração de Key
 	 * 
@@ -826,6 +1041,7 @@ public final class Extra {
 		return key;
 
 	}
+
 	/**
 	 * Pega o Ip do Coneção do Servidor
 	 * 
@@ -833,8 +1049,7 @@ public final class Extra {
 	 */
 	public static String getServerIp() {
 		try {
-			URLConnection connect = new URL("http://checkip.amazonaws.com/")
-					.openConnection();
+			URLConnection connect = new URL("http://checkip.amazonaws.com/").openConnection();
 			connect.addRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 			Scanner scan = new Scanner(connect.getInputStream());

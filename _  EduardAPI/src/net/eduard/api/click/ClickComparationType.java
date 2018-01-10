@@ -1,7 +1,14 @@
 package net.eduard.api.click;
-
+/**
+ * Tipo de Comparação do Clique que o jogador faz
+ * @since 1.0
+ * @version 1.0
+ * @author Eduard
+ *
+ */
 public enum ClickComparationType {
-	ON_BLOCK, WITH_LEFT_ON_AIR, WITH_RIGHT_ON_AIR, ON_AIR, WITH_RIGHT, WITH_LEFT, WITH_RIGHT_ON_BLOCK, WITH_LEFT_ON_BLOCK;
+	ON_BLOCK,
+	WITH_LEFT_ON_AIR, WITH_RIGHT_ON_AIR, ON_AIR, WITH_RIGHT, WITH_LEFT, WITH_RIGHT_ON_BLOCK, WITH_LEFT_ON_BLOCK;
 	
 	public boolean compare(String action) {
 		switch (this) {

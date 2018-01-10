@@ -17,12 +17,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,7 +41,10 @@ import java.util.zip.ZipInputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,17 +55,25 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.enchantments.EnchantmentWrapper;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -81,6 +94,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -89,10 +103,12 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Criterias;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -103,29 +119,704 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import net.eduard.api.setup.StorageAPI.Copyable;
 import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.setup.StorageAPI.Variable;
 
 public final class Mine {
-	public static String getProgressBar(double money, double price,
-			String concluidoCor, String faltandoCor, String symbol) {
+	
+	public static ChatColor SUCCESS = ChatColor.GREEN;
+	public static ChatColor SUCCESS_ARGUMENT = ChatColor.DARK_GREEN;
+	public static ChatColor ERROR = ChatColor.RED;
+	public static ChatColor ERROR_ARGUMENT = ChatColor.DARK_RED;
+	public static ChatColor MESSAGE = ChatColor.GOLD;
+	public static ChatColor MESSAGE_ARGUMENT = ChatColor.YELLOW;
+	public static ChatColor CHAT_CLEAR = ChatColor.WHITE;
+	public static ChatColor CHAT_NORMAL = ChatColor.GRAY;
+	public static ChatColor GUI_TITLE = ChatColor.BLACK;
+	public static ChatColor GUI_TEXT = ChatColor.DARK_GRAY;
+	public static ChatColor CONFIG = ChatColor.AQUA;
+	public static ChatColor CONFIG_ARGUMENT = ChatColor.DARK_AQUA;
+	public static ChatColor ITEM_TITLE = ChatColor.LIGHT_PURPLE;
+	public static ChatColor ITEM_TEXT = ChatColor.DARK_PURPLE;
+	public static ChatColor TITLE = ChatColor.DARK_BLUE;
+	public static ChatColor TEXT = ChatColor.BLUE;
+	
+
+	public static enum Chat {
+		NORMAL("§A", "§2"), ERROR("§C", "§4"), SIMPLE("§7", "§8"), GAME("§E", "§6"), SETUP("§B", "§3"), BONUS("§9",
+				"§1"), EFFECT("§D", "§5"), EXTRA("§F", "§0");
+
+		private String dark;
+		private String light;
+
+		private Chat(String light, String dark) {
+			setLight(light);
+			setDark(dark);
+		}
+
+		public static String getHeart() {
+			return "♥";
+		}
+
+		public static String getArrow() {
+			return "➵";
+		}
+
+		public static String getArrowRight() {
+			return "››";
+		}
+
+		public static String getArrowLeft() {
+			return "‹‹";
+		}
+
+		public static String getSquared() {
+			return "❑";
+		}
+
+		public static String getInterrogation() {
+			return "➁";
+		}
+
+		public static String getRedHeart() {
+			return ChatColor.RED + getHeart();
+		}
+
+		public static String getALlSimbols() {
+			return "❤❥✔✖✗✘❂⋆✢✣✤✥✦✩✪✫✬✭✵✴✳✲✱★✰✯✮✶✷✸✹✺✻✼❄❅✽✡☆❋❊❉❈❇❆✾✿❀❁❃✌♼♽✂➣➢⬇➟⬆⬅➡✈✄➤➥➦➧➨➚➘➙➛➶➵➴➳➲➸➞➝➜➷➹➹➺➻➼➽Ⓜ⬛⬜ℹ☕▌▄▆▜▀▛█";
+		}
+
+		public static String getAllSimbols2() {
+			return "™⚑⚐☃⚠⚔⚖⚒⚙⚜⚀⚁⚂⚃⚄⚅⚊⚋⚌⚍⚏⚎☰☱☲☳☴☵☶☷⚆⚇⚈⚉♿♩♪♫♬♭♮♯♠♡♢♗♖♕♔♧♛♦♥♤♣♘♙♚♛♜♝♞♟⚪➃➂➁➀➌➋➊➉➈➇➆➅➄☣☮☯⚫➌➋➊➉➈➇➆➅➄➍➎➏➐➑➒➓ⓐⓑⓚ";
+		}
+
+		public static String getAllSimbols3() {
+			return "웃유♋♀♂❣¿⌚☑▲☠☢☿Ⓐ✍☤✉☒▼⌘⌛®©✎♒☁☼ツღ¡Σ☭✞℃℉ϟ☂¢£⌨⚛⌇☹☻☺☪½∞✆☎⌥⇧↩←→↑↓⚣⚢⌲♺☟☝☞☜➫❑❒◈◐◑«»‹›×±※⁂‽¶—⁄—–≈÷≠π†‡‡¥€‰●•·";
+		}
+
+		public String getLightBold() {
+			return this.light + "§l";
+		}
+
+		public String getDarkBold() {
+			return this.dark + "§l";
+		}
+
+		public String getLight() {
+			return this.light;
+		}
+
+		public void setLight(String light) {
+			this.light = light;
+		}
+
+		public String getDark() {
+			return this.dark;
+		}
+
+		public void setDark(String dark) {
+			this.dark = dark;
+		}
+
+		public String toString() {
+			return getDarkBold();
+		}
+	}
+	/**
+	 * Pega uma lista de classes de uma package
+	 * 
+	 * @param plugin
+	 *            Plugin
+	 * @param pkgname
+	 *            Package
+	 * @return Lista de Classes
+	 */
+	public static ArrayList<Class<?>> getClassesForPackage(JavaPlugin plugin,
+			String pkgname) {
+		ArrayList<Class<?>> classes = new ArrayList<>();
+
+		CodeSource src = plugin.getClass().getProtectionDomain()
+				.getCodeSource();
+		if (src != null) {
+			URL resource = src.getLocation();
+			resource.getPath();
+			Extra.processJarfile(resource, pkgname, classes);
+		}
+		return classes;
+	}
+	public static void registerPackage(String pack,JavaPlugin plugin) {
+		getClassesForPackage(plugin, pack).forEach(claz -> {
+
+			if (Listener.class.isAssignableFrom(claz)) {
+				try {
+					Bukkit.getPluginManager().registerEvents((Listener) claz.newInstance(), plugin);
+				} catch (Exception e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + ":" + e.getMessage());
+				}
+			}
+
+			if (Command.class.isAssignableFrom(claz)) {
+				try {
+					createCommand(plugin,(Command) claz.newInstance());
+				} catch (Exception e) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + ":" + e.getMessage());
+				}
+			}
+
+		});
+	}
+	public static void createCommand(JavaPlugin plugin,Command... cmds) {
+		try {
+			Class<?> serverClass = Extra.get(Bukkit.getServer());
+			
+//			if ((Bukkit.getServer() instanceof CraftServer)) {
+				Field field = serverClass.getDeclaredField("commandMap");
+				field.setAccessible(true);
+
+				CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+				int tamanho = cmds.length;
+				for (int id = 0; id < tamanho; id++) {
+					Command cmd = cmds[id];
+					map.register(plugin.getName(), cmd);
+				}
+//			}
+		} catch (Exception ex) {
+		}
+	}
+	
+	public static class EnchantGlow extends EnchantmentWrapper {
+
+		private static Enchantment glow;
+
+		public EnchantGlow(int id) {
+			super(id);
+		}
+
+		@Override
+		public boolean canEnchantItem(ItemStack item) {
+			return false;
+		}
+
+		@Override
+		public boolean conflictsWith(Enchantment other) {
+			return false;
+		}
+
+		@Override
+		public EnchantmentTarget getItemTarget() {
+			return null;
+		}
+
+		@Override
+		public int getMaxLevel() {
+			return 10;
+		}
+
+		@Override
+		public String getName() {
+			return "Glow";
+		}
+
+		@Override
+		public int getStartLevel() {
+			return 1;
+		}
+
+		public static Enchantment getGlow() {
+			if (glow != null)
+				return glow;
+			if (Enchantment.getByName("Glow") != null)
+				return Enchantment.getByName("Glow");
+			try {
+				Extra.setValue(Enchantment.class, "acceptingNew", true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			glow = new EnchantGlow(255);
+			Enchantment.registerEnchantment(glow);
+			return glow;
+		}
+
+		public static ItemStack addGlow(ItemStack item) {
+			Enchantment glow = getGlow();
+
+			if (!item.containsEnchantment(glow))
+				item.addUnsafeEnchantment(glow, 1);
+
+			return item;
+		}
+
+		public static ItemStack removeGlow(ItemStack item) {
+			Enchantment glow = getGlow();
+
+			if (item.containsEnchantment(glow))
+				item.removeEnchantment(glow);
+
+			return item;
+		}
+
+	}
+	
+	public static void registerDefaults() {
+		StorageAPI.register(Item.class,new Item());
+		StorageAPI.register(Vector.class, new Storable() {
+
+			@Override
+			public Object restore(Map<String, Object> map) {
+				return new Vector();
+			}
+
+			@Override
+			public void store(Map<String, Object> map, Object object) {
+
+			}
+			@Override
+			public String alias() {
+				return "Vector";
+			}
+		});
+		StorageAPI.register(Enchantment.class, new Variable() {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof Enchantment) {
+					Enchantment enchantment = (Enchantment) object;
+					return enchantment.getId();
+
+				}
+				return null;
+			}
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					return Enchantment.getById(Extra.toInt(string));
+
+				}
+				return null;
+			}
+		});
+		StorageAPI.register(PotionEffectType.class, new Variable() {
+
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+
+					String string = (String) object;
+					String[] split = string.split(";");
+					return PotionEffectType.getByName(split[1]);
+				}
+				return null;
+			}
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof PotionEffectType) {
+					PotionEffectType potionEffectType = (PotionEffectType) object;
+					return potionEffectType.getName() + ";"
+							+ potionEffectType.getId();
+
+				}
+				return null;
+			}
+
+		});
+		StorageAPI.register(PotionEffect.class, new Variable() {
+
+			@Override
+			public Object save(Object object) {
+				return null;
+			}
+
+			@Override
+			public Object get(Object object) {
+				return new PotionEffect(PotionEffectType.SPEED, 20, 0);
+			}
+		});
+		StorageAPI.register(OfflinePlayer.class, new Variable() {
+
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String id = (String) object;
+					String[] split = id.split(";");
+					return new FakeOfflinePlayer(split[0],
+							UUID.fromString(split[1]));
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof OfflinePlayer) {
+					OfflinePlayer p = (OfflinePlayer) object;
+					return p.getName() + ";" + p.getUniqueId().toString();
+
+				}
+				return null;
+			}
+
+		});
+		StorageAPI.register(Location.class, new Storable() {
+
+			@Override
+			public Object restore(Map<String, Object> map) {
+				return new Location(Bukkit.getWorlds().get(0), 1, 1, 1);
+			}
+
+			@Override
+			public void store(Map<String, Object> map, Object object) {
+			}
+			@Override
+			public String alias() {
+				return "Location";
+			}
+
+		});
+
+		StorageAPI.register(Chunk.class, new Variable() {
+
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					String[] split = string.split(";");
+					return Bukkit.getWorld(split[0]).getChunkAt(
+							Extra.toInt(split[1]), Extra.toInt(split[2]));
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof Chunk) {
+					Chunk chunk = (Chunk) object;
+					return chunk.getWorld().getName() + ";" + chunk.getX() + ";"
+							+ chunk.getZ();
+				}
+
+				return null;
+			}
+
+		});
+
+		StorageAPI.register(World.class, new Variable() {
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String world = (String) object;
+					return Bukkit.getWorld(world);
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof World) {
+					World world = (World) object;
+					return world.getName();
+
+				}
+				return null;
+			}
+		});
+		StorageAPI.register(ItemStack.class, new Storable() {
+			@Override
+			public Object restore(Map<String, Object> map) {
+				int id = Extra.toInt(map.get("id"));
+				int amount = Extra.toInt(map.get("amount"));
+				int data = Extra.toInt(map.get("data"));
+				@SuppressWarnings("deprecation")
+				ItemStack item = new ItemStack(id, amount, (short) data);
+				String name = Extra.toChatMessage((String) map.get("name"));
+				if (!name.isEmpty()) {
+					Mine.setName(item, name);
+				}
+				@SuppressWarnings("unchecked")
+				List<String> lore = Extra
+						.toMessages((List<Object>) map.get("lore"));
+				if (!lore.isEmpty()) {
+					Mine.setLore(item, lore);
+				}
+				String enchants = (String) map.get("enchants");
+				if (!enchants.isEmpty()) {
+					if (enchants.contains(", ")) {
+						String[] split = enchants.split(", ");
+						for (String enchs : split) {
+							String[] sub = enchs.split("-");
+							@SuppressWarnings("deprecation")
+							Enchantment ench = Enchantment
+									.getById(Extra.toInt(sub[0]));
+							Integer level = Extra.toInt(sub[1]);
+							item.addUnsafeEnchantment(ench, level);
+
+						}
+					} else {
+						String[] split = enchants.split("-");
+						@SuppressWarnings("deprecation")
+						Enchantment ench = Enchantment
+								.getById(Extra.toInt(split[0]));
+						Integer level = Extra.toInt(split[1]);
+						item.addUnsafeEnchantment(ench, level);
+
+					}
+				}
+				return item;
+			}
+			@Override
+			public String alias() {
+				return "Item";
+			}
+			@SuppressWarnings("deprecation")
+			@Override
+			public void store(Map<String, Object> map, Object object) {
+				if (object instanceof ItemStack) {
+					ItemStack item = (ItemStack) object;
+					map.remove("durability");
+					map.remove("meta");
+					map.remove("type");
+					map.put("id", item.getTypeId());
+					map.put("data", item.getDurability());
+					map.put("amount", item.getAmount());
+					map.put("name", Mine.getName(item));
+					map.put("lore", Mine.getLore(item));
+					String enchants = "";
+					if (item.getItemMeta().hasEnchants()) {
+						StringBuilder str = new StringBuilder();
+						int id = 0;
+						for (Entry<Enchantment, Integer> entry : item
+								.getEnchantments().entrySet()) {
+							if (id > 0)
+								str.append(", ");
+							Enchantment enchantment = entry.getKey();
+							str.append(enchantment.getId() + "-"
+									+ entry.getValue());
+							id++;
+						}
+						enchants = str.toString();
+					}
+					map.put("enchants", enchants);
+				}
+
+			};
+		});
+	}
+
+	
+	public static String getRedHeart() {
+		return ChatColor.RED+"♥";
+	}
+
+	public static String cutText(String text, int lenght) {
+		return text.length() > lenght ? text.substring(0, lenght) : text;
+	}
+
+	public static class Item extends ItemStack implements Variable {
+
+		@SuppressWarnings("deprecation")
+		public Item(int id) {
+			super(id);
+		}
+
+		@SuppressWarnings("deprecation")
+		public Item() {
+			super(1);
+		}
+
+		@SuppressWarnings("deprecation")
+		public Item(int id, int amount, int data, String name, String... lore) {
+			setTypeId(id);
+			setAmount(amount);
+			setDurability((short) data);
+			ItemMeta meta = getItemMeta();
+			meta.setDisplayName(name);
+			;
+			meta.setLore(Arrays.asList(lore));
+			;
+			this.setItemMeta(meta);
+		}
+
+		/**
+		 * id:data-qnt;enchId-enchData,enchId-enchData;nome;descriao1,descricao2
+		 */
+		@SuppressWarnings("deprecation")
+		@Override
+		public Object get(Object object) {
+			if (object instanceof String) {
+				String text = (String) object;
+
+				try {
+					String[] split = text.split(";");
+					String[] splitData = split[0].split("-");
+					Integer qnt = Mine.toInt(splitData[1]);
+					String[] splitInfo = splitData[0].split(":");
+					Integer id = Mine.toInt(splitInfo[0]);
+					short data = Mine.toShort(splitInfo[1]);
+					ItemStack item = new Item();
+					item.setTypeId(id);
+					item.setDurability(data);
+					item.setAmount(qnt);
+					if (split.length > 0) {
+						if (split[1].contains(",")) {
+							String[] enchs = split[1].split(",");
+							for (String enchant : enchs) {
+								String[] ench = enchant.split("-");
+								Integer ench_id = Mine.toInt(ench[0]);
+								Integer ench_level = Mine.toInt(ench[1]);
+								item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
+							}
+						} else {
+							if (!split[1].equals(" ")) {
+								String[] ench = split[1].split("-");
+								Integer ench_id = Mine.toInt(ench[0]);
+								Integer ench_level = Mine.toInt(ench[1]);
+								item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
+							}
+
+						}
+					}
+					ItemMeta meta = item.getItemMeta();
+					if (split.length > 1) {
+						String nome = split[2];
+						if (!nome.equals(" ")) {
+							meta.setDisplayName(Extra.toChatMessage(nome));
+						}
+					}
+					if (split.length > 2) {
+						List<String> lista = new ArrayList<>();
+						String descricao = split[3];
+						if (descricao.contains(",")) {
+							String[] lore = descricao.split(",");
+							for (String line : lore) {
+								lista.add(Extra.toChatMessage(line));
+							}
+						} else {
+							if (!descricao.equals(" ")) {
+								lista.add(descricao);
+							}
+
+						}
+						meta.setLore(lista);
+					}
+					item.setItemMeta(meta);
+
+					return item;
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new Item(1);
+				}
+
+			}
+			return null;
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public Object save(Object object) {
+			if (object instanceof ItemStack) {
+				ItemStack item = (ItemStack) object;
+				StringBuilder textao = new StringBuilder();
+				textao.append(item.getTypeId() + ":" + item.getDurability() + "-" + item.getAmount() + ";");
+				ItemMeta meta = item.getItemMeta();
+				if (meta != null) {
+
+					if (meta.hasEnchants()) {
+						boolean first = true;
+						for (Entry<Enchantment, Integer> enchant : item.getItemMeta().getEnchants().entrySet()) {
+							if (!first) {
+								textao.append(",");
+							} else
+								first = false;
+							textao.append(enchant.getKey().getId());
+							textao.append("-");
+							textao.append(enchant.getValue());
+						}
+					} else {
+						textao.append(" ");
+					}
+					textao.append(";");
+					if (item.getItemMeta().hasDisplayName()) {
+						textao.append(item.getItemMeta().getDisplayName());
+					} else {
+						textao.append(" ");
+					}
+					textao.append(";");
+					if (meta.hasLore()) {
+						boolean first = true;
+						for (String line : meta.getLore()) {
+							if (!first) {
+								textao.append(",");
+							} else
+								first = false;
+							textao.append(line);
+						}
+
+					} else {
+						textao.append(" ");
+					}
+					textao.append(";");
+				}
+				return textao.toString();
+			}
+			return null;
+		}
+
+	}
+
+	public static ItemStack reloadItem(String text) {
+		return (ItemStack) new Item().get(text);
+	}
+
+	public static String saveItem(ItemStack item) {
+		return (String) new Item().save(item);
+	}
+
+	public static void newBanner() {
+		ItemStack banner = new ItemStack(Material.BANNER);
+		BannerMeta meta = (BannerMeta) banner.getItemMeta();
+		meta.setBaseColor(DyeColor.BLACK);
+		meta.setDisplayName("§aBaner");
+		meta.addPattern(new Pattern(DyeColor.WHITE, PatternType.SKULL));
+		banner.setItemMeta(meta);
+		// meta.set
+	}
+
+	public static String getProgressBar(double money, double price, String concluidoCor, String faltandoCor,
+			String symbol) {
 		StringBuilder result = new StringBuilder();
 		double div = money / price;
-		long redonde = Math.round(div * 100);
-		long con = redonde / 10;
-		long rest = 10 - con;
+		// 10 5 2
+		// long redonde = Math.round(div * 100);
+		// long con = redonde / 10;
+		if (div > 1) {
+			div = 1;
+		}
+		double rest = 1D - div;
 		result.append(concluidoCor);
-		for (int i = 0; i < con; i++) {
+		while (div > 0) {
 			result.append(symbol);
+			div -= 0.1;
 		}
 		result.append(faltandoCor);
-		for (int i = 0; i < rest; i++) {
+		while (rest > 0) {
 			result.append(symbol);
+			rest -= 0.1;
 		}
 		return result.toString();
 	}
+
 	public static Team getTeam(Scoreboard scoreboard, String name) {
-		Team team = scoreboard.getTeam(cutText(name,16));
+		Team team = scoreboard.getTeam(Mine.cutText(name, 16));
 		if (team == null) {
-			team = scoreboard.registerNewTeam(cutText(name,16));
+			team = scoreboard.registerNewTeam(cutText(name, 16));
 		}
 		return team;
 	}
@@ -134,8 +825,7 @@ public final class Mine {
 	public static String getPlayerGroupPrefix(String player) {
 
 		return Mine.toChatMessage(VaultAPI.getChat().getGroupPrefix("null",
-				VaultAPI.getPermission().getPrimaryGroup("null",
-						Bukkit.getOfflinePlayer(player))));
+				VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player))));
 	}
 
 	/**
@@ -147,6 +837,7 @@ public final class Mine {
 	public static void setarNivelJogador(Player jogador, int novoNivel) {
 		jogador.setLevel(novoNivel);
 	}
+
 	/**
 	 * Seta o nivel da barra de fome do jogador
 	 * 
@@ -169,7 +860,7 @@ public final class Mine {
 		jogador.setExp(porcentagem == 0 ? 0F : porcentagem / 100);
 	}
 
-	public static void send(Collection<Player> players, String message) {
+	public static void sendTo(Collection<Player> players, String message) {
 		for (Player player : players) {
 			player.sendMessage(message);
 		}
@@ -177,9 +868,9 @@ public final class Mine {
 	}
 
 	/**
-	 * Controlador de Tempo, classe que controla e ajuda na cria��o de
+	 * Controlador de Tempo, classe que controla e ajuda na criação de
 	 * temporarizador (Timer)<br>
-	 * , de atrasador (Delayer) que s�o Tarefa de Tempo (Task ou BukkitTask)
+	 * , de atrasador (Delayer) que são Tarefa de Tempo (Task ou BukkitTask)
 	 * 
 	 * @author Eduard-PC
 	 *
@@ -192,6 +883,7 @@ public final class Mine {
 		public TimeManager() {
 			setPlugin(defaultPlugin());
 		}
+		
 
 		/**
 		 * Construtor pedindo um Plugin
@@ -202,13 +894,14 @@ public final class Mine {
 		public TimeManager(JavaPlugin plugin) {
 			setPlugin(plugin);
 		}
+
 		/**
 		 * Tempo em ticks para o Delay ou Timer
 		 */
 		private long time = 20;
 
 		/**
-		 * Tempo anterior para fazer a compara��o
+		 * Tempo anterior para fazer a comparação
 		 */
 		private long startTime;
 
@@ -233,6 +926,7 @@ public final class Mine {
 			setStartTime(Mine.getNow());
 			return task;
 		}
+
 		/**
 		 * Cria um Timer com um Plugin
 		 * 
@@ -245,6 +939,7 @@ public final class Mine {
 			setStartTime(Mine.getNow());
 			return task;
 		}
+
 		/**
 		 * Cria um Delay com um Plugin e um Efeito rodavel
 		 * 
@@ -259,6 +954,7 @@ public final class Mine {
 			setStartTime(Mine.getNow());
 			return task;
 		}
+
 		/**
 		 * Cria um Timer com um Plugin e um Efeito rodavel
 		 * 
@@ -273,6 +969,7 @@ public final class Mine {
 			setStartTime(Mine.getNow());
 			return task;
 		}
+
 		/**
 		 * 
 		 * @return Tempo em ticks
@@ -280,6 +977,7 @@ public final class Mine {
 		public long getTime() {
 			return time;
 		}
+
 		/**
 		 * 
 		 * @return Se ligou um Timer ou Delay
@@ -287,6 +985,7 @@ public final class Mine {
 		public boolean existsTask() {
 			return task != null;
 		}
+
 		/**
 		 * Desliga o Timer/Delay criado
 		 */
@@ -296,6 +995,7 @@ public final class Mine {
 				task = null;
 			}
 		}
+
 		/**
 		 * Seta o Tempo
 		 * 
@@ -305,6 +1005,7 @@ public final class Mine {
 		public void setTime(long time) {
 			this.time = time;
 		}
+
 		/**
 		 * Define o Tempo
 		 * 
@@ -314,6 +1015,7 @@ public final class Mine {
 		public void setTime(int time) {
 			setTime(time * 20L);
 		}
+
 		/**
 		 * 
 		 * @return O tempo do inicio
@@ -321,6 +1023,7 @@ public final class Mine {
 		public long getStartTime() {
 			return startTime;
 		}
+
 		/**
 		 * Define o Tempo de inicio
 		 * 
@@ -334,6 +1037,7 @@ public final class Mine {
 		public BukkitTask getTask() {
 			return task;
 		}
+
 		/**
 		 * Define
 		 * 
@@ -363,7 +1067,7 @@ public final class Mine {
 	 * @author Eduard-PC
 	 *
 	 */
-	public static abstract class EventsManager implements Listener, Storable {
+	public static class EventsManager implements Listener, Storable {
 		/**
 		 * Se o Listener esta registrado
 		 */
@@ -372,15 +1076,18 @@ public final class Mine {
 		 * Plugin
 		 */
 		private transient Plugin plugin;
+
 		/**
 		 * Construtor base deixando Plugin automatico
 		 */
 		public EventsManager() {
 			setPlugin(defaultPlugin());
 		}
+		
 		public Plugin defaultPlugin() {
 			return JavaPlugin.getProvidingPlugin(getClass());
 		}
+
 		/**
 		 * Construtor pedindo um Plugin
 		 * 
@@ -390,6 +1097,7 @@ public final class Mine {
 		public EventsManager(Plugin plugin) {
 			register(plugin);
 		}
+
 		/**
 		 * Registra o Listener para o Plugin
 		 * 
@@ -402,6 +1110,7 @@ public final class Mine {
 			setPlugin(plugin);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 		}
+
 		public Object restore(Map<String, Object> map) {
 			return null;
 		}
@@ -410,6 +1119,7 @@ public final class Mine {
 			// TODO Auto-generated method stub
 
 		}
+
 		/**
 		 * Desregistra o Listener
 		 */
@@ -426,6 +1136,7 @@ public final class Mine {
 		public boolean isRegistered() {
 			return registred;
 		}
+
 		/**
 		 * 
 		 * @return Plugin
@@ -433,6 +1144,7 @@ public final class Mine {
 		public Plugin getPlugin() {
 			return plugin;
 		}
+
 		/**
 		 * Seta o Plugin
 		 * 
@@ -444,7 +1156,9 @@ public final class Mine {
 		}
 
 	}
+
 	private static Map<String, Replacer> replacers = new HashMap<>();
+
 	public static interface Replacer {
 
 		Object getText(Player p);
@@ -495,8 +1209,7 @@ public final class Mine {
 		return formatTime(timestamp - System.currentTimeMillis());
 	}
 
-	public static long parseDateDiff(String time, boolean future)
-			throws Exception {
+	public static long parseDateDiff(String time, boolean future) throws Exception {
 		return Extra.parseDateDiff(time, future);
 	}
 
@@ -524,6 +1237,7 @@ public final class Mine {
 		}
 		return list;
 	}
+
 	@SuppressWarnings("deprecation")
 	public static EntityType getEntity(Object object) {
 		String str = object.toString().replace("_", "").trim();
@@ -559,6 +1273,7 @@ public final class Mine {
 		return list;
 
 	}
+
 	public static List<String> getSounds(String argument) {
 		if (argument == null) {
 			argument = "";
@@ -576,6 +1291,7 @@ public final class Mine {
 		return list;
 
 	}
+
 	@SuppressWarnings("deprecation")
 	public static Enchantment getEnchant(Object object) {
 		String str = object.toString().replace("_", "").trim();
@@ -594,14 +1310,16 @@ public final class Mine {
 
 		return Extra.getChance(chance);
 	}
+
 	public static boolean random(double chance) {
 		return getChance(chance);
 	}
-	public static void randomInt(int minValue, int maxValue) {
-		getRandomInt(minValue, maxValue);
+
+	public static int randomInt(int minValue, int maxValue) {
+		return getRandomInt(minValue, maxValue);
 	}
-	public static boolean hasPerm(CommandSender sender, String permission,
-			int max, int min) {
+
+	public static boolean hasPerm(CommandSender sender, String permission, int max, int min) {
 
 		boolean has = false;
 		for (int i = max; i >= min; i--) {
@@ -613,8 +1331,7 @@ public final class Mine {
 
 	}
 
-	public static PluginCommand command(String commandName,
-			CommandExecutor command, String permission,
+	public static PluginCommand command(String commandName, CommandExecutor command, String permission,
 			String permissionMessage) {
 
 		PluginCommand cmd = Bukkit.getPluginCommand(commandName);
@@ -623,12 +1340,15 @@ public final class Mine {
 		cmd.setPermissionMessage(permissionMessage);
 		return cmd;
 	}
+
 	public static boolean hasPlugin(String plugin) {
 		return Bukkit.getPluginManager().getPlugin(plugin) != null;
 	}
+
 	public static String getCmd(String message) {
 		return Extra.getCmd(message);
 	}
+
 	/**
 	 * Retorna se (now < (seconds + before));
 	 * 
@@ -642,6 +1362,7 @@ public final class Mine {
 		return Extra.inCooldown(before, seconds);
 
 	}
+
 	public static long getCooldown(long before, long seconds) {
 		return Extra.getCooldown(before, seconds);
 
@@ -650,31 +1371,38 @@ public final class Mine {
 	public static boolean hasAPI() {
 		return hasPlugin("EduardAPI");
 	}
+
 	public static Scoreboard getMainScoreboard() {
 		return Bukkit.getScoreboardManager().getMainScoreboard();
 	}
+
 	public static long getNow() {
 		return Extra.getNow();
 	}
+
 	@SafeVarargs
 	public static <E> E getRandom(E... objects) {
 		return Extra.getRandom(objects);
 	}
+
 	public static <E> E getRandom(List<E> objects) {
 		return Extra.getRandom(objects);
 	}
+
 	public static boolean isMultBy(int number1, int numer2) {
 
 		return Extra.isMultBy(number1, numer2);
 	}
+
 	public static void addPermission(String permission) {
 		Bukkit.getPluginManager().addPermission(new Permission(permission));
 	}
-	public static boolean newExplosion(Location location, float power,
-			boolean breakBlocks, boolean makeFire) {
-		return location.getWorld().createExplosion(location.getX(),
-				location.getY(), location.getZ(), power, breakBlocks, makeFire);
+
+	public static boolean newExplosion(Location location, float power, boolean breakBlocks, boolean makeFire) {
+		return location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), power,
+				breakBlocks, makeFire);
 	}
+
 	public static BukkitTask timer(Plugin plugin, long ticks, Runnable run) {
 		if (run instanceof BukkitRunnable) {
 			BukkitRunnable bukkitRunnable = (BukkitRunnable) run;
@@ -682,29 +1410,43 @@ public final class Mine {
 		}
 		return Bukkit.getScheduler().runTaskTimer(plugin, run, ticks, ticks);
 	}
+
 	public static BukkitTask timers(Plugin plugin, long ticks, Runnable run) {
 		if (run instanceof BukkitRunnable) {
 			BukkitRunnable bukkitRunnable = (BukkitRunnable) run;
-			return bukkitRunnable.runTaskTimerAsynchronously(plugin, ticks,
-					ticks);
+			return bukkitRunnable.runTaskTimerAsynchronously(plugin, ticks, ticks);
 		}
-		return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, run,
-				ticks, ticks);
+		return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, run, ticks, ticks);
 	}
 
 	public static double getRandomDouble(double minValue, double maxValue) {
 		return Extra.getRandomDouble(minValue, maxValue);
 	}
-	public static Firework newFirework(Location location, int high, Color color,
-			Color fade, boolean trail, boolean flicker) {
+
+	public static Firework newFirework(Location location, int high, Color color, Color fade, boolean trail,
+			boolean flicker) {
+		return newFirework(location, high, color, fade, trail, flicker, FireworkEffect.Type.CREEPER);
+	}
+
+	public static Firework newFirework(Location location, int high, Color color, Color fade, boolean trail,
+			boolean flicker, FireworkEffect.Type type) {
 		Firework firework = location.getWorld().spawn(location, Firework.class);
 		FireworkMeta meta = firework.getFireworkMeta();
 		meta.setPower(high);
-		meta.addEffect(FireworkEffect.builder().trail(trail).flicker(flicker)
-				.withColor(color).withFade(fade).build());
+		meta.addEffect(FireworkEffect.builder().with(type).trail(trail).flicker(flicker).withColor(color).withFade(fade)
+				.build());
 		firework.setFireworkMeta(meta);
 		return firework;
 	}
+
+	public static void newStepSound(Location location, int blockId) {
+		location.getWorld().playEffect(location, Effect.STEP_SOUND, blockId);
+	}
+
+	public static void newStepSound(Location location, Material material) {
+		location.getWorld().playEffect(location, Effect.STEP_SOUND, material);
+	}
+
 	public static int getRandomInt(int minValue, int maxValue) {
 		return Extra.getRandomInt(minValue, maxValue);
 	}
@@ -712,6 +1454,7 @@ public final class Mine {
 	public static void runCommand(String command) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 	}
+
 	public static void makeCommand(String command) {
 		runCommand(command);
 	}
@@ -724,9 +1467,11 @@ public final class Mine {
 
 		Bukkit.getPluginManager().callEvent(event);
 	}
+
 	public static void event(Listener event, Plugin plugin) {
 		registerEvents(event, plugin);
 	}
+
 	public static void registerEvents(Listener event, Plugin plugin) {
 		Bukkit.getPluginManager().registerEvents(event, plugin);
 	}
@@ -734,9 +1479,9 @@ public final class Mine {
 	public static BukkitTask delay(Plugin plugin, long ticks, Runnable run) {
 		return Bukkit.getScheduler().runTaskLater(plugin, run, ticks);
 	}
+
 	public static BukkitTask delays(Plugin plugin, long ticks, Runnable run) {
-		return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, run,
-				ticks);
+		return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, run, ticks);
 	}
 
 	public static String getTime(int time) {
@@ -770,7 +1515,7 @@ public final class Mine {
 	}
 
 	public static String toConfigMessage(String text) {
-		return text.replace("�", "&");
+		return text.replace("§", "&");
 	}
 
 	public static String toDecimal(Object number) {
@@ -801,8 +1546,9 @@ public final class Mine {
 	public static String toTitle(String name, String replacer) {
 		return Extra.toTitle(name, replacer);
 	}
+
 	public static boolean contains(String message, String text) {
-		return message.toLowerCase().contains(text.toLowerCase());
+		return Extra.contains(message, text);
 	}
 
 	public static String getText(int init, String... args) {
@@ -818,6 +1564,7 @@ public final class Mine {
 		}
 		return text.toString();
 	}
+
 	public static Double toDouble(Object object) {
 
 		return Extra.toDouble(object);
@@ -847,6 +1594,7 @@ public final class Mine {
 		return Extra.toShort(object);
 
 	}
+
 	public static Boolean toBoolean(Object obj) {
 		return Extra.toBoolean(obj);
 	}
@@ -860,14 +1608,17 @@ public final class Mine {
 
 		return object == null ? "" : object.toString();
 	}
+
 	public static void sendActionBar(String message) {
 		for (Player player : Mine.getPlayers()) {
 			Mine.sendActionBar(player, message);
 		}
 	}
+
 	public static void addReplacer(String key, Replacer value) {
 		replacers.put(key, value);
 	}
+
 	public static Replacer getReplacer(String key) {
 		return replacers.get(key);
 	}
@@ -883,6 +1634,7 @@ public final class Mine {
 			player.sendMessage(message);
 		}
 	}
+
 	public static void broadcast(String message, String permission) {
 		for (Player player : Mine.getPlayers()) {
 			if (player.hasPermission(permission))
@@ -894,11 +1646,10 @@ public final class Mine {
 		for (Entry<String, Replacer> value : replacers.entrySet()) {
 			if (text.contains(value.getKey())) {
 				try {
-					text = text.replace(value.getKey(),
-							"" + value.getValue().getText(player));
+					text = text.replace(value.getKey(), "" + value.getValue().getText(player));
 
 				} catch (Exception e) {
-					console(e.getMessage());
+					// Mine.console("§c"+e.getMessage());
 				}
 
 			}
@@ -906,22 +1657,66 @@ public final class Mine {
 		}
 		return text;
 	}
+
 	public static List<String> toLines(String text, int size) {
 		return Extra.toLines(text, size);
 
 	}
+
+	public static Villager newNPCVillager(Location location, String name) {
+		Villager npc = location.getWorld().spawn(location, Villager.class);
+		npc.setCustomName(name);
+		npc.setCustomNameVisible(true);
+		Mine.disableAI(npc);
+		return npc;
+	}
+
+	public static ArmorStand newHologram(Location location, String line) {
+		ArmorStand holo = location.getWorld().spawn(location, ArmorStand.class);
+		holo.setGravity(false);
+		holo.setVisible(false);
+		holo.setCustomNameVisible(true);
+		holo.setCustomName(line);
+		return holo;
+	}
+
+	public static List<ArmorStand> newHologram(Location location, String... lines) {
+		List<ArmorStand> lista = new ArrayList<>();
+		for (String line : lines) {
+			ArmorStand holo = newHologram(location, line);
+			lista.add(holo);
+			location = location.subtract(0, 0.3, 0);
+		}
+		return lista;
+	}
+
+	public static List<ArmorStand> newHologram(Location location, List<String> lines) {
+		return newHologram(location, lines, false);
+	}
+	public static List<ArmorStand> newHologram(Location location, List<String> lines,boolean toDown) {
+		List<ArmorStand> lista = new ArrayList<>();
+		for (String line : lines) {
+			ArmorStand holo = newHologram(location, line);
+			lista.add(holo);
+			if (toDown)
+			location = location.subtract(0, 0.3, 0);
+			else {
+				location = location.add(0, 0.3, 0);
+			}
+		}
+		return lista;
+	}
+
 	public static String[] wordWrap(String rawString, int lineLength) {
 		if (rawString == null) {
-			return new String[]{""};
+			return new String[] { "" };
 		}
 
-		if ((rawString.length() <= lineLength)
-				&& (!(rawString.contains("\n")))) {
-			return new String[]{rawString};
+		if ((rawString.length() <= lineLength) && (!(rawString.contains("\n")))) {
+			return new String[] { rawString };
 		}
 
-		char[] rawChars = new StringBuilder().append(rawString).append(' ')
-				.toString().toCharArray();
+		char[] rawChars = new StringBuilder().append(rawString).append(' ').toString().toCharArray();
 		StringBuilder word = new StringBuilder();
 		StringBuilder line = new StringBuilder();
 		List<String> lines = new LinkedList<>();
@@ -937,22 +1732,16 @@ public final class Mine {
 			} else if ((c == ' ') || (c == '\n')) {
 				if ((line.length() == 0) && (word.length() > lineLength)) {
 					for (String partialWord : word.toString()
-							.split(new StringBuilder().append("(?<=\\G.{")
-									.append(lineLength).append("})")
-									.toString()))
+							.split(new StringBuilder().append("(?<=\\G.{").append(lineLength).append("})").toString()))
 						lines.add(partialWord);
-				} else if (line.length() + word.length()
-						- lineColorChars == lineLength) {
+				} else if (line.length() + word.length() - lineColorChars == lineLength) {
 					line.append(word);
 					lines.add(line.toString());
 					line = new StringBuilder();
 					lineColorChars = 0;
-				} else if (line.length() + 1 + word.length()
-						- lineColorChars > lineLength) {
-					for (String partialWord : word.toString()
-							.split(new StringBuilder().append("(?<=\\G.{")
-									.append(lineLength).append("})")
-									.toString())) {
+				} else if (line.length() + 1 + word.length() - lineColorChars > lineLength) {
+					for (String partialWord : word.toString().split(
+							new StringBuilder().append("(?<=\\G.{").append(lineLength).append("})").toString())) {
 						lines.add(line.toString());
 						line = new StringBuilder(partialWord);
 					}
@@ -979,8 +1768,7 @@ public final class Mine {
 		}
 
 		if ((lines.get(0).length() == 0) || (lines.get(0).charAt(0) != 167)) {
-			lines.set(0, new StringBuilder().append(ChatColor.WHITE)
-					.append(lines.get(0)).toString());
+			lines.set(0, new StringBuilder().append(ChatColor.WHITE).append(lines.get(0)).toString());
 		}
 		for (int i = 1; i < lines.size(); ++i) {
 			String pLine = lines.get(i - 1);
@@ -988,82 +1776,33 @@ public final class Mine {
 
 			char color = pLine.charAt(pLine.lastIndexOf(167) + 1);
 			if ((subLine.length() == 0) || (subLine.charAt(0) != 167)) {
-				lines.set(i,
-						new StringBuilder().append(ChatColor.getByChar(color))
-								.append(subLine).toString());
+				lines.set(i, new StringBuilder().append(ChatColor.getByChar(color)).append(subLine).toString());
 			}
 		}
 
 		return (lines.toArray(new String[lines.size()]));
 	}
+
 	public static String formatColors(String str) {
-		char[] chars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a',
-				'b', 'c', 'd', 'e', 'f', 'n', 'r', 'l', 'k', 'o', 'm'};
+		char[] chars = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'n', 'r', 'l',
+				'k', 'o', 'm' };
 		char[] array = str.toCharArray();
 		for (int t = 0; t < array.length - 1; t++) {
 			if (array[t] == '&') {
 				for (char c : chars) {
 					if (c == array[(t + 1)]) {
-						array[t] = '�';
+						array[t] = '§';
 					}
 				}
 			}
 		}
 		return new String(array);
 	}
+
 	public static void box(String[] paragraph, String title) {
-		ArrayList<String> buffer = new ArrayList<String>();
-		String at = "";
-
-		int side1 = (int) Math.round(25.0D - (title.length() + 4) / 2.0D);
-		int side2 = (int) (26.0D - (title.length() + 4) / 2.0D);
-		at = at + '+';
-		for (int t = 0; t < side1; t++) {
-			at = at + '-';
-		}
-		at = at + "{ ";
-		at = at + title;
-		at = at + " }";
-		for (int t = 0; t < side2; t++) {
-			at = at + '-';
-		}
-		at = at + '+';
-		buffer.add(at);
-		at = "";
-		buffer.add("|                                                   |");
-		String[] arrayOfString = paragraph;
-		int j = paragraph.length;
-		for (int i = 0; i < j; i++) {
-			String s = arrayOfString[i];
-			at = at + "| ";
-			int left = 49;
-			for (int t = 0; t < s.length(); t++) {
-				at = at + s.charAt(t);
-				left--;
-				if (left == 0) {
-					at = at + " |";
-					buffer.add(at);
-					at = "";
-					at = at + "| ";
-					left = 49;
-				}
-			}
-			while (left-- > 0) {
-				at = at + ' ';
-			}
-			at = at + " |";
-			buffer.add(at);
-			at = "";
-		}
-		buffer.add("|                                                   |");
-		buffer.add("+---------------------------------------------------+");
-
-		System.out.println(" ");
-		for (String line : buffer.toArray(new String[buffer.size()])) {
-			System.out.println(line);
-		}
-		System.out.println(" ");
+		Extra.box(paragraph, title);
 	}
+
 	public static List<String> toMessages(List<Object> list) {
 		List<String> lines = new ArrayList<String>();
 		for (Object line : list) {
@@ -1071,37 +1810,39 @@ public final class Mine {
 		}
 		return lines;
 	}
-	public static String mEntityPlayer = "#mEntityPlayer";
-	public static String cCraftPlayer = "#cCraftPlayer";
-	public static String sPacketTitle = "#sProtocolInjector$PacketTitle";
-	public static String sAction = "#sProtocolInjector$PacketTitle$Action";
-	public static String sPacketTabHeader = "#sProtocolInjector$PacketTabHeader";
-	public static String pPlayOutChat = "#pPlayOutChat";
-	public static String pPlayOutTitle = "#pPlayOutTitle";
-	public static String pPlayOutWorldParticles = "#pPlayOutWorldParticles";
-	public static String pPlayOutPlayerListHeaderFooter = "#pPlayOutPlayerListHeaderFooter";
-	public static String pPlayOutNamedEntitySpawn = "#pPlayOutNamedEntitySpawn";
-	public static String pPlayInClientCommand = "#pPlayInClientCommand";
-	public static String cEnumTitleAction = "#cEnumTitleAction";
-	public static String pEnumTitleAction2 = "#pPlayOutTitle$EnumTitleAction";
-	public static String mEnumClientCommand = "#mEnumClientCommand";
-	public static String mEnumClientCommand2 = "#pPlayInClientCommand$EnumClientCommand";
-	public static String mChatSerializer = "#mChatSerializer";
-	public static String mIChatBaseComponent = "#mIChatBaseComponent";
-	public static String mEntityHuman = "#mEntityHuman";
-	public static String mNBTTagCompound = "#mNBTTagCompound";
-	public static String mNBTBase = "#mNBTBase";
-	public static String mNBTTagList = "#mNBTTagList";
-	public static String pPacket = "#p";
-	public static String cItemStack = "#cinventory.CraftItemStack";
-	public static String mItemStack = "#mItemStack";
-	public static String bItemStack = "#bItemStack";
-	public static String bBukkit = "#bBukkit";
-	public static String mChatComponentText = "#mChatComponentText";
-	public static String mMinecraftServer = "#mMinecraftServer";
+
+	public static String claz_mEntityPlayer = "#mEntityPlayer";
+	public static String claz_cCraftPlayer = "#cCraftPlayer";
+	public static String claz_sPacketTitle = "#sProtocolInjector$PacketTitle";
+	public static String claz_sAction = "#sProtocolInjector$PacketTitle$Action";
+	public static String claz_sPacketTabHeader = "#sProtocolInjector$PacketTabHeader";
+	public static String claz_pPlayOutChat = "#pPlayOutChat";
+	public static String claz_pPlayOutTitle = "#pPlayOutTitle";
+	public static String claz_pPlayOutWorldParticles = "#pPlayOutWorldParticles";
+	public static String claz_pPlayOutPlayerListHeaderFooter = "#pPlayOutPlayerListHeaderFooter";
+	public static String claz_pPlayOutNamedEntitySpawn = "#pPlayOutNamedEntitySpawn";
+	public static String claz_pPlayInClientCommand = "#pPlayInClientCommand";
+	public static String claz_cEnumTitleAction = "#cEnumTitleAction";
+	public static String claz_pEnumTitleAction2 = "#pPlayOutTitle$EnumTitleAction";
+	public static String claz_mEnumClientCommand = "#mEnumClientCommand";
+	public static String claz_mEnumClientCommand2 = "#pPlayInClientCommand$EnumClientCommand";
+	public static String claz_mChatSerializer = "#mChatSerializer";
+	public static String claz_mIChatBaseComponent = "#mIChatBaseComponent";
+	public static String claz_mEntityHuman = "#mEntityHuman";
+	public static String claz_mNBTTagCompound = "#mNBTTagCompound";
+	public static String claz_mNBTBase = "#mNBTBase";
+	public static String claz_mNBTTagList = "#mNBTTagList";
+	public static String claz_pPacket = "#p";
+	public static String claz_cItemStack = "#cinventory.CraftItemStack";
+	public static String claz_mItemStack = "#mItemStack";
+	public static String claz_bItemStack = "#bItemStack";
+	public static String claz_bBukkit = "#bBukkit";
+	public static String claz_mChatComponentText = "#mChatComponentText";
+	public static String claz_mMinecraftServer = "#mMinecraftServer";
 	static {
 		Extra.newReplacer("#v", getVersion());
 	}
+
 	/**
 	 * Envia o pacote para o jogador
 	 * 
@@ -1111,19 +1852,19 @@ public final class Mine {
 	 *            Pacote
 	 * @throws Exception
 	 */
-	public static void sendPacket(Object packet, Player player)
-			throws Exception {
+	public static void sendPacket(Object packet, Player player) throws Exception {
 
-		Extra.getResult(getConnection(player), "sendPacket",
-				Extra.getParameters(pPacket), packet);
+		Extra.getResult(getConnection(player), "sendPacket", Extra.getParameters(claz_pPacket), packet);
 	}
+
 	public static Plugin getPlugin(String plugin) {
 		return Bukkit.getPluginManager().getPlugin(plugin);
 	}
 
 	public static int getCurrentTick() throws Exception {
-		return (int) Extra.getValue(Mine.mMinecraftServer, "currentTick");
+		return (int) Extra.getValue(Mine.claz_mMinecraftServer, "currentTick");
 	}
+
 	/**
 	 * Pega o TPS do servidor uma expecie de calculador de LAG
 	 * 
@@ -1131,8 +1872,7 @@ public final class Mine {
 	 */
 	public static Double getTPS() {
 		try {
-			return Double.valueOf(
-					Math.min(20.0D, Math.round(getCurrentTick() * 10) / 10.0D));
+			return Double.valueOf(Math.min(20.0D, Math.round(getCurrentTick() * 10) / 10.0D));
 		} catch (Exception e) {
 		}
 
@@ -1148,8 +1888,7 @@ public final class Mine {
 	 *            Pacote
 	 * @throws Exception
 	 */
-	public static void sendPacket(Player player, Object packet)
-			throws Exception {
+	public static void sendPacket(Player player, Object packet) throws Exception {
 		sendPacket(packet, player);
 	}
 
@@ -1163,10 +1902,10 @@ public final class Mine {
 	 */
 	public static void sendPackets(Object packet, Player target) {
 		for (Player player : getPlayers()) {
-			if (target == player)
+			if (player.equals(target))
 				continue;
 			try {
-				sendPacket(packet, target);
+				sendPacket(packet, player);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1200,8 +1939,8 @@ public final class Mine {
 	}
 
 	/**
-	 * Inicia um ChatComponentText"IChatBaseComponent" pelo cons(String) da
-	 * classe ChatComponentText
+	 * Inicia um ChatComponentText"IChatBaseComponent" pelo cons(String) da classe
+	 * ChatComponentText
 	 * 
 	 * @param text
 	 *            Texto
@@ -1209,13 +1948,13 @@ public final class Mine {
 	 * 
 	 */
 	public static Object getIChatText2(String text) throws Exception {
-		return Extra.getNew(mChatComponentText, text);
+		return Extra.getNew(claz_mChatComponentText, text);
 
 	}
 
 	/**
-	 * Inicia um IChatBaseComponent pelo metodo a(String) da classe
-	 * ChatSerializer adicionando componente texto
+	 * Inicia um IChatBaseComponent pelo metodo a(String) da classe ChatSerializer
+	 * adicionando componente texto
 	 * 
 	 * @return IChatBaseComponent iniciado
 	 * @param text
@@ -1226,16 +1965,14 @@ public final class Mine {
 	}
 
 	/**
-	 * Inicia um IChatBaseComponent pelo metodo a(String) da classe
-	 * ChatSerializer
+	 * Inicia um IChatBaseComponent pelo metodo a(String) da classe ChatSerializer
 	 * 
 	 * @param component
 	 *            Componente (Texto)
 	 * @return IChatBaseComponent iniciado
 	 */
-	public static Object getIChatBaseComponent(String component)
-			throws Exception {
-		return Extra.getResult(mChatSerializer, "a", component);
+	public static Object getIChatBaseComponent(String component) throws Exception {
+		return Extra.getResult(claz_mChatSerializer, "a", component);
 	}
 
 	/**
@@ -1255,28 +1992,28 @@ public final class Mine {
 	 * 
 	 * @param player
 	 *            Jogador (CraftPlayer)
-	 * @return Conex�o do jogador
+	 * @return Conexão do jogador
 	 */
 	public static Object getConnection(Player player) throws Exception {
 		return Extra.getValue(getHandle(player), "playerConnection");
 	}
+
 	/**
 	 * 
-	 * @return Vers�o do Servidor
+	 * @return Versão do Servidor
 	 */
 	public static String getVersion() {
-		return Bukkit.getServer().getClass().getPackage().getName()
-				.replace('.', ',').split(",")[3];
+		return Bukkit.getServer().getClass().getPackage().getName().replace('.', ',').split(",")[3];
 	}
+
 	/**
-	 * (N�o funciona)
+	 * (Não funciona)
 	 * 
-	 * @return Vers�o do Servidor
+	 * @return Versão do Servidor
 	 */
 	@Deprecated
 	public static String getVersion2() {
-		return Bukkit.getServer().getClass().getPackage().getName()
-				.split("\\")[3];
+		return Bukkit.getServer().getClass().getPackage().getName().split("\\")[3];
 	}
 
 	/**
@@ -1285,17 +2022,16 @@ public final class Mine {
 	 * @param player
 	 *            Jogador
 	 * @param header
-	 *            Cabe�alho
+	 *            Cabeçalho
 	 * @param footer
-	 *            Rodap�
+	 *            Rodapé
 	 */
 	public static void setTabList(Player player, String header, String footer) {
 		try {
 			if (isAbove1_8(player)) {
-				Object packet = Extra.getNew(sPacketTabHeader,
-						Extra.getParameters(mIChatBaseComponent,
-								mIChatBaseComponent),
-						getIChatText(header), getIChatText(footer));
+				Object packet = Extra.getNew(claz_sPacketTabHeader,
+						Extra.getParameters(claz_mIChatBaseComponent, claz_mIChatBaseComponent), getIChatText(header),
+						getIChatText(footer));
 				sendPacket(packet, player);
 				return;
 			}
@@ -1303,18 +2039,16 @@ public final class Mine {
 		} catch (Exception e) {
 		}
 		try {
-			Object packet = Extra.getNew(pPlayOutPlayerListHeaderFooter,
-					Extra.getParameters(mIChatBaseComponent),
-					getIChatText(header));
+			Object packet = Extra.getNew(claz_pPlayOutPlayerListHeaderFooter,
+					Extra.getParameters(claz_mIChatBaseComponent), getIChatText(header));
 
 			Extra.setValue(packet, "b", getIChatText(footer));
 			sendPacket(packet, player);
 		} catch (Exception e) {
 		}
 		try {
-			Object packet = Extra.getNew(pPlayOutPlayerListHeaderFooter,
-					Extra.getParameters(mIChatBaseComponent),
-					getIChatText2(header));
+			Object packet = Extra.getNew(claz_pPlayOutPlayerListHeaderFooter,
+					Extra.getParameters(claz_mIChatBaseComponent), getIChatText2(header));
 			Extra.setValue(packet, "b", getIChatText2(footer));
 			sendPacket(packet, player);
 		} catch (Exception ex) {
@@ -1322,16 +2056,15 @@ public final class Mine {
 		}
 
 	}
+
 	/**
 	 * @param player
 	 *            Jogador
-	 * @return Se o Jogador esta na vers�o 1.8 ou pra cima
+	 * @return Se o Jogador esta na versão 1.8 ou pra cima
 	 */
 	public static boolean isAbove1_8(Player player) {
 		try {
-			return (int) Extra.getResult(
-					Extra.getValue(getConnection(player), "networkManager"),
-					"getVersion") == 47;
+			return (int) Extra.getResult(Extra.getValue(getConnection(player), "networkManager"), "getVersion") == 47;
 
 		} catch (Exception ex) {
 		}
@@ -1354,8 +2087,7 @@ public final class Mine {
 	 * @param fadeOut
 	 *            Tempo de Desaparecimento (Ticks)
 	 */
-	public static void sendTitle(Player player, String title, String subTitle,
-			int fadeIn, int stay, int fadeOut) {
+	public static void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
 		try {
 			if (isAbove1_8(player)) {
 
@@ -1363,18 +2095,13 @@ public final class Mine {
 				// int.class, int.class, int.class),
 				// getValue(Action, "TIMES"), fadeIn, stay, fadeOut));
 				sendPacket(player,
-						Extra.getNew(sPacketTitle,
-								Extra.getValue(sAction, "TIMES"), fadeIn, stay,
-								fadeOut));
-				sendPacket(player, Extra.getNew(sPacketTitle,
-						Extra.getParameters(sAction, mIChatBaseComponent),
-						Extra.getValue(sAction, "TITLE"), getIChatText(title)));
+						Extra.getNew(claz_sPacketTitle, Extra.getValue(claz_sAction, "TIMES"), fadeIn, stay, fadeOut));
 				sendPacket(player,
-						Extra.getNew(sPacketTitle,
-								Extra.getParameters(sAction,
-										mIChatBaseComponent),
-								Extra.getValue(sAction, "SUBTITLE"),
-								getIChatText(subTitle)));
+						Extra.getNew(claz_sPacketTitle, Extra.getParameters(claz_sAction, claz_mIChatBaseComponent),
+								Extra.getValue(claz_sAction, "TITLE"), getIChatText(title)));
+				sendPacket(player,
+						Extra.getNew(claz_sPacketTitle, Extra.getParameters(claz_sAction, claz_mIChatBaseComponent),
+								Extra.getValue(claz_sAction, "SUBTITLE"), getIChatText(subTitle)));
 
 				return;
 			}
@@ -1382,42 +2109,33 @@ public final class Mine {
 		} catch (Exception e) {
 		}
 		try {
+			sendPacket(player, Extra.getNew(claz_pPlayOutTitle, fadeIn, stay, fadeOut));
 			sendPacket(player,
-					Extra.getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
+					Extra.getNew(claz_pPlayOutTitle,
+							Extra.getParameters(claz_cEnumTitleAction, claz_mIChatBaseComponent),
+							Extra.getValue(claz_cEnumTitleAction, "TITLE"), getIChatText(title)));
 			sendPacket(player,
-					Extra.getNew(pPlayOutTitle,
-							Extra.getParameters(cEnumTitleAction,
-									mIChatBaseComponent),
-							Extra.getValue(cEnumTitleAction, "TITLE"),
-							getIChatText(title)));
-			sendPacket(player,
-					Extra.getNew(pPlayOutTitle,
-							Extra.getParameters(cEnumTitleAction,
-									mIChatBaseComponent),
-							Extra.getValue(cEnumTitleAction, "SUBTITLE"),
-							getIChatText(subTitle)));
+					Extra.getNew(claz_pPlayOutTitle,
+							Extra.getParameters(claz_cEnumTitleAction, claz_mIChatBaseComponent),
+							Extra.getValue(claz_cEnumTitleAction, "SUBTITLE"), getIChatText(subTitle)));
 			return;
 		} catch (Exception e) {
 		}
 		try {
+			sendPacket(player, Extra.getNew(claz_pPlayOutTitle, fadeIn, stay, fadeOut));
 			sendPacket(player,
-					Extra.getNew(pPlayOutTitle, fadeIn, stay, fadeOut));
+					Extra.getNew(claz_pPlayOutTitle,
+							Extra.getParameters(claz_pEnumTitleAction2, claz_mIChatBaseComponent),
+							Extra.getValue(claz_pEnumTitleAction2, "TITLE"), getIChatText2(title)));
 			sendPacket(player,
-					Extra.getNew(pPlayOutTitle,
-							Extra.getParameters(pEnumTitleAction2,
-									mIChatBaseComponent),
-							Extra.getValue(pEnumTitleAction2, "TITLE"),
-							getIChatText2(title)));
-			sendPacket(player,
-					Extra.getNew(pPlayOutTitle,
-							Extra.getParameters(pEnumTitleAction2,
-									mIChatBaseComponent),
-							Extra.getValue(pEnumTitleAction2, "SUBTITLE"),
-							getIChatText2(subTitle)));
+					Extra.getNew(claz_pPlayOutTitle,
+							Extra.getParameters(claz_pEnumTitleAction2, claz_mIChatBaseComponent),
+							Extra.getValue(claz_pEnumTitleAction2, "SUBTITLE"), getIChatText2(subTitle)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Modifica a Action Bar do Jogador
 	 * 
@@ -1429,8 +2147,7 @@ public final class Mine {
 	public static void sendActionBar(Player player, String text) {
 		try {
 			Object component = getIChatText(text);
-			Object packet = Extra.getNew(pPlayOutChat,
-					Extra.getParameters(mIChatBaseComponent, byte.class),
+			Object packet = Extra.getNew(claz_pPlayOutChat, Extra.getParameters(claz_mIChatBaseComponent, byte.class),
 					component, (byte) 2);
 			sendPacket(player, packet);
 			return;
@@ -1438,17 +2155,17 @@ public final class Mine {
 		}
 		try {
 			Object component = getIChatText2(text);
-			Object packet = Extra.getNew(pPlayOutChat,
-					Extra.getParameters(mIChatBaseComponent, byte.class),
+			Object packet = Extra.getNew(claz_pPlayOutChat, Extra.getParameters(claz_mIChatBaseComponent, byte.class),
 					component, (byte) 2);
 			sendPacket(player, packet);
 		} catch (Exception e) {
 			Bukkit.getConsoleSender().sendMessage(
-					"�bRexAPI �aNao foi possivel usar o 'setActionBar' pois o servidor esta na versao anterior a 1.8");
+					"§bRexAPI §aNao foi possivel usar o 'setActionBar' pois o servidor esta na versao anterior a 1.8");
 
 		}
 
 	}
+
 	/**
 	 * @param player
 	 *            Jogador
@@ -1462,6 +2179,7 @@ public final class Mine {
 		}
 		return "";
 	}
+
 	/**
 	 * @return Lista de jogadores do servidor
 	 */
@@ -1469,7 +2187,7 @@ public final class Mine {
 		List<Player> list = new ArrayList<>();
 		try {
 
-			Object object = Extra.getResult(bBukkit, "getOnlinePlayers");
+			Object object = Extra.getResult(claz_bBukkit, "getOnlinePlayers");
 			if (object instanceof Collection) {
 				Collection<?> players = (Collection<?>) object;
 				for (Object obj : players) {
@@ -1489,22 +2207,23 @@ public final class Mine {
 
 		return list;
 	}
+
 	/**
-	 * For�a o Respawn do Jogador (Respawn Automatico)
+	 * Força o Respawn do Jogador (Respawn Automatico)
 	 * 
 	 * @param player
 	 *            Jogador
 	 */
 	public static void makeRespawn(Player player) {
 		try {
-			Object packet = Extra.getNew(pPlayInClientCommand,
-					Extra.getValue(mEnumClientCommand, "PERFORM_RESPAWN"));
+			Object packet = Extra.getNew(claz_pPlayInClientCommand,
+					Extra.getValue(claz_mEnumClientCommand, "PERFORM_RESPAWN"));
 			Extra.getResult(getConnection(player), "a", packet);
 
 		} catch (Exception ex) {
 			try {
-				Object packet = Extra.getNew(pPlayInClientCommand,
-						Extra.getValue(mEnumClientCommand2, "PERFORM_RESPAWN"));
+				Object packet = Extra.getNew(claz_pPlayInClientCommand,
+						Extra.getValue(claz_mEnumClientCommand2, "PERFORM_RESPAWN"));
 				Extra.getResult(getConnection(player), "a", packet);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1512,9 +2231,10 @@ public final class Mine {
 
 		}
 	}
+
 	/**
 	 * Modifica o nome do Jogador para um Novo Nome e<br>
-	 * Envia para Todos os outros Jogadores a altera��o (Packet)
+	 * Envia para Todos os outros Jogadores a alteração (Packet)
 	 * 
 	 * @param player
 	 *            Jogador
@@ -1524,15 +2244,107 @@ public final class Mine {
 	public static void changeName(Player player, String displayName) {
 
 		try {
-			Object packet = Extra.getNew(pPlayOutNamedEntitySpawn,
-					Extra.getParameters(mEntityHuman), getHandle(player));
-			Extra.setValue(Extra.getValue(packet, "b"), "name", displayName);
-			sendPackets(packet, player);
+			Object entityplayer = getHandle(player);
+			// PacketPlayOutNamedEntitySpawn a;
+			// EntityPlayer c;
+			// PacketPlayOutEntity d;
+			// PacketPlayOutSpawnEntityLiving e;
+
+			// EntityHuman b;
+			Field profileField = Extra.getField(Mine.claz_mEntityHuman, "bH");
+			Object gameprofile = profileField.get(entityplayer);
+			// Object before = Extra.getValue(gameprofile, "name");
+			Extra.setValue(gameprofile, "name", displayName);
+			// EntityPlayer a;
+			// Object packet = Extra.getNew(claz_pPlayOutNamedEntitySpawn,
+			// Extra.getParameters(claz_mEntityHuman),
+			// entityplayer);
+			// // Extra.setValue(Extra.getValue(packet, "b"), "name", displayName);
+			// sendPackets(packet, player);
+			for (Player p : getPlayers()) {
+				if (p.equals(player))
+					continue;
+				p.hidePlayer(player);
+			}
+			for (Player p : getPlayers()) {
+				if (p.equals(player))
+					continue;
+				p.showPlayer(player);
+			}
+			// Extra.setValue(gameprofile, "name", before);
+			// System.out.println(Bukkit.getPlayer(displayName));
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
+	// public static void teste() {
+	// Player theGuyToChangeNameFor = Bukkit.getPlayer("theguy");
+	//
+	// PlayerInfoData pid = new
+	// PlayerInfoData(WrappedGameProfile.fromPlayer(theGuyToChangeNameFor), 1,
+	// EnumWrappers.NativeGameMode.SURVIVAL,
+	// WrappedChatComponent.fromText("whatever_string"));
+	// WrapperPlayServerPlayerInfo wpspi = new WrapperPlayServerPlayerInfo();
+	// wpspi.setAction(EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
+	// wpspi.setData(Collections.singletonList(pid));
+	// for(Player p : Bukkit.getOnlinePlayers())
+	// {
+	// if(p.equals(theGuyToChangeNameFor))
+	// {
+	// continue;
+	// }
+	// p.hidePlayer(theGuyToChangeNameFor);
+	// wpspi.sendPacket(p);
+	// }
+	//
+	// ProtocolLibrary.getProtocolManager().addPacketListener(
+	// new PacketAdapter(Mine.getPlugin("EduardAPI"),
+	// PacketType.Play.Server.PLAYER_INFO)
+	// {
+	//
+	// @Override
+	// public void onPacketSending(PacketEvent event)
+	// {
+	//
+	// if(event.getPacket().getPlayerInfoAction().read(0) !=
+	// EnumWrappers.PlayerInfoAction.ADD_PLAYER)
+	// {
+	// return;
+	// }
+	//
+	// PlayerInfoData pid =
+	// event.getPacket().getPlayerInfoDataLists().read(0).get(0);
+	//
+	// if(!pid.getProfile().getName().toLowerCase().equals("theguy")) // Here you
+	// can do something to ensure you're changing the name of the correct guy
+	// {
+	// return;
+	// }
+	//
+	// PlayerInfoData newPid = new
+	// PlayerInfoData(pid.getProfile().withName("HEAD_NAME"), pid.getPing(),
+	// pid.getGameMode(),
+	// WrappedChatComponent.fromText("TAB_LIST_NAME"));
+	// event.getPacket().getPlayerInfoDataLists().write(0,
+	// Collections.singletonList(newPid));
+	//
+	// }
+	//
+	// }
+	// );
+	//
+	// for(Player p : Bukkit.getOnlinePlayers())
+	// {
+	// if(p.equals(theGuyToChangeNameFor))
+	// {
+	// continue;
+	// }
+	// p.showPlayer(theGuyToChangeNameFor);
+	// }
+	// }
+
 	/**
 	 * Desabilita a Inteligencia da Entidade
 	 * 
@@ -1547,7 +2359,7 @@ public final class Mine {
 			// NMS.c(compound);
 			// compound.setByte("NoAI", (byte) 1);
 			// NMS.f(compound);
-			Object compound = Extra.getNew(mNBTTagCompound);
+			Object compound = Extra.getNew(claz_mNBTTagCompound);
 			Object getHandle = Extra.getResult(entity, "getHandle");
 			Extra.getResult(getHandle, "c", compound);
 			Extra.getResult(compound, "setByte", "NoAI", (byte) 1);
@@ -1557,6 +2369,7 @@ public final class Mine {
 		}
 
 	}
+
 	/**
 	 * Pega o Ip do Jogador atual
 	 * 
@@ -1567,8 +2380,9 @@ public final class Mine {
 	public static String getIp(Player player) {
 		return player.getAddress().getAddress().getHostAddress();
 	}
-	public static List<LivingEntity> getNearbyEntities(LivingEntity player,
-			double x, double y, double z, EntityType... types) {
+
+	public static List<LivingEntity> getNearbyEntities(LivingEntity player, double x, double y, double z,
+			EntityType... types) {
 		List<LivingEntity> list = new ArrayList<>();
 		for (Entity item : player.getNearbyEntities(x, y, z)) {
 			if (item instanceof LivingEntity) {
@@ -1587,9 +2401,9 @@ public final class Mine {
 		return list;
 
 	}
+
 	@SuppressWarnings("unchecked")
-	public static <T extends Player> T getTarget(Player entity,
-			Iterable<T> entities) {
+	public static <T extends Player> T getTarget(Player entity, Iterable<T> entities) {
 		if (entity == null)
 			return null;
 		Player target = null;
@@ -1597,15 +2411,11 @@ public final class Mine {
 		for (Player other : entities) {
 			if (other.equals(entity))
 				continue;
-			Vector n = other.getLocation().toVector()
-					.subtract(entity.getLocation().toVector());
-			if ((entity.getLocation().getDirection().normalize().crossProduct(n)
-					.lengthSquared() < 1.0D)
-					&& (n.normalize().dot(entity.getLocation().getDirection()
-							.normalize()) >= 0.0D)) {
-				if ((target == null) || (target.getLocation().distanceSquared(
-						entity.getLocation()) > other.getLocation()
-								.distanceSquared(entity.getLocation()))) {
+			Vector n = other.getLocation().toVector().subtract(entity.getLocation().toVector());
+			if ((entity.getLocation().getDirection().normalize().crossProduct(n).lengthSquared() < 1.0D)
+					&& (n.normalize().dot(entity.getLocation().getDirection().normalize()) >= 0.0D)) {
+				if ((target == null) || (target.getLocation().distanceSquared(entity.getLocation()) > other
+						.getLocation().distanceSquared(entity.getLocation()))) {
 					target = other;
 				}
 			}
@@ -1613,14 +2423,13 @@ public final class Mine {
 		return (T) target;
 	}
 
-	public static List<LivingEntity> getNearbyEntities(LivingEntity entity,
-			double radio, EntityType... entities) {
+	public static List<LivingEntity> getNearbyEntities(LivingEntity entity, double radio, EntityType... entities) {
 
 		return getNearbyEntities(entity, radio, radio, radio, entities);
 
 	}
-	public static List<Player> getPlayerAtRange(Location location,
-			double range) {
+
+	public static List<Player> getPlayerAtRange(Location location, double range) {
 
 		List<Player> players = new ArrayList<>();
 		for (Player p : location.getWorld().getPlayers()) {
@@ -1632,25 +2441,29 @@ public final class Mine {
 		}
 		return players;
 	}
+
 	public static boolean hasLightOn(Entity entity) {
 		return hasLightOn(entity.getLocation());
 	}
+
 	public static boolean hasLightOn(Location location) {
 		return hasLightOn(location.getBlock());
 	}
+
 	public static boolean hasLightOn(Block block) {
 		return block.getLightLevel() > 10;
 	}
+
 	public static Player getRandomPlayer() {
 		return getRandomPlayer(getPlayers());
 	}
+
 	public static Player getRandomPlayer(List<Player> list) {
 		return list.get(Mine.getRandomInt(1, list.size()) - 1);
 	}
 
 	public static void setDirection(Entity entity, Entity target) {
-		entity.teleport(entity.getLocation()
-				.setDirection(target.getLocation().getDirection()));
+		entity.teleport(entity.getLocation().setDirection(target.getLocation().getDirection()));
 	}
 
 	public static void hide(Player player) {
@@ -1660,9 +2473,9 @@ public final class Mine {
 			}
 		}
 	}
+
 	public static boolean isOnGround(Entity entity) {
-		return entity.getLocation().getBlock().getRelative(BlockFace.DOWN)
-				.getType() != Material.AIR;
+		return entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR;
 	}
 
 	public static void makeInvunerable(Player player) {
@@ -1690,20 +2503,18 @@ public final class Mine {
 		entity.setVelocity(vector);
 	}
 
-	public static void moveTo(Entity entity, Location target, double staticX,
-			double staticY, double staticZ, double addX, double addY,
-			double addZ) {
+	public static void moveTo(Entity entity, Location target, double staticX, double staticY, double staticZ,
+			double addX, double addY, double addZ) {
 		Location location = entity.getLocation();
 		if (entity instanceof LivingEntity) {
 			LivingEntity livingEntity = (LivingEntity) entity;
 			location = livingEntity.getEyeLocation();
 		}
-		entity.setVelocity(getVelocity(location, target, staticX, staticY,
-				staticZ, addX, addY, addZ));
+		entity.setVelocity(getVelocity(location, target, staticX, staticY, staticZ, addX, addY, addZ));
 	}
+
 	public static boolean isFlying(Entity entity) {
-		return entity.getLocation().getBlock().getRelative(BlockFace.DOWN, 2)
-				.getType() == Material.AIR;
+		return entity.getLocation().getBlock().getRelative(BlockFace.DOWN, 2).getType() == Material.AIR;
 	}
 
 	public static boolean isInvulnerable(Player player) {
@@ -1719,15 +2530,16 @@ public final class Mine {
 	}
 
 	public static void teleport(Entity entity, Location target) {
-		entity.teleport(
-				target.setDirection(entity.getLocation().getDirection()));
+		entity.teleport(target.setDirection(entity.getLocation().getDirection()));
 	}
+
 	public static void removeEffects(Player player) {
 		player.setFireTicks(0);
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
 		}
 	}
+
 	public static void resetLevel(Player player) {
 		player.setLevel(0);
 		player.setExp(0);
@@ -1741,10 +2553,10 @@ public final class Mine {
 			location = livingEntity.getEyeLocation().clone();
 
 		}
-		entity.teleport(entity.getLocation()
-				.setDirection(getDiretion(location, target)));
+		entity.teleport(entity.getLocation().setDirection(getDiretion(location, target)));
 
 	}
+
 	public static Vector getDiretion(Location location, Location target) {
 		double distance = target.distance(location);
 		double x = ((target.getX() - location.getX()) / distance);
@@ -1757,16 +2569,12 @@ public final class Mine {
 		player.setPlayerListName(Mine.getText(32, displayName));
 	}
 
-	public static Vector getVelocity(Location entity, Location target,
-			double staticX, double staticY, double staticZ, double addX,
-			double addY, double addZ) {
+	public static Vector getVelocity(Location entity, Location target, double staticX, double staticY, double staticZ,
+			double addX, double addY, double addZ) {
 		double distance = target.distance(entity);
-		double x = (staticX + (addX * distance))
-				* ((target.getX() - entity.getX()) / distance);
-		double y = (staticY + (addY * distance))
-				* ((target.getY() - entity.getY()) / distance);
-		double z = (staticZ + (addZ * distance))
-				* ((target.getZ() - entity.getZ()) / distance);
+		double x = (staticX + (addX * distance)) * ((target.getX() - entity.getX()) / distance);
+		double y = (staticY + (addY * distance)) * ((target.getY() - entity.getY()) / distance);
+		double z = (staticZ + (addZ * distance)) * ((target.getZ() - entity.getZ()) / distance);
 		return new Vector(x, y, z);
 
 	}
@@ -1797,10 +2605,10 @@ public final class Mine {
 
 	public static void setSpawn(Entity entity) {
 
-		entity.getWorld().setSpawnLocation((int) entity.getLocation().getX(),
-				(int) entity.getLocation().getY(),
+		entity.getWorld().setSpawnLocation((int) entity.getLocation().getX(), (int) entity.getLocation().getY(),
 				(int) entity.getLocation().getZ());
 	}
+
 	public static void show(Player player) {
 		for (Player target : getPlayers()) {
 			if (target != player) {
@@ -1808,21 +2616,24 @@ public final class Mine {
 			}
 		}
 	}
+
 	public static void teleport(LivingEntity entity, int range) {
 		teleport(entity, getTargetLoc(entity, range));
 	}
 
 	public static void teleportToSpawn(Entity entity) {
 
-		entity.teleport(entity.getWorld().getSpawnLocation()
-				.setDirection(entity.getLocation().getDirection()));
+		entity.teleport(entity.getWorld().getSpawnLocation().setDirection(entity.getLocation().getDirection()));
 	}
+
 	public static boolean isFalling(Entity entity) {
 		return entity.getVelocity().getY() < Extra.WALKING_VELOCITY;
 	}
+
 	public static List<Player> getOnlinePlayers() {
 		return getPlayers();
 	}
+
 	public static Location getTargetLoc(LivingEntity entity, int distance) {
 		@SuppressWarnings("deprecation")
 		Block block = entity.getTargetBlock((HashSet<Byte>) null, distance);
@@ -1847,6 +2658,7 @@ public final class Mine {
 
 		return target;
 	}
+
 	public static void fixDrops(List<ItemStack> drops) {
 		HashMap<ItemStack, ItemStack> itens = new HashMap<>();
 		for (ItemStack drop : drops) {
@@ -1871,6 +2683,7 @@ public final class Mine {
 		drops.clear();
 		drops.addAll(itens.values());
 	}
+
 	/**
 	 * Transforma um Texto em Vetor de Itens
 	 * 
@@ -1881,10 +2694,8 @@ public final class Mine {
 	 */
 	public static ItemStack[] itemFromBase64(final String data) {
 		try {
-			final ByteArrayInputStream inputStream = new ByteArrayInputStream(
-					Base64Coder.decodeLines(data));
-			final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(
-					inputStream);
+			final ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+			final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 			final ItemStack[] stacks = new ItemStack[dataInput.readInt()];
 			for (int i = 0; i < stacks.length; ++i) {
 
@@ -1898,6 +2709,7 @@ public final class Mine {
 		}
 		return null;
 	}
+
 	/**
 	 * Transforma um Vetor de Itens em um Texto
 	 * 
@@ -1922,6 +2734,7 @@ public final class Mine {
 		}
 		return null;
 	}
+
 	public static boolean isDirectory(File file) {
 		try {
 			return (file.isDirectory());
@@ -1930,6 +2743,7 @@ public final class Mine {
 		}
 
 	}
+
 	public static boolean isDirectory(String name) {
 
 		if (name.endsWith(File.separator)) {
@@ -1945,8 +2759,8 @@ public final class Mine {
 		return false;
 
 	}
-	public static InputStream getResource(ClassLoader loader, String name)
-			throws IOException {
+
+	public static InputStream getResource(ClassLoader loader, String name) throws IOException {
 		URL url = loader.getResource(name);
 		if (url == null)
 			return null;
@@ -1954,27 +2768,25 @@ public final class Mine {
 		connection.setUseCaches(false);
 		return connection.getInputStream();
 	}
-	public static void copyAsUTF8(InputStream is, File file)
-			throws IOException {
+
+	public static void copyAsUTF8(InputStream is, File file) throws IOException {
 		if (is == null)
 			return;
-		InputStreamReader in = new InputStreamReader(is);
+		InputStreamReader in = new InputStreamReader(is, StandardCharsets.UTF_8);
 		BufferedReader br = new BufferedReader(in);
-		// OutputStream os = new FileOutputStream(file);
-		// OutputStreamWriter out = new OutputStreamWriter(os,
-		// Charset.forName("UTF-8"));
 		List<String> lines = new ArrayList<>();
 		String line;
 		while ((line = br.readLine()) != null) {
 			lines.add(line);
 		}
-		Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
 		br.close();
 		in.close();
 		is.close();
-	}
-	public static void copyAsUTF8(Path path, File file) throws IOException {
+		Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
 
+	}
+
+	public static void copyAsUTF8(Path path, File file) throws IOException {
 		List<String> lines = Files.readAllLines(path);
 		Files.write(file.toPath(), lines, StandardCharsets.UTF_8);
 	}
@@ -1982,19 +2794,23 @@ public final class Mine {
 	public static List<String> readLines(File file) {
 		Path path = file.toPath();
 		try {
+			Mine.console("§bConfigAPI §a-> " + file.getName() + " §futf-8");
 			return Files.readAllLines(path);
 		} catch (Exception e) {
+			// e.printStackTrace();
 		}
 		try {
+			Mine.console("§bConfigAPI §a-> " + file.getName() + " §f" + Charset.defaultCharset().displayName());
 			return Files.readAllLines(path, Charset.defaultCharset());
 		} catch (Exception e) {
 		}
 		List<String> lines = new ArrayList<>();
 		try {
-
+			Mine.console("§bConfigAPI §a-> " + file.getName());
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
 			while ((line = reader.readLine()) != null) {
+				// System.out.println(line);
 				lines.add(line);
 			}
 			reader.close();
@@ -2026,6 +2842,7 @@ public final class Mine {
 		}
 
 	}
+
 	@SuppressWarnings("deprecation")
 	public static void setItem(ConfigurationSection section, ItemStack item) {
 		section.set("id", item.getTypeId());
@@ -2044,16 +2861,13 @@ public final class Mine {
 			}
 		}
 		StringBuilder text = new StringBuilder();
-		for (Entry<Enchantment, Integer> enchant : item.getEnchantments()
-				.entrySet()) {
-			text.append(
-					enchant.getKey().getId() + "-" + enchant.getValue() + ",");
+		for (Entry<Enchantment, Integer> enchant : item.getEnchantments().entrySet()) {
+			text.append(enchant.getKey().getId() + "-" + enchant.getValue() + ",");
 		}
 		section.set("enchant", text.toString());
 	}
 
-	public static void setLocation(ConfigurationSection section,
-			Location location) {
+	public static void setLocation(ConfigurationSection section, Location location) {
 		section.set("x", location.getX());
 		section.set("y", location.getY());
 		section.set("z", location.getZ());
@@ -2081,6 +2895,7 @@ public final class Mine {
 		float pitch = Float.parseFloat(split[5]);
 		return new Location(world, x, y, z, yaw, pitch);
 	}
+
 	public static String saveLocation(Location location) {
 		StringBuilder text = new StringBuilder();
 		text.append(location.getWorld().getName() + ",");
@@ -2091,6 +2906,7 @@ public final class Mine {
 		text.append(location.getPitch());
 		return text.toString();
 	}
+
 	/**
 	 * Pega um Objecto serializavel do Arquivo
 	 * 
@@ -2116,8 +2932,9 @@ public final class Mine {
 
 		return null;
 	}
+
 	/**
-	 * Salva um Objecto no Arquivo em forma de serializa��o Java
+	 * Salva um Objecto no Arquivo em forma de serialização Java
 	 * 
 	 * @param object
 	 *            Objeto (Dado)
@@ -2156,13 +2973,11 @@ public final class Mine {
 			if (!destDir.exists()) {
 				destDir.mkdir();
 			}
-			ZipInputStream zipIn = new ZipInputStream(
-					new FileInputStream(zipFilePath));
+			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
 			ZipEntry entry = zipIn.getNextEntry();
 
 			while (entry != null) {
-				String filePath = destDirectory + File.separator
-						+ entry.getName();
+				String filePath = destDirectory + File.separator + entry.getName();
 				if (!entry.isDirectory()) {
 					extractFile(zipIn, filePath);
 				} else {
@@ -2178,18 +2993,18 @@ public final class Mine {
 		}
 
 	}
+
 	/**
 	 * Defaz o ZIP do Arquivo
 	 * 
 	 * @param zipIn
-	 *            Input Stream (Cone��o de Algum Arquivo)
+	 *            Input Stream (Coneção de Algum Arquivo)
 	 * @param filePath
 	 *            Destino Arquivo
 	 */
 	public static void extractFile(ZipInputStream zipIn, String filePath) {
 		try {
-			BufferedOutputStream bos = new BufferedOutputStream(
-					new FileOutputStream(filePath));
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
 			byte[] bytesIn = new byte[4096];
 			int read = 0;
 			while ((read = zipIn.read(bytesIn)) != -1) {
@@ -2203,7 +3018,7 @@ public final class Mine {
 	}
 
 	/**
-	 * Efeito a fazer na localiza��o
+	 * Efeito a fazer na localização
 	 * 
 	 * @author Eduard
 	 *
@@ -2212,8 +3027,9 @@ public final class Mine {
 
 		boolean effect(Location location);
 	}
+
 	/**
-	 * Ponto de dire��o usado para fazer um RADAR
+	 * Ponto de direção usado para fazer um RADAR
 	 * 
 	 * @author Eduard
 	 *
@@ -2232,24 +3048,21 @@ public final class Mine {
 			return String.valueOf(this.asciiChar);
 		}
 
-		public String toString(boolean isActive, ChatColor colorActive,
-				String colorDefault) {
-			return (isActive ? colorActive : colorDefault)
-					+ String.valueOf(this.asciiChar);
+		public String toString(boolean isActive, ChatColor colorActive, String colorDefault) {
+			return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
 		}
 	}
+
 	public static boolean equals(Location location1, Location location2) {
 
-		return getBlockLocation1(location1)
-				.equals(getBlockLocation1(location2));
+		return getBlockLocation1(location1).equals(getBlockLocation1(location2));
 	}
 
 	public static boolean equals2(Location location1, Location location2) {
-		return location1.getBlock().getLocation()
-				.equals(location2.getBlock().getLocation());
+		return location1.getBlock().getLocation().equals(location2.getBlock().getLocation());
 	}
-	public static List<Location> getLocations(Location location1,
-			Location location2) {
+
+	public static List<Location> getLocations(Location location1, Location location2) {
 		return getLocations(location1, location2, new LocationEffect() {
 
 			@Override
@@ -2258,16 +3071,16 @@ public final class Mine {
 			}
 		});
 	}
-	public static Location getHighLocation(Location loc, double high,
-			double size) {
+
+	public static Location getHighLocation(Location loc, double high, double size) {
 
 		loc.add(size, high, size);
 		return loc;
 	}
+
 	public static void copyWorldFolder(File source, File target) {
 		try {
-			List<String> ignore = new ArrayList<String>(
-					Arrays.asList("uid.dat", "session.dat"));
+			List<String> ignore = new ArrayList<String>(Arrays.asList("uid.dat", "session.dat"));
 			if (!ignore.contains(source.getName())) {
 				if (source.isDirectory()) {
 					if (!target.exists())
@@ -2295,52 +3108,57 @@ public final class Mine {
 	}
 
 	public static void deleteWorld(String name) {
+		unloadWorld(name);
+		deleteFolder(getWorldFolder(name));
+	}
+
+	public static void unloadWorld(String name) {
 		World world = Bukkit.getWorld(name);
 		if (world != null) {
 			for (Player p : world.getPlayers()) {
-				try {
-					p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation()
-							.setDirection(p.getLocation().getDirection()));
-
-				} catch (Exception e) {
-					p.kickPlayer("�cRestarting Server!");
-				}
+				p.kickPlayer("§cRestarting Server!");
 			}
 		}
-		Bukkit.unloadWorld(name, true);
-		deleteFolder(new File(Bukkit.getWorldContainer(), name.toLowerCase()));
+		Bukkit.unloadWorld(name, false);
 	}
+
 	public static void deleteFolder(File file) {
 		if (file.exists()) {
 			File files[] = file.listFiles();
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isDirectory()) {
 					deleteFolder(files[i]);
+					files[i].delete();
 				} else {
 					files[i].delete();
 				}
 			}
+			file.delete();
 		}
 	}
-	public static void copyWorld(String worldName, String name) {
-		World world = Bukkit.getWorld(worldName);
-		world.save();
-		copyWorldFolder(world.getWorldFolder(), getWorldFolder(name));
-		WorldCreator copy = new WorldCreator(name);
-		copy.copy(world);
+
+	public static void copyWorld(String fromWorld, String toWorld) {
+		unloadWorld(fromWorld);
+		unloadWorld(toWorld);
+		deleteWorld(toWorld);
+		copyWorldFolder(getWorldFolder(fromWorld), getWorldFolder(toWorld));
+		WorldCreator copy = new WorldCreator(toWorld);
 		copy.createWorld();
 	}
+
 	public static World loadWorld(String name) {
 		return new WorldCreator(name).createWorld();
 	}
+
 	public static World newEmptyWorld(String worldName) {
-		World world = new WorldCreator(worldName)
-				.generator(new EmptyWorldGenerator()).createWorld();
+		World world = new WorldCreator(worldName).generator(new EmptyWorldGenerator()).createWorld();
 		world.setSpawnLocation(100, 100, 100);
 		return world;
 	}
+
 	public static File getWorldFolder(String name) {
-		return new File(Bukkit.getWorldContainer(), name.toLowerCase());
+		File file = new File(Bukkit.getWorldContainer().getParentFile(), name);
+		return file;
 	}
 
 	public static Location getHighLocation(Location loc1, Location loc2) {
@@ -2350,8 +3168,8 @@ public final class Mine {
 		double z = Math.max(loc1.getZ(), loc2.getZ());
 		return new Location(loc1.getWorld(), x, y, z);
 	}
-	public static List<Location> getLocations(Location location1,
-			Location location2, LocationEffect effect) {
+
+	public static List<Location> getLocations(Location location1, Location location2, LocationEffect effect) {
 
 		Location min = getLowLocation(location1, location2);
 		Location max = getHighLocation(location1, location2);
@@ -2377,24 +3195,23 @@ public final class Mine {
 		return locations;
 
 	}
-	public static Location getLowLocation(Location loc, double low,
-			double size) {
+
+	public static Location getLowLocation(Location loc, double low, double size) {
 
 		loc.subtract(size, low, size);
 		return loc;
 	}
 
-	public static Location getLowLocation(Location location1,
-			Location location2) {
+	public static Location getLowLocation(Location location1, Location location2) {
 		double x = Math.min(location1.getX(), location2.getX());
 		double y = Math.min(location1.getY(), location2.getY());
 		double z = Math.min(location1.getZ(), location2.getZ());
 		return new Location(location1.getWorld(), x, y, z);
 	}
+
 	public static Location getBlockLocation1(Location location) {
 
-		return new Location(location.getWorld(), (int) location.getX(),
-				(int) location.getY(), (int) location.getZ());
+		return new Location(location.getWorld(), (int) location.getX(), (int) location.getY(), (int) location.getZ());
 	}
 
 	public static Location getBlockLocation2(Location location) {
@@ -2402,79 +3219,67 @@ public final class Mine {
 		return location.getBlock().getLocation();
 	}
 
-	public static List<Location> getBox(Location playerLocation, double higher,
-			double lower, double size, LocationEffect effect) {
+	public static List<Location> getBox(Location playerLocation, double higher, double lower, double size,
+			LocationEffect effect) {
 		Location high = getHighLocation(playerLocation.clone(), higher, size);
 		Location low = getLowLocation(playerLocation.clone(), lower, size);
 		return getLocations(low, high, effect);
 	}
-	public static List<Location> setBox(Location playerLocation, double higher,
-			double lower, double size, Material wall, Material up,
-			Material down, boolean clearInside) {
-		return getBox(playerLocation, higher, lower, size,
-				new LocationEffect() {
 
-					@Override
-					public boolean effect(Location location) {
+	public static List<Location> setBox(Location playerLocation, double higher, double lower, double size,
+			Material wall, Material up, Material down, boolean clearInside) {
+		return getBox(playerLocation, higher, lower, size, new LocationEffect() {
 
-						if (location.getBlockY() == playerLocation.getBlockY()
-								+ higher) {
-							location.getBlock().setType(up);
-							return true;
-						}
-						if (location.getBlockY() == playerLocation.getBlockY()
-								- lower) {
-							location.getBlock().setType(down);
-							return true;
-						}
+			@Override
+			public boolean effect(Location location) {
 
-						if (location.getBlockX() == playerLocation.getBlockX()
-								+ size
-								|| location.getBlockZ() == playerLocation
-										.getBlockZ() + size
-								|| location.getBlockX() == playerLocation
-										.getBlockX() - size
-								|| location.getBlockZ() == playerLocation
-										.getBlockZ() - size) {
-							location.getBlock().setType(wall);
-							return true;
-						}
-						if (clearInside) {
-							if (location.getBlock().getType() != Material.AIR)
-								location.getBlock().setType(Material.AIR);
-						}
-						return false;
-					}
-				});
+				if (location.getBlockY() == playerLocation.getBlockY() + higher) {
+					location.getBlock().setType(up);
+					return true;
+				}
+				if (location.getBlockY() == playerLocation.getBlockY() - lower) {
+					location.getBlock().setType(down);
+					return true;
+				}
+
+				if (location.getBlockX() == playerLocation.getBlockX() + size
+						|| location.getBlockZ() == playerLocation.getBlockZ() + size
+						|| location.getBlockX() == playerLocation.getBlockX() - size
+						|| location.getBlockZ() == playerLocation.getBlockZ() - size) {
+					location.getBlock().setType(wall);
+					return true;
+				}
+				if (clearInside) {
+					if (location.getBlock().getType() != Material.AIR)
+						location.getBlock().setType(Material.AIR);
+				}
+				return false;
+			}
+		});
 	}
-	public static List<Location> getBox(Location playerLocation, double higher,
-			double lower, double size) {
-		return getBox(playerLocation, higher, lower, size,
-				new LocationEffect() {
 
-					@Override
-					public boolean effect(Location location) {
-						return true;
-					}
-				});
+	public static List<Location> getBox(Location playerLocation, double higher, double lower, double size) {
+		return getBox(playerLocation, higher, lower, size, new LocationEffect() {
+
+			@Override
+			public boolean effect(Location location) {
+				return true;
+			}
+		});
 	}
-	public static List<Location> getBox(Location playerLocation, double xHigh,
-			double xLow, double zHigh, double zLow, double yLow, double yHigh) {
+
+	public static List<Location> getBox(Location playerLocation, double xHigh, double xLow, double zHigh, double zLow,
+			double yLow, double yHigh) {
 		Location low = playerLocation.clone().subtract(xLow, yLow, zLow);
 		Location high = playerLocation.clone().add(xHigh, yHigh, zHigh);
 		return getLocations(low, high);
 	}
-	public static Location getRandomPosition(Location location, int xVar,
-			int zVar) {
+
+	public static Location getRandomPosition(Location location, int xVar, int zVar) {
 		return getHighPosition(getRandomLocation(location, xVar, 0, zVar));
 
 	}
-	public static void unloadWorld(String name) {
-		try {
-			unloadWorld(Bukkit.getWorld(name));
-		} catch (Exception ex) {
-		}
-	}
+
 	public static double distanceX(Location loc1, Location loc2) {
 		return loc1.getX() - loc2.getX();
 	}
@@ -2482,16 +3287,8 @@ public final class Mine {
 	public static double distanceZ(Location loc1, Location loc2) {
 		return loc1.getZ() - loc2.getZ();
 	}
-	public static void unloadWorld(World world) {
-		try {
-			Bukkit.getServer().unloadWorld(world, false);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 
-	}
-	public static Location getRandomLocation(Location location, int xVar,
-			int yVar, int zVar) {
+	public static Location getRandomLocation(Location location, int xVar, int yVar, int zVar) {
 		int x = location.getBlockX();
 		int z = location.getBlockZ();
 		int y = location.getBlockY();
@@ -2500,9 +3297,11 @@ public final class Mine {
 		int yR = Mine.getRandomInt(y - yVar, y + zVar);
 		return new Location(location.getWorld(), xR, yR, zR);
 	}
+
 	public static Location getHighPosition(Location location) {
 		return location.getWorld().getHighestBlockAt(location).getLocation();
 	}
+
 	public static Location getSpawn() {
 		return Bukkit.getWorlds().get(0).getSpawnLocation();
 	}
@@ -2535,43 +3334,32 @@ public final class Mine {
 		return null;
 	}
 
-	public static ArrayList<String> getAsciiCompass(Point point,
-			ChatColor colorActive, String colorDefault) {
+	public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault) {
 		ArrayList<String> ret = new ArrayList<>();
 
 		String row = "";
-		row = row + Point.NW.toString(Point.NW == point, colorActive,
-				colorDefault);
-		row = row
-				+ Point.N.toString(Point.N == point, colorActive, colorDefault);
-		row = row + Point.NE.toString(Point.NE == point, colorActive,
-				colorDefault);
+		row = row + Point.NW.toString(Point.NW == point, colorActive, colorDefault);
+		row = row + Point.N.toString(Point.N == point, colorActive, colorDefault);
+		row = row + Point.NE.toString(Point.NE == point, colorActive, colorDefault);
 		ret.add(row);
 
 		row = "";
-		row = row
-				+ Point.W.toString(Point.W == point, colorActive, colorDefault);
+		row = row + Point.W.toString(Point.W == point, colorActive, colorDefault);
 		row = row + colorDefault + "+";
-		row = row
-				+ Point.E.toString(Point.E == point, colorActive, colorDefault);
+		row = row + Point.E.toString(Point.E == point, colorActive, colorDefault);
 		ret.add(row);
 
 		row = "";
-		row = row + Point.SW.toString(Point.SW == point, colorActive,
-				colorDefault);
-		row = row
-				+ Point.S.toString(Point.S == point, colorActive, colorDefault);
-		row = row + Point.SE.toString(Point.SE == point, colorActive,
-				colorDefault);
+		row = row + Point.SW.toString(Point.SW == point, colorActive, colorDefault);
+		row = row + Point.S.toString(Point.S == point, colorActive, colorDefault);
+		row = row + Point.SE.toString(Point.SE == point, colorActive, colorDefault);
 		ret.add(row);
 
 		return ret;
 	}
 
-	public static ArrayList<String> getAsciiCompass(double inDegrees,
-			ChatColor colorActive, String colorDefault) {
-		return getAsciiCompass(getCompassPointForDirection(inDegrees),
-				colorActive, colorDefault);
+	public static ArrayList<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault) {
+		return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
 	}
 
 	/**
@@ -2583,8 +3371,8 @@ public final class Mine {
 	public static class EmptyWorldGenerator extends ChunkGenerator {
 
 		@Override
-		public byte[][] generateBlockSections(World world, Random random,
-				int chunkX, int chunkZ, ChunkGenerator.BiomeGrid biomeGrid) {
+		public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
+				ChunkGenerator.BiomeGrid biomeGrid) {
 			byte[][] result = new byte[world.getMaxHeight() / 16][];
 			return result;
 		}
@@ -2594,8 +3382,7 @@ public final class Mine {
 			return new Location(world, 100, 100, 100);
 		}
 
-		public void setBlock(byte[][] result, int x, int y, int z,
-				byte blockID) {
+		public void setBlock(byte[][] result, int x, int y, int z, byte blockID) {
 			if (result[(y >> 4)] == null) {
 				result[(y >> 4)] = new byte[4096];
 			}
@@ -2630,8 +3417,7 @@ public final class Mine {
 			}
 		}
 
-		public void setLayer(byte[][] result, int minLevel, int maxLevel,
-				Material material) {
+		public void setLayer(byte[][] result, int minLevel, int maxLevel, Material material) {
 			int y;
 			for (y = minLevel; y <= maxLevel; y++) {
 				setLayer(result, y, material);
@@ -2648,8 +3434,8 @@ public final class Mine {
 	public static class FlatWorldGenerator extends EmptyWorldGenerator {
 
 		@Override
-		public byte[][] generateBlockSections(World world, Random random,
-				int chunkX, int chunkZ, ChunkGenerator.BiomeGrid biomeGrid) {
+		public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
+				ChunkGenerator.BiomeGrid biomeGrid) {
 			byte[][] result = new byte[world.getMaxHeight() / 16][];
 			setLayer(result, 0, Material.BEDROCK);
 			setLayer(result, 1, 3, Material.DIRT);
@@ -2688,16 +3474,17 @@ public final class Mine {
 		 *            Jogador
 		 */
 		public abstract void onLeftCooldown(Player player);
+
 		/**
-		 * Metodo abstrato para oque vai acontecer quando come�ar o Cooldown
+		 * Metodo abstrato para oque vai acontecer quando começar o Cooldown
 		 * 
 		 * @param player
 		 *            Jogador
 		 */
 		public abstract void onStartCooldown(Player player);
+
 		/**
-		 * Metodo abstrato para oque vai acontecer quando estiver ainda em
-		 * Coodlwon
+		 * Metodo abstrato para oque vai acontecer quando estiver ainda em Coodlwon
 		 * 
 		 * @param player
 		 */
@@ -2722,6 +3509,7 @@ public final class Mine {
 		public void setTime(int seconds) {
 			ticks = seconds * 20;
 		}
+
 		/**
 		 * 
 		 * @return Tempo de Cooldown em Ticks
@@ -2748,21 +3536,24 @@ public final class Mine {
 			event.runTaskLater(getPlugin(), ticks);
 			cooldowns.put(player.getUniqueId(), event);
 		}
+
 		public int getCooldown(Player player) {
 			if (onCooldown(player)) {
 				CooldownEvent cooldown = cooldowns.get(player.getUniqueId());
-				int result = (int) ((-cooldown.getStartTime()
-						+ System.currentTimeMillis()) / 1000);
+				int result = (int) ((-cooldown.getStartTime() + System.currentTimeMillis()) / 1000);
 				return (int) (cooldown.getCooldownTime() - result);
 			}
 			return -1;
 		}
+
 		public JavaPlugin getPlugin() {
 			return JavaPlugin.getProvidingPlugin(getClass());
 		}
+
 		public boolean onCooldown(Player player) {
 			return cooldowns.containsKey(player.getUniqueId());
 		}
+
 		public void removeFromCooldown(Player player) {
 			if (onCooldown(player)) {
 				onLeftCooldown(player);
@@ -2770,6 +3561,7 @@ public final class Mine {
 				cooldowns.remove(player.getUniqueId());
 			}
 		}
+
 		public boolean cooldown(Player player) {
 			if (onCooldown(player)) {
 				onInCooldown(player);
@@ -2780,6 +3572,7 @@ public final class Mine {
 
 		}
 	}
+
 	public static abstract class CooldownEvent extends BukkitRunnable {
 
 		public CooldownEvent(long cooldownTime) {
@@ -2818,7 +3611,7 @@ public final class Mine {
 	public static Map<Player, ItemStack[]> INV_ITEMS = new HashMap<>();
 
 	/**
-	 * Cria um item da Cabe�a do Jogador
+	 * Cria um item da Cabeça do Jogador
 	 * 
 	 * @param name
 	 *            Nome
@@ -2827,14 +3620,12 @@ public final class Mine {
 	 * @param amount
 	 *            Quantidade
 	 * @param lore
-	 *            Descri��o (Lista)
-	 * @return O Item da Cabe�a do jogador criada
+	 *            Descrição (Lista)
+	 * @return O Item da Cabeça do jogador criada
 	 */
-	public static ItemStack newHead(String name, String owner, int amount,
-			List<String> lore) {
-		ItemStack item = new ItemStack(Material.SKULL_ITEM, amount,
-				(short) SkullType.PLAYER.ordinal());
-		SkullMeta meta = (SkullMeta) item;
+	public static ItemStack newHead(String name, String owner, int amount, List<String> lore) {
+		ItemStack item = new ItemStack(Material.SKULL_ITEM, amount, (short) SkullType.PLAYER.ordinal());
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwner(owner);
 		meta.setDisplayName(name);
 		meta.setLore(lore);
@@ -2842,8 +3633,33 @@ public final class Mine {
 
 		return item;
 	}
+
 	/**
-	 * Descobre qual � a coluna baseada no numero
+	 * Cria um item da Cabeça do Jogador
+	 * 
+	 * @param name
+	 *            Nome
+	 * @param owner
+	 *            Nome do Jogador
+	 * @param amount
+	 *            Quantidade
+	 * @param lore
+	 *            Descrição (Lista)
+	 * @return O Item da Cabeça do jogador criada
+	 */
+	public static ItemStack newHead(String name, String owner, int amount, String... lore) {
+		ItemStack item = new ItemStack(Material.SKULL_ITEM, amount, (short) SkullType.PLAYER.ordinal());
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		meta.setOwner(owner);
+		meta.setDisplayName(name);
+		meta.setLore(Arrays.asList(lore));
+		item.setItemMeta(meta);
+
+		return item;
+	}
+
+	/**
+	 * Descobre qual é a coluna baseada no numero
 	 * 
 	 * @param index
 	 *            Numero
@@ -2855,8 +3671,9 @@ public final class Mine {
 		}
 		return (index % 9) + 1;
 	}
+
 	/**
-	 * Testa se o numero passado � da coluna expecificada
+	 * Testa se o numero passado é da coluna expecificada
 	 * 
 	 * @param index
 	 *            Numero
@@ -2867,6 +3684,7 @@ public final class Mine {
 	public static boolean isColumn(int index, int colunm) {
 		return getColumn(index) == colunm;
 	}
+
 	/**
 	 * Pega um Item aleatorio baseado na lista
 	 * 
@@ -2878,6 +3696,7 @@ public final class Mine {
 
 		return Mine.getRandom(items);
 	}
+
 	/**
 	 * Pega um Item aleatorio baseado no vetor
 	 * 
@@ -2889,6 +3708,7 @@ public final class Mine {
 
 		return Mine.getRandom(items);
 	}
+
 	/**
 	 * Limpa o Inventario da Entidade viva
 	 * 
@@ -2898,6 +3718,7 @@ public final class Mine {
 	public static void clearArmours(LivingEntity entity) {
 		entity.getEquipment().setArmorContents(null);
 	}
+
 	/**
 	 * Limpa a Hotbar do Jogador
 	 * 
@@ -2909,8 +3730,9 @@ public final class Mine {
 			player.getInventory().setItem(i, null);
 		}
 	}
+
 	/**
-	 * Cria um item da cabe�a do Jogador
+	 * Cria um item da cabeça do Jogador
 	 * 
 	 * @param name
 	 * @param skull
@@ -2921,13 +3743,14 @@ public final class Mine {
 
 		return setSkull(newItem(name, Material.SKULL_ITEM, 3), skull);
 	}
+
 	public static int getPosition(int line, int column) {
 		int value = (line - 1) * 9;
 		return value + column - 1;
 	}
 
 	/**
-	 * Modifica um Item transformando ele na Cabe�a do Jogador
+	 * Modifica um Item transformando ele na Cabeça do Jogador
 	 * 
 	 * @param item
 	 *            Item
@@ -2940,6 +3763,7 @@ public final class Mine {
 		item.setItemMeta(meta);
 		return item;
 	}
+
 	/**
 	 * Limpa todo o Inventario do Jogador
 	 * 
@@ -2949,6 +3773,7 @@ public final class Mine {
 		clearItens(player);
 		clearArmours(player);
 	}
+
 	/**
 	 * Limpa os itens da Entidade viva
 	 * 
@@ -2974,6 +3799,7 @@ public final class Mine {
 		getArmours(player);
 
 	}
+
 	/**
 	 * Restaura as armaduras armazenado no Jogador
 	 * 
@@ -2986,6 +3812,7 @@ public final class Mine {
 			player.updateInventory();
 		}
 	}
+
 	/**
 	 * Pega a quantidade de itens do Invetario
 	 * 
@@ -3018,13 +3845,14 @@ public final class Mine {
 			inv.setItem(i, item);
 		}
 	}
+
 	/**
-	 * Modifica a Descri��o do Item
+	 * Modifica a Descrição do Item
 	 * 
 	 * @param item
 	 *            Item
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
 	public static ItemStack setLore(ItemStack item, List<String> lore) {
@@ -3033,6 +3861,7 @@ public final class Mine {
 		item.setItemMeta(meta);
 		return item;
 	}
+
 	/**
 	 * Pega a quantidade total dos itens do Inventario
 	 * 
@@ -3049,6 +3878,7 @@ public final class Mine {
 		}
 		return amount;
 	}
+
 	/**
 	 * Pega a quantidade total do Material do Inventario
 	 * 
@@ -3065,6 +3895,7 @@ public final class Mine {
 		}
 		return amount;
 	}
+
 	/**
 	 * Pega a quantidade total do Item do Inventario
 	 * 
@@ -3083,10 +3914,11 @@ public final class Mine {
 		}
 		return amount;
 	}
+
 	/**
 	 * Remove itens se for igual a este<br>
-	 * O inv.remove(...) tamb�m remove porem remove qualquer item n�o importanto
-	 * nome, descri��o, encantamentos
+	 * O inv.remove(...) também remove porem remove qualquer item não importanto
+	 * nome, descrição, encantamentos
 	 * 
 	 * @param inventory
 	 *            Inventario
@@ -3094,31 +3926,31 @@ public final class Mine {
 	 *            Item
 	 */
 	public static void remove(Inventory inventory, ItemStack item) {
-		for (Entry<Integer, ? extends ItemStack> map : inventory
-				.all(item.getType()).entrySet()) {
+		for (Entry<Integer, ? extends ItemStack> map : inventory.all(item.getType()).entrySet()) {
 			if (map.getValue().isSimilar(item)) {
 				inventory.clear(map.getKey());
 			}
 		}
 	}
+
 	/**
 	 * Remove itens se for igual a este tipo de Material<br>
-	 * O inv.remove(...) tamb�m remove porem remove qualquer item n�o importanto
-	 * nome, descri��o, encantamentos
+	 * O inv.remove(...) também remove porem remove qualquer item não importanto
+	 * nome, descrição, encantamentos
 	 * 
 	 * @param inventory
 	 *            Inventario
 	 * @param material
 	 *            Tipo do Material
 	 */
-	public static void remove(Inventory inventory, Material material,
-			int amount) {
+	public static void remove(Inventory inventory, Material material, int amount) {
 		remove(inventory, new ItemStack(material), amount);
 	}
+
 	/**
 	 * Remove alguns itens se for igual a este Item<br>
-	 * O inv.remove(...) tamb�m remove porem remove qualquer item n�o importanto
-	 * nome, descri��o, encantamentos
+	 * O inv.remove(...) também remove porem remove qualquer item não importanto
+	 * nome, descrição, encantamentos
 	 * 
 	 * @param inventory
 	 *            Inventario
@@ -3128,8 +3960,7 @@ public final class Mine {
 	 *            Quantidade
 	 */
 	public static void remove(Inventory inventory, ItemStack item, int amount) {
-		for (Entry<Integer, ? extends ItemStack> map : inventory
-				.all(item.getType()).entrySet()) {
+		for (Entry<Integer, ? extends ItemStack> map : inventory.all(item.getType()).entrySet()) {
 			if (map.getValue().isSimilar(item)) {
 				ItemStack currentItem = map.getValue();
 				if (currentItem.getAmount() <= amount) {
@@ -3145,6 +3976,7 @@ public final class Mine {
 				break;
 		}
 	}
+
 	/**
 	 * Testa se o Inventario tem determinada quantidade do Item
 	 * 
@@ -3156,10 +3988,10 @@ public final class Mine {
 	 *            Quantidade
 	 * @return Teste
 	 */
-	public static boolean contains(Inventory inventory, ItemStack item,
-			int amount) {
+	public static boolean contains(Inventory inventory, ItemStack item, int amount) {
 		return getTotalAmount(inventory, item) >= amount;
 	}
+
 	/**
 	 * Testa se o Inventario tem determinada quantidade do Tipo do Material
 	 * 
@@ -3168,10 +4000,10 @@ public final class Mine {
 	 * @param amount
 	 * @return
 	 */
-	public static boolean contains(Inventory inventory, Material item,
-			int amount) {
+	public static boolean contains(Inventory inventory, Material item, int amount) {
 		return getTotalAmount(inventory, item) >= amount;
 	}
+
 	/**
 	 * Adiciona um Encantamento no Item
 	 * 
@@ -3183,11 +4015,11 @@ public final class Mine {
 	 *            Nivel do Entamento
 	 * @return Item
 	 */
-	public static ItemStack addEnchant(ItemStack item, Enchantment type,
-			int level) {
+	public static ItemStack addEnchant(ItemStack item, Enchantment type, int level) {
 		item.addUnsafeEnchantment(type, level);
 		return item;
 	}
+
 	/**
 	 * Adiciona itens na HotBar do Jogador
 	 * 
@@ -3202,11 +4034,14 @@ public final class Mine {
 			return;
 		if (item.getType() == Material.AIR)
 			return;
+		if (isFull(inv))
+			return;
 		int i;
 		while ((i = inv.firstEmpty()) < 9) {
 			inv.setItem(i, item);
 		}
 	}
+
 	/**
 	 * Cria um Inventario
 	 * 
@@ -3218,8 +4053,9 @@ public final class Mine {
 	 */
 	public static Inventory newInventory(String name, int size) {
 
-		return Bukkit.createInventory(null, size, name);
+		return Bukkit.createInventory(null, size, Extra.toText(32,name));
 	}
+
 	/**
 	 * Cria um Set de Couro para entidade viva
 	 * 
@@ -3232,17 +4068,12 @@ public final class Mine {
 	 */
 	public static void setEquip(LivingEntity entity, Color color, String name) {
 		EntityEquipment inv = entity.getEquipment();
-		inv.setBoots(setName(
-				setColor(new ItemStack(Material.LEATHER_BOOTS), color), name));
-		inv.setHelmet(setName(
-				setColor(new ItemStack(Material.LEATHER_HELMET), color), name));
-		inv.setChestplate(setName(
-				setColor(new ItemStack(Material.LEATHER_CHESTPLATE), color),
-				name));
-		inv.setLeggings(setName(
-				setColor(new ItemStack(Material.LEATHER_LEGGINGS), color),
-				name));
+		inv.setBoots(setName(setColor(new ItemStack(Material.LEATHER_BOOTS), color), name));
+		inv.setHelmet(setName(setColor(new ItemStack(Material.LEATHER_HELMET), color), name));
+		inv.setChestplate(setName(setColor(new ItemStack(Material.LEATHER_CHESTPLATE), color), name));
+		inv.setLeggings(setName(setColor(new ItemStack(Material.LEATHER_LEGGINGS), color), name));
 	}
+
 	/**
 	 * Ganha todos os Itens do Inventario
 	 * 
@@ -3256,12 +4087,13 @@ public final class Mine {
 			inventory.addItem(item);
 		}
 	}
+
 	/**
-	 * Pega o descri��o do Item
+	 * Pega o descrição do Item
 	 * 
 	 * @param item
 	 *            Item
-	 * @return Descri��o
+	 * @return Descrição
 	 */
 	public static List<String> getLore(ItemStack item) {
 		if (item != null) {
@@ -3282,6 +4114,7 @@ public final class Mine {
 	public static boolean isFull(Inventory inventory) {
 		return inventory.firstEmpty() == -1;
 	}
+
 	/**
 	 * Testa se a Entidade viva esta usando na mao o Tipo do Material
 	 * 
@@ -3294,9 +4127,9 @@ public final class Mine {
 	public static boolean isUsing(LivingEntity entity, Material material) {
 		return (getHandType(entity) == material);
 	}
+
 	/**
-	 * Testa se a Entidade viva esta usando na mao um Tipo do Material com este
-	 * nome
+	 * Testa se a Entidade viva esta usando na mao um Tipo do Material com este nome
 	 * 
 	 * @param entity
 	 *            Entidade
@@ -3305,9 +4138,9 @@ public final class Mine {
 	 * @return
 	 */
 	public static boolean isUsing(LivingEntity entity, String material) {
-		return getHandType(entity).name().toLowerCase()
-				.contains(material.toLowerCase());
+		return getHandType(entity).name().toLowerCase().contains(material.toLowerCase());
 	}
+
 	/**
 	 * Dropa um item no Local da entidade
 	 * 
@@ -3319,6 +4152,7 @@ public final class Mine {
 	public static void drop(Entity entity, ItemStack item) {
 		drop(entity.getLocation(), item);
 	}
+
 	/**
 	 * Pega o tipo do material da mao da Entidade viva
 	 * 
@@ -3340,7 +4174,7 @@ public final class Mine {
 	}
 
 	/**
-	 * Cria um Item da Cabe�a do Jogador
+	 * Cria um Item da Cabeça do Jogador
 	 * 
 	 * @param name
 	 *            Nome de Jogador
@@ -3353,6 +4187,7 @@ public final class Mine {
 		item.setItemMeta(meta);
 		return item;
 	}
+
 	/**
 	 * Testa se o Inventario esta vasio
 	 * 
@@ -3369,6 +4204,7 @@ public final class Mine {
 		}
 		return true;
 	}
+
 	/**
 	 * Modifica a Cor do Item (Usado somente para Itens de Couro)
 	 * 
@@ -3384,13 +4220,14 @@ public final class Mine {
 		item.setItemMeta(meta);
 		return item;
 	}
+
 	/**
-	 * Modifica a Descri��o do Item
+	 * Modifica a Descrição do Item
 	 * 
 	 * @param item
 	 *            Item
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
 	public static ItemStack setLore(ItemStack item, String... lore) {
@@ -3402,6 +4239,7 @@ public final class Mine {
 		}
 		return item;
 	}
+
 	/**
 	 * Modifica o Nome do Item
 	 * 
@@ -3420,6 +4258,7 @@ public final class Mine {
 
 		return item;
 	}
+
 	/**
 	 * Restaura o Nome Original do Item
 	 * 
@@ -3431,6 +4270,7 @@ public final class Mine {
 		setName(item, "");
 		return item;
 	}
+
 	/**
 	 * Pega o Nome do Item
 	 * 
@@ -3440,12 +4280,9 @@ public final class Mine {
 	 */
 	public static String getName(ItemStack item) {
 
-		return item.hasItemMeta()
-				? item.getItemMeta().hasDisplayName()
-						? item.getItemMeta().getDisplayName()
-						: ""
-				: "";
+		return item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : "" : "";
 	}
+
 	/**
 	 * Dropa o Item no Local (Joga no Local)
 	 * 
@@ -3457,6 +4294,7 @@ public final class Mine {
 	public static void drop(Location location, ItemStack item) {
 		location.getWorld().dropItemNaturally(location, item);
 	}
+
 	/**
 	 * Enche o Invetario com o Item
 	 * 
@@ -3471,6 +4309,7 @@ public final class Mine {
 			inventory.setItem(id, item);
 		}
 	}
+
 	/**
 	 * Pega a quantidade de dano causada pelo Item
 	 * 
@@ -3531,6 +4370,7 @@ public final class Mine {
 		}
 		return damage;
 	}
+
 	/**
 	 * Armazena os Itens do Jogador
 	 * 
@@ -3540,6 +4380,7 @@ public final class Mine {
 		saveArmours(player);
 		INV_ITEMS.put(player, player.getInventory().getContents());
 	}
+
 	/**
 	 * Armazena as armaduras do Jogador
 	 * 
@@ -3548,6 +4389,7 @@ public final class Mine {
 	public static void saveArmours(Player player) {
 		INV_ARMOURS.put(player, player.getInventory().getArmorContents());
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3560,6 +4402,7 @@ public final class Mine {
 		setName(item, name);
 		return item;
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3571,8 +4414,7 @@ public final class Mine {
 	 *            Quantidade
 	 * @return Item
 	 */
-	public static ItemStack newItem(Material material, String name,
-			int amount) {
+	public static ItemStack newItem(Material material, String name, int amount) {
 		return newItem(material, name, amount, 0);
 	}
 
@@ -3588,11 +4430,10 @@ public final class Mine {
 	 * @param data
 	 *            MetaData
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(Material material, String name, int amount,
-			int data, String... lore) {
+	public static ItemStack newItem(Material material, String name, int amount, int data, String... lore) {
 
 		ItemStack item = newItem(material, name);
 		setLore(item, lore);
@@ -3600,6 +4441,7 @@ public final class Mine {
 		item.setDurability((short) data);
 		return item;
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3612,11 +4454,10 @@ public final class Mine {
 	 * @param data
 	 *            MetaData
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(int id, String name, int amount, int data,
-			String... lore) {
+	public static ItemStack newItem(int id, String name, int amount, int data, String... lore) {
 
 		@SuppressWarnings("deprecation")
 		ItemStack item = new ItemStack(id, amount, (short) data);
@@ -3628,6 +4469,7 @@ public final class Mine {
 		}
 		return item;
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3640,11 +4482,10 @@ public final class Mine {
 	 * @param data
 	 *            MetaData
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(int id, String name, int amount, int data,
-			List<String> lore) {
+	public static ItemStack newItem(int id, String name, int amount, int data, List<String> lore) {
 
 		@SuppressWarnings("deprecation")
 		ItemStack item = new ItemStack(id, amount, (short) data);
@@ -3656,6 +4497,7 @@ public final class Mine {
 		}
 		return item;
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3670,6 +4512,7 @@ public final class Mine {
 		setName(item, name);
 		return item;
 	}
+
 	/**
 	 * Cria um Item
 	 * 
@@ -3697,23 +4540,26 @@ public final class Mine {
 	 * @param data
 	 *            Data
 	 * @param lore
-	 *            Descri��o
+	 *            Descrição
 	 * @return Item
 	 */
-	public static ItemStack newItem(String name, Material material, int amount,
-			int data, String... lore) {
+	public static ItemStack newItem(String name, Material material, int amount, int data, String... lore) {
 		return newItem(material, name, amount, data, lore);
 	}
+
 	public static interface RecipeBuilder {
 
 		public Recipe getRecipe();
+
 		public default boolean addRecipe() {
 			;
 			if (getResult() == null)
 				return false;
 			return Bukkit.addRecipe(getRecipe());
 		}
+
 		public ItemStack getResult();
+
 		public void setResult(ItemStack result);
 
 	}
@@ -3722,9 +4568,11 @@ public final class Mine {
 
 		private ItemStack result = null;
 		private List<ItemStack> items = new ArrayList<>();
+
 		public SimpleRecipe() {
 			// TODO Auto-generated constructor stub
 		}
+
 		public SimpleRecipe(ItemStack result) {
 			setResult(result);
 		}
@@ -3732,13 +4580,16 @@ public final class Mine {
 		public SimpleRecipe add(Material material) {
 			return add(new ItemStack(material));
 		}
+
 		public SimpleRecipe add(Material material, int data) {
 			return add(new ItemStack(material, 1, (short) data));
 		}
+
 		public SimpleRecipe add(ItemStack item) {
 			items.add(item);
 			return this;
 		}
+
 		public SimpleRecipe remove(ItemStack item) {
 			items.remove(item);
 			return this;
@@ -3778,17 +4629,21 @@ public final class Mine {
 
 		private Map<Integer, ItemStack> items = new HashMap<>();
 		private ItemStack result = null;
+
 		public NormalRecipe() {
 			// TODO Auto-generated constructor stub
 		}
+
 		public NormalRecipe set(int slot, ItemStack item) {
 			items.put(slot, item);
 			return this;
 		}
+
 		public NormalRecipe remove(int slot) {
 			items.remove(slot);
 			return this;
 		}
+
 		public ItemStack getIngridient(int slot) {
 			return items.get(slot);
 		}
@@ -3801,8 +4656,7 @@ public final class Mine {
 
 			for (Entry<Integer, ItemStack> entry : items.entrySet()) {
 				try {
-					recipe.setIngredient(getSlot(entry.getKey()),
-							entry.getValue().getData());
+					recipe.setIngredient(getSlot(entry.getKey()), entry.getValue().getData());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -3855,16 +4709,20 @@ public final class Mine {
 			this.result = result;
 		}
 	}
+
 	public static interface SimpleClick {
 		public void onClick(InventoryClickEvent event, int page);
 	}
+
 	public static class SimpleShopGui extends SimpleGui {
 
 		private ItemStack[] products;
 		private double[] prices;
+
 		public SimpleShopGui() {
 			// TODO Auto-generated constructor stub
 		}
+
 		public SimpleShopGui(String name, int lines) {
 			super(name, lines);
 			setClick(new SimpleClick() {
@@ -3880,25 +4738,17 @@ public final class Mine {
 							if (VaultAPI.hasVault()) {
 								if (VaultAPI.hasEconomy()) {
 
-									if (VaultAPI.getEconomy().has(player,
-											price)) {
-										VaultAPI.getEconomy()
-												.withdrawPlayer(player, price);
-										if (Mine.isFull(
-												player.getInventory())) {
-											player.getWorld().dropItemNaturally(
-													player.getLocation().add(0,
-															5, 0),
+									if (VaultAPI.getEconomy().has(player, price)) {
+										VaultAPI.getEconomy().withdrawPlayer(player, price);
+										if (Mine.isFull(player.getInventory())) {
+											player.getWorld().dropItemNaturally(player.getLocation().add(0, 5, 0),
 													product);
 										} else {
-											player.getInventory()
-													.addItem(product);
+											player.getInventory().addItem(product);
 										}
-										player.sendMessage(
-												"�aVoce adquiriu um item da Loja!");
+										player.sendMessage("§aVoce adquiriu um item da Loja!");
 									} else {
-										player.sendMessage(
-												"�cVoce n�o tem dinheiro suficiente!");
+										player.sendMessage("§cVoce não tem dinheiro suficiente!");
 									}
 
 								}
@@ -3910,11 +4760,13 @@ public final class Mine {
 			});
 
 		}
+
 		public void resetInventories() {
 			super.resetInventories();
 			prices = new double[getLines() * 9 * getPages()];
 			products = new ItemStack[getLines() * 9 * getPages()];
 		}
+
 		/**
 		 * 
 		 * @param product
@@ -3922,15 +4774,14 @@ public final class Mine {
 		 * @param slot
 		 * @param price
 		 */
-		public void addProduct(ItemStack product, int page, int slot,
-				double price) {
+		public void addProduct(ItemStack product, int page, int slot, double price) {
 			int index = getIndex(page, slot);
 			List<String> lore = new ArrayList<String>();
 			ItemStack clone = product.clone();
 			if (clone.getItemMeta().hasLore())
 				lore.addAll(clone.getItemMeta().getLore());
 			lore.add("");
-			lore.add("�aPre�o: �2" + price);
+			lore.add("§aPreço: §2" + price);
 			lore.add("");
 			Mine.setLore(clone, lore);
 			addSlot(clone, page, slot);
@@ -3973,41 +4824,46 @@ public final class Mine {
 		private String name;
 		private int lines = 6;
 		private int pages = 10;
-		private String pagPrefix = " �8P�gina: ";
+		private String pagPrefix = " §8Página: ";
 		private String command = "abrirGuiExemplo";
 		private ItemStack item = new ItemStack(Material.COMPASS);
 		private boolean hasPageSystem = true;
 
 		private int nextPageSlot = 8;
 		private int previousPageSlot = 0;
-		private ItemStack nextPage = Mine.newItem(Material.ARROW,
-				"�aPr�xima P�gina");
+		private ItemStack nextPage = Mine.newItem(Material.ARROW, "§aPróxima Página");
 
 		public SimpleGui copy() {
 			return copy(this);
 		}
+
 		public void unregister() {
 			HandlerList.unregisterAll(this);
 		}
+
 		public void register(Plugin plugin) {
 			unregister();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 		}
-		private ItemStack previosPage = Mine.newItem(Material.ARROW,
-				"�aP�gina Anterior");
+
+		private ItemStack previosPage = Mine.newItem(Material.ARROW, "§aPágina Anterior");
 
 		private ItemStack[] slots;
+
 		public SimpleGui() {
 			resetInventories();
 		}
+
 		public SimpleGui(String name) {
 			this(name, 6);
 		}
+
 		public SimpleGui(String name, int lines) {
 			this.name = name;
 			this.lines = lines;
 			resetInventories();
 		}
+
 		public void resetInventories() {
 			slots = new ItemStack[lines * 9 * pages];
 			clicks = new SimpleClick[lines * 9 * pages];
@@ -4015,15 +4871,18 @@ public final class Mine {
 			resetPages();
 
 		}
+
 		public void resetPages() {
 			for (int page = 1; page <= pages; page++) {
 				addSlot(previosPage, page, previousPageSlot);
 				addSlot(nextPage, page, nextPageSlot);
 			}
 		}
+
 		public void onCopy() {
 			resetInventories();
 		}
+
 		public boolean isHasPageSystem() {
 			return hasPageSystem;
 		}
@@ -4031,15 +4890,16 @@ public final class Mine {
 		public void setHasPageSystem(boolean hasPageSystem) {
 			this.hasPageSystem = hasPageSystem;
 		}
+
 		public int getFirstEmptySlot() {
 			return getFirstEmptySlot(1);
 		}
+
 		public int getFirstEmptySlot(int page) {
 			if (hasInventory(page)) {
 				return inventories[page - 1].firstEmpty();
 			} else {
-				ItemStack[] array = Arrays.copyOfRange(slots, getIndex(page, 0),
-						getIndex(page + 1, 0));
+				ItemStack[] array = Arrays.copyOfRange(slots, getIndex(page, 0), getIndex(page + 1, 0));
 				for (int i = 0; i < array.length; i++) {
 					if (array[i] == null)
 						return i;
@@ -4047,12 +4907,15 @@ public final class Mine {
 			}
 			return -1;
 		}
+
 		public boolean hasInventory(int page) {
 			return inventories[page - 1] != null;
 		}
+
 		public boolean isFull() {
 			return isFull(1);
 		}
+
 		public boolean isFull(int page) {
 			return Mine.isFull(inventories[page - 1]);
 		}
@@ -4060,27 +4923,35 @@ public final class Mine {
 		public boolean hasPages() {
 			return pages > 1;
 		}
+
 		public boolean isUniquePage() {
 			return pages == 1;
 		}
+
 		public String getName() {
 			return name;
 		}
+
 		public void setName(String name) {
 			this.name = name;
 		}
+
 		public String getPagPrefix() {
 			return pagPrefix;
 		}
+
 		public void setPagPrefix(String pagPrefix) {
 			this.pagPrefix = pagPrefix;
 		}
+
 		public ItemStack[] getItems() {
 			return slots;
 		}
+
 		public void setItems(ItemStack[] items) {
 			this.slots = items;
 		}
+
 		public void openGui(Player player) {
 			openGui(player, 1);
 		}
@@ -4088,14 +4959,16 @@ public final class Mine {
 		public boolean hasSlot(int page, int slot) {
 			return getSlot(page, slot) != null;
 		}
+
 		public boolean hasClick(int page, int slot) {
 			return clicks[getIndex(page, slot)] != null;
 		}
+
 		public void addSlot(ItemStack item, int page, int slot) {
 			addSlot(item, page, slot, null);
 		}
-		public void addSlot(ItemStack item, int page, int slot,
-				SimpleClick click) {
+
+		public void addSlot(ItemStack item, int page, int slot, SimpleClick click) {
 			int index = getIndex(page, slot);
 			slots[index] = item;
 			clicks[index] = click;
@@ -4112,6 +4985,7 @@ public final class Mine {
 				getPage(page).clear(index);
 			}
 		}
+
 		public Inventory getPage(int page) {
 			return inventories[page - 1];
 		}
@@ -4125,6 +4999,7 @@ public final class Mine {
 			int index = getIndex(page, slot);
 			return clicks[index];
 		}
+
 		protected int getIndex(int page, int slot) {
 			int result = ((page - 1) * lines * 9) + (slot);
 			return result;
@@ -4133,14 +5008,13 @@ public final class Mine {
 		public void openGui(Player player, int page) {
 			Inventory inventory = inventories[page - 1];
 			if (inventory == null) {
-				inventory = Bukkit.createInventory(null, lines * 9,
-						name + pagPrefix + page);
-				inventory.setContents(Arrays.copyOfRange(slots,
-						getIndex(page, 0), getIndex(page + 1, 0)));
+				inventory = Bukkit.createInventory(null, lines * 9, name + pagPrefix + page);
+				inventory.setContents(Arrays.copyOfRange(slots, getIndex(page, 0), getIndex(page + 1, 0)));
 				inventories[page - 1] = inventory;
 			}
 			player.openInventory(inventory);
 		}
+
 		@EventHandler
 		public void onOpenGui(PlayerInteractEvent event) {
 			Player player = event.getPlayer();
@@ -4166,6 +5040,7 @@ public final class Mine {
 				openGui(player);
 			}
 		}
+
 		@EventHandler
 		public void onClickInGui(InventoryClickEvent event) {
 			if (event.getWhoClicked() instanceof Player) {
@@ -4179,8 +5054,7 @@ public final class Mine {
 					int slot = event.getRawSlot();
 					int page = 1;
 					if (!isUniquePage()) {
-						page = Integer.valueOf(event.getInventory().getTitle()
-								.split(name + pagPrefix)[1]);
+						page = Integer.valueOf(event.getInventory().getTitle().split(name + pagPrefix)[1]);
 					}
 					if (hasPageSystem) {
 						if (item.equals(nextPage)) {
@@ -4317,6 +5191,35 @@ public final class Mine {
 		}
 
 	}
+
+	public static Player getPlayer(String name) {
+		return Bukkit.getPlayerExact(name);
+	}
+
+	public static World getWorld(String name) {
+		return Bukkit.getWorld(name);
+	}
+
+	public static void removeReplacer(String replacer) {
+		replacers.remove(replacer);
+	}
+
+	public static void send(CommandSender sender, String message) {
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			sender.sendMessage(Mine.getReplacers(message, player));
+		} else {
+			sender.sendMessage(message);
+			;
+		}
+
+	}
+
+	public static void sendAll(Player p, String message) {
+		broadcast(getReplacers(message, p));
+
+	}
+
 	public static class ScoreListener implements Listener {
 		@EventHandler
 		public void onQuit(PlayerQuitEvent e) {
@@ -4325,6 +5228,7 @@ public final class Mine {
 			removeScore(p);
 			removeTag(p);
 		}
+
 		@EventHandler
 		public void onKick(PlayerKickEvent e) {
 			Player p = e.getPlayer();
@@ -4339,7 +5243,8 @@ public final class Mine {
 				setScore(e.getPlayer(), scoreDefault.copy());
 			}
 			if (tagsEnabled) {
-				updateTagByRank(p);
+				setTag(p, tagDefault.copy());
+				updatePlayerTag(p);
 			}
 
 		}
@@ -4358,6 +5263,7 @@ public final class Mine {
 		updater.runTaskTimer(plugin, 20, 20);
 		Bukkit.getPluginManager().registerEvents(listener, plugin);
 	}
+
 	public static void unregister() {
 		if (updater != null) {
 			updater.cancel();
@@ -4365,62 +5271,98 @@ public final class Mine {
 		}
 		HandlerList.unregisterAll(listener);
 	}
+
 	private static boolean tagsEnabled;
+	private static boolean tagsByGroup;
 	private static boolean scoresEnabled;
 	private static Tag tagDefault;
 	private static DisplayBoard scoreDefault;
-	private static List<String> tagsGroups = new ArrayList<>();
+	private static Map<String, Tag> groupsTags = new HashMap<>();
 	private static Map<Player, Tag> playersTags = new HashMap<>();
 	private static Map<Player, DisplayBoard> playersScores = new HashMap<>();
 	private static BukkitRunnable updater;
 	private static ScoreListener listener = new ScoreListener();
 
+	public static Map<String, Tag> getGroupsTags() {
+		return groupsTags;
+	}
+
+	public static void setGroupsTags(Map<String, Tag> groupsTags) {
+		Mine.groupsTags = groupsTags;
+	}
+
+	public static void updateGroupsTags() {
+		for (String group : VaultAPI.getPermission().getGroups()) {
+			String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
+			String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
+			Tag tag = new Tag(prefix, suffix);
+			groupsTags.put(group, tag);
+
+		}
+
+	}
+
+	public static void updateGroupsRanks(List<String> list) {
+		int id = 0;
+		for (String group : list) {
+			Tag tag = groupsTags.get(group);
+			// Mine.broadcast("affs "+tag +" "+(tag==null));
+			if (tag != null) {
+				tag.setRank(id);
+				id++;
+			}
+			// Mine.broadcast("affs "+tag +" "+(tag==null));
+		}
+
+	}
+
 	@SuppressWarnings("deprecation")
 	public static void updateTags(Scoreboard score) {
+		// score.getTeams().forEach(team -> team.unregister());
 		for (Entry<Player, Tag> map : playersTags.entrySet()) {
 			Tag tag = map.getValue();
 			Player player = map.getKey();
 			if (player == null)
 				continue;
 			String name = Mine.cutText(tag.getRank() + player.getName(), 16);
-			Team team = score.getTeam(name);
-			if (team == null)
-				team = score.registerNewTeam(name);
-			TagUpdateEvent event = new TagUpdateEvent(tag, player);
-			Mine.callEvent(event);
-			if (!event.isCancelled())
-				continue;
-			team.setPrefix(Mine.removeBrackets(Mine.toChatMessage(tag.getPrefix())));
-			team.setSuffix(Mine.removeBrackets(Mine.toChatMessage(tag.getSuffix())));
-			if (!team.hasPlayer(player))
-				team.addPlayer(player);
+			Team team = Mine.getTeam(score, name);
+			try {
+				team.setNameTagVisibility(NameTagVisibility.ALWAYS);
+			} catch (Exception e) {
+			}
+			String prefix = Mine.cutText(Mine.toChatMessage(tag.getPrefix()), 16);
+			String suffix = Mine.cutText(Mine.toChatMessage(tag.getSuffix()), 16);
+
+			if (!prefix.equals(team.getPrefix()))
+				team.setPrefix(prefix);
+			if (!suffix.equals(suffix))
+				team.setSuffix(suffix);
+			FakeOfflinePlayer fake = new FakeOfflinePlayer(player.getName());
+			if (!team.hasPlayer(fake))
+				team.addPlayer(fake);
 
 		}
 	}
+
+	public static void updatePlayerTag(Player player) {
+		if (tagsByGroup) {
+			String group = VaultAPI.getPermission().getPrimaryGroup(player);
+			Tag tag = groupsTags.get(group);
+			if (tag != null) {
+				setTag(player, tag.copy());
+			}
+		}
+	}
+
 	public static void updateScoreboard(Player player) {
 		getScore(player).update(player);
 	}
-	public static void updateTagByRank(Player player) {
-		String group = VaultAPI.getPermission().getPrimaryGroup(player);
-		String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
-		String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
-		int id = 0;
-		for (String rank : tagsGroups) {
-			if (rank.equalsIgnoreCase(group)) {
-				Tag tag = new Tag(prefix, suffix);
-				tag.setName(player.getName());
-				tag.setRank(id);
-				setTag(player, tag);
-				break;
-			}
-			id++;
-		}
 
-	}
 	public static void setScore(Player player, DisplayBoard score) {
 		playersScores.put(player, score);
 		score.apply(player);
 	}
+
 	public static DisplayBoard getScore(Player player) {
 		return playersScores.get(player);
 
@@ -4451,29 +5393,26 @@ public final class Mine {
 		if (scoresEnabled) {
 
 			try {
-				for (Entry<Player, DisplayBoard> map : playersScores
-						.entrySet()) {
+				for (Entry<Player, DisplayBoard> map : playersScores.entrySet()) {
 					DisplayBoard score = map.getValue();
 					Player player = map.getKey();
-					ScoreUpdateEvent event = new ScoreUpdateEvent(player,
-							score);
+					ScoreUpdateEvent event = new ScoreUpdateEvent(player, score);
 					if (!event.isCancelled()) {
 						score.update(player);
 					}
 				}
 			} catch (Exception e) {
-				Bukkit.getLogger().info(
-						"Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
+				Bukkit.getLogger().info("Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
 			}
 		}
 		if (tagsEnabled) {
+
 			Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
 
 			for (Player p : Mine.getPlayers()) {
 				Scoreboard score = p.getScoreboard();
 				if (score == null) {
 					p.setScoreboard(main);
-					score = main;
 					continue;
 				}
 				updateTags(score);
@@ -4482,48 +5421,56 @@ public final class Mine {
 			updateTags(main);
 		}
 	}
+
 	public static void removeScore(Player player) {
 		player.setScoreboard(Mine.getMainScoreboard());
-		playersTags.remove(player);
+		playersScores.remove(player);
 	}
+
 	public static void removeTag(Player player) {
 		playersTags.remove(player);
 	}
 
-	public static class TagUpdateEvent extends PlayerEvent
-			implements
-				Cancellable {
+	// public static class TagUpdateEvent extends PlayerEvent implements Cancellable
+	// {
+	//
+	// private Tag tag;
+	// private boolean cancelled;
+	//
+	// public boolean isCancelled() {
+	// return cancelled;
+	// }
+	//
+	// public void setCancelled(boolean cancelled) {
+	// this.cancelled = cancelled;
+	// }
+	//
+	// @Override
+	// public HandlerList getHandlers() {
+	// return handlers;
+	// }
+	//
+	// public static HandlerList getHandlerList() {
+	// return handlers;
+	// }
+	//
+	// private static final HandlerList handlers = new HandlerList();
+	//
+	// public TagUpdateEvent(Tag tag, Player who) {
+	// super(who);
+	// setTag(tag);
+	// }
+	//
+	// public Tag getTag() {
+	// return tag;
+	// }
+	//
+	// public void setTag(Tag tag) {
+	// this.tag = tag;
+	// }
+	// }
 
-		private Tag tag;
-		private boolean cancelled;
-
-		public boolean isCancelled() {
-			return cancelled;
-		}
-		public void setCancelled(boolean cancelled) {
-			this.cancelled = cancelled;
-		}
-		@Override
-		public HandlerList getHandlers() {
-			return handlers;
-		}
-		public static HandlerList getHandlerList() {
-			return handlers;
-		}
-		private static final HandlerList handlers = new HandlerList();
-
-		public TagUpdateEvent(Tag tag, Player who) {
-			super(who);
-			setTag(tag);
-		}
-		public Tag getTag() {
-			return tag;
-		}
-		public void setTag(Tag tag) {
-			this.tag = tag;
-		}
-	}
-	public static class Tag implements Storable {
+	public static class Tag implements Storable, Copyable {
 
 		private String prefix, suffix, name;
 
@@ -4533,9 +5480,21 @@ public final class Mine {
 			this.prefix = prefix;
 			this.suffix = suffix;
 		}
+
+		public Tag(String prefix, String suffix, String name) {
+			this.prefix = prefix;
+			this.suffix = suffix;
+			this.name = name;
+		}
+
 		public Tag() {
 			// TODO Auto-generated constructor stub
 		}
+
+		public Tag copy() {
+			return copy(this);
+		}
+
 		public String getPrefix() {
 			return prefix;
 		}
@@ -4581,10 +5540,14 @@ public final class Mine {
 
 		}
 
+		@Override
+		public String toString() {
+			return "Tag [prefix=" + prefix + ", suffix=" + suffix + ", name=" + name + ", rank=" + rank + "]";
+		}
+
 	}
-	public static class ScoreUpdateEvent extends PlayerEvent
-			implements
-				Cancellable {
+
+	public static class ScoreUpdateEvent extends PlayerEvent implements Cancellable {
 		private DisplayBoard score;
 		private boolean cancelled;
 
@@ -4592,24 +5555,30 @@ public final class Mine {
 		public HandlerList getHandlers() {
 			return handlers;
 		}
+
 		public static HandlerList getHandlerList() {
 			return handlers;
 		}
+
 		private static final HandlerList handlers = new HandlerList();
 
 		public ScoreUpdateEvent(Player who, DisplayBoard score) {
 			super(who);
 			setScore(score);
 		}
+
 		public DisplayBoard getScore() {
 			return score;
 		}
+
 		public void setScore(DisplayBoard score) {
 			this.score = score;
 		}
+
 		public boolean isCancelled() {
 			return cancelled;
 		}
+
 		public void setCancelled(boolean cancelled) {
 			this.cancelled = cancelled;
 		}
@@ -4617,8 +5586,7 @@ public final class Mine {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static Scoreboard applyScoreboard(Player player, String title,
-			String... lines) {
+	public static Scoreboard applyScoreboard(Player player, String title, String... lines) {
 		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective obj = board.registerNewObjective("score", "dummy");
 		obj.setDisplayName(title);
@@ -4626,8 +5594,8 @@ public final class Mine {
 		int id = 15;
 		for (String line : lines) {
 			String empty = ChatColor.values()[id - 1].toString();
-			obj.getScore(new FakeOfflinePlayer(line.isEmpty() ? empty : line))
-					.setScore(id);;
+			obj.getScore(new FakeOfflinePlayer(line.isEmpty() ? empty : line)).setScore(id);
+			;
 			id--;
 			if (id == 0) {
 				break;
@@ -4637,10 +5605,11 @@ public final class Mine {
 		player.setScoreboard(board);
 		return board;
 	}
-	public static Scoreboard newScoreboard(Player player, String title,
-			String... lines) {
+
+	public static Scoreboard newScoreboard(Player player, String title, String... lines) {
 		return applyScoreboard(player, title, lines);
 	}
+
 	/**
 	 * Jogador Off Ficticio
 	 * 
@@ -4652,9 +5621,13 @@ public final class Mine {
 		private String name;
 		private UUID id;
 
+		public void setName(String name) {
+			this.name = name;
+		}
+
 		public FakeOfflinePlayer(String name) {
 			this.name = name;
-			this.id = UUID.nameUUIDFromBytes(name.getBytes());
+			// this.id = UUID.nameUUIDFromBytes(name.getBytes());
 		}
 
 		public FakeOfflinePlayer(String name, UUID id) {
@@ -4752,10 +5725,9 @@ public final class Mine {
 		}
 
 	}
-	public static String cutText(String text, int lenght) {
-		return text.length() > lenght ? text.substring(0, lenght) : text;
-	}
 
+	
+	@SuppressWarnings("deprecation")
 	public static class DisplayBoard implements Storable, Copyable {
 
 		public static final int PLAYER_ABOVE_1_7_NAME_LIMIT = 40;
@@ -4765,53 +5737,108 @@ public final class Mine {
 		public static final int PREFIX_LIMIT = 16;
 		public static final int SUFFIX_LIMIT = 16;
 		public int PLAYER_NAME_LIMIT = PLAYER_BELOW_1_8_NAME_LIMIT;
-		protected transient Map<Integer, OfflinePlayer> players = new HashMap<>();
-		protected transient Map<Integer, Team> teams = new HashMap<>();
 		protected List<String> lines = new ArrayList<>();
 		protected String title;
 		protected String healthBar;
-		protected transient Scoreboard score;
-		protected transient Objective board;
+		protected boolean perfect;
 		protected transient Objective health;
+		protected transient Scoreboard scoreboard;
+		protected transient Objective objective;
+		protected transient Map<Integer, OfflinePlayer> fakes = new HashMap<>();
+		protected transient Map<Integer, Team> teams = new HashMap<>();
+		protected transient Map<Integer, String> texts = new HashMap<>();
 
 		public DisplayBoard hide() {
 
-			board.setDisplaySlot(null);
+			objective.setDisplaySlot(null);
 			return this;
 		}
+
 		public boolean isShowing() {
-			return board.getDisplaySlot() == DisplaySlot.SIDEBAR;
+			return objective.getDisplaySlot() == DisplaySlot.SIDEBAR;
 		}
+
 		public DisplayBoard show() {
-			board.setDisplaySlot(DisplaySlot.SIDEBAR);
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 			return this;
 		}
+
+		public void clear() {
+			for (int id = 15; id > 0; id--) {
+				remove(id);
+			}
+		}
+
+		public void setLine(String prefix, String center, String suffix, int line) {
+			if (center.isEmpty()) {
+				center = "" + ChatColor.values()[line - 1];
+			}
+			prefix = Mine.cutText(prefix, 16);
+			center = Mine.cutText(center, 40);
+			suffix = Mine.cutText(suffix, 16);
+			Team team = teams.get(line);
+			if (fakes.containsKey(line)) {
+				OfflinePlayer fake = fakes.get(line);
+				if (!fake.getName().equals(center)) {
+					team.removePlayer(fake);
+					if (fakes.size() >= 15) {
+						objective.getScore(fake).setScore(-1);
+					} else {
+						scoreboard.resetScores(fake);
+					}
+					fakes.remove(line);
+				}
+			}
+			if (!fakes.containsKey(line)) {
+				FakeOfflinePlayer fake = new FakeOfflinePlayer(center);
+				objective.getScore(fake).setScore(line);
+				fakes.put(line, fake);
+				team.addPlayer(fake);
+			}
+			team.setSuffix(suffix);
+			team.setPrefix(prefix);
+
+		}
+
+		public void removeEntries() {
+			for (OfflinePlayer fake : scoreboard.getPlayers()) {
+				if (objective.getScore(fake).getScore() == -1)
+					scoreboard.resetScores(fake);
+			}
+
+		}
+
+		public void clearEntries() {
+			for (OfflinePlayer fake : scoreboard.getPlayers()) {
+				scoreboard.resetScores(fake);
+			}
+		}
+
 		public DisplayBoard copy() {
 			return copy(this);
 		}
 
 		public DisplayBoard() {
-			title = "�6�lScoreboard";
+			title = "§6§lScoreboard";
 			init();
-			build();
 		}
+
 		public DisplayBoard(String title, String... lines) {
 			setTitle(title);
 			getLines().addAll(Arrays.asList(lines));
 			init();
-			build();
-			update();
 		}
-		public List<String> getDisplayLines() {
-			List<String> list = new ArrayList<>();
-			for (Entry<Integer, OfflinePlayer> entry : players.entrySet()) {
-				Integer id = entry.getKey();
-				Team team = teams.get(id);
-				list.add(team.getPrefix() + entry.getValue().getName()
-						+ team.getSuffix());
-			}
-			return list;
-		}
+
+		// public List<String> getDisplayLines() {
+		// List<String> list = new ArrayList<>();
+		// for (Entry<Integer, OfflinePlayer> entry : players.entrySet()) {
+		// Integer id = entry.getKey();
+		// Team team = teams.get(id);
+		// list.add(team.getPrefix() + entry.getValue().getName() + team.getSuffix());
+		// }
+		// return list;
+		// }
+
 		public DisplayBoard update(Player player) {
 			int id = 15;
 			for (String line : this.lines) {
@@ -4819,8 +5846,10 @@ public final class Mine {
 				id--;
 			}
 			setDisplay(Mine.getReplacers(title, player));
+			removeEntries();
 			return this;
 		}
+
 		public DisplayBoard update() {
 			setDisplay(title);
 			int id = 15;
@@ -4828,118 +5857,136 @@ public final class Mine {
 				set(id, line);
 				id--;
 			}
-			return this;
-		}
-		public DisplayBoard init() {
-			score = Bukkit.getScoreboardManager().getNewScoreboard();
-			for (int id = 1; id <= 15; id++) {
-				teams.put(id, score.registerNewTeam("TeamTag-" + id));
-			}
+			removeEntries();
 			return this;
 		}
 
-		public DisplayBoard apply(Player player) {
-			player.setScoreboard(score);
+		public DisplayBoard init() {
+			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+			objective = scoreboard.registerNewObjective("scoreboard", "dummy");
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+			health = scoreboard.registerNewObjective("HealthBar", Criterias.HEALTH);
+			health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+			for (int id = 15; id > 0; id--) {
+				Team team = scoreboard.registerNewTeam("team-" + id);
+				FakeOfflinePlayer fake = new FakeOfflinePlayer("" + ChatColor.values()[id]);
+				team.addPlayer(fake);
+				objective.getScore(fake).setScore(id);
+				teams.put(id, team);
+				fakes.put(id, fake);
+			}
+			setDisplay(title);
+			setHealthBar(getRedHeart());
 			return this;
 		}
+
+		public char getHeart() {
+			return '\u2764';
+		}
+
+		public DisplayBoard apply(Player player) {
+			player.setScoreboard(scoreboard);
+			return this;
+		}
+
 		public DisplayBoard updateHealthBar(Player player) {
 			player.setHealth(player.getMaxHealth() - 1);
 			return this;
 		}
+
 		public void empty(int slot) {
-			set(slot, "");
+			set(id(slot), "");
 		}
+
 		public void clear(int slot) {
 			int id = id(slot);
 			remove(id);
 		}
+
 		public DisplayBoard setDisplay(String name) {
-			board.setDisplayName(Mine.cutText(name, TITLE_LIMIT));
+			objective.setDisplayName(Mine.cutText(name, TITLE_LIMIT));
 			return this;
 		}
-		@SuppressWarnings("deprecation")
+
 		public boolean remove(int id) {
-			if (players.containsKey(id)) {
-				OfflinePlayer fake = players.get(id);
-				score.resetScores(fake);
-				teams.get(id).removePlayer(fake);
-				players.remove(id);
-				return true;
-			}
+			OfflinePlayer fake = fakes.get(id);
+			scoreboard.resetScores(fake);
+			fakes.remove(id);
 			return false;
 		}
 
-		@SuppressWarnings("deprecation")
 		public boolean set(int slot, String text) {
 			int id = id(slot);
-			text = cutText(text,
-					PREFIX_LIMIT + SUFFIX_LIMIT + PLAYER_NAME_LIMIT);
+			String line = texts.get(id);
+			if (line != null && line.equals(text)) {
+				return true;
+			}
+			text = Mine.cutText(text, PREFIX_LIMIT + SUFFIX_LIMIT + PLAYER_NAME_LIMIT);
 			String center = "";
 			String prefix = "";
 			String suffix = "";
-			if (text.length() > PLAYER_NAME_LIMIT + PREFIX_LIMIT
-					+ SUFFIX_LIMIT) {
-				text = Mine.cutText(text,
-						PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT);
+			if (text.length() > PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT) {
+				text = Mine.cutText(text, PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT);
 			}
 			if (text.length() <= PLAYER_NAME_LIMIT) {
 				center = text;
 			} else if (text.length() <= PLAYER_NAME_LIMIT + PREFIX_LIMIT) {
+				center = text.substring(0, PLAYER_NAME_LIMIT);
+				suffix = text.substring(SUFFIX_LIMIT);
+
+			} else if (text.length() <= PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT) {
 				prefix = text.substring(0, PREFIX_LIMIT);
-				center = text.substring(PREFIX_LIMIT);
-			} else if (text.length() <= PLAYER_NAME_LIMIT + PREFIX_LIMIT
-					+ SUFFIX_LIMIT) {
-				prefix = text.substring(0, PREFIX_LIMIT);
-				center = text.substring(PREFIX_LIMIT - 1,
-						PREFIX_LIMIT + PLAYER_NAME_LIMIT - 1);
+				center = text.substring(PREFIX_LIMIT, PREFIX_LIMIT + PLAYER_NAME_LIMIT - 1);
 				suffix = text.substring(PREFIX_LIMIT + PLAYER_NAME_LIMIT);
 			}
 			Team team = teams.get(id);
-			if (players.containsKey(id)) {
-				String fake = players.get(id).getName();
-				if (center.equals(fake) && prefix.equals(team.getPrefix())
-						&& suffix.equals(team.getSuffix())) {
-					return false;
+			// if (center.isEmpty()) {
+			// center = ChatColor.values()[id].toString();
+			// }
+			if (perfect) {
+				prefix = Mine.cutText(text, 16);
+
+				if (text.length() > 16) {
+					suffix = text.substring(16);
 				}
-				remove(id);
+				team.setPrefix(prefix);
+				team.setSuffix(suffix);
+			} else {
+				setLine(prefix, center, suffix, id);
+				// OfflinePlayer fakeBefore = fakes.get(id);
+				// if (!fakeBefore.getName().equals(center)) {
+				//
+				// team.removePlayer(fakeBefore);
+				// Bukkit.getScheduler().runTaskLaterAsynchronously(Mine.getEduard(), () -> {
+				// scoreboard.resetScores(fakeBefore);
+				// }, 1);
+				//
+				// }
+				// FakeOfflinePlayer fake = new FakeOfflinePlayer(center);
+				// team.setPrefix(prefix);
+				// team.setSuffix(suffix);
+				// team.addPlayer(fake);
 			}
-			OfflinePlayer fake = text(center, id);
-			board.getScore(fake).setScore(id);
-			team.setPrefix(prefix);
-			team.setSuffix(suffix);
-			team.addPlayer(fake);
-			players.put(id, fake);
+
+			texts.put(id, text);
+
 			return true;
 
 		}
-		protected OfflinePlayer text(String text, int id) {
-			if (text.isEmpty()) {
-				return new FakeOfflinePlayer(ChatColor.values()[id].toString());
-			}
-			return new FakeOfflinePlayer(ChatColor.translateAlternateColorCodes(
-					'&', cutText(text, PLAYER_NAME_LIMIT)));
-		}
+
 		protected int id(int slot) {
-			return slot <= 0 ? 1 : slot > 15 ? 15 : slot;
-		}
-		public String getDisplay() {
-			return board.getDisplayName();
+			return slot <= 0 ? 1 : slot >= 15 ? 15 : slot;
 		}
 
-		public DisplayBoard build() {
-			board = score.registerNewObjective(cutText(title, REGISTER_LIMIT),
-					"Displayboard");
-			board.setDisplaySlot(DisplaySlot.SIDEBAR);
-			setDisplay(title);
-			health = score.registerNewObjective("HealthBar", Criterias.HEALTH);
-			health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-			setHealthBar(Chat.getRedHeart());
-			return this;
+		public String getDisplay() {
+			return objective.getDisplayName();
 		}
+
 		public void setHealthBar(String health) {
 			this.health.setDisplayName(health);
 			this.healthBar = health;
 		}
+
 		public String getHealthBar() {
 			return this.healthBar;
 		}
@@ -4961,30 +6008,77 @@ public final class Mine {
 		}
 
 		public Scoreboard getScore() {
-			return score;
+			return scoreboard;
 		}
 
 		public Objective getBoard() {
-			return board;
+			return objective;
 		}
 
 		public Objective getHealth() {
 			return health;
 		}
+
 		@Override
 		public Object restore(Map<String, Object> map) {
 			update();
 			return null;
 		}
+
 		@Override
 		public void onCopy() {
-			init().build();
+			init();
 
 		}
+
 		@Override
 		public void store(Map<String, Object> map, Object object) {
 			// TODO Auto-generated method stub
 
+		}
+
+		public boolean isPerfect() {
+			return perfect;
+		}
+
+		public void setPerfect(boolean perfect) {
+			this.perfect = perfect;
+		}
+
+		public Objective getObjective() {
+			return objective;
+		}
+
+		public void setObjective(Objective objective) {
+			this.objective = objective;
+		}
+
+		public Map<Integer, OfflinePlayer> getFakes() {
+			return fakes;
+		}
+
+		public void setFakes(Map<Integer, OfflinePlayer> fakes) {
+			this.fakes = fakes;
+		}
+
+		public Map<Integer, Team> getTeams() {
+			return teams;
+		}
+
+		public void setTeams(Map<Integer, Team> teams) {
+			this.teams = teams;
+		}
+
+		public Map<Integer, String> getTexts() {
+			return texts;
+		}
+
+		public void setTexts(Map<Integer, String> texts) {
+			this.texts = texts;
+		}
+
+		public void setHealth(Objective health) {
+			this.health = health;
 		}
 
 	}
@@ -4992,62 +6086,60 @@ public final class Mine {
 	public static boolean isTagsEnabled() {
 		return tagsEnabled;
 	}
+
+	public static Plugin getEduard() {
+		return getPlugin("EduardAPI");
+	}
+
 	public static void setTagsEnabled(boolean tagsEnabled) {
 		Mine.tagsEnabled = tagsEnabled;
 	}
+
 	public static boolean isScoresEnabled() {
 		return scoresEnabled;
 	}
+
 	public static void setScoresEnabled(boolean scoresEnabled) {
 		Mine.scoresEnabled = scoresEnabled;
 	}
+
 	public static Tag getTagDefault() {
 		return tagDefault;
 	}
+
 	public static void setTagDefault(Tag tagDefault) {
 		Mine.tagDefault = tagDefault;
 	}
+
 	public static DisplayBoard getScoreDefault() {
 		return scoreDefault;
 	}
+
 	public static void setScoreDefault(DisplayBoard scoreDefault) {
 		Mine.scoreDefault = scoreDefault;
 	}
-	public static List<String> getTagsGroups() {
-		return tagsGroups;
-	}
-	public static void setTagsGroups(List<String> tagsGroups) {
-		Mine.tagsGroups = tagsGroups;
-	}
+
 	public static Map<Player, Tag> getPlayersTags() {
 		return playersTags;
 	}
+
 	public static void setPlayersTags(Map<Player, Tag> playersTags) {
 		Mine.playersTags = playersTags;
 	}
+
 	public static Map<Player, DisplayBoard> getPlayersScores() {
 		return playersScores;
 	}
-	public static void setPlayersScores(
-			Map<Player, DisplayBoard> playersScores) {
+
+	public static void setPlayersScores(Map<Player, DisplayBoard> playersScores) {
 		Mine.playersScores = playersScores;
 	}
-	public static Player getPlayer(String name) {
-		return Bukkit.getPlayerExact(name);
-	}
-	public static World getWorld(String name) {
-		return Bukkit.getWorld(name);
-	}
-	public static void removeReplacer(String replacer) {
-		replacers.remove(replacer);
+
+	public static boolean isTagsByGroup() {
+		return tagsByGroup;
 	}
 
-	public static void send(Player p, String message) {
-		p.sendMessage(getReplacers(message, p));
-
-	}
-	public static void sendAll(Player p, String message) {
-		broadcast(getReplacers(message, p));
-
+	public static void setTagsByGroup(boolean tagsByGroup) {
+		Mine.tagsByGroup = tagsByGroup;
 	}
 }

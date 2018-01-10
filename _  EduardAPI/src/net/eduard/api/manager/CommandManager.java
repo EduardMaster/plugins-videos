@@ -17,44 +17,38 @@ import net.eduard.api.API;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.EventsManager;
 
-public class CommandManager extends EventsManager
-		implements
-			TabCompleter,
-			CommandExecutor {
-	
+public class CommandManager extends EventsManager implements TabCompleter, CommandExecutor {
+
 	private static Map<String, CommandManager> commandsRegistred = new HashMap<>();
-	
+
 	private transient PluginCommand command;
 
 	private Map<String, CommandManager> commands = new HashMap<>();
 
-	private String permission = getCommandName() + ".use";
+	private String permission;
 
-	private String name = getCommandName();
-
+	protected String name;
+ 
 	private String usage;
 
 	private List<String> aliases = new ArrayList<>();
 
-	private String permissionMessage = API.NO_PERMISSION;
+	private String permissionMessage;
 
-	private String description = "Exemplo de descricao";
-	
+	private String description;
+
 	public void sendPermissionMessage(CommandSender sender) {
 		sender.sendMessage(permissionMessage);
 	}
 
 	public String getCommandName() {
 
-		return getClass().getSimpleName().toLowerCase().replace("sub", "")
-				.replace("subcommand", "").replace("comando", "")
-				.replace("command", "").replace("cmd", "")
-				.replace("eduard", "");
+		return getClass().getSimpleName().toLowerCase().replace("sub", "").replace("subcommand", "")
+				.replace("comando", "").replace("command", "").replace("cmd", "").replace("eduard", "");
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command,
-			String label, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		return null;
 	}
 
@@ -62,6 +56,7 @@ public class CommandManager extends EventsManager
 		Mine.broadcast(message, permission);
 
 	}
+
 	public static CommandManager getCommand(String name) {
 		return commandsRegistred.get(name.toLowerCase());
 	}
@@ -69,89 +64,112 @@ public class CommandManager extends EventsManager
 	public CommandManager() {
 		this("");
 	}
+
 	public CommandManager(String name) {
 		this.name = name;
 		if (name.equals("")) {
 			this.name = getCommandName();
 		}
-		preRegister();
-		
-	}
-	public void preRegister() {
-		command = Bukkit.getPluginCommand(name);
-		if (command == null) {
-			return;
-		}
-		setCommand(command);
-		setPlugin(command.getPlugin());
-		if (command.getPermission() == null) {
-			permission = getPlugin().getName() + "." + name;
-		} else if (command.getPermission().isEmpty()) {
-			permission = getPlugin().getName() + "." + name;
-		} else
-			permission = command.getPermission();
-		description = "§a" + command.getDescription();
-
-		if (!command.getUsage().isEmpty()) {
-			usage = API.USAGE + command.getUsage().replace("<command>", name);
-		} else {
-			usage = API.USAGE + "/" + name + " help";
-
-		}
-		aliases = command.getAliases();
-		update();
 	}
 
 	public CommandManager(String name, String... aliases) {
 		this(name);
 		this.aliases = Arrays.asList(aliases);
 	}
+
 	public void sendUsage(CommandSender sender) {
-		sender.sendMessage( getUsage());
+		sender.sendMessage(getUsage());
 	}
+
 	public void sendDescription(CommandSender sender) {
 		sender.sendMessage(getDescription());
 	}
-	
+
 	public boolean register(CommandManager sub) {
-		if (commands.containsKey(sub.name)) {
-			return false;
-		}
-		if (command == null) {
-			return false;
-		}
 		commands.put(sub.name, sub);
-		sub.command = command;
-		sub.permission = permission + "." + sub.name;
-		if (sub.usage == null)
-			sub.usage = API.USAGE + "/" + name + " " + sub.name;
-		// sub.a
-		Mine.console("§bCommandAPI §fO subcomando §e" + sub.name
-				+ " §ffoi registrado no comando §a" + name
-				+ " §fpara o Plugin §b" + getPlugin().getName());
-		commandsRegistred.put(name.toLowerCase(), this);
 		return true;
 	}
-	public void update() {
-		command.setUsage(usage);
-		command.setDescription(description);
-		command.setPermission(permission);
+
+
+	public void updateSubs() {
+		for (CommandManager sub : commands.values()) {
+			sub.command = command;
+			if (sub.permission == null)
+			sub.permission = permission + "." + sub.name;
+			if (sub.description == null) {
+				sub.description = "§fExemplo";
+			}
+			
+			
+			if (permissionMessage == null) {
+				permissionMessage = API.NO_PERMISSION;
+			}
+			
+			if (sub.usage == null) {
+				sub.usage = API.USAGE + "/" + name + " "+sub.name;
+				
+			}
+			if (sub.usage == null)
+				sub.usage = API.USAGE + "/" + name + " " + sub.name;
+			Mine.console("§bCommandAPI §fO subcomando §e" + sub.name + " §ffoi registrado no comando §a" + name);
+			if (!sub.commands.isEmpty())
+				sub.updateSubs();
+		}
 	}
 
 	public boolean register() {
+		command = Bukkit.getPluginCommand(name);
 		if (command == null) {
 			Mine.console("§bCommandAPI §fO comando §a" + name
 					+ " §fnao foi registrado na plugin.yml de nenhum Plugin do Servidor");
 			return false;
 		}
+		setCommand(command);
+		setPlugin(command.getPlugin());
+		if (permission == null) {
+			if (command.getPermission() == null) {
+				permission = getPlugin().getName() + "." + name;
+			} else if (command.getPermission().isEmpty()) {
+				permission = getPlugin().getName() + "." + name;
+			} else
+				permission = command.getPermission();
+		}
+		if (description == null) {
+			if (command.getDescription() == null) {
+				description = "§fExemplo";
+			}else {
+				description =	"§a" + command.getDescription();
+			}
+		}
+		if (permissionMessage == null) {
+			if (command.getPermissionMessage() == null) {
+				permissionMessage = API.NO_PERMISSION;
+			}else {
+				permissionMessage = command.getPermissionMessage();
+			}
+		}
+		if (usage == null) {
+			if (!command.getUsage().isEmpty()) {
+				usage = API.USAGE + command.getUsage().replace("<command>", name);
+			} else {
+				usage = API.USAGE + "/" + name + " help";
+			}
+		}
+	
+		aliases = command.getAliases();
+		command.setUsage(usage);
+		command.setDescription(description);
+		command.setPermission(permission);
 		command.setExecutor(this);
-		register(getPlugin());
-		Mine.console("§bCommandAPI §fO comando §a" + name
-				+ " §ffoi registrado para o Plugin §b"
+		Mine.console("§bCommandAPI §fO comando §a" + name + " §ffoi registrado para o Plugin §b"
 				+ command.getPlugin().getName());
+		commandsRegistred.put(name.toLowerCase(), this);
+		updateSubs();
+		register(getPlugin());
 		return true;
 
 	}
+
 	public boolean unregisterCommand() {
 		if (hasCommand()) {
 			API.removeCommand(name);
@@ -160,13 +178,13 @@ public class CommandManager extends EventsManager
 		}
 		return false;
 	}
+
 	public boolean hasCommand() {
 		return command != null;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command,
-			String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			return false;
 		}
@@ -175,7 +193,7 @@ public class CommandManager extends EventsManager
 		while (true) {
 			if (args.length == id) {
 				if (sender.hasPermission(cmd.getPermission())) {
-					return cmd.onCommand(sender, command, label, args);	
+					return cmd.onCommand(sender, command, label, args);
 				}
 				sendPermissionMessage(sender);
 				return true;
@@ -188,7 +206,7 @@ public class CommandManager extends EventsManager
 					break;
 				}
 				if (sub.getAliases().contains(arg.toLowerCase())) {
-					newCmd = sub;	
+					newCmd = sub;
 					break;
 				}
 			}
@@ -197,7 +215,7 @@ public class CommandManager extends EventsManager
 					return false;
 				}
 				if (sender.hasPermission(cmd.getPermission())) {
-					return cmd.onCommand(sender, command, label, args);	
+					return cmd.onCommand(sender, command, label, args);
 				}
 				sendPermissionMessage(sender);
 				return true;
@@ -209,11 +227,11 @@ public class CommandManager extends EventsManager
 		}
 
 	}
-	
 
 	public PluginCommand getCommand() {
 		return command;
 	}
+
 	protected void setCommand(PluginCommand command) {
 		this.command = command;
 	}
@@ -291,10 +309,7 @@ public class CommandManager extends EventsManager
 	@Override
 	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-
-	
 
 }

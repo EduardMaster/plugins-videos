@@ -24,7 +24,9 @@ import net.eduard.api.setup.Mine.SimpleClick;
 import net.eduard.api.setup.Mine.SimpleGui;
 import net.eduard.api.setup.VaultAPI;
 
+
 public class KitManager extends EventsManager {
+	
 	private transient Map<Player, Ability> playersKits = new HashMap<>();
 	private transient Map<Player, SimpleGui> kitsGuis = new HashMap<>();
 	private transient Map<Player, SimpleGui> shopsGuis = new HashMap<>();

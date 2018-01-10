@@ -6,14 +6,17 @@ import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.config.ConfigSection;
+import net.eduard.api.setup.Mine.Item;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 public class Kit implements Storable{
 	
 	private String name;
 	private long cooldown;
+	private double price;
 	private ItemStack icon;
 	private ArrayList<ItemStack> items = new ArrayList<>();
+	private ArrayList<Item> simpleItems = new ArrayList<>();
 	private ItemStack helmet;
 	private ItemStack chestplate;
 	private ItemStack boots;
@@ -95,6 +98,18 @@ public class Kit implements Storable{
 	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
 		
+	}
+	public ArrayList<Item> getSimpleItems() {
+		return simpleItems;
+	}
+	public void setSimpleItems(ArrayList<Item> simpleItems) {
+		this.simpleItems = simpleItems;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	
 }

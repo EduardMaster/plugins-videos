@@ -1,9 +1,9 @@
 package net.eduard.api.internet.hologram;
 
-import org.bukkit.Bukkit;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import org.bukkit.Bukkit;
 
 public abstract class Reflection {
 

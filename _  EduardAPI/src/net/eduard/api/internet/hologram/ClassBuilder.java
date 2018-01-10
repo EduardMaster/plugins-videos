@@ -1,12 +1,12 @@
 package net.eduard.api.internet.hologram;
 
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 
 public abstract class ClassBuilder {
  

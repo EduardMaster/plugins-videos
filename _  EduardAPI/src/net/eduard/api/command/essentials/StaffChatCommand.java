@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CommandManager;
-import net.eduard.api.server.chat.ChatAPI;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.Chat;
 
 public class StaffChatCommand extends CommandManager {
 	public StaffChatCommand() {
@@ -31,7 +31,7 @@ public class StaffChatCommand extends CommandManager {
 
 				builder.append(Mine.toChatMessage(arg));
 			}
-			Mine.broadcast(staffTag + p.getDisplayName() + ChatAPI.getArrowRight()
+			Mine.broadcast(staffTag + p.getDisplayName() + Chat.getArrowRight()
 					+ " " + builder.toString(), getCommand().getPermission());
 		}
 		return true;

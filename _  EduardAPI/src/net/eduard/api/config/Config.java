@@ -27,18 +27,21 @@ import net.eduard.api.setup.StorageAPI.Storable;
  *
  */
 public class Config implements Storable {
+	private boolean saveAsUTF8 = false;
 
 	public static void saveConfigs() {
 		for (Config config : CONFIGS) {
 			config.saveConfig();
 		}
 	}
+
 	public static void reloadConfigs() {
 		for (Config config : CONFIGS) {
 			config.reloadConfig();
 		}
 
 	}
+
 	public static void saveConfigs(Plugin plugin) {
 		for (Config config : CONFIGS) {
 			if (config.getPlugin().equals(plugin)) {
@@ -47,6 +50,7 @@ public class Config implements Storable {
 
 		}
 	}
+
 	public static void reloadConfigs(Plugin plugin) {
 		for (Config config : CONFIGS) {
 			if (config.getPlugin().equals(plugin)) {
@@ -64,14 +68,16 @@ public class Config implements Storable {
 	private String name;
 	private boolean autoSave;
 
-	List<String> lines;
+	transient List<String> lines;
 
 	public Config() {
 		this("config.yml");
 	}
+
 	public Config(String name) {
 		this(API.getAPI(), name);
 	}
+
 	public Config(Plugin plugin) {
 		this(plugin, "config.yml");
 	}
@@ -80,8 +86,10 @@ public class Config implements Storable {
 		this.name = name;
 		this.plugin = plugin;
 		init();
+		
 
 	}
+
 	public void init() {
 		boolean contains = false;
 		for (Config config : CONFIGS) {
@@ -94,6 +102,7 @@ public class Config implements Storable {
 			}
 		}
 		if (!contains) {
+//			System.out.println("avancar");
 			file = new File(plugin.getDataFolder(), name);
 			root = new ConfigSection("", "{}");
 			lines = new ArrayList<>();
@@ -101,24 +110,38 @@ public class Config implements Storable {
 			root.lineSpaces = 1;
 			this.root.father = root;
 			reloadConfig();
+		}else {
+//			System.out.println("voltar");
 		}
 	}
+
 	public List<Integer> getIntList(String path) {
 		return root.getIntList(path);
 	}
+
 	public void saveDefaultConfig() {
+
 		if (!file.exists()) {
-			try {
-				InputStream is = Mine
-						.getResource(plugin.getClass().getClassLoader(), name);
+			Mine.console("§bConfigAPI §a<- DEFAULT " + file.getName());
+			if (saveAsUTF8) {
+				try {
+					InputStream is = Mine.getResource(plugin.getClass().getClassLoader(), name);
 					Mine.copyAsUTF8(is, file);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				//			} else {
+//				plugin.saveResource(name, true);
+			}else {
+				if (plugin.getResource(name)!=null) {
+					plugin.saveResource(name, true);
+				}
 			}
 
 		}
 	}
+
 	public void saveConfig() {
 		lines.clear();
 		root.save(this, -1);
@@ -131,6 +154,7 @@ public class Config implements Storable {
 			ex.printStackTrace();
 		}
 	}
+
 	public void reloadConfig() {
 		try {
 			file.getParentFile().mkdirs();
@@ -365,18 +389,21 @@ public class Config implements Storable {
 	public void setAutoSave(boolean autoSave) {
 		this.autoSave = autoSave;
 	}
+
 	public void setIndent(int amount) {
 		root.setIndent(amount);
 	}
+
 	@Override
 	public Object restore(Map<String, Object> map) {
-		plugin = Bukkit.getPluginManager().getPlugin(Mine.toString(map.get("plugin")));
+		plugin = Bukkit.getPluginManager().getPlugin(Mine.toString(map.get("folder")));
 		init();
 		return null;
 	}
+
 	@Override
 	public void store(Map<String, Object> map, Object object) {
-		map.put("plugin", plugin.getName());
+		map.put("folder", plugin.getName());
 	}
 
 }

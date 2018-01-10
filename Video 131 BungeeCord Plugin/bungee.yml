@@ -1,0 +1,4 @@
+name: BungeeTutorial
+version: 1.0
+main: me.eduard.bungeecord.Main
+description: Este e um plugin tutorial

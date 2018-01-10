@@ -1,7 +1,7 @@
 name: EduardAPI
 description: A melhor API ja criada pelo Eduard
 main: net.eduard.api.EduardAPI
-version: 1.0
+version: 1.0.1
 authors: [Eduard]
 soft-depend: [Essentials,Vault,McMMO]
 website: https://www.youtube.com/user/EduTutoriaisHD
@@ -18,10 +18,10 @@ commands:
     description: Controle de Permissoes
     aliases: [perm,permissao,grupo,group]
     usage: /<command> help
-  economy: 
-    description: Controle de Economia
-    aliases: [dinheiro,eco,money]
-    usage: /<command> help
+#  economy: 
+#    description: Controle de Economia
+#    aliases: [dinheiro,eco,money]
+#    usage: /<command> help
   goto:
     description: Teleportar para um Mundo
     aliases: [world,go,ir,irpara,mundo]

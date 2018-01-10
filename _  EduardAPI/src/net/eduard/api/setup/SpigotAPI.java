@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+
 /**
  * API para utilização de metodos do Spigot com mais facilidade
  * 
@@ -17,22 +18,22 @@ import net.md_5.bungee.api.chat.TextComponent;
  *
  */
 public final class SpigotAPI {
-	public static void sendMessage(Player player, String message,
-			String hoverMessage, String clickCommand) {
+	public static void sendMessage(Player player, String message, String hoverMessage, String clickCommand) {
 		sendMessage(Arrays.asList(player), message, hoverMessage, clickCommand);
 	}
-	public static void sendMessage(Collection<Player> players, String message,
-			String hoverMessage, String clickCommand) {
-		sendMessage(players, message, Arrays.asList(hoverMessage),
-				clickCommand);
+
+	public static void sendMessage(Collection<Player> players, String message, String hoverMessage,
+			String clickCommand) {
+		sendMessage(players, message, Arrays.asList(hoverMessage), clickCommand);
 	}
-	public static void sendMessage(Collection<Player> players, String message,
-			List<String> hoverMessages, String clickCommand) {
+
+	public static void sendMessage(Collection<Player> players, String message, List<String> hoverMessages,
+			String clickCommand) {
 		sendMessage(players, message, hoverMessages, clickCommand, true);
 	}
-	public static void sendMessage(Collection<Player> players, String message,
-			List<String> hoverMessages, String clickCommand,
-			boolean runCommand) {
+
+	public static void sendMessage(Collection<Player> players, String message, List<String> hoverMessages,
+			String clickCommand, boolean runCommand) {
 
 		String lastColor = "";
 		String msg = message;
@@ -40,11 +41,9 @@ public final class SpigotAPI {
 		for (String line : hoverMessages) {
 			builder.append(line + "\n");
 		}
-		HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				builder.create());
-		ClickEvent clickEvent = new ClickEvent(runCommand
-				? ClickEvent.Action.RUN_COMMAND
-				: ClickEvent.Action.SUGGEST_COMMAND, clickCommand);
+		HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create());
+		ClickEvent clickEvent = new ClickEvent(
+				runCommand ? ClickEvent.Action.RUN_COMMAND : ClickEvent.Action.SUGGEST_COMMAND, clickCommand);
 		boolean stop = false;
 		while (!stop) {
 			String send = "";
@@ -67,6 +66,7 @@ public final class SpigotAPI {
 		}
 
 	}
+
 	public static String getLastColor(String text) {
 		char[] array = text.toLowerCase().toCharArray();
 		String lastColor = "";

@@ -9,6 +9,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -19,9 +20,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -53,228 +56,34 @@ import net.eduard.api.game.Drop;
 import net.eduard.api.kits.Achilles;
 import net.eduard.api.manager.CommandManager;
 import net.eduard.api.minigame.Game;
-import net.eduard.api.minigame.Schematic;
-import net.eduard.api.server.chat.ChatAPI;
-import net.eduard.api.server.chat.ChatAPI.ChatChannel;
-import net.eduard.api.setup.BungeeAPI;
+import net.eduard.api.setup.BukkitAPI;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.Replacer;
 import net.eduard.api.setup.Mine.TimeManager;
+import net.eduard.api.setup.ServerAPI.BukkitControl;
 import net.eduard.api.setup.StorageAPI;
 import net.eduard.api.setup.VaultAPI;
+import net.eduard.api.tutorial.nivel_5.UsarStorage;
+import net.eduard.api.util.SimpleChatAPI;
+import net.eduard.api.util.SimpleChatAPI.ChatChannel;
+
 /**
- * @author Eduard-PC
- *
+ * Classe Principal do Plugin EduardAPI herda todas propriedades de um
+ * JavaPlugin e também implementa Listener para alterar eventos.
+ * 
+ * @author Eduard
+ * @version 1.0
+ * @since 1.0
  */
 public class EduardAPI extends JavaPlugin implements Listener {
-	public static void simpleClans() {
-//		ExtraAPI.addReplacer("$clan_label", new Replacer() {
-//
-//			@Override
-//			public Object getText(Player p) {
-//
-//				ClanPlayer clan = SimpleClans.getInstance().getClanManager()
-//						.getClanPlayer(p);
-//				if (clan == null) {
-//					return "";
-//				}
-//				if (clan.getClan() == null) {
-//					return "";
-//				}
-//
-//				return clan.getClan().getTagLabel();
-//			}
-//		});
-//		ExtraAPI.addReplacer("$clan_name", new Replacer() {
-//
-//			@Override
-//			public Object getText(Player p) {
-//
-//				ClanPlayer clan = SimpleClans.getInstance().getClanManager()
-//						.getClanPlayer(p);
-//				if (clan == null) {
-//					return "";
-//				}
-//				if (clan.getClan() == null) {
-//					return "";
-//				}
-//
-//				return clan.getClan().getName();
-//			}
-//		});
-//		ExtraAPI.addReplacer("$clan_tag", new Replacer() {
-//
-//			@Override
-//			public Object getText(Player p) {
-//
-//				ClanPlayer clan = SimpleClans.getInstance().getClanManager()
-//						.getClanPlayer(p);
-//				if (clan == null) {
-//					return "";
-//				}
-//				if (clan.getClan() == null) {
-//					return "";
-//				}
-//
-//				return  clan.getClan().getTag();
-//			}
-//		});
-//		ExtraAPI.addReplacer("$clan_color", new Replacer() {
-//
-//			@Override
-//			public Object getText(Player p) {
-//
-//				ClanPlayer clan = SimpleClans.getInstance().getClanManager()
-//						.getClanPlayer(p);
-//				if (clan == null) {
-//					return "";
-//				}
-//				if (clan.getClan() == null) {
-//					return "";
-//				}
-//
-//				return  clan.getClan().getColorTag();
-//			}
-//		});
-//		ExtraAPI.addReplacer("$clan_name", new Replacer() {
-//
-//			@Override
-//			public Object getText(Player p) {
-//
-//				ClanPlayer clan = SimpleClans.getInstance().getClanManager()
-//						.getClanPlayer(p);
-//				if (clan == null) {
-//					return "";
-//				}
-//				if (clan.getClan() == null) {
-//					return "";
-//				}
-//
-//				return  clan.getClan().getName();
-//			}
-//		});
-	}
-	public static void hardFacs() {
-//		if (API.hasPlugin("HardFacs")) {
-//			ExtraAPI.addReplacer("$fac_money", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//					DecimalFormat decimal = new DecimalFormat("#,##0.00");
-//					return decimal.format(FPlayers.i.get(p).getFaction().money);
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_p_chat", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//					return FPlayers.i.get(p).getChatTag();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_zone", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//					FPlayer player = FPlayers.i.get(p);
-//					Faction zone = Board.getFactionAt(player.getLastStoodAt());
-//
-//					return zone.getColorTo(player) + zone.getTag();
-//					// return Board.getTerritoryAccessAt(new FLocation(fp)).
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_p_power", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getPowerRounded();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_p_maxpower", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getPowerMaxRounded();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_power", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction().getPowerRounded();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_maxpower", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction().getPowerMaxRounded();
-//				}
-//			});
-//
-//			ExtraAPI.addReplacer("$fac_tag", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//					Faction f = FPlayers.i.get(p).getFaction();
-//					if (f != null & !f.getComparisonTag().equals("ZonaLivre"))
-//						return f.getTag();
-//					return "§7Sem Facção";
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_comptag", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction().getComparisonTag();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_desc", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//					Faction f = FPlayers.i.get(p).getFaction();
-//					if (f != null)
-//						return f.getDescription();
-//					return "";
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_online", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction()
-//							.getFPlayersWhereOnline(true).size();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_players", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction().getFPlayers().size();
-//				}
-//			});
-//			ExtraAPI.addReplacer("$fac_claims", new Replacer() {
-//
-//				@Override
-//				public Object getText(Player p) {
-//
-//					return FPlayers.i.get(p).getFaction().getClaims().size();
-//				}
-//			});
-	}
+
 	private static JavaPlugin plugin;
 	private TimeManager time;
 
 	private Config messages;
 
 	private Config config;
+
 	public static JavaPlugin getInstance() {
 		return plugin;
 	}
@@ -282,9 +91,11 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public boolean getBoolean(String path) {
 		return config.getBoolean(path);
 	}
+
 	public String message(String path) {
 		return messages.message(path);
 	}
+
 	public List<String> getMessages(String path) {
 		return messages.getMessages(path);
 	}
@@ -292,29 +103,29 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public TimeManager getTime() {
 		return time;
 	}
+
 	public Config getMessages() {
 		return messages;
 	}
+
 	public Config getConfigs() {
 		return config;
 	}
-	// @EventHandler
-	// public void event(PlayerTargetEvent e) {
-	// Player p = e.getPlayer();
-	// LivingEntity target = e.getEntity();
-	// if (target != null)
-	// Mine.sendActionBar(p, "§c" + target.getName());
-	// }
+
+	public void onLoad() {
+	}
+
 	@Override
 	public void onEnable() {
 		plugin = this;
-		StorageAPI.init();
+//		UsarStorage.register(this);
+		Mine.registerDefaults();
+		BukkitAPI.register(this);
 		config = new Config(this, "config.yml");
 		messages = new Config(this, "messages.yml");
 		time = new TimeManager(this);
 		StorageAPI.registerPackage(ClickComparationType.class);
 		StorageAPI.registerPackage(AntiHackCommand.class);
-		StorageAPI.registerPackage(ApiCommand.class);
 		StorageAPI.registerPackage(ApiCommand.class);
 		StorageAPI.registerPackage(EconomyCommand.class);
 		StorageAPI.registerPackage(ConfigCommand.class);
@@ -326,12 +137,10 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		StorageAPI.registerPackage(Ability.class);
 		StorageAPI.registerPackage(CommandManager.class);
 		StorageAPI.registerPackage(Game.class);
-		StorageAPI.registerClasses(ChatAPI.class);
+		StorageAPI.registerClasses(SimpleChatAPI.class);
 		StorageAPI.registerClasses(Mine.class);
-		StorageAPI.register(Schematic.class);
-		BungeeAPI.register(this);
 		Mine.resetScoreboards();
-		Mine.console("§bEduardAPI §fScoreboard resetadas!");
+		Mine.console("§bEduardAPI §fScoreboards resetadas!");
 		replacers();
 		time.timer(20, new Runnable() {
 
@@ -340,7 +149,6 @@ public class EduardAPI extends JavaPlugin implements Listener {
 				API.updateTargets();
 			}
 		});
-		Mine.register(this);
 		new GotoCommand().register();
 		new ApiCommand().register();
 		new SoundCommand().register();
@@ -351,28 +159,24 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		new AntiHackCommand().register();
 		new LagCommand().register();
 
-		Mine.console("§bEduardAPI §fCustom Tag e Score ativado!");
+		Mine.console("§bEduardAPI §fCustom Tag e Scoreboard ativado!");
 		saveObjects();
 		Mine.console("§bEduardAPI §fDataBase §agerada!");
 		new Drop().register(this);
 		Mine.console("§bEduardAPI §fCustom drops ativado!");
 		Mine.event(this, this);
 		Mine.console("§bEduardAPI §fBase ativado!");
-		API.loadMaps();
 		Mine.console("§bEduardAPI §fMapas §acarregados!");
-		ChatAPI.setEnabled(config.getBoolean("custom-chat"));
-		if (ChatAPI.isEnabled())
-			ChatAPI.enable(this);
+		SimpleChatAPI.setEnabled(config.getBoolean("custom-chat"));
+		if (SimpleChatAPI.isEnabled())
+			SimpleChatAPI.enable(this);
 		config.add("chat-default", "local");
 
 		config.add("sound-teleport", API.SOUND_TELEPORT);
 		config.add("sound-error", API.SOUND_ERROR);
 		config.add("sound-success", API.SOUND_SUCCESS);
-		ChatChannel local = new ChatChannel("local",
-				"$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "",
-				"l");
-		ChatChannel global = new ChatChannel("global",
-				"$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "",
+		ChatChannel local = new ChatChannel("local", "$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "", "l");
+		ChatChannel global = new ChatChannel("global", "$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "",
 				"g");
 		config.add("chats.local", local);
 		config.add("chats.global", global);
@@ -387,34 +191,36 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		API.SOUND_TELEPORT = config.getSound("sound-teleport");
 		API.SOUND_ERROR = config.getSound("sound-error");
 		API.SOUND_SUCCESS = config.getSound("sound-success");
-		Mine.setTagsEnabled(config.getBoolean("auto-tag"));
-		Mine.setTagsGroups(config.getStringList("tags-rank"));
 		Mine.register(this);
+		// Mine.setTagsEnabled(true);
 		for (ConfigSection sec : config.getValues("chats")) {
 			ChatChannel chat = (ChatChannel) sec.getValue();
-			ChatAPI.getChannels().put(chat.getName(), chat);
+			SimpleChatAPI.getChannels().put(chat.getName(), chat);
 		}
-		ChatAPI.setChatDefault(ChatAPI.getChannels()
-				.getOrDefault(config.getString("chat-default"), local));
+		SimpleChatAPI.setChatDefault(SimpleChatAPI.getChannels().getOrDefault(config.getString("chat-default"), local));
 		if (config.getBoolean("auto-rejoin")) {
 			for (Player p : API.getPlayers()) {
 				Mine.callEvent(new PlayerJoinEvent(p, null));
 			}
 		}
-
+		BukkitControl.register(this);
 		Mine.console("§bEduardAPI §acarregado!");
+
 	}
+
 	@Override
 	public void onDisable() {
-		API.saveMaps();
+		// API.saveMaps();
+		UsarStorage.save();
 		Mine.console("§bEduardAPI §aMapas salvados!");
 		Mine.console("§bEduardAPI §cdesativado!");
 	}
+
 	@EventHandler
 	public void onEnable(PluginEnableEvent e) {
 		if (e.getPlugin() instanceof EduardPlugin) {
-			Mine.broadcast("§aEduard Developer: §b" + e.getPlugin().getName()
-					+ " §fv" + e.getPlugin().getDescription().getVersion());
+			Mine.broadcast("§aEduard Developer: §b" + e.getPlugin().getName() + " §fv"
+					+ e.getPlugin().getDescription().getVersion());
 
 		}
 		for (Config config : Config.CONFIGS) {
@@ -423,6 +229,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			}
 		}
 	}
+
 	@EventHandler
 	public void onDisable(PluginDisableEvent e) {
 		for (Config config : Config.CONFIGS) {
@@ -477,6 +284,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		}
 
 	}
+
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
@@ -504,13 +312,32 @@ public class EduardAPI extends JavaPlugin implements Listener {
 
 	}
 
+	@EventHandler
+	public void onClick(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		if (p.getGameMode() == GameMode.CREATIVE) {
+			if (e.getItem() == null)
+				return;
+			if (e.getItem().getType() == Material.WOOD_AXE) {
+				if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+					API.POSITION1.put(p, e.getClickedBlock().getLocation());
+					p.sendMessage("§bEduardAPI §6Posição 1 setada!");
+				} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					API.POSITION2.put(p, e.getClickedBlock().getLocation());
+					p.sendMessage("§bEduardAPI §6Posição 2 setada!");
+				}
+
+			}
+		}
+	}
+
 	public static void saveEnum(Class<?> value) {
 		saveEnum(value, false);
 	}
+
 	public static void saveClassLikeEnum(Class<?> value) {
 		try {
-			Config config = new Config(
-					"DataBase/" + value.getSimpleName() + ".yml");
+			Config config = new Config("DataBase/" + value.getSimpleName() + ".yml");
 			for (Field field : value.getFields()) {
 				if (field.getType().equals(value)) {
 					Object obj = field.get(value);
@@ -518,9 +345,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 					for (Method method : obj.getClass().getDeclaredMethods()) {
 						String name = method.getName();
 						if ((method.getParameterCount() == 0)
-								&& name.startsWith("get")
-										| name.startsWith("is")
-										| name.startsWith("can")) {
+								&& name.startsWith("get") | name.startsWith("is") | name.startsWith("can")) {
 							method.setAccessible(true);
 							Object test = method.invoke(obj);
 							if (test instanceof Class)
@@ -535,14 +360,15 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			ex.printStackTrace();
 		}
 	}
+
 	public static void saveObject(String local, Object value) {
 		try {
 			Config config = new Config("DataBase/" + local + ".yml");
 			ConfigSection section = config.getConfig();
 			for (Method method : value.getClass().getDeclaredMethods()) {
 				String name = method.getName();
-				if ((method.getParameterCount() == 0) && name.startsWith("get")
-						| name.startsWith("is") | name.startsWith("can")) {
+				if ((method.getParameterCount() == 0)
+						&& name.startsWith("get") | name.startsWith("is") | name.startsWith("can")) {
 					method.setAccessible(true);
 					Object test = method.invoke(value);
 					if (test == null)
@@ -557,6 +383,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			ex.printStackTrace();
 		}
 	}
+
 	public static void saveEnum(Class<?> value, boolean perConfig) {
 		try {
 			if (perConfig) {
@@ -565,18 +392,13 @@ public class EduardAPI extends JavaPlugin implements Listener {
 
 					try {
 						Enum<?> obj = (Enum<?>) part;
-						Config config = new Config(
-								"DataBase/" + value.getSimpleName() + "/"
-										+ obj.name() + ".yml");
+						Config config = new Config("DataBase/" + value.getSimpleName() + "/" + obj.name() + ".yml");
 						ConfigSection section = config.getConfig();
 						section.set("number", obj.ordinal());
-						for (Method method : obj.getClass()
-								.getDeclaredMethods()) {
+						for (Method method : obj.getClass().getDeclaredMethods()) {
 							String name = method.getName();
 							if ((method.getParameterCount() == 0)
-									&& name.startsWith("get")
-											| name.startsWith("is")
-											| name.startsWith("can")) {
+									&& name.startsWith("get") | name.startsWith("is") | name.startsWith("can")) {
 								method.setAccessible(true);
 								Object test = method.invoke(obj);
 								if (test instanceof Class)
@@ -592,22 +414,17 @@ public class EduardAPI extends JavaPlugin implements Listener {
 				}
 
 			} else {
-				Config config = new Config(
-						"DataBase/" + value.getSimpleName() + ".yml");
+				Config config = new Config("DataBase/" + value.getSimpleName() + ".yml");
 				boolean used = false;
 				for (Object part : value.getEnumConstants()) {
 					try {
 						Enum<?> obj = (Enum<?>) part;
-						ConfigSection section = config.add(obj.name(),
-								obj.ordinal());
+						ConfigSection section = config.add(obj.name(), obj.ordinal());
 
-						for (Method method : obj.getClass()
-								.getDeclaredMethods()) {
+						for (Method method : obj.getClass().getDeclaredMethods()) {
 							String name = method.getName();
 							if ((method.getParameterCount() == 0)
-									&& name.startsWith("get")
-											| name.startsWith("is")
-											| name.startsWith("can")) {
+									&& name.startsWith("get") | name.startsWith("is") | name.startsWith("can")) {
 								try {
 									method.setAccessible(true);
 									Object test = method.invoke(obj);
@@ -618,8 +435,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 									section.add(method.getName(), test);
 									used = true;
 								} catch (Exception ex) {
-									Mine.console("§bDataBase §fO metodo §c"
-											+ name + "§f causou erro!");
+									Mine.console("§bDataBase §fO metodo §c" + name + "§f causou erro!");
 									ex.printStackTrace();
 									continue;
 								}
@@ -641,6 +457,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			ex.printStackTrace();
 		}
 	}
+
 	private void replacers() {
 		if (Mine.hasPlugin("Vault")) {
 			Mine.addReplacer("$player_group", new Replacer() {
@@ -654,34 +471,30 @@ public class EduardAPI extends JavaPlugin implements Listener {
 
 				@Override
 				public Object getText(Player p) {
-					return Mine.toChatMessage(
-							VaultAPI.getChat().getPlayerPrefix(p));
+					return Mine.toChatMessage(VaultAPI.getChat().getPlayerPrefix(p));
 				}
 			});
 			Mine.addReplacer("$player_suffix", new Replacer() {
 
 				@Override
 				public Object getText(Player p) {
-					return Mine.toChatMessage(Mine.toChatMessage(
-							VaultAPI.getChat().getPlayerPrefix(p)));
+					return Mine.toChatMessage(Mine.toChatMessage(VaultAPI.getChat().getPlayerPrefix(p)));
 				}
 			});
 			Mine.addReplacer("$group_prefix", new Replacer() {
 
 				@Override
 				public Object getText(Player p) {
-					return Mine.toChatMessage(VaultAPI.getChat().getGroupPrefix(
-							"null",
-							VaultAPI.getPermission().getPrimaryGroup(p)));
+					return Mine.toChatMessage(
+							VaultAPI.getChat().getGroupPrefix("null", VaultAPI.getPermission().getPrimaryGroup(p)));
 				}
 			});
 			Mine.addReplacer("$group_suffix", new Replacer() {
 
 				@Override
 				public Object getText(Player p) {
-					return Mine.toChatMessage(VaultAPI.getChat().getGroupSuffix(
-							"null",
-							VaultAPI.getPermission().getPrimaryGroup(p)));
+					return Mine.toChatMessage(
+							VaultAPI.getChat().getGroupSuffix("null", VaultAPI.getPermission().getPrimaryGroup(p)));
 				}
 			});
 			Mine.addReplacer("$player_money", new Replacer() {
@@ -691,8 +504,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 					if (VaultAPI.hasVault() && VaultAPI.hasEconomy()) {
 
 						DecimalFormat decimal = new DecimalFormat("#,##0.00");
-						return decimal
-								.format(VaultAPI.getEconomy().getBalance(p));
+						return decimal.format(VaultAPI.getEconomy().getBalance(p));
 
 					}
 					return "0.00";
@@ -856,8 +668,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		if (getConfigs().getBoolean("save-players")) {
 			for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
 				String name = player.getName();
-				saveObject("Players/" + name + " " + player.getUniqueId(),
-						player);
+				saveObject("Players/" + name + " " + player.getUniqueId(), player);
 			}
 		}
 		saveObject("Server", Bukkit.getServer());

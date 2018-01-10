@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -18,8 +17,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.eduard.api.config.Config;
@@ -27,17 +24,13 @@ import net.eduard.api.config.ConfigSection;
 import net.eduard.api.event.PlayerTargetEvent;
 import net.eduard.api.game.Sounds;
 import net.eduard.api.manager.CommandManager;
-import net.eduard.api.minigame.Schematic;
-import net.eduard.api.setup.Arena;
 import net.eduard.api.setup.Extra;
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.FakeOfflinePlayer;
 import net.eduard.api.setup.Mine.TimeManager;
-import net.eduard.api.setup.StorageAPI;
+import net.eduard.api.setup.Schematic;
 
 /**
- * API principal da EduardAPI contendo muitos codigos bons e utilitarios Boolean
- * = Teste
+ * API principal da EduardAPI contendo muitos codigos bons e utilitarios 
  * 
  * @author Eduard
  *
@@ -45,14 +38,9 @@ import net.eduard.api.setup.StorageAPI;
 @SuppressWarnings("unchecked")
 public class API {
 	/**
-	 * Mapa de Arenas dos Jogadores
-	 */
-	public static Map<Player, Arena> MAPS = new HashMap<>();
-	private final static API INSTANCE = new API();
-	/**
 	 * Mapa de Arenas registradas
 	 */
-	public static Map<String, Arena> SCHEMATICS = new HashMap<>();
+	public static Map<String, Schematic> SCHEMATICS = new HashMap<>();
 	/**
 	 * Mapa das posições 1 dos jogadores
 	 */
@@ -170,7 +158,8 @@ public class API {
 		return POSITION2.get(p) != null;
 	}
 	public static Schematic getSchematic(Player player) {
-		return new Schematic(player.getLocation(), POSITION1.get(player), POSITION2.get(player));
+//		return new Schematic(player.getLocation(), POSITION1.get(player), POSITION2.get(player));
+		return null;
 	}
 	/**
 	 * Ligando algumas coisas
@@ -377,26 +366,9 @@ public class API {
 		p.addAttachment(API.PLUGIN, permission, false);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Scoreboard applyScoreboard(Player player, String title,
 			String... lines) {
-		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective obj = board.registerNewObjective("score", "dummy");
-		obj.setDisplayName(title);
-		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		int id = 15;
-		for (String line : lines) {
-			String empty = ChatColor.values()[id - 1].toString();
-			obj.getScore(new FakeOfflinePlayer(line.isEmpty() ? empty : line))
-					.setScore(id);;
-			id--;
-			if (id == 0) {
-				break;
-			}
-		}
-
-		player.setScoreboard(board);
-		return board;
+		return Mine.applyScoreboard(player, title, lines);
 	}
 	public static Scoreboard newScoreboard(Player player, String title,
 			String... lines) {
@@ -405,38 +377,8 @@ public class API {
 
 
 	
-	public static void loadMaps() {
-		if (MAPS_CONFIG.contains("MAPS")) {
-
-			try {
-				StorageAPI.restoreField(INSTANCE,
-						MAPS_CONFIG.getSection("MAPS").toMap(),
-						Extra.getField(INSTANCE, "MAPS"));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
-	public static void saveMaps() {
-
-		try {
-			Object value = StorageAPI.storeField(INSTANCE,
-					Extra.getField(INSTANCE, "MAPS"));
-			MAPS_CONFIG.set("MAPS", value);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		MAPS_CONFIG.saveConfig();
-	}
 	public static void chat(CommandSender sender, String message) {
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			sender.sendMessage(Mine.getReplacers(message, player));	
-		}else {
-			sender.sendMessage(message);;
-		}
+		Mine.send(sender, message);
 		
 	}
 

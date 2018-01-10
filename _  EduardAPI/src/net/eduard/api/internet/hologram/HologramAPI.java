@@ -1,15 +1,15 @@
 package net.eduard.api.internet.hologram;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
-import javax.annotation.Nonnull;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public abstract class HologramAPI {
 	

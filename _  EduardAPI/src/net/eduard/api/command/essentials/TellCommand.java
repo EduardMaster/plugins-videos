@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CommandManager;
-import net.eduard.api.server.chat.ChatAPI;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.Mine.Chat;
 
 public class TellCommand extends CommandManager {
 
@@ -47,11 +47,11 @@ public class TellCommand extends CommandManager {
 				} else {
 					API.chat(sender,
 							this.message.replace("$target", target.getName())
-									.replace("$>", ChatAPI.getArrowRight())
+									.replace("$>", Chat.getArrowRight())
 									.replace("$message", message));
 					API.chat(target,
 							messageTarget.replace("$player", sender.getName())
-									.replace("$>", ChatAPI.getArrowRight())
+									.replace("$>", Chat.getArrowRight())
 									.replace("$message", message));
 				}
 			}

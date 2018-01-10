@@ -6,32 +6,89 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.game.Rank;
+import net.eduard.api.server.ranks.Rank;
 import net.eduard.api.setup.StorageAPI.Reference;
 import net.eduard.api.setup.StorageAPI.Storable;
+
 public class FactionPlayer implements Storable {
 
 	@Reference
+	private FactionManager manager;
+	@Reference
 	private Faction faction;
+	
 	private UUID id;
 	private String name;
-
-	@Reference
-	private Rank rank;
 	private int kills;
 	private int deaths;
+	private int deathsByEnemies;
+	private int deathsByNeutrals;
+	private int deathsByCivilians;
+	
+	
+	private transient Player player;
+	
+	public Rank getRank() {
+		return manager.getRank(this);
+	}
+	
+	
+	
+
+	public FactionManager getManager() {
+		return manager;
+	}
+
+
+
+
+	public void setManager(FactionManager manager) {
+		this.manager = manager;
+	}
+
+
+
+
+	public int getDeathsByEnemies() {
+		return deathsByEnemies;
+	}
+
+	public void setDeathsByEnemies(int deathsByEnemies) {
+		this.deathsByEnemies = deathsByEnemies;
+	}
+
+	public int getDeathsByNeutrals() {
+		return deathsByNeutrals;
+	}
+
+	public void setDeathsByNeutrals(int deathsByNeutrals) {
+		this.deathsByNeutrals = deathsByNeutrals;
+	}
+
+	public int getDeathsByCivilians() {
+		return deathsByCivilians;
+	}
+
+	public void setDeathsByCivilians(int deathsByCivilians) {
+		this.deathsByCivilians = deathsByCivilians;
+	}
+
 	private double power;
 	private double maxPower;
-public FactionPlayer() {
-	// TODO Auto-generated constructor stub
-}
+
+	public FactionPlayer() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
 	public FactionPlayer(Player player) {
 		this.id = player.getUniqueId();
 		this.setName(player.getName());
 	}
+
 	public double getPower() {
 		return power;
 	}
@@ -51,22 +108,28 @@ public FactionPlayer() {
 	public int getDeaths() {
 		return deaths;
 	}
+
 	public Faction getFaction() {
 		return faction;
 	}
+
 	public int getKills() {
 		return kills;
 	}
+
 	public boolean hasFaction() {
 		return this.faction != null;
 
 	}
+
 	public void setDeaths(int deaths) {
 		this.deaths = deaths;
 	}
+
 	public void setFaction(Faction faction) {
 		this.faction = faction;
 	}
+
 	public void setKills(int kills) {
 		this.kills = kills;
 	}
@@ -85,6 +148,7 @@ public FactionPlayer() {
 		return getFaction().getRel(faction);
 
 	}
+
 	public FactionRel getRel(FactionPlayer member) {
 		if (member.getFaction() == null) {
 			return FactionRel.NEUTRAL;
@@ -100,6 +164,7 @@ public FactionPlayer() {
 		}
 		return getFaction().getRel(member.getFaction());
 	}
+
 	public FactionRel getRel(FactionClaim claim) {
 		if (claim == null) {
 			return FactionRel.FREE_ZONE;
@@ -110,16 +175,10 @@ public FactionPlayer() {
 
 	}
 
-	public Rank getRank() {
-		return rank;
-	}
-
-	public void setRank(Rank rank) {
-		this.rank = rank;
-	}
-
 	public void sendMessage(String message) {
-		getPlayer().sendMessage(message);
+		Player player = getPlayer();
+		if (player != null)
+			player.sendMessage(message);
 	}
 
 	public boolean isOnline() {
@@ -127,7 +186,7 @@ public FactionPlayer() {
 	}
 
 	public Player getPlayer() {
-		return Bukkit.getPlayer(id);
+		return player == null? player = Bukkit.getPlayer(id): player;
 	}
 
 	public UUID getId() {
@@ -154,12 +213,15 @@ public FactionPlayer() {
 		}
 
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	
 
 }

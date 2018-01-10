@@ -26,6 +26,7 @@ public class TeleportCommand extends CommandManager {
 				Player p = (Player) sender;
 				if (API.existsPlayer(sender, args[0])) {
 					Player target = Mine.getPlayer(args[0]);
+					System.out.println(target == null);
 					API.chat(p,message.replace("$target",
 							target.getDisplayName()));
 					p.teleport(target);

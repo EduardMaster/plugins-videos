@@ -7,19 +7,36 @@ import net.eduard.api.setup.Mine;
 public class GamePlayer {
 
 	private Player player;
-	private GamePlayerState state;
+	private GamePlayerState state = GamePlayerState.NORMAL;
 	private GameTeam team;
 	private Game game;
+	
+	public void leaveTeam() {
+		if (hasTeam()) {
+			getTeam().leave(this);
+		}
+	}
+	
 	public GamePlayer(Player player) {
 		this.player = player;
+	}
+
+	public boolean isState(GamePlayerState state) {
+		return this.state == state;
+	}
+
+	public boolean isPlayingOn(Game game) {
+		return this.game == game && game.getPlayers().contains(this);
 	}
 
 	public GamePlayerState getState() {
 		return state;
 	}
+
 	public void send(String message) {
 		player.sendMessage(Mine.getReplacers(message, player));
 	}
+
 	public void setState(GamePlayerState state) {
 		this.state = state;
 	}
@@ -39,6 +56,7 @@ public class GamePlayer {
 	public void setGame(Game game) {
 		this.game = game;
 	}
+
 	public boolean isPlaying() {
 		return game != null;
 	}
@@ -91,5 +109,14 @@ public class GamePlayer {
 		this.setGame(game);
 
 	}
+
+	public boolean canBattle(GamePlayer player) {
+		if (hasTeam()&&player.hasTeam()) {
+			if (getTeam().equals(player.getTeam()))
+				return false;
+		}
+		return true;
+	}
+
 
 }

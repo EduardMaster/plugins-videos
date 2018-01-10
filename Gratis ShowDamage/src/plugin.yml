@@ -1,0 +1,14 @@
+name: ShowDamage
+description: Sistema de mostrar o dano causado em forma de holograma e action bar
+main: net.eduard.showdamage.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  comando:
+    aliases: [dg]
+    permission: perm.use
+    permission-message: No Permission
+    usage: /<command> [usage]
+    description: Comando Description

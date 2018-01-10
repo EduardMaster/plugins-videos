@@ -24,7 +24,8 @@ public class Particle implements Storable {
 	private float yRandom;
 
 	private float zRandom;
-
+public Particle() {
+}
 	public Particle(ParticleType type, Location location, int amount) {
 		setLocation(location);
 		setAmount(amount);
@@ -67,7 +68,7 @@ public class Particle implements Storable {
 
 	private Object getPacket() throws Exception {
 
-		return Extra.getNew(Mine.pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
+		return Extra.getNew(Mine.claz_pPlayOutWorldParticles, particle.getParticleName(), (float) location.getX(),
 				(float) location.getY(), (float) location.getZ(), xRandom, yRandom, zRandom, speed, amount);
 	}
 

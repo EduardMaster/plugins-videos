@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import net.eduard.api.setup.Schematic;
 import net.eduard.api.setup.StorageAPI.Storable;
 
 /**
@@ -26,6 +27,7 @@ public class GameMap implements Storable {
 	private int timeIntoRestart = 20;
 	private int timeIntoGameOver = 15 * 60;
 	private int timeWithoutPvP = 2 * 60;
+	private int timeOnStartTimer = 0;
 	private int timeOnRestartTimer = 40;
 	private int timeOnForceTimer = 10;
 	private int minPlayersAmount = 2;
@@ -51,7 +53,8 @@ public class GameMap implements Storable {
 	}
 	@Override
 	public Object restore(Map<String, Object> map) {
-		// TODO Auto-generated method stub
+//		System.out.println("Restaurando dados GameMap");
+//		System.out.println("Valor "+timeIntoStart);
 		return null;
 	}
 	@Override
@@ -61,9 +64,9 @@ public class GameMap implements Storable {
 	}
 	public void world(World world) {
 		this.world = world;
-		for (Schematic base : this.bases) {
-			base.world(world);
-		}
+//		for (Schematic base : this.bases) {
+//			base.world(world);
+//		}
 		for (Location spawn : this.spawns) {
 			spawn.setWorld(world);
 		}
@@ -77,7 +80,7 @@ public class GameMap implements Storable {
 			entry.getValue().setWorld(world);
 		}
 		if (hasSchematic()) {
-			this.map.world(world);
+//			this.map.world(world);
 		}
 			
 	}
@@ -213,6 +216,12 @@ public class GameMap implements Storable {
 	}
 	public boolean hasSchematic() {
 		return this.map != null;
+	}
+	public int getTimeOnStartTimer() {
+		return timeOnStartTimer;
+	}
+	public void setTimeOnStartTimer(int timeOnStartTimer) {
+		this.timeOnStartTimer = timeOnStartTimer;
 	}
 	
 	
