@@ -1,4 +1,4 @@
-package net.eduard.api.util;
+package net.eduard.api.setup;
 
 import java.io.File;
 import java.io.IOException;

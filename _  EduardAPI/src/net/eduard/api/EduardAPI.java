@@ -61,9 +61,9 @@ import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.Replacer;
 import net.eduard.api.setup.Mine.TimeManager;
 import net.eduard.api.setup.ServerAPI.BukkitControl;
+import net.eduard.api.tutorial.nivel_4.CentralizarExemplo;
 import net.eduard.api.setup.StorageAPI;
 import net.eduard.api.setup.VaultAPI;
-import net.eduard.api.tutorial.nivel_5.UsarStorage;
 import net.eduard.api.util.SimpleChatAPI;
 import net.eduard.api.util.SimpleChatAPI.ChatChannel;
 
@@ -119,6 +119,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 //		UsarStorage.register(this);
+		CentralizarExemplo.register(this);
 		Mine.registerDefaults();
 		BukkitAPI.register(this);
 		config = new Config(this, "config.yml");
@@ -211,7 +212,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable() {
 		// API.saveMaps();
-		UsarStorage.save();
+//		UsarStorage.save();
 		Mine.console("§bEduardAPI §aMapas salvados!");
 		Mine.console("§bEduardAPI §cdesativado!");
 	}

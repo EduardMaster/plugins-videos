@@ -2070,6 +2070,26 @@ public final class Mine {
 		}
 		return false;
 	}
+	/**
+	 * Envia um Title para os Jogadores
+	 * 
+
+	 * @param title
+	 *            Titulo
+	 * @param subTitle
+	 *            SubTitulo
+	 * @param fadeIn
+	 *            Tempo de Aparececimento (Ticks)
+	 * @param stay
+	 *            Tempo de Passagem (Ticks)
+	 * @param fadeOut
+	 *            Tempo de Desaparecimento (Ticks)
+	 */
+	public static void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+		for (Player player : Mine.getPlayers()) {
+			sendTitle(player, title, subTitle, fadeIn, stay, fadeOut);
+		}
+	}
 
 	/**
 	 * Envia um Title para o Jogador

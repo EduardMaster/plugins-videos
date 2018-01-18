@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
  *
  */
 public final class ChatAPI {
-
+  
 	public static ChatColor SUCCESS = ChatColor.GREEN;
 	public static ChatColor SUCCESS_ARGUMENT = ChatColor.DARK_GREEN;
 	public static ChatColor ERROR = ChatColor.RED;
@@ -63,7 +63,7 @@ public final class ChatAPI {
 		return "➁";
 	}
 
-	public static String getALlSimbols() {
+	public static String  getALlSimbols() {
 		return "❤❥✔✖✗✘❂⋆✢✣✤✥✦✩✪✫✬✭✵✴✳✲✱★✰✯✮✶✷✸✹✺✻✼❄❅✽✡☆❋❊❉❈❇❆✾✿❀❁❃✌♼♽✂➣➢⬇➟⬆⬅➡✈✄➤➥➦➧➨➚➘➙➛➶➵➴➳➲➸➞➝➜➷➹➹➺➻➼➽Ⓜ⬛⬜ℹ☕▌▄▆▜▀▛█";
 	}
 
