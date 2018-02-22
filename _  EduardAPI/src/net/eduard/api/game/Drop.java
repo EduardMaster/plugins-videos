@@ -157,7 +157,6 @@ public class Drop extends EventsManager{
 	}
 
 	public void setNormalDrops(boolean normalDrops) {
-
 		this.normalDrops = normalDrops;
 	}
 

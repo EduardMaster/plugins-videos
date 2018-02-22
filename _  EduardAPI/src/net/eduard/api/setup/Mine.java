@@ -64,8 +64,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -79,10 +77,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -99,6 +94,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -122,105 +118,7 @@ import net.eduard.api.setup.StorageAPI.Storable;
 import net.eduard.api.setup.StorageAPI.Variable;
 
 public final class Mine {
-	
-	public static ChatColor SUCCESS = ChatColor.GREEN;
-	public static ChatColor SUCCESS_ARGUMENT = ChatColor.DARK_GREEN;
-	public static ChatColor ERROR = ChatColor.RED;
-	public static ChatColor ERROR_ARGUMENT = ChatColor.DARK_RED;
-	public static ChatColor MESSAGE = ChatColor.GOLD;
-	public static ChatColor MESSAGE_ARGUMENT = ChatColor.YELLOW;
-	public static ChatColor CHAT_CLEAR = ChatColor.WHITE;
-	public static ChatColor CHAT_NORMAL = ChatColor.GRAY;
-	public static ChatColor GUI_TITLE = ChatColor.BLACK;
-	public static ChatColor GUI_TEXT = ChatColor.DARK_GRAY;
-	public static ChatColor CONFIG = ChatColor.AQUA;
-	public static ChatColor CONFIG_ARGUMENT = ChatColor.DARK_AQUA;
-	public static ChatColor ITEM_TITLE = ChatColor.LIGHT_PURPLE;
-	public static ChatColor ITEM_TEXT = ChatColor.DARK_PURPLE;
-	public static ChatColor TITLE = ChatColor.DARK_BLUE;
-	public static ChatColor TEXT = ChatColor.BLUE;
-	
 
-	public static enum Chat {
-		NORMAL("§A", "§2"), ERROR("§C", "§4"), SIMPLE("§7", "§8"), GAME("§E", "§6"), SETUP("§B", "§3"), BONUS("§9",
-				"§1"), EFFECT("§D", "§5"), EXTRA("§F", "§0");
-
-		private String dark;
-		private String light;
-
-		private Chat(String light, String dark) {
-			setLight(light);
-			setDark(dark);
-		}
-
-		public static String getHeart() {
-			return "♥";
-		}
-
-		public static String getArrow() {
-			return "➵";
-		}
-
-		public static String getArrowRight() {
-			return "››";
-		}
-
-		public static String getArrowLeft() {
-			return "‹‹";
-		}
-
-		public static String getSquared() {
-			return "❑";
-		}
-
-		public static String getInterrogation() {
-			return "➁";
-		}
-
-		public static String getRedHeart() {
-			return ChatColor.RED + getHeart();
-		}
-
-		public static String getALlSimbols() {
-			return "❤❥✔✖✗✘❂⋆✢✣✤✥✦✩✪✫✬✭✵✴✳✲✱★✰✯✮✶✷✸✹✺✻✼❄❅✽✡☆❋❊❉❈❇❆✾✿❀❁❃✌♼♽✂➣➢⬇➟⬆⬅➡✈✄➤➥➦➧➨➚➘➙➛➶➵➴➳➲➸➞➝➜➷➹➹➺➻➼➽Ⓜ⬛⬜ℹ☕▌▄▆▜▀▛█";
-		}
-
-		public static String getAllSimbols2() {
-			return "™⚑⚐☃⚠⚔⚖⚒⚙⚜⚀⚁⚂⚃⚄⚅⚊⚋⚌⚍⚏⚎☰☱☲☳☴☵☶☷⚆⚇⚈⚉♿♩♪♫♬♭♮♯♠♡♢♗♖♕♔♧♛♦♥♤♣♘♙♚♛♜♝♞♟⚪➃➂➁➀➌➋➊➉➈➇➆➅➄☣☮☯⚫➌➋➊➉➈➇➆➅➄➍➎➏➐➑➒➓ⓐⓑⓚ";
-		}
-
-		public static String getAllSimbols3() {
-			return "웃유♋♀♂❣¿⌚☑▲☠☢☿Ⓐ✍☤✉☒▼⌘⌛®©✎♒☁☼ツღ¡Σ☭✞℃℉ϟ☂¢£⌨⚛⌇☹☻☺☪½∞✆☎⌥⇧↩←→↑↓⚣⚢⌲♺☟☝☞☜➫❑❒◈◐◑«»‹›×±※⁂‽¶—⁄—–≈÷≠π†‡‡¥€‰●•·";
-		}
-
-		public String getLightBold() {
-			return this.light + "§l";
-		}
-
-		public String getDarkBold() {
-			return this.dark + "§l";
-		}
-
-		public String getLight() {
-			return this.light;
-		}
-
-		public void setLight(String light) {
-			this.light = light;
-		}
-
-		public String getDark() {
-			return this.dark;
-		}
-
-		public void setDark(String dark) {
-			this.dark = dark;
-		}
-
-		public String toString() {
-			return getDarkBold();
-		}
-	}
 	/**
 	 * Pega uma lista de classes de uma package
 	 * 
@@ -230,12 +128,10 @@ public final class Mine {
 	 *            Package
 	 * @return Lista de Classes
 	 */
-	public static ArrayList<Class<?>> getClassesForPackage(JavaPlugin plugin,
-			String pkgname) {
+	public static ArrayList<Class<?>> getClassesForPackage(JavaPlugin plugin, String pkgname) {
 		ArrayList<Class<?>> classes = new ArrayList<>();
 
-		CodeSource src = plugin.getClass().getProtectionDomain()
-				.getCodeSource();
+		CodeSource src = plugin.getClass().getProtectionDomain().getCodeSource();
 		if (src != null) {
 			URL resource = src.getLocation();
 			resource.getPath();
@@ -243,7 +139,9 @@ public final class Mine {
 		}
 		return classes;
 	}
-	public static void registerPackage(String pack,JavaPlugin plugin) {
+
+	@SuppressWarnings("deprecation")
+	public static void registerPackage(String pack, JavaPlugin plugin) {
 		getClassesForPackage(plugin, pack).forEach(claz -> {
 
 			if (Listener.class.isAssignableFrom(claz)) {
@@ -256,7 +154,7 @@ public final class Mine {
 
 			if (Command.class.isAssignableFrom(claz)) {
 				try {
-					createCommand(plugin,(Command) claz.newInstance());
+					createCommand(plugin, (Command) claz.newInstance());
 				} catch (Exception e) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + ":" + e.getMessage());
 				}
@@ -264,101 +162,74 @@ public final class Mine {
 
 		});
 	}
-	public static void createCommand(JavaPlugin plugin,Command... cmds) {
+
+	public static List<Chunk> getChunks(Location location, int amount, int size) {
+		List<Chunk> lista = new ArrayList<>();
+		Chunk chunkInicial = location.getChunk();
+		World world = location.getWorld();
+		int xInicial = chunkInicial.getX();
+		int zInicial = chunkInicial.getZ();
+
+		for (int x = xInicial - size; x < xInicial + size; x++) {
+			for (int z = zInicial - size; z < zInicial + size; z++) {
+				Chunk chunk = world.getChunkAt(x, z);
+				lista.add(chunk);
+				if (lista.size() == amount) {
+					break;
+				}
+			}
+		}
+
+		return lista;
+	}
+
+	public static void createCommand(JavaPlugin plugin, Command... cmds) {
 		try {
 			Class<?> serverClass = Extra.get(Bukkit.getServer());
-			
-//			if ((Bukkit.getServer() instanceof CraftServer)) {
-				Field field = serverClass.getDeclaredField("commandMap");
-				field.setAccessible(true);
 
-				CommandMap map = (CommandMap) field.get(Bukkit.getServer());
-				int tamanho = cmds.length;
-				for (int id = 0; id < tamanho; id++) {
-					Command cmd = cmds[id];
-					map.register(plugin.getName(), cmd);
-				}
-//			}
+			// if ((Bukkit.getServer() instanceof CraftServer)) {
+			Field field = serverClass.getDeclaredField("commandMap");
+			field.setAccessible(true);
+
+			CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+			int tamanho = cmds.length;
+			for (int id = 0; id < tamanho; id++) {
+				Command cmd = cmds[id];
+				map.register(plugin.getName(), cmd);
+			}
+			// }
 		} catch (Exception ex) {
 		}
 	}
-	
-	public static class EnchantGlow extends EnchantmentWrapper {
 
-		private static Enchantment glow;
-
-		public EnchantGlow(int id) {
-			super(id);
-		}
-
-		@Override
-		public boolean canEnchantItem(ItemStack item) {
-			return false;
-		}
-
-		@Override
-		public boolean conflictsWith(Enchantment other) {
-			return false;
-		}
-
-		@Override
-		public EnchantmentTarget getItemTarget() {
-			return null;
-		}
-
-		@Override
-		public int getMaxLevel() {
-			return 10;
-		}
-
-		@Override
-		public String getName() {
-			return "Glow";
-		}
-
-		@Override
-		public int getStartLevel() {
-			return 1;
-		}
-
-		public static Enchantment getGlow() {
-			if (glow != null)
-				return glow;
-			if (Enchantment.getByName("Glow") != null)
-				return Enchantment.getByName("Glow");
-			try {
-				Extra.setValue(Enchantment.class, "acceptingNew", true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			glow = new EnchantGlow(255);
-			Enchantment.registerEnchantment(glow);
-			return glow;
-		}
-
-		public static ItemStack addGlow(ItemStack item) {
-			Enchantment glow = getGlow();
-
-			if (!item.containsEnchantment(glow))
-				item.addUnsafeEnchantment(glow, 1);
-
-			return item;
-		}
-
-		public static ItemStack removeGlow(ItemStack item) {
-			Enchantment glow = getGlow();
-
-			if (item.containsEnchantment(glow))
-				item.removeEnchantment(glow);
-
-			return item;
-		}
-
-	}
 	
 	public static void registerDefaults() {
-		StorageAPI.register(Item.class,new Item());
+		StorageAPI.register(Item.class, new Item());
+		StorageAPI.register(MaterialData.class, new Variable() {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof MaterialData) {
+					MaterialData materialData = (MaterialData) object;
+					return materialData.getItemTypeId() + ":" + materialData.getData();
+
+				}
+				return null;
+			}
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					String[] split = string.split(":");
+					return new MaterialData(Material.getMaterial(Mine.toInt(split[0])), Mine.toByte(split[1]));
+
+				}
+				return null;
+			}
+		});
 		StorageAPI.register(Vector.class, new Storable() {
 
 			@Override
@@ -370,6 +241,7 @@ public final class Mine {
 			public void store(Map<String, Object> map, Object object) {
 
 			}
+
 			@Override
 			public String alias() {
 				return "Vector";
@@ -417,8 +289,7 @@ public final class Mine {
 			public Object save(Object object) {
 				if (object instanceof PotionEffectType) {
 					PotionEffectType potionEffectType = (PotionEffectType) object;
-					return potionEffectType.getName() + ";"
-							+ potionEffectType.getId();
+					return potionEffectType.getName() + ";" + potionEffectType.getId();
 
 				}
 				return null;
@@ -444,8 +315,7 @@ public final class Mine {
 				if (object instanceof String) {
 					String id = (String) object;
 					String[] split = id.split(";");
-					return new FakeOfflinePlayer(split[0],
-							UUID.fromString(split[1]));
+					return new FakeOfflinePlayer(split[0], UUID.fromString(split[1]));
 
 				}
 				return null;
@@ -472,6 +342,7 @@ public final class Mine {
 			@Override
 			public void store(Map<String, Object> map, Object object) {
 			}
+
 			@Override
 			public String alias() {
 				return "Location";
@@ -486,8 +357,7 @@ public final class Mine {
 				if (object instanceof String) {
 					String string = (String) object;
 					String[] split = string.split(";");
-					return Bukkit.getWorld(split[0]).getChunkAt(
-							Extra.toInt(split[1]), Extra.toInt(split[2]));
+					return Bukkit.getWorld(split[0]).getChunkAt(Extra.toInt(split[1]), Extra.toInt(split[2]));
 
 				}
 				return null;
@@ -497,8 +367,7 @@ public final class Mine {
 			public Object save(Object object) {
 				if (object instanceof Chunk) {
 					Chunk chunk = (Chunk) object;
-					return chunk.getWorld().getName() + ";" + chunk.getX() + ";"
-							+ chunk.getZ();
+					return chunk.getWorld().getName() + ";" + chunk.getX() + ";" + chunk.getZ();
 				}
 
 				return null;
@@ -540,8 +409,7 @@ public final class Mine {
 					Mine.setName(item, name);
 				}
 				@SuppressWarnings("unchecked")
-				List<String> lore = Extra
-						.toMessages((List<Object>) map.get("lore"));
+				List<String> lore = Extra.toMessages((List<Object>) map.get("lore"));
 				if (!lore.isEmpty()) {
 					Mine.setLore(item, lore);
 				}
@@ -552,8 +420,7 @@ public final class Mine {
 						for (String enchs : split) {
 							String[] sub = enchs.split("-");
 							@SuppressWarnings("deprecation")
-							Enchantment ench = Enchantment
-									.getById(Extra.toInt(sub[0]));
+							Enchantment ench = Enchantment.getById(Extra.toInt(sub[0]));
 							Integer level = Extra.toInt(sub[1]);
 							item.addUnsafeEnchantment(ench, level);
 
@@ -561,8 +428,7 @@ public final class Mine {
 					} else {
 						String[] split = enchants.split("-");
 						@SuppressWarnings("deprecation")
-						Enchantment ench = Enchantment
-								.getById(Extra.toInt(split[0]));
+						Enchantment ench = Enchantment.getById(Extra.toInt(split[0]));
 						Integer level = Extra.toInt(split[1]);
 						item.addUnsafeEnchantment(ench, level);
 
@@ -570,10 +436,12 @@ public final class Mine {
 				}
 				return item;
 			}
+
 			@Override
 			public String alias() {
 				return "Item";
 			}
+
 			@SuppressWarnings("deprecation")
 			@Override
 			public void store(Map<String, Object> map, Object object) {
@@ -591,13 +459,11 @@ public final class Mine {
 					if (item.getItemMeta().hasEnchants()) {
 						StringBuilder str = new StringBuilder();
 						int id = 0;
-						for (Entry<Enchantment, Integer> entry : item
-								.getEnchantments().entrySet()) {
+						for (Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
 							if (id > 0)
 								str.append(", ");
 							Enchantment enchantment = entry.getKey();
-							str.append(enchantment.getId() + "-"
-									+ entry.getValue());
+							str.append(enchantment.getId() + "-" + entry.getValue());
 							id++;
 						}
 						enchants = str.toString();
@@ -609,9 +475,8 @@ public final class Mine {
 		});
 	}
 
-	
 	public static String getRedHeart() {
-		return ChatColor.RED+"♥";
+		return ChatColor.RED + "♥";
 	}
 
 	public static String cutText(String text, int lenght) {
@@ -779,7 +644,7 @@ public final class Mine {
 		return (String) new Item().save(item);
 	}
 
-	public static void newBanner() {
+	public static ItemStack newBanner() {
 		ItemStack banner = new ItemStack(Material.BANNER);
 		BannerMeta meta = (BannerMeta) banner.getItemMeta();
 		meta.setBaseColor(DyeColor.BLACK);
@@ -787,6 +652,7 @@ public final class Mine {
 		meta.addPattern(new Pattern(DyeColor.WHITE, PatternType.SKULL));
 		banner.setItemMeta(meta);
 		// meta.set
+		return banner;
 	}
 
 	public static String getProgressBar(double money, double price, String concluidoCor, String faltandoCor,
@@ -819,13 +685,6 @@ public final class Mine {
 			team = scoreboard.registerNewTeam(cutText(name, 16));
 		}
 		return team;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static String getPlayerGroupPrefix(String player) {
-
-		return Mine.toChatMessage(VaultAPI.getChat().getGroupPrefix("null",
-				VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player))));
 	}
 
 	/**
@@ -883,7 +742,6 @@ public final class Mine {
 		public TimeManager() {
 			setPlugin(defaultPlugin());
 		}
-		
 
 		/**
 		 * Construtor pedindo um Plugin
@@ -1083,7 +941,7 @@ public final class Mine {
 		public EventsManager() {
 			setPlugin(defaultPlugin());
 		}
-		
+
 		public Plugin defaultPlugin() {
 			return JavaPlugin.getProvidingPlugin(getClass());
 		}
@@ -1693,13 +1551,14 @@ public final class Mine {
 	public static List<ArmorStand> newHologram(Location location, List<String> lines) {
 		return newHologram(location, lines, false);
 	}
-	public static List<ArmorStand> newHologram(Location location, List<String> lines,boolean toDown) {
+
+	public static List<ArmorStand> newHologram(Location location, List<String> lines, boolean toDown) {
 		List<ArmorStand> lista = new ArrayList<>();
 		for (String line : lines) {
 			ArmorStand holo = newHologram(location, line);
 			lista.add(holo);
 			if (toDown)
-			location = location.subtract(0, 0.3, 0);
+				location = location.subtract(0, 0.3, 0);
 			else {
 				location = location.add(0, 0.3, 0);
 			}
@@ -2070,10 +1929,11 @@ public final class Mine {
 		}
 		return false;
 	}
+
 	/**
 	 * Envia um Title para os Jogadores
 	 * 
-
+	 * 
 	 * @param title
 	 *            Titulo
 	 * @param subTitle
@@ -3189,6 +3049,12 @@ public final class Mine {
 		return new Location(loc1.getWorld(), x, y, z);
 	}
 
+	public static boolean equals(ItemStack item, ItemStack stack) {
+		return getLore(item).equals(getLore(stack)) && getName(item).equals(getName(stack))
+				&& item.getType() == stack.getType() && item.getAmount() == stack.getAmount()
+				&& item.getDurability() == stack.getDurability();
+	}
+
 	public static List<Location> getLocations(Location location1, Location location2, LocationEffect effect) {
 
 		Location min = getLowLocation(location1, location2);
@@ -3764,6 +3630,12 @@ public final class Mine {
 		return setSkull(newItem(name, Material.SKULL_ITEM, 3), skull);
 	}
 
+	@SuppressWarnings("deprecation")
+	public static ItemStack newSkull(EntityType type, String name) {
+		return newSkull(name,
+				("MHF_") + (type.getName() == null ? Mine.toTitle(type.name().replace("_", "")) : type.getName()));
+	}
+
 	public static int getPosition(int line, int column) {
 		int value = (line - 1) * 9;
 		return value + column - 1;
@@ -3778,6 +3650,7 @@ public final class Mine {
 	 * @return Nome do Jogador
 	 */
 	public static ItemStack setSkull(ItemStack item, String name) {
+		item.setType(Material.SKULL_ITEM);
 		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwner(name);
 		item.setItemMeta(meta);
@@ -4073,7 +3946,7 @@ public final class Mine {
 	 */
 	public static Inventory newInventory(String name, int size) {
 
-		return Bukkit.createInventory(null, size, Extra.toText(32,name));
+		return Bukkit.createInventory(null, size, Extra.toText(32, name));
 	}
 
 	/**
@@ -4730,487 +4603,6 @@ public final class Mine {
 		}
 	}
 
-	public static interface SimpleClick {
-		public void onClick(InventoryClickEvent event, int page);
-	}
-
-	public static class SimpleShopGui extends SimpleGui {
-
-		private ItemStack[] products;
-		private double[] prices;
-
-		public SimpleShopGui() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public SimpleShopGui(String name, int lines) {
-			super(name, lines);
-			setClick(new SimpleClick() {
-
-				@Override
-				public void onClick(InventoryClickEvent event, int page) {
-					if (event.getWhoClicked() instanceof Player) {
-						Player player = (Player) event.getWhoClicked();
-						int slot = event.getRawSlot();
-						ItemStack product = getProduct(page, slot);
-						double price = getPrice(page, slot);
-						if (product != null) {
-							if (VaultAPI.hasVault()) {
-								if (VaultAPI.hasEconomy()) {
-
-									if (VaultAPI.getEconomy().has(player, price)) {
-										VaultAPI.getEconomy().withdrawPlayer(player, price);
-										if (Mine.isFull(player.getInventory())) {
-											player.getWorld().dropItemNaturally(player.getLocation().add(0, 5, 0),
-													product);
-										} else {
-											player.getInventory().addItem(product);
-										}
-										player.sendMessage("§aVoce adquiriu um item da Loja!");
-									} else {
-										player.sendMessage("§cVoce não tem dinheiro suficiente!");
-									}
-
-								}
-							}
-						}
-
-					}
-				}
-			});
-
-		}
-
-		public void resetInventories() {
-			super.resetInventories();
-			prices = new double[getLines() * 9 * getPages()];
-			products = new ItemStack[getLines() * 9 * getPages()];
-		}
-
-		/**
-		 * 
-		 * @param product
-		 * @param page
-		 * @param slot
-		 * @param price
-		 */
-		public void addProduct(ItemStack product, int page, int slot, double price) {
-			int index = getIndex(page, slot);
-			List<String> lore = new ArrayList<String>();
-			ItemStack clone = product.clone();
-			if (clone.getItemMeta().hasLore())
-				lore.addAll(clone.getItemMeta().getLore());
-			lore.add("");
-			lore.add("§aPreço: §2" + price);
-			lore.add("");
-			Mine.setLore(clone, lore);
-			addSlot(clone, page, slot);
-			products[index] = product;
-			prices[index] = price;
-		}
-
-		public void removeProduct(int page, int slot) {
-			int index = getIndex(page, slot);
-			products[index] = null;
-			prices[index] = 0;
-			removeSlot(page, slot);
-
-		}
-
-		public ItemStack getProduct(int page, int slot) {
-			int index = getIndex(page, slot);
-			return products[index];
-		}
-
-		public double getPrice(int page, int slot) {
-			int index = getIndex(page, slot);
-			return prices[index];
-		}
-
-	}
-
-	public static class SimpleGui implements Listener, Storable, Copyable {
-
-		private transient SimpleClick[] clicks;
-		private transient SimpleClick click = new SimpleClick() {
-
-			@Override
-			public void onClick(InventoryClickEvent event, int page) {
-
-			}
-		};
-		private transient Inventory[] inventories;
-
-		private String name;
-		private int lines = 6;
-		private int pages = 10;
-		private String pagPrefix = " §8Página: ";
-		private String command = "abrirGuiExemplo";
-		private ItemStack item = new ItemStack(Material.COMPASS);
-		private boolean hasPageSystem = true;
-
-		private int nextPageSlot = 8;
-		private int previousPageSlot = 0;
-		private ItemStack nextPage = Mine.newItem(Material.ARROW, "§aPróxima Página");
-
-		public SimpleGui copy() {
-			return copy(this);
-		}
-
-		public void unregister() {
-			HandlerList.unregisterAll(this);
-		}
-
-		public void register(Plugin plugin) {
-			unregister();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
-		}
-
-		private ItemStack previosPage = Mine.newItem(Material.ARROW, "§aPágina Anterior");
-
-		private ItemStack[] slots;
-
-		public SimpleGui() {
-			resetInventories();
-		}
-
-		public SimpleGui(String name) {
-			this(name, 6);
-		}
-
-		public SimpleGui(String name, int lines) {
-			this.name = name;
-			this.lines = lines;
-			resetInventories();
-		}
-
-		public void resetInventories() {
-			slots = new ItemStack[lines * 9 * pages];
-			clicks = new SimpleClick[lines * 9 * pages];
-			inventories = new Inventory[pages];
-			resetPages();
-
-		}
-
-		public void resetPages() {
-			for (int page = 1; page <= pages; page++) {
-				addSlot(previosPage, page, previousPageSlot);
-				addSlot(nextPage, page, nextPageSlot);
-			}
-		}
-
-		public void onCopy() {
-			resetInventories();
-		}
-
-		public boolean isHasPageSystem() {
-			return hasPageSystem;
-		}
-
-		public void setHasPageSystem(boolean hasPageSystem) {
-			this.hasPageSystem = hasPageSystem;
-		}
-
-		public int getFirstEmptySlot() {
-			return getFirstEmptySlot(1);
-		}
-
-		public int getFirstEmptySlot(int page) {
-			if (hasInventory(page)) {
-				return inventories[page - 1].firstEmpty();
-			} else {
-				ItemStack[] array = Arrays.copyOfRange(slots, getIndex(page, 0), getIndex(page + 1, 0));
-				for (int i = 0; i < array.length; i++) {
-					if (array[i] == null)
-						return i;
-				}
-			}
-			return -1;
-		}
-
-		public boolean hasInventory(int page) {
-			return inventories[page - 1] != null;
-		}
-
-		public boolean isFull() {
-			return isFull(1);
-		}
-
-		public boolean isFull(int page) {
-			return Mine.isFull(inventories[page - 1]);
-		}
-
-		public boolean hasPages() {
-			return pages > 1;
-		}
-
-		public boolean isUniquePage() {
-			return pages == 1;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getPagPrefix() {
-			return pagPrefix;
-		}
-
-		public void setPagPrefix(String pagPrefix) {
-			this.pagPrefix = pagPrefix;
-		}
-
-		public ItemStack[] getItems() {
-			return slots;
-		}
-
-		public void setItems(ItemStack[] items) {
-			this.slots = items;
-		}
-
-		public void openGui(Player player) {
-			openGui(player, 1);
-		}
-
-		public boolean hasSlot(int page, int slot) {
-			return getSlot(page, slot) != null;
-		}
-
-		public boolean hasClick(int page, int slot) {
-			return clicks[getIndex(page, slot)] != null;
-		}
-
-		public void addSlot(ItemStack item, int page, int slot) {
-			addSlot(item, page, slot, null);
-		}
-
-		public void addSlot(ItemStack item, int page, int slot, SimpleClick click) {
-			int index = getIndex(page, slot);
-			slots[index] = item;
-			clicks[index] = click;
-			if (hasInventory(page)) {
-				getPage(page).setItem(index, item);
-			}
-		}
-
-		public void removeSlot(int page, int slot) {
-			int index = getIndex(page, slot);
-			slots[index] = null;
-			clicks[index] = null;
-			if (hasInventory(page)) {
-				getPage(page).clear(index);
-			}
-		}
-
-		public Inventory getPage(int page) {
-			return inventories[page - 1];
-		}
-
-		public ItemStack getSlot(int page, int slot) {
-			int index = getIndex(page, slot);
-			return slots[index];
-		}
-
-		public SimpleClick getClick(int page, int slot) {
-			int index = getIndex(page, slot);
-			return clicks[index];
-		}
-
-		protected int getIndex(int page, int slot) {
-			int result = ((page - 1) * lines * 9) + (slot);
-			return result;
-		}
-
-		public void openGui(Player player, int page) {
-			Inventory inventory = inventories[page - 1];
-			if (inventory == null) {
-				inventory = Bukkit.createInventory(null, lines * 9, name + pagPrefix + page);
-				inventory.setContents(Arrays.copyOfRange(slots, getIndex(page, 0), getIndex(page + 1, 0)));
-				inventories[page - 1] = inventory;
-			}
-			player.openInventory(inventory);
-		}
-
-		@EventHandler
-		public void onOpenGui(PlayerInteractEvent event) {
-			Player player = event.getPlayer();
-			if (player.getItemInHand() == null)
-				return;
-			if (item == null)
-				return;
-			if (item.isSimilar(player.getItemInHand())) {
-				openGui(player);
-			}
-
-		}
-
-		@EventHandler
-		public void onOpenGui(PlayerCommandPreprocessEvent event) {
-			Player player = event.getPlayer();
-			String message = event.getMessage();
-			String cmd = Mine.getCmd(message);
-			if (command == null)
-				return;
-			if (Mine.startWith(cmd, "/" + command)) {
-				event.setCancelled(true);
-				openGui(player);
-			}
-		}
-
-		@EventHandler
-		public void onClickInGui(InventoryClickEvent event) {
-			if (event.getWhoClicked() instanceof Player) {
-				Player player = (Player) event.getWhoClicked();
-				if (event.getInventory().getName().startsWith(name)) {
-					ItemStack item = event.getCurrentItem();
-					event.setCancelled(true);
-					if (item == null)
-						return;
-
-					int slot = event.getRawSlot();
-					int page = 1;
-					if (!isUniquePage()) {
-						page = Integer.valueOf(event.getInventory().getTitle().split(name + pagPrefix)[1]);
-					}
-					if (hasPageSystem) {
-						if (item.equals(nextPage)) {
-							if (page == pages) {
-								return;
-							}
-							openGui(player, ++page);
-							return;
-						}
-						if (item.equals(previosPage)) {
-							if (page <= 1) {
-								return;
-							}
-							openGui(player, --page);
-							return;
-						}
-					}
-					SimpleClick click = getClick(page, slot);
-					if (click != null) {
-						click.onClick(event, page);
-					} else {
-						this.click.onClick(event, page);
-					}
-
-				}
-
-			}
-		}
-
-		public String getCommand() {
-			return command;
-		}
-
-		public void setCommand(String command) {
-			this.command = command;
-		}
-
-		public ItemStack getItem() {
-			return item;
-		}
-
-		public void setItem(ItemStack item) {
-			this.item = item;
-		}
-
-		public ItemStack getNextPage() {
-			return nextPage;
-		}
-
-		public void setNextPage(ItemStack nextPage) {
-			this.nextPage = nextPage;
-		}
-
-		public ItemStack getPreviosPage() {
-			return previosPage;
-		}
-
-		public void setPreviosPage(ItemStack previosPage) {
-			this.previosPage = previosPage;
-		}
-
-		public int getPreviousPageSlot() {
-			return previousPageSlot;
-		}
-
-		public void setPreviousPageSlot(int previousPageSlot) {
-			this.previousPageSlot = previousPageSlot;
-		}
-
-		public int getNextPageSlot() {
-			return nextPageSlot;
-		}
-
-		public void setNextPageSlot(int nextPageSlot) {
-			this.nextPageSlot = nextPageSlot;
-		}
-
-		public int getLines() {
-			return lines;
-		}
-
-		public void setLines(int lines) {
-			this.lines = lines;
-		}
-
-		public int getPages() {
-			return pages;
-		}
-
-		public void setPages(int pages) {
-			this.pages = pages;
-		}
-
-		public Inventory[] getInventories() {
-			return inventories;
-		}
-
-		public void setInventories(Inventory[] inventories) {
-			this.inventories = inventories;
-		}
-
-		public ItemStack[] getSlots() {
-			return slots;
-		}
-
-		public void setSlots(ItemStack[] slots) {
-			this.slots = slots;
-		}
-
-		public SimpleClick[] getClicks() {
-			return clicks;
-		}
-
-		public void setClicks(SimpleClick[] clicks) {
-			this.clicks = clicks;
-		}
-
-		public SimpleClick getClick() {
-			return click;
-		}
-
-		public void setClick(SimpleClick click) {
-			this.click = click;
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			return null;
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-
-		}
-
-	}
 
 	public static Player getPlayer(String name) {
 		return Bukkit.getPlayerExact(name);
@@ -5746,7 +5138,6 @@ public final class Mine {
 
 	}
 
-	
 	@SuppressWarnings("deprecation")
 	public static class DisplayBoard implements Storable, Copyable {
 
@@ -6162,4 +5553,7 @@ public final class Mine {
 	public static void setTagsByGroup(boolean tagsByGroup) {
 		Mine.tagsByGroup = tagsByGroup;
 	}
+
+	
+
 }

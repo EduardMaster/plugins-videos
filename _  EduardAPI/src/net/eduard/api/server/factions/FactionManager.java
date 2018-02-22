@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.server.ranks.Rank;
@@ -18,6 +19,7 @@ public class FactionManager implements Storable {
 
 	private Map<String, Faction> factions = new HashMap<>();
 	private Map<UUID, FactionPlayer> members = new HashMap<>();
+	private transient FactionGeneratorManager generatorManager;
 	private RankManager ranks = new RankManager();
 	@Reference
 	private Faction warZone;
@@ -25,10 +27,12 @@ public class FactionManager implements Storable {
 	private Faction protectedZone;
 	@Reference
 	private Faction freeZone;
-	
+	private Map<EntityType, Double> generatorsPrices = new HashMap<>();
+
 	public Rank getRank(FactionPlayer player) {
 		return ranks.getPlayerRank(player.getId());
 	}
+
 	public FactionManager() {
 		warZone = new Faction("Zona de Guerra", "§4Zona de Guerra");
 		protectedZone = new Faction("Zona Protegida", "§6Zona Protegida!");
@@ -39,18 +43,24 @@ public class FactionManager implements Storable {
 		warZone.setManager(this);
 		protectedZone.setManager(this);
 		freeZone.setManager(this);
-		
+
 		Rank rankLeader = new Rank("lider", 1);
 		rankLeader.setPrefix("**");
 		ranks.getRanks().put("leader", rankLeader);
-	
+
 		Rank rankMember = new Rank("membro", 2);
 		rankMember.setPrefix("+");
 		rankMember.setNextRank("leader");
 		ranks.getRanks().put("member", rankMember);
 		ranks.setFirst("member");
 		ranks.setLast("leader");
-
+		for (EntityType e : EntityType.values()) {
+			if (e.isAlive()) {
+				if (e.isSpawnable()) {
+					generatorsPrices.put(e, 1000D);
+				}
+			}
+		}
 	}
 
 	public Faction getFaction(Player player) {
@@ -60,60 +70,78 @@ public class FactionManager implements Storable {
 	public Map<String, Faction> getFactions() {
 		return factions;
 	}
+
+	public void addGenerator(Location location, EntityType type) {
+		FactionClaim claim = getClaim(location);
+		Faction fac = claim.getFaction();
+		fac.getGenerators().put(type, fac.getGenerators().getOrDefault(type, 0) + 1);
+	}
+	public void removeGenerator(Location location, EntityType type) {
+		FactionClaim claim = getClaim(location);
+		Faction fac = claim.getFaction();
+		fac.getGenerators().put(type, fac.getGenerators().getOrDefault(type, 0) - 1);
+	}
+
 	public FactionPlayer getMember(String nome) {
 		for (FactionPlayer member : members.values()) {
-			if (member.getName().equalsIgnoreCase(nome))
-			{
+			if (member.getName().equalsIgnoreCase(nome)) {
 				return member;
-		
+
 			}
 		}
-		
+
 		return null;
 	}
+
 	public FactionPlayer getMember(OfflinePlayer player) {
 		FactionPlayer member = members.get(player.getUniqueId());
-//		Mine.console("§c"+ranks.getFirstRank());
-//		Mine.console("§e"+ranks.getLastRank());
+		// Mine.console("§c"+ranks.getFirstRank());
+		// Mine.console("§e"+ranks.getLastRank());
 		if (member == null) {
 			member = new FactionPlayer();
 			member.setName(player.getName());
 			member.setId(player.getUniqueId());
 			member.setManager(this);
-//			ranks.setRank(player.getUniqueId(), ranks.getFirst());
+			// ranks.setRank(player.getUniqueId(), ranks.getFirst());
 			members.put(player.getUniqueId(), member);
 		}
 		return member;
 
 	}
+
 	public FactionPlayer getMember(Player player) {
 		FactionPlayer member = members.get(player.getUniqueId());
-//		Mine.console("§c"+ranks.getFirst());
-//		Mine.console("§e"+ranks.getRanks());
+		// Mine.console("§c"+ranks.getFirst());
+		// Mine.console("§e"+ranks.getRanks());
 		if (member == null) {
 			member = new FactionPlayer(player);
 			member.setManager(this);
-//			ranks.setRank(player.getUniqueId(), ranks.getFirst());
+			// ranks.setRank(player.getUniqueId(), ranks.getFirst());
 			members.put(player.getUniqueId(), member);
 		}
 		return member;
 
 	}
-//	public FactionPlayer getPlayer(Player player) {
-//		return members.get(player.getUniqueId());
-//	}
+
+	// public FactionPlayer getPlayer(Player player) {
+	// return members.get(player.getUniqueId());
+	// }
 	public Map<UUID, FactionPlayer> getMembers() {
 		return members;
 	}
+
 	public boolean hasFaction(Player player) {
 		return getMember(player).getFaction() != null;
 	}
+
 	public Faction getFaction(String name) {
 		return factions.get(name.toLowerCase());
 	}
+
 	public boolean hasFaction(String name) {
 		return factions.containsKey(name.toLowerCase());
 	}
+
 	public Faction getFaction(String name, String prefix) {
 		Faction fac = getFaction(name);
 		if (fac == null) {
@@ -125,6 +153,7 @@ public class FactionManager implements Storable {
 		}
 		return fac;
 	}
+
 	public boolean hasFaction(String name, String prefix) {
 		return getFaction(name, prefix) != null;
 	}
@@ -141,21 +170,26 @@ public class FactionManager implements Storable {
 		}
 		return claim;
 	}
-	public void factionCreate(FactionPlayer player,Faction faction) {
+
+	public void factionCreate(FactionPlayer player, Faction faction) {
 		faction.setLeader(player);
 		ranks.setLastRank(player.getId());
 		factionJoin(player, faction);
 	}
+
 	public FactionClaim getClaim(Location location) {
 		return getClaim(location.getChunk());
 	}
+
 	public boolean isClaimed(Location location) {
 		return getClaim(location).getFaction() != null;
 	}
+
 	public void factionJoin(FactionPlayer member, Faction faction) {
 		faction.getMembers().add(member);
 		member.setFaction(faction);
 	}
+
 	public void factionLeave(Player player) {
 		FactionPlayer member = getMember(player);
 		Faction fac = member.getFaction();
@@ -166,7 +200,7 @@ public class FactionManager implements Storable {
 			deleteFaction(fac);
 		}
 	}
-	
+
 	public void factionClaim(Player player) {
 		Faction fac = getFaction(player);
 		FactionClaim claim = new FactionClaim(player.getLocation());
@@ -180,12 +214,13 @@ public class FactionManager implements Storable {
 		faction.setManager(this);
 		return faction;
 	}
+
 	public void deleteFaction(Faction faction) {
 
 		for (FactionPlayer member : faction.getMembers()) {
 			member.setFaction(null);
 			ranks.setFirstRank(member.getId());
-			
+
 		}
 		for (Faction fac : faction.getAllies()) {
 			fac.getAllies().remove(faction);
@@ -246,6 +281,22 @@ public class FactionManager implements Storable {
 	public void store(Map<String, Object> map, Object object) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public FactionGeneratorManager getGeneratorManager() {
+		return generatorManager;
+	}
+
+	public void setGeneratorManager(FactionGeneratorManager generatorManager) {
+		this.generatorManager = generatorManager;
+	}
+
+	public Map<EntityType, Double> getGeneratorsPrices() {
+		return generatorsPrices;
+	}
+
+	public void setGeneratorsPrices(Map<EntityType, Double> generatorsPrices) {
+		this.generatorsPrices = generatorsPrices;
 	}
 
 }

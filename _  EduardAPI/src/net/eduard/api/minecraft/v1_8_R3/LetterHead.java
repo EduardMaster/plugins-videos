@@ -29,6 +29,20 @@ public class LetterHead
 
     this.HeadItem = itemStack;
   }
+  
+  public static LetterHead newHead(String displayName,String comando) {
+	  String[] split = comando.split(" ");
+	  String text = split[5];
+	  String[] idInicio = text.split("Id:\"");
+	  String[] idFim = idInicio[1].split("\"");
+	  String id = idFim[0];
+	  String[] texturaInicio = text.split("Value:\"");
+	  String[] texturaFim = texturaInicio[1].split("\"");
+	  String textura = texturaFim[0];
+	  return new LetterHead(displayName, id, textura);
+	  
+	  
+  }
 
   public LetterHead(String skullname, String id, String textureValue)
   {

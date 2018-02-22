@@ -3,8 +3,8 @@ package net.eduard.api;
 import java.util.UUID;
 
 import net.eduard.api.manager.DBBungee;
-import net.eduard.api.manager.DBManager;
 import net.eduard.api.setup.BungeeConfig;
+import net.eduard.api.setup.DBManager;
 import net.eduard.api.setup.ServerAPI;
 import net.eduard.api.setup.ServerAPI.BungeeControl;
 import net.eduard.api.setup.ServerAPI.Server;

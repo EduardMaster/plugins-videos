@@ -17,6 +17,18 @@ import net.milkbowl.vault.permission.Permission;
 public final class VaultAPI {
 
 	/**
+	 * Pega o prefixo no primeiro grupo do jogador
+	 * @param player Jogador
+	 * @return Prefixo do grupo
+	 */
+	@SuppressWarnings("deprecation")
+	public static String getPlayerGroupPrefix(String player) {
+
+		return Mine.toChatMessage(VaultAPI.getChat().getGroupPrefix("null",
+				VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player))));
+	}
+
+	/**
 	 * Controle de permissões
 	 */
 	

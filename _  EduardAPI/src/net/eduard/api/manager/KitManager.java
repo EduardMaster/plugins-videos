@@ -18,10 +18,10 @@ import org.bukkit.plugin.Plugin;
 import net.eduard.api.game.Ability;
 import net.eduard.api.game.KitType;
 import net.eduard.api.game.Slot;
+import net.eduard.api.setup.GUI.SimpleClick;
+import net.eduard.api.setup.GUI.SimpleGui;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.EventsManager;
-import net.eduard.api.setup.Mine.SimpleClick;
-import net.eduard.api.setup.Mine.SimpleGui;
 import net.eduard.api.setup.VaultAPI;
 
 

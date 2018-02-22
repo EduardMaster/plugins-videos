@@ -2,6 +2,8 @@ package net.eduard.api.manager;
 
 import java.util.UUID;
 
+import net.eduard.api.setup.DBManager;
+
 public class DBBungee extends DBManager {
 	
 	

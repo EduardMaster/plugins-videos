@@ -1,9 +1,9 @@
 package net.eduard.api.tutorial.nivel_5;
 
-import net.eduard.api.manager.DBManager;
+import net.eduard.api.setup.DBManager;
 
 public class UsarRanksDB extends DBManager {
-
+ 
 	public UsarRanksDB(String user, String pass, String host, String database) {
 		super(user, pass, host, database);
 		update("create table if not exists ranks values(name varchar(11),prefix varchar(16),price double ,rankup varchar(11) )");

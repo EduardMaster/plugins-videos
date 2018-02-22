@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import net.eduard.api.setup.ChatAPI.Chat;
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.Chat;
 import net.eduard.api.setup.Mine.EventsManager;
 import net.eduard.showdamage.Main;
 

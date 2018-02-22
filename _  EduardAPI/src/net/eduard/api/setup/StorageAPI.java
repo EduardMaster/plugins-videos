@@ -17,10 +17,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import net.eduard.api.setup.DBManager.AutoBase;
+
 import java.util.Random;
 import java.util.UUID;
-
-import net.eduard.api.manager.DBManager.AutoBase;
 
 /**
  * Sistema automatico de Armazenamento em Mapas que podem ser usados em JSON,
@@ -223,6 +224,7 @@ public final class StorageAPI {
 
 		} else {
 			try {
+				@SuppressWarnings("deprecation")
 				E newInstance = (E) object.getClass().newInstance();
 				while (!claz.equals(Object.class)) {
 					for (Field field : claz.getDeclaredFields()) {
@@ -408,6 +410,7 @@ public final class StorageAPI {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Storable register(Class<? extends Storable> claz) {
 		Storable store = null;
 		try {

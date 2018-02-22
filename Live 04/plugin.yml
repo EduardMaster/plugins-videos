@@ -1,0 +1,8 @@
+name: AlmasEdu
+description: Sei la
+version: 1.0
+main: net.eduard.live.almas.Main
+commands:
+  almas:
+    description: Sei la
+    

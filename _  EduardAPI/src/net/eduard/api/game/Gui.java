@@ -9,8 +9,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.manager.EffectManager;
-import net.eduard.api.setup.Mine.SimpleClick;
-import net.eduard.api.setup.Mine.SimpleGui;
+import net.eduard.api.setup.GUI.SimpleClick;
+import net.eduard.api.setup.GUI.SimpleGui;
 import net.eduard.api.setup.StorageAPI.Copyable;
 
 public class Gui extends SimpleGui implements Copyable {

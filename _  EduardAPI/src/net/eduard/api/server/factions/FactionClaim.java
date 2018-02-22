@@ -15,7 +15,8 @@ public class FactionClaim implements Storable{
 	
 	private boolean onAttack;
 	private Chunk chunk;
-	
+	public FactionClaim() {
+	}
 	public FactionClaim(Chunk chunk) {
 		setChunk(chunk);
 	}
@@ -32,9 +33,6 @@ public class FactionClaim implements Storable{
 		return faction.isWarZone();
 	}
 	public boolean isDomined() {
-		return faction != null;
-	}
-	public boolean claimed() {
 		return faction != null;
 	}
 		

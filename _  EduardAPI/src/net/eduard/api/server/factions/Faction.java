@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public class Faction implements Storable {
 	private FactionPlayer leader;
 	private int wins;
 	private int defeats;
-	@Reference
+
 	private List<FactionClaim> claims = new ArrayList<>();
 	@Reference
 	private List<FactionPlayer> members = new ArrayList<>();
@@ -42,6 +43,37 @@ public class Faction implements Storable {
 
 	private Map<EntityType, Integer> spawners = new HashMap<>();
 
+	private Map<EntityType, Integer> generators = new HashMap<>();
+
+	public String getDisplayName() {
+		return "[" + this.prefix + "] " + this.name;
+	}
+
+	public double getValue() {
+
+		return getMoney() + getSpawnersPrice() + getGeneratorsPrice();
+	}
+
+	public double getAllSpawnersPrice() {
+		return getSpawnersPrice() + getGeneratorsPrice();
+	}
+
+	public double getSpawnersPrice() {
+		double price = 0;
+		for (Entry<EntityType, Integer> entry : spawners.entrySet()) {
+			price += entry.getValue() * manager.getGeneratorsPrices().getOrDefault(entry.getKey(), 0D);
+		}
+		return price;
+	}
+
+	public double getGeneratorsPrice() {
+		double price = 0;
+		for (Entry<EntityType, Integer> entry : generators.entrySet()) {
+			price += entry.getValue() * manager.getGeneratorsPrices().getOrDefault(entry.getKey(), 0D);
+		}
+		return price;
+	}
+
 	public List<Faction> getBattles() {
 		return battles;
 	}
@@ -56,7 +88,19 @@ public class Faction implements Storable {
 	}
 
 	public int getSpawnersAmount() {
-		return spawners.size();
+		int amount = 0;
+		for (Entry<EntityType, Integer> entry : spawners.entrySet()) {
+			amount += entry.getValue();
+		}
+		return amount;
+	}
+
+	public int getGeneratorsAmount() {
+		int amount = 0;
+		for (Entry<EntityType, Integer> entry : generators.entrySet()) {
+			amount += entry.getValue();
+		}
+		return amount;
 	}
 
 	public List<Faction> getRelations() {
@@ -359,6 +403,14 @@ public class Faction implements Storable {
 
 	public void setSpawners(Map<EntityType, Integer> spawners) {
 		this.spawners = spawners;
+	}
+
+	public Map<EntityType, Integer> getGenerators() {
+		return generators;
+	}
+
+	public void setGenerators(Map<EntityType, Integer> generators) {
+		this.generators = generators;
 	}
 
 }

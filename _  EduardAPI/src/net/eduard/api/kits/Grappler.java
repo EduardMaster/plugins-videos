@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
 
 import net.eduard.api.API;
 import net.eduard.api.game.Ability;
-import net.eduard.api.minecraft.v1_7_2_R4.GrapplerHook;
+import net.eduard.api.minecraft.v1_7_R4.GrapplerHook;
 
 public class Grappler extends Ability {
 	public static HashMap<Player, GrapplerHook> hooks = new HashMap<>();

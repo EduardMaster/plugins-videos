@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.ChatAPI.Chat;
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.Chat;
 
 public class TellCommand extends CommandManager {
 

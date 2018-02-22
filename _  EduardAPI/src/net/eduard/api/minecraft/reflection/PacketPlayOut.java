@@ -40,7 +40,8 @@ public class PacketPlayOut
     }
   }
 
-  public PacketPlayOut(String name, String prefix, String suffix, Collection<?> players, int paramInt)
+  @SuppressWarnings("deprecation")
+public PacketPlayOut(String name, String prefix, String suffix, Collection<?> players, int paramInt)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException
   {
     this.packet = packetType.newInstance();
@@ -57,7 +58,8 @@ public class PacketPlayOut
       addAll(players);
   }
 
-  public PacketPlayOut(String name, Collection<?> players, int paramInt)
+  @SuppressWarnings("deprecation")
+public PacketPlayOut(String name, Collection<?> players, int paramInt)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException
   {
     this.packet = packetType.newInstance();

@@ -39,7 +39,8 @@ public class Tag
     }
   }
 
-  private void setField(Object packet, Field field, Object value) {
+  @SuppressWarnings("deprecation")
+private void setField(Object packet, Field field, Object value) {
     field.setAccessible(true);
     try {
       field.set(packet, value);

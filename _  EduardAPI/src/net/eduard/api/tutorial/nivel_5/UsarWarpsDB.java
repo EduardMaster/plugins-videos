@@ -6,10 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import net.eduard.api.manager.DBManager;
+import net.eduard.api.setup.DBManager;
 
 public class UsarWarpsDB extends DBManager {
-
+ 
 	public UsarWarpsDB(String user, String pass, String host,
 			String database) {
 		super(user, pass, host, database);

@@ -28,6 +28,16 @@ public class FactionPlayer implements Storable {
 	
 	private transient Player player;
 	
+	public String getDisplayName() {
+		StringBuilder b = new StringBuilder();
+		if (hasFaction()) {
+			b.append(getFaction().getPrefix()+" ");
+		}
+		b.append(getRank().getPrefix());
+		b.append(name);
+		return b.toString();
+	}
+	
 	public Rank getRank() {
 		return manager.getRank(this);
 	}
@@ -220,6 +230,13 @@ public class FactionPlayer implements Storable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+
+
+	public boolean isLeader() {
+		return getFaction().getLeader().equals(this);
 	}
 
 	

@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 
-import net.eduard.api.manager.DBManager;
-import net.eduard.api.manager.DBManager.AutoBase;
-import net.eduard.api.manager.DBManager.Info;
+import net.eduard.api.setup.DBManager;
+import net.eduard.api.setup.DBManager.AutoBase;
+import net.eduard.api.setup.DBManager.Info;
 
 public class UsarAutoBase {
 	public static HashMap<String, Double> contas = new HashMap<>();

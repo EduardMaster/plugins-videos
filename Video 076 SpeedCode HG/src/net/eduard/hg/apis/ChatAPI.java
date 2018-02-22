@@ -1,6 +1,6 @@
 package net.eduard.hg.apis;
 
-import org.bukkit.ChatColor;
+import org.bukkit.ChatColor; 
 
 /**
  * API de manipulação de Cores e CHAT do Minecraft
@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
  *
  */
 public final class ChatAPI {
-  
+     
 	public static ChatColor SUCCESS = ChatColor.GREEN;
 	public static ChatColor SUCCESS_ARGUMENT = ChatColor.DARK_GREEN;
 	public static ChatColor ERROR = ChatColor.RED;

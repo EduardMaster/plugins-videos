@@ -30,7 +30,7 @@ import net.eduard.api.setup.Mine.DisplayBoard;
 import net.eduard.api.setup.Mine.FakeOfflinePlayer;
 import net.eduard.api.setup.Mine.TimeManager;
 import net.eduard.api.setup.Schematic;
-import net.eduard.api.util.Scoreboards;
+import net.eduard.api.setup.Scoreboards;
 
 public class Testes {
 	
