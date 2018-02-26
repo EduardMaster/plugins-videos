@@ -498,7 +498,7 @@ public final class ObjectAPI {
 
 	public static String getMessage(Object... objects) {
 		String message = getText(objects);
-		message = message.replace("$>", ChatAPI.getArrowRight());
+		message = message.replace("$>", "");
 		return getWraps(message);
 	}
 

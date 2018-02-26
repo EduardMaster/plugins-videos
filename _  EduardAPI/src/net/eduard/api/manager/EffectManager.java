@@ -19,7 +19,6 @@ import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.TimeManager;
 
-
 public class EffectManager extends TimeManager implements PlayerEffect {
 	private List<PotionEffect> potions = new ArrayList<>();
 	private List<ItemStack> items = new ArrayList<>();
@@ -38,9 +37,11 @@ public class EffectManager extends TimeManager implements PlayerEffect {
 	private boolean clearHotBar;
 	private boolean clearArmours;
 	private boolean clearItems;
-public EffectManager() {
-	// TODO Auto-generated constructor stub
-}
+
+	public EffectManager() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public EffectManager clone() {
 		try {
@@ -49,18 +50,21 @@ public EffectManager() {
 			return null;
 		}
 	}
+
 	public EffectManager makeCommand(Player p) {
 		if (command != null) {
 			p.chat("/" + command);
 		}
 		return this;
 	}
+
 	public EffectManager sendMessage(Player p) {
 		if (message != null) {
 			p.sendMessage(message);
 		}
 		return this;
 	}
+
 	public EffectManager displayEffect(Player p) {
 		if (display != null) {
 			display.create(p);
@@ -68,30 +72,35 @@ public EffectManager() {
 		return this;
 
 	}
+
 	public EffectManager makeCustomEffect(Player p) {
 		if (effect != null) {
 			effect.effect(p);
 		}
 		return this;
 	}
+
 	public EffectManager makeExplosion(Entity entity) {
 		if (explosion != null) {
 			explosion.create(entity);
 		}
 		return this;
 	}
+
 	public EffectManager makeSound(Entity entity) {
 		if (sound != null) {
 			sound.create(entity);
 		}
 		return this;
 	}
+
 	public EffectManager teleport(Entity entity) {
 		if (teleport != null) {
 			entity.teleport(teleport);
 		}
 		return this;
 	}
+
 	public EffectManager jump(Entity entity) {
 		if (jump != null) {
 			jump.create(entity);
@@ -106,24 +115,28 @@ public EffectManager() {
 				return false;
 		return true;
 	}
+
 	public EffectManager closeInventory(Player p) {
 		if (closeInventory) {
 			p.closeInventory();
 		}
 		return this;
 	}
+
 	public EffectManager clearInventory(Player p) {
 		if (clearInventory) {
 			Mine.clearInventory(p);
 		}
 		return this;
 	}
+
 	public EffectManager clearItems(LivingEntity livingEntity) {
 		if (clearItems) {
 			Mine.clearItens(livingEntity);
 		}
 		return this;
 	}
+
 	public EffectManager clearArmours(LivingEntity livingEntity) {
 		if (clearArmours) {
 			Mine.clearArmours(livingEntity);
@@ -131,6 +144,7 @@ public EffectManager() {
 		return this;
 
 	}
+
 	public EffectManager clearHotBar(Player p) {
 
 		if (clearHotBar) {
@@ -138,10 +152,12 @@ public EffectManager() {
 		}
 		return this;
 	}
+
 	public EffectManager giveItems(Player p) {
 		Mine.give(items, p.getInventory());
 		return this;
 	}
+
 	public EffectManager givePotions(LivingEntity entity) {
 		entity.addPotionEffects(potions);
 		return this;
@@ -160,10 +176,12 @@ public EffectManager() {
 		clearHotBar(p);
 		clearItems(p);
 		clearArmours(p);
-		teleport(p);;
+		teleport(p);
+		;
 		jump(p);
 		givePotions(p);
-		giveItems(p);;
+		giveItems(p);
+		;
 		displayEffect(p);
 
 	}
@@ -171,24 +189,30 @@ public EffectManager() {
 	public String getPermission() {
 		return permission;
 	}
+
 	public EffectManager permission(String permission) {
 		this.permission = permission;
 		return this;
 	}
+
 	public List<ItemStack> getItems() {
 		return items;
 
 	}
+
 	public EffectManager items(List<ItemStack> items) {
 		this.items = items;
 		return this;
 	}
+
 	public EffectManager items(ItemStack... items) {
 		return items(Arrays.asList(items));
 	}
+
 	public Location getTeleport() {
 		return teleport;
 	}
+
 	public EffectManager teleport(Location location) {
 		this.teleport = location;
 		return this;
@@ -197,48 +221,61 @@ public EffectManager() {
 	public String getCommand() {
 		return command;
 	}
+
 	public EffectManager command(String command) {
 		this.command = command;
 		return this;
 	}
+
 	public boolean isCloseInventory() {
 		return closeInventory;
 	}
+
 	public EffectManager closeInventory(boolean closeInventory) {
 		this.closeInventory = closeInventory;
 		return this;
 	}
+
 	public boolean isClearInventory() {
 		return clearInventory;
 	}
+
 	public EffectManager clearInventory(boolean clearInventory) {
 		this.clearInventory = clearInventory;
 		return this;
 	}
+
 	public boolean isClearHotBar() {
 		return clearHotBar;
 	}
+
 	public EffectManager clearHotBar(boolean clearHotBar) {
 		this.clearHotBar = clearHotBar;
 		return this;
 	}
+
 	public boolean isClearArmours() {
 		return clearArmours;
 	}
+
 	public EffectManager clearArmours(boolean clearArmours) {
 		this.clearArmours = clearArmours;
 		return this;
 	}
+
 	public boolean isClearItems() {
 		return clearItems;
 	}
+
 	public EffectManager clearItems(boolean clearItems) {
 		this.clearItems = clearItems;
 		return this;
 	}
+
 	public String getMessage() {
 		return message;
 	}
+
 	public EffectManager message(String message) {
 		this.message = message;
 		return this;
@@ -284,23 +321,29 @@ public EffectManager() {
 		this.potions.addAll(Arrays.asList(potions));
 		return this;
 	}
+
 	public Explosion getExplosion() {
 		return explosion;
 	}
+
 	public EffectManager explosion(Explosion explosion) {
 		this.explosion = explosion;
 		return this;
 	}
+
 	public Effects getDisplay() {
 		return display;
 	}
+
 	public EffectManager display(Effects display) {
 		this.display = display;
 		return this;
 	}
+
 	public List<String> getCommands() {
 		return commands;
 	}
+
 	public void commands(List<String> commands) {
 		this.commands = commands;
 	}

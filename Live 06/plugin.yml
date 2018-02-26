@@ -1,0 +1,5 @@
+name: liveDoEdu
+description: sei la
+version: 1.0
+main: net.eduard.live.kills.Main
+commands:

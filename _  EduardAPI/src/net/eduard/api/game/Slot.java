@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.manager.EffectManager;
 
-public class Slot extends EffectManager{
+public class Slot extends EffectManager {
 
 	private ItemStack item;
 	private int index;
@@ -15,18 +15,17 @@ public class Slot extends EffectManager{
 		setIndex(index);
 	}
 
-
 	public int getIndex() {
 		return index;
 	}
-public Slot() {
-	// TODO Auto-generated constructor stub
-}
+
+	public Slot() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
 
 	public ItemStack getItem() {
 		return item;
