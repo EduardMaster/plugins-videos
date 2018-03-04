@@ -1,8 +1,9 @@
-name: EMSpawn
+name: EduSpawn
 description: Sistema de Spawn configuravel
 main: net.eduard.spawn.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 depend: [EduardAPI]
 commands:

@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.eduard.api.setup.DBManager.AutoBase;
-
 import java.util.Random;
 import java.util.UUID;
 

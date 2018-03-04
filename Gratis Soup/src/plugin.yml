@@ -1,8 +1,9 @@
-name: eSoup
+name: EduardSoup
 description: Sistema de sopas para KitPvP
 main: net.eduard.soup.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 depend: [EduardAPI]
 commands:

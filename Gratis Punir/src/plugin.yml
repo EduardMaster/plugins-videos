@@ -1,8 +1,9 @@
-name: Template
-description: Template
-main: net.eduard.template.Main
+name: eSimplesPunir
+description: Sistema basico de punir
+main: net.eduard.simplespunir.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   punir:

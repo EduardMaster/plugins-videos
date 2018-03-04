@@ -1,4 +1,4 @@
-name: eComboCounter
+name: EduComboCounter
 description: Sistema de contar o seu combo feito
 main: net.eduard.combocounter.Main
 version: 1.0

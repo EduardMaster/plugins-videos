@@ -1,7 +1,8 @@
-name: Warp
+name: EduardWarp
 description: Tutorial do Plugin de Warp
-main: net.eduard.warp.Main
+main: net.eduard.simplewarp.Main
 version: 1.0
+author: Eduard
 authors: [Eduard]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:

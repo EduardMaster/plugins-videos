@@ -1,8 +1,9 @@
-name: EMCaixas
+name: eCaixas
 description: Sistema de Caixas Misteriosas Simpels
 main: net.eduard.misterybox.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   comando:

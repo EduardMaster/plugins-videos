@@ -1,7 +1,8 @@
-name: Template
+name: eBungeeTeste
 description: Plugin Template
-main: net.eduard.template.Main
+main: net.eduard.bungeeteste.Main
 version: 1.0
+author: Eduard
 authors: [Eduard]
 depend: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD

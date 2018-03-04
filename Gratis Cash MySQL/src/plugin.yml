@@ -1,6 +1,7 @@
-name: Template
-description: Template
-main: net.eduard.template.Main
+name: eCashSql
+description: Plugin de cash do mysql
+main: net.eduard.cashsql.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD

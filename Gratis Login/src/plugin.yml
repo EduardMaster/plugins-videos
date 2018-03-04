@@ -1,4 +1,4 @@
-name: Login
+name: EduardLogin
 version: 1.0.0
 description: Plugin de login basico
 main: net.eduard.tutorial.login.Login

@@ -1,0 +1,6 @@
+name: LiveDoEdu
+main: net.eduard.live.Main
+version: 1.7
+commands:
+  tempban:
+    aliases: [banirtemporariamente,bt,bantemp]

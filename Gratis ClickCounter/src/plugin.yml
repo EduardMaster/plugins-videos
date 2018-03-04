@@ -1,9 +1,9 @@
-name: eClickConter
-
+name: EduClickConter
 description: Sistema de testar quantos cliques voce consegue fazer
 main: net.eduard.clickcounter.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 depend: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:

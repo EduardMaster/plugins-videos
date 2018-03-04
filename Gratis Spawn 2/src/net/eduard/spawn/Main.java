@@ -13,10 +13,7 @@ import net.eduard.spawn.command.SpawnCommand;
 import net.eduard.spawn.event.SpawnEvent;
 
 
-/**
- * Preço: 12
- * @author Eduard-PC
- */
+
 public class Main extends EduardPlugin {
 	public static Main getPlugin() {
 		return JavaPlugin.getPlugin(Main.class);

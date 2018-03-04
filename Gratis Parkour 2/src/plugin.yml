@@ -1,8 +1,9 @@
-name: Parkour
+name: EduardParkour
 description: Plugin do Minigame de Parkour
 main: net.eduard.parkour.Main
 version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   parkour:

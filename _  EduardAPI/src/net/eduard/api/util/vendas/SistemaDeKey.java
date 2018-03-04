@@ -14,7 +14,11 @@ import net.eduard.api.setup.ConfigAPI;
 import net.eduard.api.setup.Extra;
 import net.eduard.api.setup.Extra.KeyType;
 import net.eduard.api.setup.Mine;
-
+/**
+ * Desenvolvido por Eduard mais SrNizinho
+ * @author Eduard
+ *
+ */
 public class SistemaDeKey {
 
 	@SuppressWarnings("resource")

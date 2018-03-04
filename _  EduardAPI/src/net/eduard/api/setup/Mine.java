@@ -202,7 +202,6 @@ public final class Mine {
 		}
 	}
 
-	
 	public static void registerDefaults() {
 		StorageAPI.register(Item.class, new Item());
 		StorageAPI.register(MaterialData.class, new Variable() {
@@ -1528,9 +1527,17 @@ public final class Mine {
 		Mine.disableAI(npc);
 		return npc;
 	}
-
+	/**
+	 * Tenha certeza que esta carregado a chunk pois assim funciona, caso contario buga<br>
+	 * location.getChunk().load(true);
+	 * @param location Local
+	 * @param line Linha
+	 * @return ArmorStand
+	 */
 	public static ArmorStand newHologram(Location location, String line) {
 		ArmorStand holo = location.getWorld().spawn(location, ArmorStand.class);
+		if (!location.getChunk().isLoaded())
+			location.getChunk().load(true);
 		holo.setGravity(false);
 		holo.setVisible(false);
 		holo.setCustomNameVisible(true);
@@ -4603,7 +4610,6 @@ public final class Mine {
 		}
 	}
 
-
 	public static Player getPlayer(String name) {
 		return Bukkit.getPlayerExact(name);
 	}
@@ -5556,7 +5562,7 @@ public final class Mine {
 
 	public static enum ItemCategory {
 
-		WEAPON, ARMOUR, BLOCK, ORE, TOOL, OTHER, FARM, FOOD, SPAWNER, SKULL,POTION;
+		WEAPON, ARMOUR, BLOCK, ORE, TOOL, OTHER, FARM, FOOD, SPAWNER, SKULL, POTION;
 
 		public static ItemCategory getBy(ItemStack item) {
 			if (Enchantment.DAMAGE_ALL.canEnchantItem(item)) {

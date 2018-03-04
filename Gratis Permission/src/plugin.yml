@@ -1,8 +1,9 @@
-name: EMGroup
+name: eGroup
 description: Plugin de Permissao
 main: net.eduard.permission.Main
-version: 0.2
+version: 1.0
 authors: [Eduard]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   groupmaster:

@@ -12,6 +12,7 @@ public class TestConfig {
 		t.saveYaml();
 //		t.saveConfig();
 		t.debug();
+		
 	}
 
 }

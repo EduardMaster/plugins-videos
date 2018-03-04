@@ -1,13 +1,11 @@
-name: Template
-description: Plugin Template
-main: net.eduard.template.Main
+name: EduAdmin
+description: Simples plugin de /admin
+main: net.eduard.admin.Main
 version: 1.0
 authors: [Eduard]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
-  comando:
-    aliases: [dg]
-    permission: perm.use
-    permission-message: No Permission
+  admin:
+    aliases: [adm]
     usage: /<command> [usage]
-    description: Comando Description
+    description: Entrar ou sair do modo admin

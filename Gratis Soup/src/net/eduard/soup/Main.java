@@ -25,10 +25,7 @@ import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
 import net.eduard.soup.command.SoupCommand;
 
-/**
- * Preço: 15
- *
- */
+
 public class Main extends JavaPlugin implements Listener {
 
 	public static Config getConfig(World world) {

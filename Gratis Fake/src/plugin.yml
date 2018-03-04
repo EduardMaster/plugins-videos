@@ -1,6 +1,6 @@
-name: EMFake
+name: EduFake
 description: Sistema de Alterar o Nome temporariamente
-main: net.eduard.fake.Main
+main: net.eduard.simplefake.Main
 version: 1.0
 authors: [Eduard]
 website: https://www.youtube.com/user/EduTutoriaisHD

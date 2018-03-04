@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.API;
 import net.eduard.api.manager.CommandManager;
-import net.eduard.clickcounter.event.CPSCounter;
+import net.eduard.clickcounter.events.CPSCounter;
 
 public class TestClickCommand extends CommandManager {
 

@@ -1,0 +1,6 @@
+name: Live
+main: net.eduard.live07.Main
+version: 1.0
+commands:
+  vender:
+  compactar:

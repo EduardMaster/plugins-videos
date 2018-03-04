@@ -70,11 +70,27 @@ import net.eduard.api.util.SimpleChatAPI.ChatChannel;
 /**
  * Classe Principal do Plugin EduardAPI herda todas propriedades de um
  * JavaPlugin e também implementa Listener para alterar eventos.
- * 
+ * <br>
+ *  Padroes que vão existir na nomeclatura dos plugins<br>
+	 * Possiveis Prefixos:
+	 * e, 
+	 * Edu, 
+	 * Eduard, 
+	 * Master, 
+	 * EduMaster, 
+	 * EM, 
+	 * <br>
+	 * Padrão para Plugins iniciado no dia 02/03/2018<br>
+	 * Prefixo+Nome exemplo MasterFactions<br>
+		* <br>
+	 * A qualquer momento posso mudar a nomeclatura porem os plugins já nomeados anteriormente continuam com mesmo nome.<br>
+	 * 
  * @author Eduard
  * @version 1.0
  * @since 1.0
- */
+
+	 
+	 */
 public class EduardAPI extends JavaPlugin implements Listener {
 
 	private static JavaPlugin plugin;
@@ -115,7 +131,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public void onLoad() {
 	}
 
-	@Override
+	
 	public void onEnable() {
 		plugin = this;
 //		UsarStorage.register(this);

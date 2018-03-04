@@ -1,8 +1,9 @@
-name: MegaPvP
+name: EduPvP
 description: Plugin de KitPvP
-main: mega.plugins.kitpvp.Main
+main: net.plugins.kitpvp.Main
 version: 1.0
 authors: [Eduard,KyzeYT]
+author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   comando:
