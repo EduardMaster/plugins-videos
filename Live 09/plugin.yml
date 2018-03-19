@@ -1,0 +1,8 @@
+name: LiveDoEdu
+version: 1.0
+main: net.eduard.live.Main
+commands:
+  teste:
+  mudarplaca:
+  luz:
+  baucair:

@@ -229,7 +229,7 @@ public class ConfigAPI {
 	}
 
 	public double getDouble(String path) {
-		return config.getDouble(path);
+		return config.getDouble(path,0);
 	}
 
 	public int getInt(String path) {

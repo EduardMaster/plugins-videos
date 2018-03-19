@@ -82,6 +82,8 @@ public class EduardBungee extends Plugin implements Listener {
 			config.saveConfig();
 
 		}
+		
+		
 
 		bungeeManager.openConnection();
 		if (bungeeManager.hasConnection()) {

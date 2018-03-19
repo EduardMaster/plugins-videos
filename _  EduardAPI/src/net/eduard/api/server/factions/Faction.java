@@ -128,7 +128,7 @@ public class Faction implements Storable {
 	}
 
 	public int getPlaying() {
-		return getMembers().size();
+		return getMembersOnline().size();
 	}
 
 	public boolean isWarZone() {

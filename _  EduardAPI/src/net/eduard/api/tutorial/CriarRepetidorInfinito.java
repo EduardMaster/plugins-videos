@@ -1,5 +1,7 @@
 package net.eduard.api.tutorial;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 public class CriarRepetidorInfinito {
 
 	public static void geito1() {
@@ -11,5 +13,7 @@ public class CriarRepetidorInfinito {
 		while(true) {
 			break;
 		}
+		
+		
 	}
 }
