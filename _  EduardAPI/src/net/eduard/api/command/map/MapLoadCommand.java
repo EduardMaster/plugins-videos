@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class MapLoadCommand extends CommandManager {
 
@@ -21,10 +21,10 @@ public class MapLoadCommand extends CommandManager {
 		if (args.length == 1) {
 			sender.sendMessage("§c/e load <name>");
 		} else {
-			if (API.onlyPlayer(sender)) {
+			if (Mine.onlyPlayer(sender)) {
 				Player p = (Player) sender;
-				if (API.SCHEMATICS.containsKey(args[1].toLowerCase())) {
-//					API.MAPS.put(p, API.SCHEMATICS.get(args[1].toLowerCase()));
+				if (Mine.SCHEMATICS.containsKey(args[1].toLowerCase())) {
+					Mine.MAPS.put(p, Mine.SCHEMATICS.get(args[1].toLowerCase()));
 					p.sendMessage("§bEduardAPI §6Mapa carregado com sucesso!");
 				} else {
 					p.sendMessage("§bEduardAPI §cMapa invalido: §f" + args[1]);

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.game.Ability;
 
 
 public class Urgal extends Ability{

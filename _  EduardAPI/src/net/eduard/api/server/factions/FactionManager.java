@@ -4,19 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.server.ranks.Rank;
 import net.eduard.api.server.ranks.RankManager;
 import net.eduard.api.setup.StorageAPI.Reference;
 import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.setup.game.Chunk;
 
 public class FactionManager implements Storable {
-
+	private ItemStack itemMaxPower,itemInstantPower;
+	private int maxPlayerSize=15;
+	private int startingPower=5,startingPowerMax=5;
+	
+	private Map<EntityType, Double> generatorsPrices = new HashMap<>();
 	private Map<String, Faction> factions = new HashMap<>();
 	private Map<UUID, FactionPlayer> members = new HashMap<>();
 	private transient FactionGeneratorManager generatorManager;
@@ -27,10 +32,10 @@ public class FactionManager implements Storable {
 	private Faction protectedZone;
 	@Reference
 	private Faction freeZone;
-	private Map<EntityType, Double> generatorsPrices = new HashMap<>();
+
 
 	public Rank getRank(FactionPlayer player) {
-		return ranks.getPlayerRank(player.getId());
+		return ranks.getPlayerRank(player.getPlayerData());
 	}
 
 	public FactionManager() {
@@ -45,13 +50,30 @@ public class FactionManager implements Storable {
 		freeZone.setManager(this);
 
 		Rank rankLeader = new Rank("lider", 1);
-		rankLeader.setPrefix("**");
+		rankLeader.setPosition(4);
+		rankLeader.setPrefix("#");
+		rankLeader.setPreviousRank("captain");
 		ranks.getRanks().put("leader", rankLeader);
 
-		Rank rankMember = new Rank("membro", 2);
-		rankMember.setPrefix("+");
-		rankMember.setNextRank("leader");
+		Rank rankMember = new Rank("member", 2);
+		rankMember.setPrefix("*");
+		rankMember.setPosition(1);
+		rankMember.setNextRank("recruit");
 		ranks.getRanks().put("member", rankMember);
+		
+		Rank rankRecruit = new Rank("recruit", 2);
+		rankRecruit.setPrefix("+");
+		rankRecruit.setNextRank("captain");
+		rankRecruit.setPosition(2);
+		ranks.getRanks().put("recruit", rankRecruit);
+		
+		Rank rankCaptain = new Rank("captain", 2);
+		rankCaptain.setPrefix("-");
+		rankCaptain.setNextRank("leader");
+		rankCaptain.setPosition(3);
+		ranks.getRanks().put("captain", rankCaptain);
+		
+		
 		ranks.setFirst("member");
 		ranks.setLast("leader");
 		for (EntityType e : EntityType.values()) {
@@ -76,6 +98,7 @@ public class FactionManager implements Storable {
 		Faction fac = claim.getFaction();
 		fac.getGenerators().put(type, fac.getGenerators().getOrDefault(type, 0) + 1);
 	}
+
 	public void removeGenerator(Location location, EntityType type) {
 		FactionClaim claim = getClaim(location);
 		Faction fac = claim.getFaction();
@@ -84,7 +107,7 @@ public class FactionManager implements Storable {
 
 	public FactionPlayer getMember(String nome) {
 		for (FactionPlayer member : members.values()) {
-			if (member.getName().equalsIgnoreCase(nome)) {
+			if (member.getPlayerData().getName().equalsIgnoreCase(nome)) {
 				return member;
 
 			}
@@ -99,8 +122,7 @@ public class FactionManager implements Storable {
 		// Mine.console("§e"+ranks.getLastRank());
 		if (member == null) {
 			member = new FactionPlayer();
-			member.setName(player.getName());
-			member.setId(player.getUniqueId());
+			member.setPlayerData(player);
 			member.setManager(this);
 			// ranks.setRank(player.getUniqueId(), ranks.getFirst());
 			members.put(player.getUniqueId(), member);
@@ -162,7 +184,7 @@ public class FactionManager implements Storable {
 		FactionClaim claim = new FactionClaim(chunk);
 		for (Faction fac : factions.values()) {
 			for (FactionClaim loopClaim : fac.getClaims()) {
-				if (loopClaim.equals(claim)) {
+				if (loopClaim.getChunk().equals(claim.getChunk())) {
 					return loopClaim;
 				}
 
@@ -173,12 +195,12 @@ public class FactionManager implements Storable {
 
 	public void factionCreate(FactionPlayer player, Faction faction) {
 		faction.setLeader(player);
-		ranks.setLastRank(player.getId());
+		ranks.setLastRank(player.getPlayerData());
 		factionJoin(player, faction);
 	}
 
 	public FactionClaim getClaim(Location location) {
-		return getClaim(location.getChunk());
+		return getClaim(new Chunk(location.getChunk()));
 	}
 
 	public boolean isClaimed(Location location) {
@@ -195,7 +217,7 @@ public class FactionManager implements Storable {
 		Faction fac = member.getFaction();
 		member.getFaction().getMembers().remove(member);
 		member.setFaction(null);
-		ranks.setFirstRank(member.getId());
+		ranks.setFirstRank(player);
 		if (fac.getLeader().equals(member)) {
 			deleteFaction(fac);
 		}
@@ -206,6 +228,26 @@ public class FactionManager implements Storable {
 		FactionClaim claim = new FactionClaim(player.getLocation());
 		claim.setFaction(fac);
 		fac.getClaims().add(claim);
+	}
+
+	public boolean canClaim(Chunk chunk, Faction faction) {
+		boolean temOutraFac = false;
+		boolean temTerrenoPerto = false;
+		int range = 1;
+		for (int x = -range; x <= range; x++) {
+			for (int z = -range; z <= range; z++) {
+				Chunk newChunk = chunk.newChunk(chunk.getX() + x, chunk.getZ() + z);
+				FactionClaim claim = getClaim(newChunk);
+				if (!faction.equals(claim.getFaction()) && claim.isDomined()) {
+					temOutraFac = true;
+				}
+				if (faction.equals(claim.getFaction())) {
+					temTerrenoPerto = true;
+				}
+
+			}
+		}
+		return (temTerrenoPerto && !temOutraFac);
 	}
 
 	public Faction createFaction(String name, String tag) {
@@ -219,7 +261,7 @@ public class FactionManager implements Storable {
 
 		for (FactionPlayer member : faction.getMembers()) {
 			member.setFaction(null);
-			ranks.setFirstRank(member.getId());
+			ranks.setFirstRank(member.getPlayerData());
 
 		}
 		for (Faction fac : faction.getAllies()) {
@@ -297,6 +339,46 @@ public class FactionManager implements Storable {
 
 	public void setGeneratorsPrices(Map<EntityType, Double> generatorsPrices) {
 		this.generatorsPrices = generatorsPrices;
+	}
+
+	public ItemStack getItemInstantPower() {
+		return itemInstantPower;
+	}
+
+	public void setItemInstantPower(ItemStack itemInstantPower) {
+		this.itemInstantPower = itemInstantPower;
+	}
+
+	public ItemStack getItemMaxPower() {
+		return itemMaxPower;
+	}
+
+	public void setItemMaxPower(ItemStack itemMaxPower) {
+		this.itemMaxPower = itemMaxPower;
+	}
+
+	public int getMaxPlayerSize() {
+		return maxPlayerSize;
+	}
+
+	public void setMaxPlayerSize(int maxPlayerSize) {
+		this.maxPlayerSize = maxPlayerSize;
+	}
+
+	public int getStartingPower() {
+		return startingPower;
+	}
+
+	public void setStartingPower(int startingPower) {
+		this.startingPower = startingPower;
+	}
+
+	public int getStartingPowerMax() {
+		return startingPowerMax;
+	}
+
+	public void setStartingPowerMax(int startingPowerMax) {
+		this.startingPowerMax = startingPowerMax;
 	}
 
 }

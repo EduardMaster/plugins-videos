@@ -9,7 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.manager.EventsManager;
 
 public class ChatManager extends EventsManager  {
 	private String messageChatDisabled = "&cChat desabilitado tempariamente!";

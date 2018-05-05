@@ -4,12 +4,12 @@ package net.eduard.api.command.api;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ApiLoadCommand extends CommandManager {
 
 	public ApiLoadCommand() {
-		super("reload");
+		super("load","carregar");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
-import net.eduard.api.setup.Mine.FakeOfflinePlayer;
+import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Reference;
 import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.setup.lib.FakePlayer;
 import net.eduard.api.setup.VaultAPI;
 
 /**
@@ -23,39 +24,81 @@ import net.eduard.api.setup.VaultAPI;
  *
  */
 public class RankManager implements Storable {
-	private transient Map<Player, PermissionAttachment> permissions = new HashMap<>();
-
-	private Map<String, Rank> ranks = new LinkedHashMap<>();
-
+	private transient Map<UUID, PermissionAttachment> permissions = new HashMap<>();
 	private String first;
-
 	private String last;
-
 	private boolean perGroup = true;
-
+	private Map<String, Rank> ranks = new LinkedHashMap<>();
+	
 	@Reference
-	private Map<UUID, Rank> playersRanks = new HashMap<>();
+	private Map<OfflinePlayer, Rank> playersRanks = new HashMap<>();
 
-	public void promote(Player player) {
+	public PermissionAttachment getPermissionControler(OfflinePlayer player) {
+		PermissionAttachment controler = permissions.get(player.getUniqueId());
+		if (controler== null) {
+			Player p = player.getPlayer();
+			if (p!=null) {
+				controler = new PermissionAttachment(Mine.getMainPlugin(), p);
+				permissions.put(p.getUniqueId(), controler);
+			}
+				
+		}
+		
+		return controler;
+	}
+
+	
+
+	public void promote(OfflinePlayer player) {
 		setRank(player, getPlayerRank(player).getNextRank());
 
 	}
 
-	public boolean isInLastRank(Player p) {
+	public void removePermissions(OfflinePlayer player) {
+		Rank rank = getPlayerRank(player);
+		if (perGroup) {
+			VaultAPI.getPermission().playerRemoveGroup(null, player, rank.getName());
+		} else {
+			PermissionAttachment controler = getPermissionControler(player);
+			for (String permission : rank.getPermissions()) {
+				controler.unsetPermission(permission);
+			}
+		}
+
+	}
+
+	public void addPermissions(OfflinePlayer player) {
+		Rank rank = getPlayerRank(player);
+		
+		if (perGroup) {
+			VaultAPI.getPermission().playerAddGroup(null, player, rank.getName());
+		} else {
+			PermissionAttachment controler = getPermissionControler(player);
+			for (String permission : rank.getPermissions()) {
+				controler.setPermission(permission, true);
+			}
+		}
+
+	}
+
+
+	public boolean isInLastRank(OfflinePlayer p) {
 		return getLastRank().equals(getPlayerRank(p));
 	}
 
-	public void demote(Player player) {
+	public void demote(OfflinePlayer player) {
 		setRank(player, getPlayerRank(player).getPreviousRank());
 	}
 
-	public void updatePermissions() {
-		if (perGroup) {
-			for (Entry<String, Rank> map : ranks.entrySet()) {
-				Rank rank = map.getValue();
-				rank.removePermissions();
-				rank.addPermissions();
+	public void updateGroupPermissions() {
+		for (Rank rank : ranks.values()) {
+			for (String permission : rank.getPermissions()) {
+				VaultAPI.getPermission().groupRemove((World) null, rank.getName(), permission);
 			}
+			for (String permission : rank.getPermissions()) {
+				VaultAPI.getPermission().groupAdd((World) null, rank.getName(), permission);
+			}
+
 		}
 	}
 
@@ -67,120 +110,42 @@ public class RankManager implements Storable {
 		return getRank(last);
 	}
 
-	public Map<UUID, Rank> getPlayers() {
-		return playersRanks;
-	}
 
-	public void setRanks(Map<String, Rank> ranks) {
-		this.ranks = ranks;
-	}
 
-	public void updateGroups(Player p) {
-		for (Entry<String, Rank> map : ranks.entrySet()) {
-			Rank rank = map.getValue();
-			VaultAPI.getPermission().playerRemoveGroup(p, rank.getName());
-		}
-		Rank rank = getPlayerRank(p);
-		VaultAPI.getPermission().playerAddGroup(p, rank.getName());
-	}
+	public Rank getPlayerRank(OfflinePlayer p) {
+		FakePlayer fake = new FakePlayer(p);
+		Rank rank = playersRanks.get(fake);
 
-	public void updateGroups() {
-		if (perGroup) {
-			// for (Entry<String, Rank> map : ranks.entrySet()) {
-			// Rank rank = map.getValue();
-			// for (Player p : API.getPlayers()) {
-			// VaultAPI.getPermission().playerRemoveGroup(p, rank.getName());
-			// }
-			// for (Entry<UUID, Rank> entry : playersRanks.entrySet()) {
-			// UUID id = entry.getKey();
-			// FakeOfflinePlayer fake = new FakeOfflinePlayer(null, id);
-			// VaultAPI.getPermission().playerAddGroup(null, fake, rank.getName());
-			// }
-			// }
-			for (Entry<UUID, Rank> map : playersRanks.entrySet()) {
-				Rank rank = map.getValue();
-				UUID id = map.getKey();
-				FakeOfflinePlayer fake = new FakeOfflinePlayer(null, id);
-				VaultAPI.getPermission().playerAddGroup(null, fake, rank.getName());
-			}
-		}
-	}
-
-	public Map<String, Rank> getRanks() {
-		return ranks;
-	}
-
-	public void setRanks(NavigableMap<String, Rank> ranks) {
-		this.ranks = ranks;
-	}
-
-	public Rank getPlayerRank(Player player) {
-		return getPlayerRank(player.getUniqueId());
-	}
-
-	public Rank getPlayerRank(UUID playerId) {
-		Rank rank = playersRanks.get(playerId);
 		if (rank == null) {
-			Player player = Bukkit.getPlayer(playerId);
-			setRank(playerId, rank = getFirstRank());
-			if (player != null) {
-				addPermissions(player);
-			}
-			// rank = getFirstRank();
-			// setRank(player.getUniqueId(), first);
-
+			playersRanks.put(fake, rank = getFirstRank());
+			addPermissions(fake);
 		}
+		
 		return rank;
 	}
 
-	public void rankUp(Player p) {
+	public void rankUp(OfflinePlayer p) {
 		Rank rank = getPlayerRank(p);
 		VaultAPI.getEconomy().withdrawPlayer(p, rank.getPrice());
 		setRank(p, rank.getNextRank());
 	}
 
-	public void removePermissions(Player player) {
-		if (perGroup) {
-			getPlayerRank(player).removeGroup(player);
-		} else {
 
-			getPlayerRank(player).removePermissions(player);
 
-		}
-
-	}
-
-	public void setRank(UUID playerId, Rank rank) {
-		playersRanks.put(playerId, rank);
-	}
-	public void setFirstRank(UUID playerId) {
-		setRank(playerId,getFirstRank());
-	}
-	public void setLastRank(UUID playerId) {
-		setRank(playerId,getLastRank());
-	}
-	public void setRank(Player p, String rank) {
-
-		removePermissions(p);
-		setRank(p.getUniqueId(), getRank(rank));
-		addPermissions(p);
+	public void setRank(OfflinePlayer p, String newRank) {
+		FakePlayer fake = new FakePlayer(p);
+		removePermissions(fake);
+		playersRanks.put(fake, getRank(newRank));
+		addPermissions(fake);
 
 	}
 
-	public void addPermissions(Player p) {
-		if (perGroup) {
-			updateGroups(p);
-		} else {
-			getPlayerRank(p).addPermissions(p);
-		}
-	}
-
-	public boolean canRankUp(Player p) {
+	public boolean canRankUp(OfflinePlayer p) {
 		return VaultAPI.getEconomy().has(p, getPlayerRank(p).getPrice());
 
 	}
 
-	public double getPercent(Player p) {
+	public double getPercent(OfflinePlayer p) {
 
 		Rank rank = getPlayerRank(p);
 		double dinheiroParaUpar = rank.getPrice();
@@ -255,12 +220,49 @@ public class RankManager implements Storable {
 		this.perGroup = perGroup;
 	}
 
-	public Map<Player, PermissionAttachment> getPermissions() {
+
+
+	public Map<UUID, PermissionAttachment> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(Map<Player, PermissionAttachment> permissions) {
+
+
+	public void setPermissions(Map<UUID, PermissionAttachment> permissions) {
 		this.permissions = permissions;
+	}
+
+
+
+	public Map<String, Rank> getRanks() {
+		return ranks;
+	}
+
+
+
+	public void setRanks(Map<String, Rank> ranks) {
+		this.ranks = ranks;
+	}
+
+
+
+	public Map<OfflinePlayer, Rank> getPlayersRanks() {
+		return playersRanks;
+	}
+
+
+
+	public void setPlayersRanks(Map<OfflinePlayer, Rank> playersRanks) {
+		this.playersRanks = playersRanks;
+	}
+
+
+
+	public void setLastRank(OfflinePlayer player) {
+		setRank(player, getLast());
+	}
+	public void setFirstRank(OfflinePlayer player) {
+		setRank(player, getFirst());
 	}
 
 }

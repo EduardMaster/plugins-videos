@@ -5,7 +5,6 @@ debug-plugin-messages: true
 save-worlds: true
 save-players: false
 
-
 no-join-message: true
 custom-join-message: false
 on-join-message: '&6O jogador &e$player &6entrou no server'
@@ -19,9 +18,6 @@ custom-death-message: false
 on-death-player-message: '&6O jogador &e$killer matou o jogador $player'
 
 
-custom-chat: false
-chat-format: '$player: $message'
-
 custom-motd: false
 
 custom-motd-amount: -1
@@ -31,3 +27,5 @@ motd:
 
 auto-respawn: false
 auto-rejoin: false
+
+

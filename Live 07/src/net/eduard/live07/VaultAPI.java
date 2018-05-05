@@ -7,7 +7,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 /**
- * API para a utilização do Vault com um formato mais simples de entender <br>
+ * Mine para a utilização do Vault com um formato mais simples de entender <br>
  * 
  * @author Eduard
  * @version 1.0

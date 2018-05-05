@@ -3,19 +3,18 @@ package net.eduard.api.kits;
 import java.util.HashMap;
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.click.PlayerClick;
-import net.eduard.api.click.PlayerClickEffect;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Explosion;
-import net.eduard.api.game.Jump;
-import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.click.PlayerClick;
+import net.eduard.api.setup.click.PlayerClickEffect;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.setup.game.Explosion;
+import net.eduard.api.setup.game.Jump;
+import net.eduard.api.setup.game.Sounds;
 
 public class C4 extends Ability {
 
@@ -28,7 +27,7 @@ public class C4 extends Ability {
 		add(Material.STONE_BUTTON);
 		message("§6A bomba foi plantada!");
 		jump(new Jump(false, 0.6, 0.5,
-				Sounds.create(Sound.CLICK)));
+				Sounds.create("CLICK")));
 		explosion(new Explosion(4, false, false));
 		setTime(2);
 		setTimes(2);

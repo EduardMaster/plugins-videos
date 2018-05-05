@@ -13,8 +13,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
 import me.confuser.barapi.BarAPI;
-import net.eduard.api.API;
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Ability;
 
 
 public class MadMan extends Ability{
@@ -29,7 +29,7 @@ public class MadMan extends Ability{
 	public void run() {
 		
 		 DecimalFormat dm = new DecimalFormat("##");
-		      for (Player p : API.getPlayers())
+		      for (Player p : Mine.getPlayers())
 		      {
 		        if (hasKit(p)) {
 		          for (Entity e : p.getNearbyEntities(20.0D, 20.0D, 20.0D)) {

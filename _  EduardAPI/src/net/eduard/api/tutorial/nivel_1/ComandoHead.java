@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 /**
- * HEAD significa a cabeça do jogador em forma de Item
+ * HEAD significa a cabeï¿½a do jogador em forma de Item
  * @author Eduard-PC
  *
  */
@@ -18,12 +18,12 @@ public class ComandoHead implements CommandExecutor {
 
 		Player jogador = (Player) sender;
 		if (command.getName().equalsIgnoreCase("headof")) {
-			ItemStack cabeça = new ItemStack(Material.SKULL_ITEM,1,(short) 3);
-			SkullMeta meta = (SkullMeta) cabeça.getItemMeta();
+			ItemStack cabeca = new ItemStack(Material.SKULL_ITEM,1,(short) 3);
+			SkullMeta meta = (SkullMeta) cabeca.getItemMeta();
 			meta.setOwner(jogador.getName());
-			cabeça.setItemMeta(meta);
-			jogador.sendMessage("§aVoce ganhou sua cabeça!");
-			jogador.getInventory().addItem(cabeça);
+			cabeca.setItemMeta(meta);
+			jogador.sendMessage("ï¿½aVoce ganhou sua cabeca!");
+			jogador.getInventory().addItem(cabeca);
 		}
 		return true;
 	}

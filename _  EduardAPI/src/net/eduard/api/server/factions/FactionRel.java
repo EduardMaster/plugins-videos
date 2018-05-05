@@ -2,7 +2,7 @@ package net.eduard.api.server.factions;
 
 public enum FactionRel {
 
-	RIVAL("§c", true), ALLY("§9"), NEUTRAL("§7"), MEMBER("§a"), FREE_ZONE("§f",
+	RIVAL("§c", true), ALLY("§a"), NEUTRAL("§f"), MEMBER("§8"), FREE_ZONE("§7",
 			true), PROTECTED_ZONE("§6"), WAR_ZONE("§4", true), WAR("§d", true), LEADER("§6");
 
 	private FactionRel(String color) {

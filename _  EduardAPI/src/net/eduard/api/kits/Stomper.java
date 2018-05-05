@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.game.Ability;
 
 public class Stomper extends Ability {
 

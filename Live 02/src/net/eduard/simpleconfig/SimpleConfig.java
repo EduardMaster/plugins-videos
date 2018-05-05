@@ -18,7 +18,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * API simplificada de criar configuração Path = Endereço = Secao
+ * Mine simplificada de criar configuração Path = Endereço = Secao
  * 
  * @author Eduard
  *

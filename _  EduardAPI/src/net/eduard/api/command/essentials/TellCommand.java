@@ -8,10 +8,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
-import net.eduard.api.setup.ChatAPI.Chat;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.SpigotAPI.Chat;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class TellCommand extends CommandManager {
 
@@ -36,20 +35,20 @@ public class TellCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length <= 1) {
-			API.chat(sender, getUsage());
+			Mine.chat(sender, getUsage());
 		} else {
-			if (API.existsPlayer(sender, args[0])) {
+			if (Mine.existsPlayer(sender, args[0])) {
 				Player target = Mine.getPlayer(args[0]);
 				String message = Mine.getText(1, args);
 				if (!isToggle(target)) {
-					API.chat(sender, messageDisabled.replace("$player",
+					Mine.chat(sender, messageDisabled.replace("$player",
 							target.getName()));
 				} else {
-					API.chat(sender,
+					Mine.chat(sender,
 							this.message.replace("$target", target.getName())
 									.replace("$>", Chat.getArrowRight())
 									.replace("$message", message));
-					API.chat(target,
+					Mine.chat(target,
 							messageTarget.replace("$player", sender.getName())
 									.replace("$>", Chat.getArrowRight())
 									.replace("$message", message));

@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.DisplayBoard;
+import net.eduard.api.setup.game.DisplayBoard;
 
 public class Main extends JavaPlugin implements Listener {
 

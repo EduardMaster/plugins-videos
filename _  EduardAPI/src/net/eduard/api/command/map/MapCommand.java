@@ -1,7 +1,7 @@
 
 package net.eduard.api.command.map;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class MapCommand extends CommandManager {
 
@@ -13,7 +13,6 @@ public class MapCommand extends CommandManager {
 		register(new MapPos2Command());
 		register(new MapLoadCommand());
 		register(new MapSaveCommand());
-		register(new MapWorldCommand());
 		register(new MapHelpCommand());
 	}
 

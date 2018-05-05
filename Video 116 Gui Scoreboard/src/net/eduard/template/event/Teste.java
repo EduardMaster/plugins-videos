@@ -19,7 +19,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.eduard.api.API;
+import net.eduard.api.setup.Mine;
 import net.eduard.template.Main;
 
 public class Teste implements Listener {
@@ -30,7 +30,7 @@ public class Teste implements Listener {
 			
 			@Override
 			public void run() {
-				for (Player p:API.getPlayers()){
+				for (Player p:Mine.getPlayers()){
 					Scoreboard board = criarScoreboard("§6Testando", "§cLinha 1","§2","§eLinha 2");
 					p.setScoreboard(board);
 				}

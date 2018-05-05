@@ -10,10 +10,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.PlayerClickEntity;
-import net.eduard.api.click.PlayerClickEntityEffect;
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.click.PlayerClickEntity;
+import net.eduard.api.setup.click.PlayerClickEntityEffect;
+import net.eduard.api.setup.game.Ability;
 
 public class TimeLord extends Ability {
 
@@ -33,7 +33,7 @@ public class TimeLord extends Ability {
 						Player target = (Player) entity;
 						if (cooldown(player)) {
 							inEffect.add(target);
-							API.TIME.delay(2,new Runnable() {
+							Mine.TIME.delay(2,new Runnable() {
 
 								@Override
 								public void run() {

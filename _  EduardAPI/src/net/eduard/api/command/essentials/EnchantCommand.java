@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class EnchantCommand extends CommandManager {
 

@@ -4,12 +4,12 @@ package net.eduard.api.command.api;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ApiEnableCommand extends CommandManager {
 
 	public ApiEnableCommand() {
-		super("reload");
+		super("enable","habilitar");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

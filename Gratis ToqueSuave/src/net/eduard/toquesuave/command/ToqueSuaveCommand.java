@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 import net.eduard.toquesuave.Main;
 
 public class ToqueSuaveCommand extends CommandManager {

@@ -5,7 +5,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
+/**
+ * Não deixar creeper explodir
+ * @author Eduard
+ *
+ */
 public class BloquearExplosao implements Listener{
 	
 	

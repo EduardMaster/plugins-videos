@@ -10,8 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.API;
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.EventsManager;
 
 public class CPSCounter extends EventsManager {
 	private static Map<Player, Integer> clicks = new HashMap<>();
@@ -24,7 +24,7 @@ public class CPSCounter extends EventsManager {
 	}
 	private static List<Player> clicking = new ArrayList<>();
 	public CPSCounter() {
-		API.TIME.timer(20, new Runnable() {
+		Mine.TIME.timer(20, new Runnable() {
 
 			@Override
 			public void run() {
@@ -33,7 +33,7 @@ public class CPSCounter extends EventsManager {
 		});
 	}
 	public void show() {
-		for (Player p : API.getPlayers()) {
+		for (Player p : Mine.getPlayers()) {
 			if (clicking.contains(p)) {
 				p.sendMessage(
 						"§aSeus Clicks: §e(" + clicks.get(p) + "/Segundo)");

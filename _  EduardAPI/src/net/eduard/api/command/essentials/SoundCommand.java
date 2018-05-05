@@ -8,9 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class SoundCommand extends CommandManager {
 
@@ -42,14 +41,14 @@ public class SoundCommand extends CommandManager {
 				player = (Player) sender;
 			}
 			if (args.length >= 4) {
-				if (API.existsPlayer(sender, args[3])) {
+				if (Mine.existsPlayer(sender, args[3])) {
 					player = Mine.getPlayer(args[3]);
 				} else
 					return true;
 
 			}
 			if (player == null) {
-				sender.sendMessage(API.PLAYER_NOT_EXISTS);
+				sender.sendMessage(Mine.PLAYER_NOT_EXISTS);
 				return true;
 			}
 

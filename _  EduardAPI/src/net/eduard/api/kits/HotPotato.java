@@ -9,11 +9,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import net.eduard.api.API;
-import net.eduard.api.click.PlayerClickEntity;
-import net.eduard.api.click.PlayerClickEntityEffect;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Explosion;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.click.PlayerClickEntity;
+import net.eduard.api.setup.click.PlayerClickEntityEffect;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.setup.game.Explosion;
 
 public class HotPotato extends Ability {
 
@@ -35,7 +35,7 @@ public class HotPotato extends Ability {
 						PlayerInventory inv = target.getInventory();
 						inv.setHelmet(new ItemStack(Material.TNT));
 						sendMessage(target);
-						API.TIME.delay( effectSeconds,new Runnable() {
+						Mine.TIME.delay( effectSeconds,new Runnable() {
 
 							@Override
 							public void run() {

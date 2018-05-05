@@ -5,9 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class CheckIpCommand extends CommandManager {
 	public String message = "§6Seu IP é: §a$ip";
@@ -22,14 +21,14 @@ public class CheckIpCommand extends CommandManager {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				API.chat(p,message.replace("$ip", Mine.getIp(p)));
+				Mine.chat(p,message.replace("$ip", Mine.getIp(p)));
 			} else
 				return false;
 
 		} else {
-			if (API.existsPlayer(sender, args[0])) {
+			if (Mine.existsPlayer(sender, args[0])) {
 				Player target = Mine.getPlayer(args[0]);
-				API.chat(sender,messageTarget
+				Mine.chat(sender,messageTarget
 						.replace("$player", target.getDisplayName())
 						.replace("$ip", Mine.getIp(target)));
 			}

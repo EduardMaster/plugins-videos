@@ -1,14 +1,14 @@
 
 package net.eduard.api.command.essentials;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ArenaCommand extends CommandManager {
 
 	public ArenaCommand() {
 		super("arena");
 	}
-//	public CooldownAPI cool;
+//	public CooldownMine cool;
 //	/* 32 */ public static ArrayList<String> ArenaCogumeloa = new ArrayList<>();
 //	/* 33 */ public static ArrayList<String> ArenaCogumelob = new ArrayList<>();
 //	/* 34 */ public static ArrayList<String> ArenaPrismarinea = new ArrayList<>();
@@ -161,7 +161,7 @@ public class ArenaCommand extends CommandManager {
 //					/*     */ }
 //				/*     */
 //				/* 171 */ ArenaCogumeloa.add(p.getName());
-//				/* 172 */ PvPAPI.Teleporte(p, "ArenaCogumelo1");
+//				/* 172 */ PvPMine.Teleporte(p, "ArenaCogumelo1");
 //				/* 173 */ p.sendMessage(" ");
 //				/* 174 */ p.sendMessage(
 //						"\u00A7aVoc\u00EA foi teleportado para a Arena Cogumelo #1");
@@ -183,7 +183,7 @@ public class ArenaCommand extends CommandManager {
 //					/*     */ }
 //				/*     */
 //				/* 191 */ ArenaCogumelob.add(p.getName());
-//				/* 192 */ PvPAPI.Teleporte(p, "ArenaCogumelo2");
+//				/* 192 */ PvPMine.Teleporte(p, "ArenaCogumelo2");
 //				/* 193 */ p.sendMessage(" ");
 //				/* 194 */ p.sendMessage(
 //						"\u00A7aVoc\u00EA foi teleportado para a Arena Cogumelo #2");
@@ -204,7 +204,7 @@ public class ArenaCommand extends CommandManager {
 //					/*     */ }
 //				/*     */
 //				/* 211 */ ArenaPrismarinea.add(p.getName());
-//				/* 212 */ PvPAPI.Teleporte(p, "ArenaPrismarine1");
+//				/* 212 */ PvPMine.Teleporte(p, "ArenaPrismarine1");
 //				/* 213 */ p.sendMessage(" ");
 //				/* 214 */ p.sendMessage(
 //						"\u00A7aVoc\u00EA foi teleportado para a Arena Prismarine #1");
@@ -225,7 +225,7 @@ public class ArenaCommand extends CommandManager {
 //					/*     */ }
 //				/*     */
 //				/* 231 */ ArenaPrismarineb.add(p.getName());
-//				/* 232 */ PvPAPI.Teleporte(p, "ArenaPrismarine2");
+//				/* 232 */ PvPMine.Teleporte(p, "ArenaPrismarine2");
 //				/* 233 */ p.sendMessage(" ");
 //				/* 234 */ p.sendMessage(
 //						"\u00A7aVoc\u00EA foi teleportado para a Arena Prismarine #2");
@@ -265,7 +265,7 @@ public class ArenaCommand extends CommandManager {
 //	/*     */ public void morrer(PlayerRespawnEvent e) {
 //		/* 90 */ Player jogador = e.getPlayer();
 //		/*     */
-//		/* 92 */ PvPAPI.Teleporte(jogador, "Spawn01");
+//		/* 92 */ PvPMine.Teleporte(jogador, "Spawn01");
 //		/*     */
 //		/* 94 */ ArenaCogumeloa.remove(e.getPlayer().getName());
 //		/* 95 */ ArenaCogumelob.remove(e.getPlayer().getName());
@@ -279,7 +279,7 @@ public class ArenaCommand extends CommandManager {
 //		/* 104 */ Player p = e.getPlayer();
 //		/* 105 */ if (p.getLocation().getY() <= 0.0D)
 //		/*     */ {
-//			/* 107 */ PvPAPI.Teleporte(p, "Spawn01");
+//			/* 107 */ PvPMine.Teleporte(p, "Spawn01");
 //			/*     */
 //			/* 109 */ ArenaCogumeloa.remove(e.getPlayer().getName());
 //			/* 110 */ ArenaCogumelob.remove(e.getPlayer().getName());
@@ -308,7 +308,7 @@ public class ArenaCommand extends CommandManager {
 //		/*     */
 //		/* 29 */ e.setJoinMessage(null);
 //		/*     */
-//		/* 31 */ PvPAPI.Tab(jogador,
+//		/* 31 */ PvPMine.Tab(jogador,
 //				"\n\n\u00A76\u00A7lFACTION MANIA\n   \u00A77jogar.factionmania.tk\n",
 //				/* 35 */ "\n\u00A76Team Speak: \u00A7fts.factionmania.tk\n\u00A76Twitter: \u00A7f@Faction_Mania\n\n\u00A76Adquira VIP e CASH acessando: \u00A7fwww.loja.factionmania.tk");
 //		/*     */
@@ -340,16 +340,16 @@ public class ArenaCommand extends CommandManager {
 //		/*     */
 //		/* 68 */ if (((FileConfiguration) Grupo)
 //				.get("Jogadores." + jogador.getName().toLowerCase()) == null) {
-//			/* 69 */ PvPAPI.SetGroup(jogador, "Membro");
+//			/* 69 */ PvPMine.SetGroup(jogador, "Membro");
 //			/*     */
-//			/* 71 */ PvPAPI.ChatOn(jogador);
+//			/* 71 */ PvPMine.ChatOn(jogador);
 //			/*     */
-//			/* 73 */ PvPAPI.TpaOn(jogador);
-//			/* 74 */ PvPAPI.TellOn(jogador);
-//			/* 75 */ PvPAPI.SlimeOFF(jogador);
+//			/* 73 */ PvPMine.TpaOn(jogador);
+//			/* 74 */ PvPMine.TellOn(jogador);
+//			/* 75 */ PvPMine.SlimeOFF(jogador);
 //			/*     */ }
 //		/*     */
-//		/* 79 */ PvPAPI.AlmaSetNull(jogador);
+//		/* 79 */ PvPMine.AlmaSetNull(jogador);
 //		/*     */
 //		/* 81 */ for (Player Todos : Bukkit.getOnlinePlayers())
 //			/* 82 */ if (ComandosGerais.Admin.contains(Todos.getName()))

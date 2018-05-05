@@ -5,9 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ConfigSaveCommand extends CommandManager {
 
@@ -22,11 +22,11 @@ public class ConfigSaveCommand extends CommandManager {
 			sendUsage(sender);
 		} else {
 			String cmd = args[1];
-			if (API.existsPlugin(sender, cmd)) {
-				Plugin pl = API.getPlugin(cmd);
+			if (Mine.existsPlugin(sender, cmd)) {
+				Plugin pl = Mine.getPlugin(cmd);
 				if (args.length == 2) {
 					Config.saveConfigs(pl);
-					API.chat(sender,
+					Mine.chat(sender,
 							"§aSalvandos todas configurações do Plugin "
 									+ pl.getName());
 				} else {

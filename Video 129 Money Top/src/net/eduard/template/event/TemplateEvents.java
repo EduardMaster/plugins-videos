@@ -6,7 +6,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.manager.EventsManager;
 import net.eduard.template.Main;
 // clase de eventos
 public class TemplateEvents extends EventsManager {

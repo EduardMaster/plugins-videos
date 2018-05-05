@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.manager.EventsManager;
 import net.eduard.combocounter.Main;
 
 public class ComboCounterEvents extends EventsManager {

@@ -10,10 +10,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.click.PlayerEffect;
-import net.eduard.api.game.Gui;
-import net.eduard.api.game.Slot;
-import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Gui;
+import net.eduard.api.setup.game.Slot;
+import net.eduard.api.setup.game.Sounds;
 
 public class Main extends JavaPlugin implements Listener {
 	public Gui gui;

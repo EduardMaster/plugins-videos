@@ -1,6 +1,5 @@
 package net.eduard.api.setup;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -13,18 +12,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,10 +30,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,6 +41,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -72,24 +68,15 @@ import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -102,9 +89,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Criterias;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -113,54 +98,463 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import net.eduard.api.setup.StorageAPI.Copyable;
 import net.eduard.api.setup.StorageAPI.Storable;
 import net.eduard.api.setup.StorageAPI.Variable;
+import net.eduard.api.setup.event.PlayerTargetEvent;
+import net.eduard.api.setup.game.Schematic;
+import net.eduard.api.setup.game.Sounds;
+import net.eduard.api.setup.lib.FakePlayer;
+import net.eduard.api.setup.lib.Item;
+import net.eduard.api.setup.manager.EmptyWorldGenerator;
+import net.eduard.api.setup.manager.PlayerManager;
+import net.eduard.api.setup.manager.TimeManager;
 
+/**
+ * API principal da Lib contendo muitos codigos bons e utilitarios
+ * 
+ * @author Eduard
+ * @version 3.0
+ */
 public final class Mine {
+	public boolean isBeaconPlaced(Location loc) {
+		int yMin = loc.getBlockY();
+		int xMin = loc.getBlockX();
+		int zMin = loc.getBlockZ();
+		boolean is = false;
+		for (int y = yMin; y < yMin + 5; y++) {
+			for (int x = xMin - 2; x > xMin + 2; x++) {
+				for (int z = zMin - 2; x > zMin + 2; z++) {
+					Location subloc = new Location(loc.getWorld(), x, y, z);
+					if (subloc.getBlock().getType() == Material.BEACON) {
+						is = true;
+					} else
+						is = false;
+				}
+			}
+		}
+		return is;
+	}
+	/**
+	 * Gerenciador dos jogadores
+	 */
+	private static PlayerManager playerManager;
 
 	/**
-	 * Pega uma lista de classes de uma package
+	 * Pega classes de um plugin pela Classe
 	 * 
 	 * @param plugin
 	 *            Plugin
 	 * @param pkgname
-	 *            Package
+	 *            Pacote
 	 * @return Lista de Classes
 	 */
-	public static ArrayList<Class<?>> getClassesForPackage(JavaPlugin plugin, String pkgname) {
-		ArrayList<Class<?>> classes = new ArrayList<>();
-
-		CodeSource src = plugin.getClass().getProtectionDomain().getCodeSource();
-		if (src != null) {
-			URL resource = src.getLocation();
-			resource.getPath();
-			Extra.processJarfile(resource, pkgname, classes);
+	public static List<Class<?>> getClasses(JavaPlugin plugin, String pkgname) {
+		List<Class<?>> lista = new ArrayList<>();
+		try {
+			Method fileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
+			fileMethod.setAccessible(true);
+			File file = (File) fileMethod.invoke(plugin);
+			return Extra.getClasses(new JarFile(file), pkgname);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return classes;
+
+		return lista;
+	}
+
+	/**
+	 * Pega classes de um plugin pela package da Classe
+	 * 
+	 * @param plugin
+	 *            Plugin
+	 * @param clazzName
+	 *            Classe
+	 * @return Lista de Classes
+	 */
+	public static List<Class<?>> getClasses(JavaPlugin plugin, Class<?> clazzName) {
+		return getClasses(plugin, clazzName.getPackage().getName());
+	}
+
+	/**
+	 * Pega classes de um plugin pela package da Classe que implementam Listener
+	 * 
+	 * @param plugin
+	 *            Plugin
+	 * @param clazzName
+	 *            Classe
+	 * @return Lista de Classes de Listener
+	 */
+	public static List<Class<?>> getListeners(JavaPlugin plugin, String packname) {
+
+		return getClasses(plugin, packname).stream().filter(classe -> classe != null)
+				.filter(classe -> Listener.class.isAssignableFrom(classe)).collect(Collectors.toList());
+	}
+
+	/*
+	 * Mapa de Arenas registradas
+	 */
+	public static Map<String, Schematic> SCHEMATICS = new HashMap<>();
+
+	public static Map<Player, Schematic> MAPS = new HashMap<>();
+
+	public static Schematic getSchematic(Player player) {
+		Schematic schema = MAPS.get(player);
+		if (schema == null) {
+			MAPS.put(player, schema = new Schematic());
+		}
+		return schema;
+	}
+
+	/**
+	 * Som do rosnar do gato
+	 */
+	public static final Sounds ROSNAR = Sounds.create("CAT_PURR");
+
+	public static ConfigAPI MAPS_CONFIG;
+
+	/**
+	 * Mensagem de quando console digita um comando
+	 */
+	public static String ONLY_PLAYER = "§cApenas jogadores pode fazer este comando!";
+	/**
+	 * Mensagem de quando o Mundo é invalido
+	 */
+	public static String WORLD_NOT_EXISTS = "§cEste mundo $world não existe!";
+	/**
+	 * Mensagem de quando o jogador é invalido
+	 */
+	public static String PLAYER_NOT_EXISTS = "§cEste jogador $player não existe!";
+	/**
+	 * Mensagem de quando plugin é invalido
+	 */
+	public static String PLUGIN_NOT_EXITS = "§cEste plugin $plugin não exite!";
+	/**
+	 * Mensagem de quando não tem permissão
+	 */
+	public static String NO_PERMISSION = "§cVoce não tem permissão para usar este comando!";
+	/**
+	 * Mensagem de quando Entrar no Servidor
+	 */
+	public static String ON_JOIN = "§6O jogador $player entrou no Jogo!";
+	/**
+	 * Mensagem de quando Sair do Servidor
+	 */
+	public static String ON_QUIT = "§6O jogador $player saiu no Jogo!";
+	/**
+	 * Prefixo de Ajuda dos Comandos
+	 */
+	public static String USAGE = "§FDigite: §c";
+	/**
+	 * Lista de Comandos para efeito Positivo
+	 */
+	public static List<String> COMMANDS_ON = new ArrayList<>(Arrays.asList("on", "ativar"));
+	/**
+	 * Lista de Comandos para efeito Negativo
+	 */
+	public static List<String> COMMANDS_OFF = new ArrayList<>(Arrays.asList("off", "desativar"));
+	/**
+	 * Som para o Teleporte
+	 */
+	public static Sounds SOUND_TELEPORT = Sounds.create("ENDERMAN_TELEPORT");
+	/**
+	 * Som para algum sucesso
+	 */
+	public static Sounds SOUND_SUCCESS = Sounds.create("LEVEL_UP");
+	/**
+	 * Som para algum erro
+	 */
+	public static Sounds SOUND_ERROR = Sounds.create("NOTE_BASS_DRUM");
+	/**
+	 * Desativar mensagem de morte
+	 */
+	public static boolean NO_DEATH_MESSAGE = true;
+	/**
+	 * Desativar mensagem de entrada
+	 */
+	public static boolean NO_JOIN_MESSAGE = true;
+	/**
+	 * Desativar mensagem de saida
+	 */
+	public static boolean NO_QUIT_MESSAGE = true;
+
+	/**
+	 * Velocidade minima de corrida
+	 */
+	public static double MIN_WALK_SPEED = 0.2;
+	/**
+	 * Velocidade minima de voo
+	 */
+	public static double MIN_FLY_SPEED = 0.1;
+	/**
+	 * Ligar sistema de Respawn Automatico
+	 */
+	public static boolean AUTO_RESPAWN = true;
+
+	/**
+	 * Controlador de Tempo da Mine
+	 */
+	public static TimeManager TIME;
+
+	/**
+	 * Ligando algumas coisas
+	 */
+	static {
+		try {
+			TIME = new TimeManager(getMainPlugin());
+			MAPS_CONFIG = new ConfigAPI("maps/", getMainPlugin());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void updateTargets() {
+		for (Player p : getPlayers()) {
+
+			PlayerTargetEvent event = new PlayerTargetEvent(p,
+					Mine.getTarget(p, Mine.getPlayerAtRange(p.getLocation(), 100)));
+			Mine.callEvent(event);
+
+		}
+	}
+
+	public static void createCommand(JavaPlugin plugin, Command... cmds) {
+		try {
+			Class<?> serverClass = Extra.get(Bukkit.getServer());
+			Field field = serverClass.getDeclaredField("commandMap");
+			field.setAccessible(true);
+			CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+			for (Command cmd : cmds) {
+				map.register(plugin.getName(), cmd);
+			}
+			// }
+		} catch (Exception ex) {
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Map<String, Command> getCommands() {
+		try {
+			Object map = Extra.getValue(Bukkit.getServer().getPluginManager(), "commandMap");
+
+			return (Map<String, Command>) Extra.getValue(map, "knownCommands");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	public static PluginCommand command(String commandName, CommandExecutor command) {
+		PluginCommand cmd = Bukkit.getPluginCommand(commandName);
+		cmd.setExecutor(command);
+		cmd.setPermissionMessage(Mine.NO_PERMISSION.replace("$permission", cmd.getPermission()));
+		return cmd;
+	}
+
+	public static PluginCommand command(String commandName, CommandExecutor command, String permission) {
+
+		PluginCommand cmd = Bukkit.getPluginCommand(commandName);
+		cmd.setExecutor(command);
+		cmd.setPermission(permission);
+		cmd.setPermissionMessage(Mine.NO_PERMISSION.replace("$permission", cmd.getPermission()));
+		return cmd;
+	}
+
+	public static boolean existsPlayer(CommandSender sender, String player) {
+
+		Player p = Bukkit.getPlayer(player);
+		if (p == null) {
+			sender.sendMessage(Mine.PLAYER_NOT_EXISTS.replace("$player", player));
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean existsPlugin(CommandSender sender, String plugin) {
+
+		Plugin p = getPlugin(plugin);
+		if (p == null) {
+			sender.sendMessage(Mine.PLUGIN_NOT_EXITS.replace("$plugin", plugin));
+			return false;
+		}
+		return true;
+	}
+
+	public static Plugin getPlugin(String plugin) {
+		return Bukkit.getPluginManager().getPlugin(plugin);
+	}
+
+	public static boolean existsWorld(CommandSender sender, String name) {
+		World world = Bukkit.getWorld(name);
+		if (world == null) {
+			sender.sendMessage(Mine.WORLD_NOT_EXISTS.replace("$world", name));
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean hasPerm(CommandSender sender, String permission) {
+		if (!sender.hasPermission(permission)) {
+			sender.sendMessage(Mine.NO_PERMISSION.replace("$permission", permission));
+			return false;
+		}
+		return true;
+
+	}
+
+	public static boolean noConsole(CommandSender sender) {
+
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(Mine.ONLY_PLAYER);
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean onlyPlayer(CommandSender sender) {
+		return noConsole(sender);
+	}
+
+	public static void console(String message) {
+		Bukkit.getConsoleSender().sendMessage(message);
+	}
+
+	public static void broadcast(String message) {
+		Bukkit.broadcastMessage(message);
+	}
+
+	public static void removeAliaseFromCommand(PluginCommand cmd, String aliase) {
+		String cmdName = cmd.getName().toLowerCase();
+		if (getCommands().containsKey(aliase)) {
+			getCommands().remove(aliase);
+			console("§bCommandAPI §fremovendo aliase §a" + aliase + "§f do comando §b" + cmdName);
+		} else {
+			console("§bCommandAPI §fnao foi encontrado a aliase §a" + aliase + "§f do comando §b" + cmdName);
+		}
+	}
+
+	public static void removeCommand(String name) {
+		if (getCommands().containsKey(name)) {
+			PluginCommand cmd = Bukkit.getPluginCommand(name);
+			String pluginName = cmd.getPlugin().getName();
+			String cmdName = cmd.getName();
+			for (String aliase : cmd.getAliases()) {
+				removeAliaseFromCommand(cmd, aliase);
+				removeAliaseFromCommand(cmd, pluginName.toLowerCase() + ":" + aliase);
+			}
+			try {
+				getCommands().remove(cmd.getName());
+			} catch (Exception e) {
+			}
+			console("§bCommandAPI §fremovendo o comando §a" + cmdName + "§f do Plugin §b" + pluginName);
+		} else {
+			console("§bCommandAPI §fnao foi encontrado a commando §a" + name);
+		}
+
+	}
+
+	public static void addPermission(Player p, String permission) {
+		p.addAttachment(getMainPlugin(), permission, true);
+	}
+
+	public static void removePermission(Player p, String permission) {
+		p.addAttachment(getMainPlugin(), permission, false);
+	}
+
+	public static Scoreboard newScoreboard(Player player, String title, String... lines) {
+		return applyScoreboard(player, title, lines);
+	}
+
+	/**
+	 * Pega o plugin que ligo a Mine
+	 * 
+	 * @return Plugin
+	 */
+	public static JavaPlugin getMainPlugin() {
+		return JavaPlugin.getProvidingPlugin(Mine.class);
+	}
+
+	public static void chat(CommandSender sender, String message) {
+		Mine.send(sender, message);
+
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void registerPackage(String pack, JavaPlugin plugin) {
-		getClassesForPackage(plugin, pack).forEach(claz -> {
-
-			if (Listener.class.isAssignableFrom(claz)) {
-				try {
-					Bukkit.getPluginManager().registerEvents((Listener) claz.newInstance(), plugin);
-				} catch (Exception e) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + ":" + e.getMessage());
-				}
+	public static Scoreboard applyScoreboard(Player player, String title, String... lines) {
+		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+		Objective obj = board.registerNewObjective("score", "dummy");
+		obj.setDisplayName(title);
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		int id = 15;
+		for (String line : lines) {
+			String empty = ChatColor.values()[id - 1].toString();
+			obj.getScore(new FakePlayer(line.isEmpty() ? empty : line)).setScore(id);
+			;
+			id--;
+			if (id == 0) {
+				break;
 			}
+		}
 
-			if (Command.class.isAssignableFrom(claz)) {
-				try {
-					createCommand(plugin, (Command) claz.newInstance());
-				} catch (Exception e) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + ":" + e.getMessage());
-				}
+		player.setScoreboard(board);
+		return board;
+	}
+
+	/**
+	 * Checa se Chunk1 é igual a Chunk2
+	 * 
+	 * @param chunk1
+	 * @param chunk2
+	 * @return
+	 */
+	public static boolean equals(Chunk chunk1, Chunk chunk2) {
+		return chunk1.getX() == chunk2.getX() && chunk1.getZ() == chunk2.getZ();
+	}
+
+	/**
+	 * Abrir um Menu Gui paginado
+	 *
+	 */
+	public static void openGui(Player player, List<ItemStack> lista, int pagina, int divisao, String nome, int linhas,
+			int index, int voltarSlot, int avancarSlot) {
+		int quantidadeDePaginas = lista.size() / divisao;
+		int inicial = (pagina - 1) * divisao;
+		if (inicial > lista.size()) {
+			return;
+		}
+		List<ItemStack> subLista = lista.subList(inicial, lista.size());
+		Inventory inv = Bukkit.createInventory(null, linhas * 9, nome);
+		int current = 1;
+		for (ItemStack item : subLista) {
+			while (Mine.isColumn(index, 1) || Mine.isColumn(index, 9)) {
+				index++;
 			}
+			inv.setItem(index, item);
+			current++;
+			index++;
+			if (current == divisao) {
+				break;
+			}
+		}
+		if (pagina > 1) {
+			inv.setItem(voltarSlot, Mine.newItem(Material.ARROW, "§aVoltar"));
+		}
+		if (pagina < quantidadeDePaginas) {
+			inv.setItem(avancarSlot, Mine.newItem(Material.ARROW, "§aAvançar"));
+		}
+		player.openInventory(inv);
 
-		});
+	}
+
+	public static ItemStack newBook(String name, String title, String author, String... pages) {
+		ItemStack item = newItem(Material.WRITTEN_BOOK, name);
+		BookMeta meta = (BookMeta) item.getItemMeta();
+		meta.addPage(pages);
+		meta.setAuthor(author);
+		meta.setTitle(title);
+		item.setItemMeta(meta);
+		return item;
 	}
 
 	public static List<Chunk> getChunks(Location location, int amount, int size) {
@@ -183,297 +577,11 @@ public final class Mine {
 		return lista;
 	}
 
-	public static void createCommand(JavaPlugin plugin, Command... cmds) {
-		try {
-			Class<?> serverClass = Extra.get(Bukkit.getServer());
-
-			// if ((Bukkit.getServer() instanceof CraftServer)) {
-			Field field = serverClass.getDeclaredField("commandMap");
-			field.setAccessible(true);
-
-			CommandMap map = (CommandMap) field.get(Bukkit.getServer());
-			int tamanho = cmds.length;
-			for (int id = 0; id < tamanho; id++) {
-				Command cmd = cmds[id];
-				map.register(plugin.getName(), cmd);
-			}
-			// }
-		} catch (Exception ex) {
-		}
-	}
-
-	public static void registerDefaults() {
-		StorageAPI.register(Item.class, new Item());
-		StorageAPI.register(MaterialData.class, new Variable() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object save(Object object) {
-				if (object instanceof MaterialData) {
-					MaterialData materialData = (MaterialData) object;
-					return materialData.getItemTypeId() + ":" + materialData.getData();
-
-				}
-				return null;
-			}
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-					String string = (String) object;
-					String[] split = string.split(":");
-					return new MaterialData(Material.getMaterial(Mine.toInt(split[0])), Mine.toByte(split[1]));
-
-				}
-				return null;
-			}
-		});
-		StorageAPI.register(Vector.class, new Storable() {
-
-			@Override
-			public Object restore(Map<String, Object> map) {
-				return new Vector();
-			}
-
-			@Override
-			public void store(Map<String, Object> map, Object object) {
-
-			}
-
-			@Override
-			public String alias() {
-				return "Vector";
-			}
-		});
-		StorageAPI.register(Enchantment.class, new Variable() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object save(Object object) {
-				if (object instanceof Enchantment) {
-					Enchantment enchantment = (Enchantment) object;
-					return enchantment.getId();
-
-				}
-				return null;
-			}
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-					String string = (String) object;
-					return Enchantment.getById(Extra.toInt(string));
-
-				}
-				return null;
-			}
-		});
-		StorageAPI.register(PotionEffectType.class, new Variable() {
-
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-
-					String string = (String) object;
-					String[] split = string.split(";");
-					return PotionEffectType.getByName(split[1]);
-				}
-				return null;
-			}
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public Object save(Object object) {
-				if (object instanceof PotionEffectType) {
-					PotionEffectType potionEffectType = (PotionEffectType) object;
-					return potionEffectType.getName() + ";" + potionEffectType.getId();
-
-				}
-				return null;
-			}
-
-		});
-		StorageAPI.register(PotionEffect.class, new Variable() {
-
-			@Override
-			public Object save(Object object) {
-				return null;
-			}
-
-			@Override
-			public Object get(Object object) {
-				return new PotionEffect(PotionEffectType.SPEED, 20, 0);
-			}
-		});
-		StorageAPI.register(OfflinePlayer.class, new Variable() {
-
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-					String id = (String) object;
-					String[] split = id.split(";");
-					return new FakeOfflinePlayer(split[0], UUID.fromString(split[1]));
-
-				}
-				return null;
-			}
-
-			@Override
-			public Object save(Object object) {
-				if (object instanceof OfflinePlayer) {
-					OfflinePlayer p = (OfflinePlayer) object;
-					return p.getName() + ";" + p.getUniqueId().toString();
-
-				}
-				return null;
-			}
-
-		});
-		StorageAPI.register(Location.class, new Storable() {
-
-			@Override
-			public Object restore(Map<String, Object> map) {
-				return new Location(Bukkit.getWorlds().get(0), 1, 1, 1);
-			}
-
-			@Override
-			public void store(Map<String, Object> map, Object object) {
-			}
-
-			@Override
-			public String alias() {
-				return "Location";
-			}
-
-		});
-
-		StorageAPI.register(Chunk.class, new Variable() {
-
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-					String string = (String) object;
-					String[] split = string.split(";");
-					return Bukkit.getWorld(split[0]).getChunkAt(Extra.toInt(split[1]), Extra.toInt(split[2]));
-
-				}
-				return null;
-			}
-
-			@Override
-			public Object save(Object object) {
-				if (object instanceof Chunk) {
-					Chunk chunk = (Chunk) object;
-					return chunk.getWorld().getName() + ";" + chunk.getX() + ";" + chunk.getZ();
-				}
-
-				return null;
-			}
-
-		});
-
-		StorageAPI.register(World.class, new Variable() {
-			@Override
-			public Object get(Object object) {
-				if (object instanceof String) {
-					String world = (String) object;
-					return Bukkit.getWorld(world);
-
-				}
-				return null;
-			}
-
-			@Override
-			public Object save(Object object) {
-				if (object instanceof World) {
-					World world = (World) object;
-					return world.getName();
-
-				}
-				return null;
-			}
-		});
-		StorageAPI.register(ItemStack.class, new Storable() {
-			@Override
-			public Object restore(Map<String, Object> map) {
-				int id = Extra.toInt(map.get("id"));
-				int amount = Extra.toInt(map.get("amount"));
-				int data = Extra.toInt(map.get("data"));
-				@SuppressWarnings("deprecation")
-				ItemStack item = new ItemStack(id, amount, (short) data);
-				String name = Extra.toChatMessage((String) map.get("name"));
-				if (!name.isEmpty()) {
-					Mine.setName(item, name);
-				}
-				@SuppressWarnings("unchecked")
-				List<String> lore = Extra.toMessages((List<Object>) map.get("lore"));
-				if (!lore.isEmpty()) {
-					Mine.setLore(item, lore);
-				}
-				String enchants = (String) map.get("enchants");
-				if (!enchants.isEmpty()) {
-					if (enchants.contains(", ")) {
-						String[] split = enchants.split(", ");
-						for (String enchs : split) {
-							String[] sub = enchs.split("-");
-							@SuppressWarnings("deprecation")
-							Enchantment ench = Enchantment.getById(Extra.toInt(sub[0]));
-							Integer level = Extra.toInt(sub[1]);
-							item.addUnsafeEnchantment(ench, level);
-
-						}
-					} else {
-						String[] split = enchants.split("-");
-						@SuppressWarnings("deprecation")
-						Enchantment ench = Enchantment.getById(Extra.toInt(split[0]));
-						Integer level = Extra.toInt(split[1]);
-						item.addUnsafeEnchantment(ench, level);
-
-					}
-				}
-				return item;
-			}
-
-			@Override
-			public String alias() {
-				return "Item";
-			}
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void store(Map<String, Object> map, Object object) {
-				if (object instanceof ItemStack) {
-					ItemStack item = (ItemStack) object;
-					map.remove("durability");
-					map.remove("meta");
-					map.remove("type");
-					map.put("id", item.getTypeId());
-					map.put("data", item.getDurability());
-					map.put("amount", item.getAmount());
-					map.put("name", Mine.getName(item));
-					map.put("lore", Mine.getLore(item));
-					String enchants = "";
-					if (item.getItemMeta().hasEnchants()) {
-						StringBuilder str = new StringBuilder();
-						int id = 0;
-						for (Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
-							if (id > 0)
-								str.append(", ");
-							Enchantment enchantment = entry.getKey();
-							str.append(enchantment.getId() + "-" + entry.getValue());
-							id++;
-						}
-						enchants = str.toString();
-					}
-					map.put("enchants", enchants);
-				}
-
-			};
-		});
-	}
-
+	/**
+	 * Criar um coração vermelho
+	 * 
+	 * @return
+	 */
 	public static String getRedHeart() {
 		return ChatColor.RED + "♥";
 	}
@@ -482,166 +590,13 @@ public final class Mine {
 		return text.length() > lenght ? text.substring(0, lenght) : text;
 	}
 
-	public static class Item extends ItemStack implements Variable {
-
-		@SuppressWarnings("deprecation")
-		public Item(int id) {
-			super(id);
-		}
-
-		@SuppressWarnings("deprecation")
-		public Item() {
-			super(1);
-		}
-
-		@SuppressWarnings("deprecation")
-		public Item(int id, int amount, int data, String name, String... lore) {
-			setTypeId(id);
-			setAmount(amount);
-			setDurability((short) data);
-			ItemMeta meta = getItemMeta();
-			meta.setDisplayName(name);
-			;
-			meta.setLore(Arrays.asList(lore));
-			;
-			this.setItemMeta(meta);
-		}
-
-		/**
-		 * id:data-qnt;enchId-enchData,enchId-enchData;nome;descriao1,descricao2
-		 */
-		@SuppressWarnings("deprecation")
-		@Override
-		public Object get(Object object) {
-			if (object instanceof String) {
-				String text = (String) object;
-
-				try {
-					String[] split = text.split(";");
-					String[] splitData = split[0].split("-");
-					Integer qnt = Mine.toInt(splitData[1]);
-					String[] splitInfo = splitData[0].split(":");
-					Integer id = Mine.toInt(splitInfo[0]);
-					short data = Mine.toShort(splitInfo[1]);
-					ItemStack item = new Item();
-					item.setTypeId(id);
-					item.setDurability(data);
-					item.setAmount(qnt);
-					if (split.length > 0) {
-						if (split[1].contains(",")) {
-							String[] enchs = split[1].split(",");
-							for (String enchant : enchs) {
-								String[] ench = enchant.split("-");
-								Integer ench_id = Mine.toInt(ench[0]);
-								Integer ench_level = Mine.toInt(ench[1]);
-								item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
-							}
-						} else {
-							if (!split[1].equals(" ")) {
-								String[] ench = split[1].split("-");
-								Integer ench_id = Mine.toInt(ench[0]);
-								Integer ench_level = Mine.toInt(ench[1]);
-								item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
-							}
-
-						}
-					}
-					ItemMeta meta = item.getItemMeta();
-					if (split.length > 1) {
-						String nome = split[2];
-						if (!nome.equals(" ")) {
-							meta.setDisplayName(Extra.toChatMessage(nome));
-						}
-					}
-					if (split.length > 2) {
-						List<String> lista = new ArrayList<>();
-						String descricao = split[3];
-						if (descricao.contains(",")) {
-							String[] lore = descricao.split(",");
-							for (String line : lore) {
-								lista.add(Extra.toChatMessage(line));
-							}
-						} else {
-							if (!descricao.equals(" ")) {
-								lista.add(descricao);
-							}
-
-						}
-						meta.setLore(lista);
-					}
-					item.setItemMeta(meta);
-
-					return item;
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new Item(1);
-				}
-
-			}
-			return null;
-		}
-
-		@SuppressWarnings("deprecation")
-		@Override
-		public Object save(Object object) {
-			if (object instanceof ItemStack) {
-				ItemStack item = (ItemStack) object;
-				StringBuilder textao = new StringBuilder();
-				textao.append(item.getTypeId() + ":" + item.getDurability() + "-" + item.getAmount() + ";");
-				ItemMeta meta = item.getItemMeta();
-				if (meta != null) {
-
-					if (meta.hasEnchants()) {
-						boolean first = true;
-						for (Entry<Enchantment, Integer> enchant : item.getItemMeta().getEnchants().entrySet()) {
-							if (!first) {
-								textao.append(",");
-							} else
-								first = false;
-							textao.append(enchant.getKey().getId());
-							textao.append("-");
-							textao.append(enchant.getValue());
-						}
-					} else {
-						textao.append(" ");
-					}
-					textao.append(";");
-					if (item.getItemMeta().hasDisplayName()) {
-						textao.append(item.getItemMeta().getDisplayName());
-					} else {
-						textao.append(" ");
-					}
-					textao.append(";");
-					if (meta.hasLore()) {
-						boolean first = true;
-						for (String line : meta.getLore()) {
-							if (!first) {
-								textao.append(",");
-							} else
-								first = false;
-							textao.append(line);
-						}
-
-					} else {
-						textao.append(" ");
-					}
-					textao.append(";");
-				}
-				return textao.toString();
-			}
-			return null;
-		}
-
-	}
-
-	public static ItemStack reloadItem(String text) {
-		return (ItemStack) new Item().get(text);
-	}
-
-	public static String saveItem(ItemStack item) {
-		return (String) new Item().save(item);
-	}
+//	public static ItemStack reloadItem(String text) {
+//		return (ItemStack) new Item().get(text);
+//	}
+//
+//	public static String saveItem(ItemStack item) {
+//		return (String) new Item().save(item);
+//	}
 
 	public static ItemStack newBanner() {
 		ItemStack banner = new ItemStack(Material.BANNER);
@@ -723,302 +678,6 @@ public final class Mine {
 			player.sendMessage(message);
 		}
 
-	}
-
-	/**
-	 * Controlador de Tempo, classe que controla e ajuda na criação de
-	 * temporarizador (Timer)<br>
-	 * , de atrasador (Delayer) que são Tarefa de Tempo (Task ou BukkitTask)
-	 * 
-	 * @author Eduard-PC
-	 *
-	 */
-	public static class TimeManager extends EventsManager implements Runnable {
-
-		/**
-		 * Construtor base automatico usando o Plugin da API;
-		 */
-		public TimeManager() {
-			setPlugin(defaultPlugin());
-		}
-
-		/**
-		 * Construtor pedindo um Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 */
-		public TimeManager(JavaPlugin plugin) {
-			setPlugin(plugin);
-		}
-
-		/**
-		 * Tempo em ticks para o Delay ou Timer
-		 */
-		private long time = 20;
-
-		/**
-		 * Tempo anterior para fazer a comparação
-		 */
-		private long startTime;
-
-		private transient BukkitTask task;
-
-		/**
-		 * Metodo principal do Efeito a cada Tempo
-		 */
-		@Override
-		public void run() {
-		}
-
-		/**
-		 * Cria um Delay com um Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 * @return Delay
-		 */
-		public BukkitTask delay(Plugin plugin) {
-			setTask(Mine.delay(plugin, time, this));
-			setStartTime(Mine.getNow());
-			return task;
-		}
-
-		/**
-		 * Cria um Timer com um Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 * @return Timer
-		 */
-		public BukkitTask timer(Plugin plugin) {
-			setTask(Mine.timer(plugin, time, this));
-			setStartTime(Mine.getNow());
-			return task;
-		}
-
-		/**
-		 * Cria um Delay com um Plugin e um Efeito rodavel
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 * @param run
-		 *            Efeito rodavel
-		 * @return Delay
-		 */
-		public BukkitTask delay(long ticks, Runnable run) {
-			setTask(Mine.delay(getPlugin(), ticks, run));
-			setStartTime(Mine.getNow());
-			return task;
-		}
-
-		/**
-		 * Cria um Timer com um Plugin e um Efeito rodavel
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 * @param run
-		 *            Efeito rodavel
-		 * @return Timer
-		 */
-		public BukkitTask timer(long ticks, Runnable run) {
-			setTask(Mine.timer(getPlugin(), ticks, run));
-			setStartTime(Mine.getNow());
-			return task;
-		}
-
-		/**
-		 * 
-		 * @return Tempo em ticks
-		 */
-		public long getTime() {
-			return time;
-		}
-
-		/**
-		 * 
-		 * @return Se ligou um Timer ou Delay
-		 */
-		public boolean existsTask() {
-			return task != null;
-		}
-
-		/**
-		 * Desliga o Timer/Delay criado
-		 */
-		public void stopTask() {
-			if (existsTask()) {
-				task.cancel();
-				task = null;
-			}
-		}
-
-		/**
-		 * Seta o Tempo
-		 * 
-		 * @param time
-		 *            Tempo em ticks
-		 */
-		public void setTime(long time) {
-			this.time = time;
-		}
-
-		/**
-		 * Define o Tempo
-		 * 
-		 * @param time
-		 *            Tempo em segundos
-		 */
-		public void setTime(int time) {
-			setTime(time * 20L);
-		}
-
-		/**
-		 * 
-		 * @return O tempo do inicio
-		 */
-		public long getStartTime() {
-			return startTime;
-		}
-
-		/**
-		 * Define o Tempo de inicio
-		 * 
-		 * @param startTime
-		 *            Tempo em ticks
-		 */
-		public void setStartTime(long startTime) {
-			this.startTime = startTime;
-		}
-
-		public BukkitTask getTask() {
-			return task;
-		}
-
-		/**
-		 * Define
-		 * 
-		 * @param task
-		 */
-		public void setTask(BukkitTask task) {
-			this.task = task;
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	/**
-	 * Controlador de Eventos (Listener)
-	 * 
-	 * @author Eduard-PC
-	 *
-	 */
-	public static class EventsManager implements Listener, Storable {
-		/**
-		 * Se o Listener esta registrado
-		 */
-		private transient boolean registred;
-		/**
-		 * Plugin
-		 */
-		private transient Plugin plugin;
-
-		/**
-		 * Construtor base deixando Plugin automatico
-		 */
-		public EventsManager() {
-			setPlugin(defaultPlugin());
-		}
-
-		public Plugin defaultPlugin() {
-			return JavaPlugin.getProvidingPlugin(getClass());
-		}
-
-		/**
-		 * Construtor pedindo um Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 */
-		public EventsManager(Plugin plugin) {
-			register(plugin);
-		}
-
-		/**
-		 * Registra o Listener para o Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 */
-		public void register(Plugin plugin) {
-			unregisterListener();
-			this.registred = true;
-			setPlugin(plugin);
-			Bukkit.getPluginManager().registerEvents(this, plugin);
-		}
-
-		public Object restore(Map<String, Object> map) {
-			return null;
-		}
-
-		public void store(Map<String, Object> map, Object object) {
-			// TODO Auto-generated method stub
-
-		}
-
-		/**
-		 * Desregistra o Listener
-		 */
-		public void unregisterListener() {
-			if (registred) {
-				HandlerList.unregisterAll(this);
-				this.registred = false;
-			}
-		}
-
-		/**
-		 * @return Se a Listener esta registrado
-		 */
-		public boolean isRegistered() {
-			return registred;
-		}
-
-		/**
-		 * 
-		 * @return Plugin
-		 */
-		public Plugin getPlugin() {
-			return plugin;
-		}
-
-		/**
-		 * Seta o Plugin
-		 * 
-		 * @param plugin
-		 *            Plugin
-		 */
-		public void setPlugin(Plugin plugin) {
-			this.plugin = plugin;
-		}
-
-	}
-
-	private static Map<String, Replacer> replacers = new HashMap<>();
-
-	public static interface Replacer {
-
-		Object getText(Player p);
 	}
 
 	public static void resetScoreboards() {
@@ -1225,7 +884,7 @@ public final class Mine {
 
 	}
 
-	public static boolean hasAPI() {
+	public static boolean hasMine() {
 		return hasPlugin("EduardAPI");
 	}
 
@@ -1480,18 +1139,6 @@ public final class Mine {
 		return replacers.get(key);
 	}
 
-	public static void console(String message) {
-		Bukkit.getConsoleSender().sendMessage(message);
-
-	}
-
-	public static void broadcast(String message) {
-		console(message);
-		for (Player player : Mine.getPlayers()) {
-			player.sendMessage(message);
-		}
-	}
-
 	public static void broadcast(String message, String permission) {
 		for (Player player : Mine.getPlayers()) {
 			if (player.hasPermission(permission))
@@ -1527,11 +1174,16 @@ public final class Mine {
 		Mine.disableAI(npc);
 		return npc;
 	}
+
 	/**
-	 * Tenha certeza que esta carregado a chunk pois assim funciona, caso contario buga<br>
+	 * Tenha certeza que esta carregado a chunk pois assim funciona, caso contario
+	 * buga<br>
 	 * location.getChunk().load(true);
-	 * @param location Local
-	 * @param line Linha
+	 * 
+	 * @param location
+	 *            Local
+	 * @param line
+	 *            Linha
 	 * @return ArmorStand
 	 */
 	public static ArmorStand newHologram(Location location, String line) {
@@ -1721,10 +1373,6 @@ public final class Mine {
 	public static void sendPacket(Object packet, Player player) throws Exception {
 
 		Extra.getResult(getConnection(player), "sendPacket", Extra.getParameters(claz_pPacket), packet);
-	}
-
-	public static Plugin getPlugin(String plugin) {
-		return Bukkit.getPluginManager().getPlugin(plugin);
 	}
 
 	public static int getCurrentTick() throws Exception {
@@ -2047,7 +1695,7 @@ public final class Mine {
 			sendPacket(player, packet);
 		} catch (Exception e) {
 			Bukkit.getConsoleSender().sendMessage(
-					"§bRexAPI §aNao foi possivel usar o 'setActionBar' pois o servidor esta na versao anterior a 1.8");
+					"§bRexMine §aNao foi possivel usar o 'setActionBar' pois o servidor esta na versao anterior a 1.8");
 
 		}
 
@@ -2166,71 +1814,6 @@ public final class Mine {
 		}
 
 	}
-	// public static void teste() {
-	// Player theGuyToChangeNameFor = Bukkit.getPlayer("theguy");
-	//
-	// PlayerInfoData pid = new
-	// PlayerInfoData(WrappedGameProfile.fromPlayer(theGuyToChangeNameFor), 1,
-	// EnumWrappers.NativeGameMode.SURVIVAL,
-	// WrappedChatComponent.fromText("whatever_string"));
-	// WrapperPlayServerPlayerInfo wpspi = new WrapperPlayServerPlayerInfo();
-	// wpspi.setAction(EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
-	// wpspi.setData(Collections.singletonList(pid));
-	// for(Player p : Bukkit.getOnlinePlayers())
-	// {
-	// if(p.equals(theGuyToChangeNameFor))
-	// {
-	// continue;
-	// }
-	// p.hidePlayer(theGuyToChangeNameFor);
-	// wpspi.sendPacket(p);
-	// }
-	//
-	// ProtocolLibrary.getProtocolManager().addPacketListener(
-	// new PacketAdapter(Mine.getPlugin("EduardAPI"),
-	// PacketType.Play.Server.PLAYER_INFO)
-	// {
-	//
-	// @Override
-	// public void onPacketSending(PacketEvent event)
-	// {
-	//
-	// if(event.getPacket().getPlayerInfoAction().read(0) !=
-	// EnumWrappers.PlayerInfoAction.ADD_PLAYER)
-	// {
-	// return;
-	// }
-	//
-	// PlayerInfoData pid =
-	// event.getPacket().getPlayerInfoDataLists().read(0).get(0);
-	//
-	// if(!pid.getProfile().getName().toLowerCase().equals("theguy")) // Here you
-	// can do something to ensure you're changing the name of the correct guy
-	// {
-	// return;
-	// }
-	//
-	// PlayerInfoData newPid = new
-	// PlayerInfoData(pid.getProfile().withName("HEAD_NAME"), pid.getPing(),
-	// pid.getGameMode(),
-	// WrappedChatComponent.fromText("TAB_LIST_NAME"));
-	// event.getPacket().getPlayerInfoDataLists().write(0,
-	// Collections.singletonList(newPid));
-	//
-	// }
-	//
-	// }
-	// );
-	//
-	// for(Player p : Bukkit.getOnlinePlayers())
-	// {
-	// if(p.equals(theGuyToChangeNameFor))
-	// {
-	// continue;
-	// }
-	// p.showPlayer(theGuyToChangeNameFor);
-	// }
-	// }
 
 	/**
 	 * Desabilita a Inteligencia da Entidade
@@ -2793,115 +2376,24 @@ public final class Mine {
 		text.append(location.getPitch());
 		return text.toString();
 	}
-
-	/**
-	 * Pega um Objecto serializavel do Arquivo
-	 * 
-	 * @param file
-	 *            Arquivo
-	 * @return Objeto
-	 */
-	public static Object getSerializable(File file) {
-		if (!file.exists()) {
-			return null;
-		}
-		try {
-
-			FileInputStream getStream = new FileInputStream(file);
-			ObjectInputStream get = new ObjectInputStream(getStream);
-			Object object = get.readObject();
-			get.close();
-			getStream.close();
-			return object;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return null;
+	
+	public static Vector toVector(String text) {
+		String[] split = text.split(",");
+	
+		double x = Double.parseDouble(split[0]);
+		double y = Double.parseDouble(split[1]);
+		double z = Double.parseDouble(split[2]);
+		
+		return new Vector(x, y, z);
 	}
 
-	/**
-	 * Salva um Objecto no Arquivo em forma de serialização Java
-	 * 
-	 * @param object
-	 *            Objeto (Dado)
-	 * @param file
-	 *            Arquivo
-	 */
-	public static void setSerializable(Object object, File file) {
-		try {
-			FileOutputStream saveStream = new FileOutputStream(file);
-			ObjectOutputStream save = new ObjectOutputStream(saveStream);
-			if (object instanceof Serializable) {
-				save.writeObject(object);
-			} else {
-			}
-			save.close();
-			saveStream.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * Desfazr o ZIP do Arquivo
-	 * 
-	 * @param zipFilePath
-	 *            Arquivo
-	 * @param destDirectory
-	 *            Destino
-	 */
-	public static void unzip(String zipFilePath, String destDirectory)
-
-	{
-		try {
-			File destDir = new File(destDirectory);
-			if (!destDir.exists()) {
-				destDir.mkdir();
-			}
-			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
-			ZipEntry entry = zipIn.getNextEntry();
-
-			while (entry != null) {
-				String filePath = destDirectory + File.separator + entry.getName();
-				if (!entry.isDirectory()) {
-					extractFile(zipIn, filePath);
-				} else {
-					File dir = new File(filePath);
-					dir.mkdir();
-				}
-				zipIn.closeEntry();
-				entry = zipIn.getNextEntry();
-			}
-			zipIn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * Defaz o ZIP do Arquivo
-	 * 
-	 * @param zipIn
-	 *            Input Stream (Coneção de Algum Arquivo)
-	 * @param filePath
-	 *            Destino Arquivo
-	 */
-	public static void extractFile(ZipInputStream zipIn, String filePath) {
-		try {
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-			byte[] bytesIn = new byte[4096];
-			int read = 0;
-			while ((read = zipIn.read(bytesIn)) != -1) {
-				bos.write(bytesIn, 0, read);
-			}
-			bos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	public static String saveVector(Vector vector) {
+		StringBuilder text = new StringBuilder();
+	
+		text.append(vector.getX() + ",");
+		text.append(vector.getY() + ",");
+		text.append(vector.getZ() + ",");
+		return text.toString();
 	}
 
 	/**
@@ -2936,6 +2428,10 @@ public final class Mine {
 		}
 
 		public String toString(boolean isActive, ChatColor colorActive, String colorDefault) {
+			return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
+		}
+
+		public String toString(boolean isActive, String colorActive, String colorDefault) {
 			return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
 		}
 	}
@@ -3002,11 +2498,13 @@ public final class Mine {
 	public static void unloadWorld(String name) {
 		World world = Bukkit.getWorld(name);
 		if (world != null) {
+			World mundoPadrao = Bukkit.getWorlds().get(0);
 			for (Player p : world.getPlayers()) {
-				p.kickPlayer("§cRestarting Server!");
+				p.teleport(mundoPadrao.getSpawnLocation());
 			}
+			
 		}
-		Bukkit.unloadWorld(name, false);
+		Bukkit.unloadWorld(name, true);
 	}
 
 	public static void deleteFolder(File file) {
@@ -3029,23 +2527,21 @@ public final class Mine {
 		unloadWorld(toWorld);
 		deleteWorld(toWorld);
 		copyWorldFolder(getWorldFolder(fromWorld), getWorldFolder(toWorld));
-		WorldCreator copy = new WorldCreator(toWorld);
-		copy.createWorld();
+		loadWorld(toWorld);
 	}
 
 	public static World loadWorld(String name) {
-		return new WorldCreator(name).createWorld();
+		return new WorldCreator(name).generator(new EmptyWorldGenerator()).createWorld();
 	}
 
 	public static World newEmptyWorld(String worldName) {
-		World world = new WorldCreator(worldName).generator(new EmptyWorldGenerator()).createWorld();
+		World world = loadWorld(worldName);
 		world.setSpawnLocation(100, 100, 100);
 		return world;
 	}
 
 	public static File getWorldFolder(String name) {
-		File file = new File(Bukkit.getWorldContainer().getParentFile(), name);
-		return file;
+		return new File(Bukkit.getWorldContainer(), name);
 	}
 
 	public static Location getHighLocation(Location loc1, Location loc2) {
@@ -3228,6 +2724,11 @@ public final class Mine {
 	}
 
 	public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault) {
+
+		return getAsciiCompass(point, colorActive.toString(), colorDefault);
+	}
+
+	public static ArrayList<String> getAsciiCompass(Point point, String colorActive, String colorDefault) {
 		ArrayList<String> ret = new ArrayList<>();
 
 		String row = "";
@@ -3255,243 +2756,8 @@ public final class Mine {
 		return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
 	}
 
-	/**
-	 * Gerador de Mundo Vasio
-	 * 
-	 * @author Eduard
-	 *
-	 */
-	public static class EmptyWorldGenerator extends ChunkGenerator {
-
-		@Override
-		public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
-				ChunkGenerator.BiomeGrid biomeGrid) {
-			byte[][] result = new byte[world.getMaxHeight() / 16][];
-			return result;
-		}
-
-		@Override
-		public Location getFixedSpawnLocation(World world, Random random) {
-			return new Location(world, 100, 100, 100);
-		}
-
-		public void setBlock(byte[][] result, int x, int y, int z, byte blockID) {
-			if (result[(y >> 4)] == null) {
-				result[(y >> 4)] = new byte[4096];
-			}
-			result[(y >> 4)][((y & 0xF) << 8 | z << 4 | x)] = blockID;
-		}
-
-		@SuppressWarnings("deprecation")
-		public byte getId(Material material) {
-			return (byte) material.getId();
-		}
-
-		public byte getId(Material material, short data) {
-			return 0;
-		}
-
-		public void setLayer(byte[][] result, int level, Material material) {
-			int x, z;
-			for (x = 0; x < 16; x++) {
-				for (z = 0; z < 16; z++) {
-					setBlock(result, x, level, z, getId(material));
-				}
-			}
-		}
-
-		public void setCorner(byte[][] result, int level, Material material) {
-			int x, z;
-			for (x = 0; x < 16; x++) {
-				setBlock(result, x, level, 0, getId(material));
-			}
-			for (z = 0; z < 16; z++) {
-				setBlock(result, 0, level, z, getId(material));
-			}
-		}
-
-		public void setLayer(byte[][] result, int minLevel, int maxLevel, Material material) {
-			int y;
-			for (y = minLevel; y <= maxLevel; y++) {
-				setLayer(result, y, material);
-			}
-		}
-	}
-
-	/**
-	 * Gerador de Mundo Plano
-	 * 
-	 * @author Eduard
-	 *
-	 */
-	public static class FlatWorldGenerator extends EmptyWorldGenerator {
-
-		@Override
-		public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ,
-				ChunkGenerator.BiomeGrid biomeGrid) {
-			byte[][] result = new byte[world.getMaxHeight() / 16][];
-			setLayer(result, 0, Material.BEDROCK);
-			setLayer(result, 1, 3, Material.DIRT);
-			setLayer(result, 4, Material.GRASS);
-			setCorner(result, 8, Material.DIAMOND_BLOCK);
-			return result;
-		}
-
-	}
-
-	/**
-	 * API de Cooldown para Habilidades e Kits
-	 * 
-	 * @author Eduard
-	 *
-	 */
-	public static abstract class Cooldowns {
-		/**
-		 * Tempo de Cooldown<br>
-		 * Em forma de Ticks<br>
-		 * Cada TICK = 1/20 de SEGUNDO
-		 */
-		private long ticks;
-
-		/**
-		 * Mapa contendo os Cooldowns em Andamento<br>
-		 * KEY = UUID = Id do Jogador<br>
-		 * VALUE = CooldownEvent = Evento do Cooldown<br>
-		 */
-		private Map<UUID, CooldownEvent> cooldowns = new HashMap<>();
-
-		/**
-		 * Metodo abstrato para oque vai acontecer quando sair do Cooldown
-		 * 
-		 * @param player
-		 *            Jogador
-		 */
-		public abstract void onLeftCooldown(Player player);
-
-		/**
-		 * Metodo abstrato para oque vai acontecer quando começar o Cooldown
-		 * 
-		 * @param player
-		 *            Jogador
-		 */
-		public abstract void onStartCooldown(Player player);
-
-		/**
-		 * Metodo abstrato para oque vai acontecer quando estiver ainda em Coodlwon
-		 * 
-		 * @param player
-		 */
-		public abstract void onInCooldown(Player player);
-
-		/**
-		 * Iniciando o Sistema de Cooldown
-		 * 
-		 * @param seconds
-		 *            Segundos de Cooldown
-		 */
-		public Cooldowns(int seconds) {
-			setTime(seconds);
-		}
-
-		/**
-		 * Define o Tempo de Cooldown
-		 * 
-		 * @param seconds
-		 *            Segundos
-		 */
-		public void setTime(int seconds) {
-			ticks = seconds * 20;
-		}
-
-		/**
-		 * 
-		 * @return Tempo de Cooldown em Ticks
-		 */
-		public long getTicks() {
-			return ticks;
-		}
-
-		public void setTicks(long ticks) {
-			this.ticks = ticks;
-		}
-
-		public void setOnCooldown(Player player) {
-			removeFromCooldown(player);
-			onStartCooldown(player);
-			CooldownEvent event = new CooldownEvent(ticks) {
-
-				@Override
-				public void run() {
-					removeFromCooldown(player);
-				}
-
-			};
-			event.runTaskLater(getPlugin(), ticks);
-			cooldowns.put(player.getUniqueId(), event);
-		}
-
-		public int getCooldown(Player player) {
-			if (onCooldown(player)) {
-				CooldownEvent cooldown = cooldowns.get(player.getUniqueId());
-				int result = (int) ((-cooldown.getStartTime() + System.currentTimeMillis()) / 1000);
-				return (int) (cooldown.getCooldownTime() - result);
-			}
-			return -1;
-		}
-
-		public JavaPlugin getPlugin() {
-			return JavaPlugin.getProvidingPlugin(getClass());
-		}
-
-		public boolean onCooldown(Player player) {
-			return cooldowns.containsKey(player.getUniqueId());
-		}
-
-		public void removeFromCooldown(Player player) {
-			if (onCooldown(player)) {
-				onLeftCooldown(player);
-				cooldowns.get(player.getUniqueId()).cancel();
-				cooldowns.remove(player.getUniqueId());
-			}
-		}
-
-		public boolean cooldown(Player player) {
-			if (onCooldown(player)) {
-				onInCooldown(player);
-				return false;
-			}
-			setOnCooldown(player);
-			return true;
-
-		}
-	}
-
-	public static abstract class CooldownEvent extends BukkitRunnable {
-
-		public CooldownEvent(long cooldownTime) {
-			setStartTime(System.currentTimeMillis());
-			setCooldownTime(cooldownTime);
-		}
-
-		private long cooldownTime;
-		private long startTime;
-
-		public long getStartTime() {
-			return startTime;
-		}
-
-		public void setStartTime(long startTime) {
-			this.startTime = startTime;
-		}
-
-		public long getCooldownTime() {
-			return cooldownTime;
-		}
-
-		public void setCooldownTime(long cooldownTime) {
-			this.cooldownTime = cooldownTime;
-		}
-
+	public static ArrayList<String> getAsciiCompass(double inDegrees, String colorActive, String colorDefault) {
+		return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
 	}
 
 	/**
@@ -4447,169 +3713,6 @@ public final class Mine {
 		return newItem(material, name, amount, data, lore);
 	}
 
-	public static interface RecipeBuilder {
-
-		public Recipe getRecipe();
-
-		public default boolean addRecipe() {
-			;
-			if (getResult() == null)
-				return false;
-			return Bukkit.addRecipe(getRecipe());
-		}
-
-		public ItemStack getResult();
-
-		public void setResult(ItemStack result);
-
-	}
-
-	public static class SimpleRecipe implements Storable, RecipeBuilder {
-
-		private ItemStack result = null;
-		private List<ItemStack> items = new ArrayList<>();
-
-		public SimpleRecipe() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public SimpleRecipe(ItemStack result) {
-			setResult(result);
-		}
-
-		public SimpleRecipe add(Material material) {
-			return add(new ItemStack(material));
-		}
-
-		public SimpleRecipe add(Material material, int data) {
-			return add(new ItemStack(material, 1, (short) data));
-		}
-
-		public SimpleRecipe add(ItemStack item) {
-			items.add(item);
-			return this;
-		}
-
-		public SimpleRecipe remove(ItemStack item) {
-			items.remove(item);
-			return this;
-		}
-
-		public ItemStack getResult() {
-
-			return result;
-		}
-
-		public ShapelessRecipe getRecipe() {
-			if (result == null)
-				return null;
-			ShapelessRecipe recipe = new ShapelessRecipe(result);
-			for (ItemStack item : items) {
-				recipe.addIngredient(item.getData());
-			}
-			return recipe;
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			return null;
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-		}
-
-		public void setResult(ItemStack result) {
-			this.result = result;
-		}
-
-	}
-
-	public static class NormalRecipe implements Storable, RecipeBuilder {
-
-		private Map<Integer, ItemStack> items = new HashMap<>();
-		private ItemStack result = null;
-
-		public NormalRecipe() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public NormalRecipe set(int slot, ItemStack item) {
-			items.put(slot, item);
-			return this;
-		}
-
-		public NormalRecipe remove(int slot) {
-			items.remove(slot);
-			return this;
-		}
-
-		public ItemStack getIngridient(int slot) {
-			return items.get(slot);
-		}
-
-		public ShapedRecipe getRecipe() {
-			if (result == null)
-				return null;
-			ShapedRecipe recipe = new ShapedRecipe(result);
-			recipe.shape("789", "456", "123");
-
-			for (Entry<Integer, ItemStack> entry : items.entrySet()) {
-				try {
-					recipe.setIngredient(getSlot(entry.getKey()), entry.getValue().getData());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-			return recipe;
-		}
-
-		public NormalRecipe(ItemStack craftResult) {
-			setResult(craftResult);
-		}
-
-		@SuppressWarnings("unused")
-		private char getSlot2(int slot) {
-			char x = 'A';
-			slot--;
-			for (int id = 1; id <= slot; id++) {
-				x++;
-			}
-			return x;
-		}
-
-		private char getSlot(int slot) {
-
-			return Character.forDigit(slot, 10);
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			return null;
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-		}
-
-		public Map<Integer, ItemStack> getItems() {
-			return items;
-		}
-
-		public void setItems(Map<Integer, ItemStack> items) {
-			this.items = items;
-		}
-
-		public ItemStack getResult() {
-			return result;
-		}
-
-		public void setResult(ItemStack result) {
-			this.result = result;
-		}
-	}
-
 	public static Player getPlayer(String name) {
 		return Bukkit.getPlayerExact(name);
 	}
@@ -4628,7 +3731,7 @@ public final class Mine {
 			sender.sendMessage(Mine.getReplacers(message, player));
 		} else {
 			sender.sendMessage(message);
-			;
+
 		}
 
 	}
@@ -4638,981 +3741,461 @@ public final class Mine {
 
 	}
 
-	public static class ScoreListener implements Listener {
-		@EventHandler
-		public void onQuit(PlayerQuitEvent e) {
-			Player p = e.getPlayer();
+	public static PlayerManager getPlayerManager() {
+		return playerManager;
+	}
 
-			removeScore(p);
-			removeTag(p);
+	public static void setPlayerManager(PlayerManager playerManager) {
+		Mine.playerManager = playerManager;
+	}
+
+	private static Map<String, Replacer> replacers = new HashMap<>();
+
+	public static interface Replacer {
+
+		Object getText(Player p);
+	}
+
+	public static void saveMaps() {
+
+		for (Entry<String, Schematic> entry : SCHEMATICS.entrySet()) {
+			Schematic mapa = entry.getValue();
+			String name = entry.getKey();
+
+			mapa.save(new File(MAPS_CONFIG.getFile(), name + ".map"));
 		}
+	}
 
-		@EventHandler
-		public void onKick(PlayerKickEvent e) {
-			Player p = e.getPlayer();
-			removeScore(p);
-			removeTag(p);
-		}
+	public static void loadMaps() {
 
-		@EventHandler
-		public void onJoin(PlayerJoinEvent e) {
-			Player p = e.getPlayer();
-			if (scoresEnabled) {
-				setScore(e.getPlayer(), scoreDefault.copy());
-			}
-			if (tagsEnabled) {
-				setTag(p, tagDefault.copy());
-				updatePlayerTag(p);
-			}
+		File file = MAPS_CONFIG.getFile();
+		file.mkdirs();
+
+		for (File subfile : file.listFiles()) {
+
+			SCHEMATICS.put(subfile.getName().replace(".map", ""), Schematic.load(subfile));
 
 		}
 
 	}
+	public static ItemStack newFirework() {
+		ItemStack fire = new ItemStack(Material.FIREWORK);
+		FireworkMeta meta = (FireworkMeta) fire.getItemMeta();
+//		meta.getEffects()
+		fire.setItemMeta(meta);
+		return fire;
+	}
+	public static ItemStack newFireworkCharge() {
+		ItemStack fire = new ItemStack(Material.FIREWORK_CHARGE);
+		FireworkEffectMeta meta = (FireworkEffectMeta) fire.getItemMeta();
+		meta.setEffect(FireworkEffect.builder().withColor(Color.RED).with(Type.STAR).build());
+		fire.setItemMeta(meta);
+		return fire;
+	}
 
-	public static void register(Plugin plugin) {
-		unregister();
-		updater = new BukkitRunnable() {
+	public static void registerDefaults() {
+		StorageAPI.register(MaterialData.class, new Variable() {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof MaterialData) {
+					MaterialData materialData = (MaterialData) object;
+					return materialData.getItemTypeId() + ":" + materialData.getData();
+
+				}
+				return null;
+			}
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					try {
+						String[] split = string.split(":");
+						return new MaterialData(Material.getMaterial(Mine.toInt(split[0])), Mine.toByte(split[1]));
+					} catch (Exception e) {
+						new MaterialData( Material.STONE);
+					}
+
+				}
+				return null;
+			}
+		});
+		StorageAPI.register(Vector.class, new Storable() {
 
 			@Override
-			public void run() {
-				updateTagsScores();
+			public Object restore(Map<String, Object> map) {
+				return new Vector();
 			}
-		};
-		updater.runTaskTimer(plugin, 20, 20);
-		Bukkit.getPluginManager().registerEvents(listener, plugin);
-	}
 
-	public static void unregister() {
-		if (updater != null) {
-			updater.cancel();
-			updater = null;
-		}
-		HandlerList.unregisterAll(listener);
-	}
+			@Override
+			public void store(Map<String, Object> map, Object object) {
 
-	private static boolean tagsEnabled;
-	private static boolean tagsByGroup;
-	private static boolean scoresEnabled;
-	private static Tag tagDefault;
-	private static DisplayBoard scoreDefault;
-	private static Map<String, Tag> groupsTags = new HashMap<>();
-	private static Map<Player, Tag> playersTags = new HashMap<>();
-	private static Map<Player, DisplayBoard> playersScores = new HashMap<>();
-	private static BukkitRunnable updater;
-	private static ScoreListener listener = new ScoreListener();
-
-	public static Map<String, Tag> getGroupsTags() {
-		return groupsTags;
-	}
-
-	public static void setGroupsTags(Map<String, Tag> groupsTags) {
-		Mine.groupsTags = groupsTags;
-	}
-
-	public static void updateGroupsTags() {
-		for (String group : VaultAPI.getPermission().getGroups()) {
-			String prefix = VaultAPI.getChat().getGroupPrefix("null", group);
-			String suffix = VaultAPI.getChat().getGroupSuffix("null", group);
-			Tag tag = new Tag(prefix, suffix);
-			groupsTags.put(group, tag);
-
-		}
-
-	}
-
-	public static void updateGroupsRanks(List<String> list) {
-		int id = 0;
-		for (String group : list) {
-			Tag tag = groupsTags.get(group);
-			// Mine.broadcast("affs "+tag +" "+(tag==null));
-			if (tag != null) {
-				tag.setRank(id);
-				id++;
 			}
-			// Mine.broadcast("affs "+tag +" "+(tag==null));
-		}
 
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void updateTags(Scoreboard score) {
-		// score.getTeams().forEach(team -> team.unregister());
-		for (Entry<Player, Tag> map : playersTags.entrySet()) {
-			Tag tag = map.getValue();
-			Player player = map.getKey();
-			if (player == null)
-				continue;
-			String name = Mine.cutText(tag.getRank() + player.getName(), 16);
-			Team team = Mine.getTeam(score, name);
-			try {
-				team.setNameTagVisibility(NameTagVisibility.ALWAYS);
-			} catch (Exception e) {
+			@Override
+			public String alias() {
+				return "Vector";
 			}
-			String prefix = Mine.cutText(Mine.toChatMessage(tag.getPrefix()), 16);
-			String suffix = Mine.cutText(Mine.toChatMessage(tag.getSuffix()), 16);
+		});
+		StorageAPI.register(Enchantment.class, new Variable() {
 
-			if (!prefix.equals(team.getPrefix()))
-				team.setPrefix(prefix);
-			if (!suffix.equals(suffix))
-				team.setSuffix(suffix);
-			FakeOfflinePlayer fake = new FakeOfflinePlayer(player.getName());
-			if (!team.hasPlayer(fake))
-				team.addPlayer(fake);
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof Enchantment) {
+					Enchantment enchantment = (Enchantment) object;
+					return enchantment.getId();
 
-		}
-	}
-
-	public static void updatePlayerTag(Player player) {
-		if (tagsByGroup) {
-			String group = VaultAPI.getPermission().getPrimaryGroup(player);
-			Tag tag = groupsTags.get(group);
-			if (tag != null) {
-				setTag(player, tag.copy());
-			}
-		}
-	}
-
-	public static void updateScoreboard(Player player) {
-		getScore(player).update(player);
-	}
-
-	public static void setScore(Player player, DisplayBoard score) {
-		playersScores.put(player, score);
-		score.apply(player);
-	}
-
-	public static DisplayBoard getScore(Player player) {
-		return playersScores.get(player);
-
-	}
-
-	public static Tag getTag(Player player) {
-		return playersTags.get(player);
-	}
-
-	public static void resetTag(Player player) {
-		setTag(player, "");
-	}
-
-	public static void setTag(Player player, String prefix) {
-		setTag(player, prefix, "");
-	}
-
-	public static void setTag(Player player, String prefix, String suffix) {
-		setTag(player, new Tag(prefix, suffix));
-	}
-
-	public static void setTag(Player player, Tag tag) {
-		playersTags.put(player, tag);
-
-	}
-
-	public static void updateTagsScores() {
-		if (scoresEnabled) {
-
-			try {
-				for (Entry<Player, DisplayBoard> map : playersScores.entrySet()) {
-					DisplayBoard score = map.getValue();
-					Player player = map.getKey();
-					ScoreUpdateEvent event = new ScoreUpdateEvent(player, score);
-					if (!event.isCancelled()) {
-						score.update(player);
-					}
 				}
-			} catch (Exception e) {
-				Bukkit.getLogger().info("Falha ao dar update ocorreu uma Troca de Scoreboard no meio do FOR");
+				return null;
 			}
-		}
-		if (tagsEnabled) {
 
-			Scoreboard main = Bukkit.getScoreboardManager().getMainScoreboard();
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					return Enchantment.getById(Extra.toInt(string));
 
-			for (Player p : Mine.getPlayers()) {
-				Scoreboard score = p.getScoreboard();
-				if (score == null) {
-					p.setScoreboard(main);
-					continue;
 				}
-				updateTags(score);
-
+				return null;
 			}
-			updateTags(main);
-		}
-	}
+		});
+		StorageAPI.register(PotionEffectType.class, new Variable() {
 
-	public static void removeScore(Player player) {
-		player.setScoreboard(Mine.getMainScoreboard());
-		playersScores.remove(player);
-	}
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
 
-	public static void removeTag(Player player) {
-		playersTags.remove(player);
-	}
-
-	// public static class TagUpdateEvent extends PlayerEvent implements Cancellable
-	// {
-	//
-	// private Tag tag;
-	// private boolean cancelled;
-	//
-	// public boolean isCancelled() {
-	// return cancelled;
-	// }
-	//
-	// public void setCancelled(boolean cancelled) {
-	// this.cancelled = cancelled;
-	// }
-	//
-	// @Override
-	// public HandlerList getHandlers() {
-	// return handlers;
-	// }
-	//
-	// public static HandlerList getHandlerList() {
-	// return handlers;
-	// }
-	//
-	// private static final HandlerList handlers = new HandlerList();
-	//
-	// public TagUpdateEvent(Tag tag, Player who) {
-	// super(who);
-	// setTag(tag);
-	// }
-	//
-	// public Tag getTag() {
-	// return tag;
-	// }
-	//
-	// public void setTag(Tag tag) {
-	// this.tag = tag;
-	// }
-	// }
-
-	public static class Tag implements Storable, Copyable {
-
-		private String prefix, suffix, name;
-
-		private int rank;
-
-		public Tag(String prefix, String suffix) {
-			this.prefix = prefix;
-			this.suffix = suffix;
-		}
-
-		public Tag(String prefix, String suffix, String name) {
-			this.prefix = prefix;
-			this.suffix = suffix;
-			this.name = name;
-		}
-
-		public Tag() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public Tag copy() {
-			return copy(this);
-		}
-
-		public String getPrefix() {
-			return prefix;
-		}
-
-		public void setPrefix(String prefix) {
-			this.prefix = prefix;
-
-		}
-
-		public String getSuffix() {
-			return suffix;
-		}
-
-		public void setSuffix(String suffix) {
-			this.suffix = suffix;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public int getRank() {
-			return rank;
-		}
-
-		public void setRank(int rank) {
-			this.rank = rank;
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public String toString() {
-			return "Tag [prefix=" + prefix + ", suffix=" + suffix + ", name=" + name + ", rank=" + rank + "]";
-		}
-
-	}
-
-	public static class ScoreUpdateEvent extends PlayerEvent implements Cancellable {
-		private DisplayBoard score;
-		private boolean cancelled;
-
-		@Override
-		public HandlerList getHandlers() {
-			return handlers;
-		}
-
-		public static HandlerList getHandlerList() {
-			return handlers;
-		}
-
-		private static final HandlerList handlers = new HandlerList();
-
-		public ScoreUpdateEvent(Player who, DisplayBoard score) {
-			super(who);
-			setScore(score);
-		}
-
-		public DisplayBoard getScore() {
-			return score;
-		}
-
-		public void setScore(DisplayBoard score) {
-			this.score = score;
-		}
-
-		public boolean isCancelled() {
-			return cancelled;
-		}
-
-		public void setCancelled(boolean cancelled) {
-			this.cancelled = cancelled;
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	public static Scoreboard applyScoreboard(Player player, String title, String... lines) {
-		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective obj = board.registerNewObjective("score", "dummy");
-		obj.setDisplayName(title);
-		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		int id = 15;
-		for (String line : lines) {
-			String empty = ChatColor.values()[id - 1].toString();
-			obj.getScore(new FakeOfflinePlayer(line.isEmpty() ? empty : line)).setScore(id);
-			;
-			id--;
-			if (id == 0) {
-				break;
+					String string = (String) object;
+					String[] split = string.split(";");
+					return PotionEffectType.getByName(split[1]);
+				}
+				return null;
 			}
-		}
 
-		player.setScoreboard(board);
-		return board;
-	}
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof PotionEffectType) {
+					PotionEffectType potionEffectType = (PotionEffectType) object;
+					return potionEffectType.getName() + ";" + potionEffectType.getId();
 
-	public static Scoreboard newScoreboard(Player player, String title, String... lines) {
-		return applyScoreboard(player, title, lines);
-	}
-
-	/**
-	 * Jogador Off Ficticio
-	 * 
-	 * @author Eduard-PC
-	 *
-	 */
-	public static class FakeOfflinePlayer implements OfflinePlayer {
-
-		private String name;
-		private UUID id;
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public FakeOfflinePlayer(String name) {
-			this.name = name;
-			// this.id = UUID.nameUUIDFromBytes(name.getBytes());
-		}
-
-		public FakeOfflinePlayer(String name, UUID id) {
-			this(name);
-			this.setId(id);
-		}
-
-		@Override
-		public boolean isOp() {
-			return false;
-		}
-
-		@Override
-		public void setOp(boolean arg0) {
-
-		}
-
-		@Override
-		public Map<String, Object> serialize() {
-			return null;
-		}
-
-		@Override
-		public Location getBedSpawnLocation() {
-			return null;
-		}
-
-		@Override
-		public long getFirstPlayed() {
-			return 0;
-		}
-
-		@Override
-		public long getLastPlayed() {
-			return 0;
-		}
-
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		@Override
-		public Player getPlayer() {
-			Player player = Bukkit.getPlayer(id);
-			return player == null ? Bukkit.getPlayer(name) : player;
-		}
-
-		@Override
-		public UUID getUniqueId() {
-			return id;
-		}
-
-		@Override
-		public boolean hasPlayedBefore() {
-			return true;
-		}
-
-		@Override
-		public boolean isBanned() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isOnline() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isWhitelisted() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void setBanned(boolean arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setWhitelisted(boolean arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public UUID getId() {
-			return id;
-		}
-
-		public void setId(UUID id) {
-			this.id = id;
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	public static class DisplayBoard implements Storable, Copyable {
-
-		public static final int PLAYER_ABOVE_1_7_NAME_LIMIT = 40;
-		public static final int PLAYER_BELOW_1_8_NAME_LIMIT = 16;
-		public static final int TITLE_LIMIT = 32;
-		public static final int REGISTER_LIMIT = 16;
-		public static final int PREFIX_LIMIT = 16;
-		public static final int SUFFIX_LIMIT = 16;
-		public int PLAYER_NAME_LIMIT = PLAYER_BELOW_1_8_NAME_LIMIT;
-		protected List<String> lines = new ArrayList<>();
-		protected String title;
-		protected String healthBar;
-		protected boolean perfect;
-		protected transient Objective health;
-		protected transient Scoreboard scoreboard;
-		protected transient Objective objective;
-		protected transient Map<Integer, OfflinePlayer> fakes = new HashMap<>();
-		protected transient Map<Integer, Team> teams = new HashMap<>();
-		protected transient Map<Integer, String> texts = new HashMap<>();
-
-		public DisplayBoard hide() {
-
-			objective.setDisplaySlot(null);
-			return this;
-		}
-
-		public boolean isShowing() {
-			return objective.getDisplaySlot() == DisplaySlot.SIDEBAR;
-		}
-
-		public DisplayBoard show() {
-			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-			return this;
-		}
-
-		public void clear() {
-			for (int id = 15; id > 0; id--) {
-				remove(id);
+				}
+				return null;
 			}
-		}
 
-		public void setLine(String prefix, String center, String suffix, int line) {
-			if (center.isEmpty()) {
-				center = "" + ChatColor.values()[line - 1];
+		});
+		StorageAPI.register(PotionEffect.class, new Variable() {
+
+			@Override
+			public Object save(Object object) {
+				return null;
 			}
-			prefix = Mine.cutText(prefix, 16);
-			center = Mine.cutText(center, 40);
-			suffix = Mine.cutText(suffix, 16);
-			Team team = teams.get(line);
-			if (fakes.containsKey(line)) {
-				OfflinePlayer fake = fakes.get(line);
-				if (!fake.getName().equals(center)) {
-					team.removePlayer(fake);
-					if (fakes.size() >= 15) {
-						objective.getScore(fake).setScore(-1);
+
+			@Override
+			public Object get(Object object) {
+				return new PotionEffect(PotionEffectType.SPEED, 20, 0);
+			}
+		});
+		StorageAPI.register(OfflinePlayer.class, new Variable() {
+
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String id = (String) object;
+					String[] split = id.split(";");
+					return new FakePlayer(split[0], UUID.fromString(split[1]));
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof OfflinePlayer) {
+					OfflinePlayer p = (OfflinePlayer) object;
+					return p.getName() + ";" + p.getUniqueId().toString();
+
+				}
+				return null;
+			}
+
+		});
+		StorageAPI.register(Location.class, new Storable() {
+
+			@Override
+			public Object restore(Map<String, Object> map) {
+				return new Location(Bukkit.getWorlds().get(0), 1, 1, 1);
+			}
+
+			@Override
+			public void store(Map<String, Object> map, Object object) {
+			}
+
+			@Override
+			public String alias() {
+				return "Location";
+			}
+
+		});
+
+		StorageAPI.register(Chunk.class, new Variable() {
+
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String string = (String) object;
+					String[] split = string.split(";");
+					return Bukkit.getWorld(split[0]).getChunkAt(Extra.toInt(split[1]), Extra.toInt(split[2]));
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof Chunk) {
+					Chunk chunk = (Chunk) object;
+					return chunk.getWorld().getName() + ";" + chunk.getX() + ";" + chunk.getZ();
+				}
+
+				return null;
+			}
+
+		});
+
+		StorageAPI.register(World.class, new Variable() {
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String world = (String) object;
+					return Bukkit.getWorld(world);
+
+				}
+				return null;
+			}
+
+			@Override
+			public Object save(Object object) {
+				if (object instanceof World) {
+					World world = (World) object;
+					return world.getName();
+
+				}
+				return null;
+			}
+		});
+		StorageAPI.register(ItemStack.class, new Storable() {
+			@Override
+			public Object restore(Map<String, Object> map) {
+				int id = Extra.toInt(map.get("id"));
+				int amount = Extra.toInt(map.get("amount"));
+				int data = Extra.toInt(map.get("data"));
+				@SuppressWarnings("deprecation")
+				ItemStack item = new ItemStack(id, amount, (short) data);
+				String name = Extra.toChatMessage((String) map.get("name"));
+				if (!name.isEmpty()) {
+					Mine.setName(item, name);
+				}
+				@SuppressWarnings("unchecked")
+				List<String> lore = Extra.toMessages((List<Object>) map.get("lore"));
+				if (!lore.isEmpty()) {
+					Mine.setLore(item, lore);
+				}
+				String enchants = (String) map.get("enchants");
+				if (!enchants.isEmpty()) {
+					if (enchants.contains(", ")) {
+						String[] split = enchants.split(", ");
+						for (String enchs : split) {
+							String[] sub = enchs.split("-");
+							@SuppressWarnings("deprecation")
+							Enchantment ench = Enchantment.getById(Extra.toInt(sub[0]));
+							Integer level = Extra.toInt(sub[1]);
+							item.addUnsafeEnchantment(ench, level);
+
+						}
 					} else {
-						scoreboard.resetScores(fake);
+						String[] split = enchants.split("-");
+						@SuppressWarnings("deprecation")
+						Enchantment ench = Enchantment.getById(Extra.toInt(split[0]));
+						Integer level = Extra.toInt(split[1]);
+						item.addUnsafeEnchantment(ench, level);
+
 					}
-					fakes.remove(line);
 				}
-			}
-			if (!fakes.containsKey(line)) {
-				FakeOfflinePlayer fake = new FakeOfflinePlayer(center);
-				objective.getScore(fake).setScore(line);
-				fakes.put(line, fake);
-				team.addPlayer(fake);
-			}
-			team.setSuffix(suffix);
-			team.setPrefix(prefix);
-
-		}
-
-		public void removeEntries() {
-			for (OfflinePlayer fake : scoreboard.getPlayers()) {
-				if (objective.getScore(fake).getScore() == -1)
-					scoreboard.resetScores(fake);
+				return item;
 			}
 
-		}
-
-		public void clearEntries() {
-			for (OfflinePlayer fake : scoreboard.getPlayers()) {
-				scoreboard.resetScores(fake);
+			@Override
+			public String alias() {
+				return "Item";
 			}
-		}
 
-		public DisplayBoard copy() {
-			return copy(this);
-		}
-
-		public DisplayBoard() {
-			title = "§6§lScoreboard";
-			init();
-		}
-
-		public DisplayBoard(String title, String... lines) {
-			setTitle(title);
-			getLines().addAll(Arrays.asList(lines));
-			init();
-		}
-
-		// public List<String> getDisplayLines() {
-		// List<String> list = new ArrayList<>();
-		// for (Entry<Integer, OfflinePlayer> entry : players.entrySet()) {
-		// Integer id = entry.getKey();
-		// Team team = teams.get(id);
-		// list.add(team.getPrefix() + entry.getValue().getName() + team.getSuffix());
-		// }
-		// return list;
-		// }
-
-		public DisplayBoard update(Player player) {
-			int id = 15;
-			for (String line : this.lines) {
-				set(id, Mine.getReplacers(line, player));
-				id--;
-			}
-			setDisplay(Mine.getReplacers(title, player));
-			removeEntries();
-			return this;
-		}
-
-		public DisplayBoard update() {
-			setDisplay(title);
-			int id = 15;
-			for (String line : lines) {
-				set(id, line);
-				id--;
-			}
-			removeEntries();
-			return this;
-		}
-
-		public DisplayBoard init() {
-			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-			objective = scoreboard.registerNewObjective("scoreboard", "dummy");
-			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-			health = scoreboard.registerNewObjective("HealthBar", Criterias.HEALTH);
-			health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-			for (int id = 15; id > 0; id--) {
-				Team team = scoreboard.registerNewTeam("team-" + id);
-				FakeOfflinePlayer fake = new FakeOfflinePlayer("" + ChatColor.values()[id]);
-				team.addPlayer(fake);
-				objective.getScore(fake).setScore(id);
-				teams.put(id, team);
-				fakes.put(id, fake);
-			}
-			setDisplay(title);
-			setHealthBar(getRedHeart());
-			return this;
-		}
-
-		public char getHeart() {
-			return '\u2764';
-		}
-
-		public DisplayBoard apply(Player player) {
-			player.setScoreboard(scoreboard);
-			return this;
-		}
-
-		public DisplayBoard updateHealthBar(Player player) {
-			player.setHealth(player.getMaxHealth() - 1);
-			return this;
-		}
-
-		public void empty(int slot) {
-			set(id(slot), "");
-		}
-
-		public void clear(int slot) {
-			int id = id(slot);
-			remove(id);
-		}
-
-		public DisplayBoard setDisplay(String name) {
-			objective.setDisplayName(Mine.cutText(name, TITLE_LIMIT));
-			return this;
-		}
-
-		public boolean remove(int id) {
-			OfflinePlayer fake = fakes.get(id);
-			scoreboard.resetScores(fake);
-			fakes.remove(id);
-			return false;
-		}
-
-		public boolean set(int slot, String text) {
-			int id = id(slot);
-			String line = texts.get(id);
-			if (line != null && line.equals(text)) {
-				return true;
-			}
-			text = Mine.cutText(text, PREFIX_LIMIT + SUFFIX_LIMIT + PLAYER_NAME_LIMIT);
-			String center = "";
-			String prefix = "";
-			String suffix = "";
-			if (text.length() > PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT) {
-				text = Mine.cutText(text, PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT);
-			}
-			if (text.length() <= PLAYER_NAME_LIMIT) {
-				center = text;
-			} else if (text.length() <= PLAYER_NAME_LIMIT + PREFIX_LIMIT) {
-				center = text.substring(0, PLAYER_NAME_LIMIT);
-				suffix = text.substring(SUFFIX_LIMIT);
-
-			} else if (text.length() <= PLAYER_NAME_LIMIT + PREFIX_LIMIT + SUFFIX_LIMIT) {
-				prefix = text.substring(0, PREFIX_LIMIT);
-				center = text.substring(PREFIX_LIMIT, PREFIX_LIMIT + PLAYER_NAME_LIMIT - 1);
-				suffix = text.substring(PREFIX_LIMIT + PLAYER_NAME_LIMIT);
-			}
-			Team team = teams.get(id);
-			// if (center.isEmpty()) {
-			// center = ChatColor.values()[id].toString();
-			// }
-			if (perfect) {
-				prefix = Mine.cutText(text, 16);
-
-				if (text.length() > 16) {
-					suffix = text.substring(16);
+			@SuppressWarnings("deprecation")
+			@Override
+			public void store(Map<String, Object> map, Object object) {
+				if (object instanceof ItemStack) {
+					ItemStack item = (ItemStack) object;
+					map.remove("durability");
+					map.remove("meta");
+					map.remove("type");
+					map.put("id", item.getTypeId());
+					map.put("data", item.getDurability());
+					map.put("amount", item.getAmount());
+					map.put("name", Mine.getName(item));
+					map.put("lore", Mine.getLore(item));
+					String enchants = "";
+					if (item.getItemMeta().hasEnchants()) {
+						StringBuilder str = new StringBuilder();
+						int id = 0;
+						for (Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
+							if (id > 0)
+								str.append(", ");
+							Enchantment enchantment = entry.getKey();
+							str.append(enchantment.getId() + "-" + entry.getValue());
+							id++;
+						}
+						enchants = str.toString();
+					}
+					map.put("enchants", enchants);
 				}
-				team.setPrefix(prefix);
-				team.setSuffix(suffix);
-			} else {
-				setLine(prefix, center, suffix, id);
-				// OfflinePlayer fakeBefore = fakes.get(id);
-				// if (!fakeBefore.getName().equals(center)) {
-				//
-				// team.removePlayer(fakeBefore);
-				// Bukkit.getScheduler().runTaskLaterAsynchronously(Mine.getEduard(), () -> {
-				// scoreboard.resetScores(fakeBefore);
-				// }, 1);
-				//
-				// }
-				// FakeOfflinePlayer fake = new FakeOfflinePlayer(center);
-				// team.setPrefix(prefix);
-				// team.setSuffix(suffix);
-				// team.addPlayer(fake);
+
+			};
+		});
+		
+		StorageAPI.register(Item.class, new Variable() {
+			
+			/**
+			 * id:data-qnt;enchId-enchData,enchId-enchData;nome;descriao1,descricao2
+			 */
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object get(Object object) {
+				if (object instanceof String) {
+					String text = (String) object;
+
+					try {
+						String[] split = text.split(";");
+						String[] splitData = split[0].split("-");
+						Integer qnt = Mine.toInt(splitData[1]);
+						String[] splitInfo = splitData[0].split(":");
+						Integer id = Mine.toInt(splitInfo[0]);
+						short data = Mine.toShort(splitInfo[1]);
+						ItemStack item = new Item();
+						item.setTypeId(id);
+						item.setDurability(data);
+						item.setAmount(qnt);
+						if (split.length > 0) {
+							if (split[1].contains(",")) {
+								String[] enchs = split[1].split(",");
+								for (String enchant : enchs) {
+									String[] ench = enchant.split("-");
+									Integer ench_id = Mine.toInt(ench[0]);
+									Integer ench_level = Mine.toInt(ench[1]);
+									item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
+								}
+							} else {
+								if (!split[1].equals(" ")) {
+									String[] ench = split[1].split("-");
+									Integer ench_id = Mine.toInt(ench[0]);
+									Integer ench_level = Mine.toInt(ench[1]);
+									item.addUnsafeEnchantment(Enchantment.getById(ench_id), ench_level);
+								}
+
+							}
+						}
+						ItemMeta meta = item.getItemMeta();
+						if (split.length > 1) {
+							String nome = split[2];
+							if (!nome.equals(" ")) {
+								meta.setDisplayName(Extra.toChatMessage(nome));
+							}
+						}
+						if (split.length > 2) {
+							List<String> lista = new ArrayList<>();
+							String descricao = split[3];
+							if (descricao.contains(",")) {
+								String[] lore = descricao.split(",");
+								for (String line : lore) {
+									lista.add(Extra.toChatMessage(line));
+								}
+							} else {
+								if (!descricao.equals(" ")) {
+									lista.add(descricao);
+								}
+
+							}
+							meta.setLore(lista);
+						}
+						item.setItemMeta(meta);
+
+						return item;
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						return new Item(1);
+					}
+
+				}
+				return null;
 			}
 
-			texts.put(id, text);
+			@SuppressWarnings("deprecation")
+			@Override
+			public Object save(Object object) {
+				if (object instanceof ItemStack) {
+					ItemStack item = (ItemStack) object;
+					StringBuilder textao = new StringBuilder();
+					textao.append(item.getTypeId() + ":" + item.getDurability() + "-" + item.getAmount() + ";");
+					ItemMeta meta = item.getItemMeta();
+					if (meta != null) {
 
-			return true;
+						if (meta.hasEnchants()) {
+							boolean first = true;
+							for (Entry<Enchantment, Integer> enchant : item.getItemMeta().getEnchants().entrySet()) {
+								if (!first) {
+									textao.append(",");
+								} else
+									first = false;
+								textao.append(enchant.getKey().getId());
+								textao.append("-");
+								textao.append(enchant.getValue());
+							}
+						} else {
+							textao.append(" ");
+						}
+						textao.append(";");
+						if (item.getItemMeta().hasDisplayName()) {
+							textao.append(item.getItemMeta().getDisplayName());
+						} else {
+							textao.append(" ");
+						}
+						textao.append(";");
+						if (meta.hasLore()) {
+							boolean first = true;
+							for (String line : meta.getLore()) {
+								if (!first) {
+									textao.append(",");
+								} else
+									first = false;
+								textao.append(line);
+							}
 
-		}
-
-		protected int id(int slot) {
-			return slot <= 0 ? 1 : slot >= 15 ? 15 : slot;
-		}
-
-		public String getDisplay() {
-			return objective.getDisplayName();
-		}
-
-		public void setHealthBar(String health) {
-			this.health.setDisplayName(health);
-			this.healthBar = health;
-		}
-
-		public String getHealthBar() {
-			return this.healthBar;
-		}
-
-		public List<String> getLines() {
-			return lines;
-		}
-
-		public void setLines(List<String> lines) {
-			this.lines = lines;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public Scoreboard getScore() {
-			return scoreboard;
-		}
-
-		public Objective getBoard() {
-			return objective;
-		}
-
-		public Objective getHealth() {
-			return health;
-		}
-
-		@Override
-		public Object restore(Map<String, Object> map) {
-			update();
-			return null;
-		}
-
-		@Override
-		public void onCopy() {
-			init();
-
-		}
-
-		@Override
-		public void store(Map<String, Object> map, Object object) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public boolean isPerfect() {
-			return perfect;
-		}
-
-		public void setPerfect(boolean perfect) {
-			this.perfect = perfect;
-		}
-
-		public Objective getObjective() {
-			return objective;
-		}
-
-		public void setObjective(Objective objective) {
-			this.objective = objective;
-		}
-
-		public Map<Integer, OfflinePlayer> getFakes() {
-			return fakes;
-		}
-
-		public void setFakes(Map<Integer, OfflinePlayer> fakes) {
-			this.fakes = fakes;
-		}
-
-		public Map<Integer, Team> getTeams() {
-			return teams;
-		}
-
-		public void setTeams(Map<Integer, Team> teams) {
-			this.teams = teams;
-		}
-
-		public Map<Integer, String> getTexts() {
-			return texts;
-		}
-
-		public void setTexts(Map<Integer, String> texts) {
-			this.texts = texts;
-		}
-
-		public void setHealth(Objective health) {
-			this.health = health;
-		}
-
-	}
-
-	public static boolean isTagsEnabled() {
-		return tagsEnabled;
-	}
-
-	public static Plugin getEduard() {
-		return getPlugin("EduardAPI");
-	}
-
-	public static void setTagsEnabled(boolean tagsEnabled) {
-		Mine.tagsEnabled = tagsEnabled;
-	}
-
-	public static boolean isScoresEnabled() {
-		return scoresEnabled;
-	}
-
-	public static void setScoresEnabled(boolean scoresEnabled) {
-		Mine.scoresEnabled = scoresEnabled;
-	}
-
-	public static Tag getTagDefault() {
-		return tagDefault;
-	}
-
-	public static void setTagDefault(Tag tagDefault) {
-		Mine.tagDefault = tagDefault;
-	}
-
-	public static DisplayBoard getScoreDefault() {
-		return scoreDefault;
-	}
-
-	public static void setScoreDefault(DisplayBoard scoreDefault) {
-		Mine.scoreDefault = scoreDefault;
-	}
-
-	public static Map<Player, Tag> getPlayersTags() {
-		return playersTags;
-	}
-
-	public static void setPlayersTags(Map<Player, Tag> playersTags) {
-		Mine.playersTags = playersTags;
-	}
-
-	public static Map<Player, DisplayBoard> getPlayersScores() {
-		return playersScores;
-	}
-
-	public static void setPlayersScores(Map<Player, DisplayBoard> playersScores) {
-		Mine.playersScores = playersScores;
-	}
-
-	public static boolean isTagsByGroup() {
-		return tagsByGroup;
-	}
-
-	public static void setTagsByGroup(boolean tagsByGroup) {
-		Mine.tagsByGroup = tagsByGroup;
-	}
-
-	public static enum ItemCategory {
-
-		WEAPON, ARMOUR, BLOCK, ORE, TOOL, OTHER, FARM, FOOD, SPAWNER, SKULL, POTION;
-
-		public static ItemCategory getBy(ItemStack item) {
-			if (Enchantment.DAMAGE_ALL.canEnchantItem(item)) {
-				return ItemCategory.WEAPON;
+						} else {
+							textao.append(" ");
+						}
+						textao.append(";");
+					}
+					return textao.toString();
+				}
+				return null;
 			}
-			if (item.getType() == Material.DIAMOND_ORE | item.getType() == Material.DIAMOND
-					| item.getType() == Material.DIAMOND_BLOCK | item.getType() == Material.IRON_ORE
-					| item.getType() == Material.IRON_INGOT | item.getType() == Material.IRON_BLOCK
-					| item.getType() == Material.LAPIS_BLOCK | item.getType() == Material.LAPIS_ORE
-					| item.getType() == Material.REDSTONE | item.getType() == Material.REDSTONE_BLOCK
-					| item.getType() == Material.REDSTONE_ORE | item.getType() == Material.EMERALD
-					| item.getType() == Material.EMERALD_ORE | item.getType() == Material.EMERALD_BLOCK
-					| item.getType() == Material.GOLD_INGOT | item.getType() == Material.GOLD_ORE
-					| item.getType() == Material.GOLD_BLOCK | item.getType() == Material.COAL
-					| item.getType() == Material.COAL_ORE | item.getType() == Material.COAL_BLOCK) {
-				return ItemCategory.ORE;
-			} else if (item.getType().name().contains("AXE") | item.getType().name().contains("PICKAXE")
-					| item.getType().name().contains("HOE") | item.getType().name().contains("SPADE")
-					| item.getType() == Material.FLINT_AND_STEEL | item.getType() == Material.COMPASS) {
-
-				return ItemCategory.TOOL;
-
-			}
-			if (item.getType().name().contains("CHESTPLATE") | item.getType().name().contains("HELMET")
-					| item.getType().name().contains("BOOTS") | item.getType().name().contains("LEGGINGS")) {
-				return ARMOUR;
-			} else if (item.getType() == Material.NETHER_STAR | item.getType() == Material.SEEDS
-					| item.getType() == Material.STRING | item.getType() == Material.BLAZE_ROD
-					| item.getType() == Material.GOLD_NUGGET | item.getType() == Material.CACTUS
-					| item.getType() == Material.ROTTEN_FLESH | item.getType() == Material.BONE
-					| item.getType() == Material.RAW_BEEF | item.getType() == Material.SLIME_BALL
-					| item.getType() == Material.SLIME_BLOCK | item.getType() == Material.PRISMARINE_SHARD) {
-				return ItemCategory.FARM;
-			}
-			if (item.getType() == Material.GOLDEN_APPLE) {
-				return ItemCategory.FOOD;
-			}
-			if (item.getType() == Material.SKULL_ITEM) {
-				return ItemCategory.SKULL;
-			}
-			if (item.getType() == Material.MOB_SPAWNER) {
-				return SPAWNER;
-			}
-			if (item.getType() == Material.POTION) {
-				return POTION;
-			}
-			return OTHER;
-
-		}
-
+		});
+		
 	}
 
 }

@@ -5,9 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class PingCommand extends CommandManager {
 
@@ -23,14 +22,14 @@ public class PingCommand extends CommandManager {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				API.chat(p,message.replace("$ping", Mine.getPing(p)));
+				Mine.chat(p,message.replace("$ping", Mine.getPing(p)));
 			} else
 				return false;
 		} else {
 			String name = args[0];
-			if (API.existsPlayer(sender, name)) {
+			if (Mine.existsPlayer(sender, name)) {
 				Player target = Mine.getPlayer(name);
-				API.chat(sender,messageTarget
+				Mine.chat(sender,messageTarget
 						.replace("$target", target.getDisplayName())
 						.replace("$ping", Mine.getPing(target)));
 			}

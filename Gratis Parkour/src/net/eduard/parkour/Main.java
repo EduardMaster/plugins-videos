@@ -4,12 +4,7 @@ package net.eduard.parkour;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-/**
- * Preço: 35
- * 
- * @author Eduard-PC
- *
- */
+
 public class Main extends JavaPlugin {
 	private static Main plugin;
 	private Config config;

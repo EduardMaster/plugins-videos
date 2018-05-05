@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.manager.EventsManager;
 
 public class AutoPickup extends EventsManager{
 

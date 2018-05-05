@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.eduard.api.EduardAPI;
-import net.eduard.api.setup.Mine.DisplayBoard;
+import net.eduard.api.setup.game.DisplayBoard;
 
 public class CriarDisplayboard implements Listener {
 	public static HashMap<Player, DisplayBoard> scores = new HashMap<>();

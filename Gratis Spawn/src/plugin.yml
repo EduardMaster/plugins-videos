@@ -1,17 +1,16 @@
-name: EduardSpawn
-description: Tutorial Plugin de Spawn
+name: EduSpawn
+description: Sistema de Spawn configuravel
 main: net.eduard.spawn.Main
 version: 1.0
 authors: [Eduard]
 author: Eduard
 website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
 commands:
   spawn:
+    description: Teleportar para o Spawn
     permission: spawn.use
     usage: /<command>
-    description: Teleportar para o Spawn
   setspawn:
-    permission: spawn.set
     usage: /<command>
-    description: Configurar o Spawn
-    
+    description: Setar o Spawn

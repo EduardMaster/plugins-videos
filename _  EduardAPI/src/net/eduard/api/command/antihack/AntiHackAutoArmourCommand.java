@@ -1,6 +1,6 @@
 package net.eduard.api.command.antihack;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class AntiHackAutoArmourCommand extends CommandManager {
 	public AntiHackAutoArmourCommand() {

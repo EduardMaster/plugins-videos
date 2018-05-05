@@ -6,8 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.API;
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Ability;
 
 public class Anchor extends Ability {
 
@@ -32,7 +32,7 @@ public class Anchor extends Ability {
 			
 		}
 		if (no) {
-			API.TIME.delay(1L,new Runnable() {
+			Mine.TIME.delay(1L,new Runnable() {
 				
 				@Override
 				public void run() {

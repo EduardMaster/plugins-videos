@@ -4,14 +4,14 @@ package net.eduard.template.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class TemplateCommand extends CommandManager {
 
 	public TemplateCommand() {
 		super("comando");
 	}
-	@Override
+	@Override 
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
 	

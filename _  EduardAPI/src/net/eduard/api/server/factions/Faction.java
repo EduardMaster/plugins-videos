@@ -154,8 +154,7 @@ public class Faction implements Storable {
 	public double getMoney() {
 		double money = 0;
 		for (FactionPlayer member : members) {
-			@SuppressWarnings("deprecation")
-			double dinheiro = VaultAPI.getEconomy().getBalance(member.getName());
+			double dinheiro = VaultAPI.getEconomy().getBalance(member.getPlayerData());
 			money += dinheiro;
 		}
 		return money;
@@ -313,7 +312,7 @@ public class Faction implements Storable {
 
 	public FactionRel getRel(Faction faction) {
 		if (faction == null) {
-			return FactionRel.FREE_ZONE;
+			return FactionRel.NEUTRAL;
 		}
 		if (getAllies().contains(faction)) {
 			return FactionRel.ALLY;

@@ -3,7 +3,7 @@ package net.eduard.api.server.factions;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.server.ranks.Rank;
@@ -16,48 +16,37 @@ public class FactionPlayer implements Storable {
 	private FactionManager manager;
 	@Reference
 	private Faction faction;
-	
-	private UUID id;
-	private String name;
+	private OfflinePlayer playerData;
+	private long lastLogin;
 	private int kills;
 	private int deaths;
 	private int deathsByEnemies;
 	private int deathsByNeutrals;
 	private int deathsByCivilians;
-	
-	
+
 	private transient Player player;
-	
+
 	public String getDisplayName() {
 		StringBuilder b = new StringBuilder();
 		if (hasFaction()) {
-			b.append(getFaction().getPrefix()+" ");
+			b.append(getFaction().getPrefix() + " ");
 		}
 		b.append(getRank().getPrefix());
-		b.append(name);
+		b.append(getPlayerData().getName());
 		return b.toString();
 	}
-	
+
 	public Rank getRank() {
 		return manager.getRank(this);
 	}
-	
-	
-	
 
 	public FactionManager getManager() {
 		return manager;
 	}
 
-
-
-
 	public void setManager(FactionManager manager) {
 		this.manager = manager;
 	}
-
-
-
 
 	public int getDeathsByEnemies() {
 		return deathsByEnemies;
@@ -90,13 +79,9 @@ public class FactionPlayer implements Storable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
 
 	public FactionPlayer(Player player) {
-		this.id = player.getUniqueId();
-		this.setName(player.getName());
+		setPlayerData(player);
 	}
 
 	public double getPower() {
@@ -145,12 +130,12 @@ public class FactionPlayer implements Storable {
 	}
 
 	public FactionRel getRel(Faction faction) {
-
+		
 		if (faction == null) {
 			return FactionRel.FREE_ZONE;
 		}
 		if (getFaction() == null) {
-			return FactionRel.FREE_ZONE;
+			return faction.getRel(getFaction());
 		}
 		if (getFaction().equals(faction)) {
 			return FactionRel.MEMBER;
@@ -179,9 +164,7 @@ public class FactionPlayer implements Storable {
 		if (claim == null) {
 			return FactionRel.FREE_ZONE;
 		}
-		if (getFaction() == null)
-			return getRel(getFaction());
-		return getFaction().getRel(claim);
+		return getRel(claim.getFaction());
 
 	}
 
@@ -196,11 +179,7 @@ public class FactionPlayer implements Storable {
 	}
 
 	public Player getPlayer() {
-		return player == null? player = Bukkit.getPlayer(id): player;
-	}
-
-	public UUID getId() {
-		return id;
+		return player !=null?player: (player = getPlayerData().getPlayer());
 	}
 
 	@Override
@@ -224,21 +203,33 @@ public class FactionPlayer implements Storable {
 
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-
 
 	public boolean isLeader() {
 		return getFaction().getLeader().equals(this);
 	}
 
+	public OfflinePlayer getPlayerData() {
+		return playerData;
+	}
+
+	public void setPlayerData(OfflinePlayer playerData) {
+		this.playerData = playerData;
+	}
+
+	public String getName() {
+		return getPlayerData().getName();
+	}
+	public UUID getId() {
+		return getPlayerData().getUniqueId();
+	}
+
+	public long getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(long lastLogin) {
+		this.lastLogin = lastLogin;
+	}
 	
 
 }

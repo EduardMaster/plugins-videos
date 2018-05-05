@@ -6,6 +6,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
 /**
  * API para a utilização do Vault com um formato mais simples de entender <br>
  * 
@@ -18,20 +19,24 @@ public final class VaultAPI {
 
 	/**
 	 * Pega o prefixo no primeiro grupo do jogador
-	 * @param player Jogador
+	 * 
+	 * @param player
+	 *            Jogador
 	 * @return Prefixo do grupo
 	 */
 	@SuppressWarnings("deprecation")
 	public static String getPlayerGroupPrefix(String player) {
 
-		return Mine.toChatMessage(VaultAPI.getChat().getGroupPrefix("null",
-				VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player))));
+		return VaultAPI.getChat()
+				.getGroupPrefix("null",
+						VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player)))
+				.replace('&', '§');
 	}
 
 	/**
 	 * Controle de permissões
 	 */
-	
+
 	@Deprecated
 	private static Permission permission = null;
 
@@ -53,6 +58,7 @@ public final class VaultAPI {
 	public static Permission getPermission() {
 		return permission;
 	}
+
 	/**
 	 * Pega o Controlador das Chat
 	 * 
@@ -61,6 +67,7 @@ public final class VaultAPI {
 	public static Chat getChat() {
 		return chat;
 	}
+
 	/**
 	 * Pega o Controlador da Economia
 	 * 
@@ -69,6 +76,7 @@ public final class VaultAPI {
 	public static Economy getEconomy() {
 		return economy;
 	}
+
 	/**
 	 * Testa se o Vault esta instalado no Servidor
 	 * 
@@ -77,6 +85,7 @@ public final class VaultAPI {
 	public static boolean hasVault() {
 		return Bukkit.getPluginManager().getPlugin("Vault") != null;
 	}
+
 	/**
 	 * Testa se tem algum plugin de Economia
 	 * 
@@ -85,6 +94,7 @@ public final class VaultAPI {
 	public static boolean hasEconomy() {
 		return economy != null;
 	}
+
 	/**
 	 * Testa se tem algum plugin de Chat
 	 * 
@@ -93,6 +103,7 @@ public final class VaultAPI {
 	public static boolean hasChat() {
 		return chat != null;
 	}
+
 	/**
 	 * Teste se tem plugin de permissões
 	 * 
@@ -101,6 +112,7 @@ public final class VaultAPI {
 	public static boolean hasPermission() {
 		return permission != null;
 	}
+
 	/**
 	 * Tenta Ativar o Sistema de Chat
 	 * 
@@ -108,8 +120,7 @@ public final class VaultAPI {
 	 */
 	private static boolean setupChat() {
 
-		RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer()
-				.getServicesManager()
+		RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.chat.Chat.class);
 		if (chatProvider != null) {
 			chat = chatProvider.getProvider();
@@ -117,6 +128,7 @@ public final class VaultAPI {
 
 		return (chat != null);
 	}
+
 	/**
 	 * Tenta Ativar o Sistema de Economia
 	 * 
@@ -124,8 +136,7 @@ public final class VaultAPI {
 	 */
 	private static boolean setupEconomy() {
 
-		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer()
-				.getServicesManager()
+		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
@@ -133,6 +144,7 @@ public final class VaultAPI {
 
 		return (economy != null);
 	}
+
 	/**
 	 * Tenta ativar o Sistema de Permissões
 	 * 
@@ -140,14 +152,14 @@ public final class VaultAPI {
 	 */
 	private static boolean setupPermissions() {
 
-		RegisteredServiceProvider<Permission> permissionProvider = Bukkit
-				.getServer().getServicesManager().getRegistration(
-						net.milkbowl.vault.permission.Permission.class);
+		RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager()
+				.getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null) {
 			permission = permissionProvider.getProvider();
 		}
 		return (permission != null);
 	}
+
 	/**
 	 * Força o ativamento do Vault
 	 */

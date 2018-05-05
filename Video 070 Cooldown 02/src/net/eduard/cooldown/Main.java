@@ -8,7 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.EduardPlugin;
-import net.eduard.api.manager.CooldownManager;
+import net.eduard.api.setup.manager.CooldownManager;
 
 public class Main extends EduardPlugin implements Listener {
 	private static Main plugin;

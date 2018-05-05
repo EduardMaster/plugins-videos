@@ -4,7 +4,7 @@ package net.eduard.money.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class TemplateCommand extends CommandManager {
 

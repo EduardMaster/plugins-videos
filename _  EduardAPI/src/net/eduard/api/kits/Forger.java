@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.game.Ability;
+import net.eduard.api.setup.game.Ability;
 
 public class Forger extends Ability {
 
@@ -19,8 +19,8 @@ public class Forger extends Ability {
 		if (e.getWhoClicked() instanceof Player) {
 			Player p = (Player) e.getWhoClicked();
 			if (hasKit(p)) {
-//				API.broadcast("Current: ",e.getCurrentItem());
-//				API.broadcast("Cursor: ",e.getCursor());
+//				Mine.broadcast("Current: ",e.getCurrentItem());
+//				Mine.broadcast("Cursor: ",e.getCursor());
 				if (e.getCursor() != null) {
 					int amount = e.getCursor().getAmount();
 					

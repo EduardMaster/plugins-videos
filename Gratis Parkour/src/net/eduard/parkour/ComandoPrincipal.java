@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.minigame.GameMap;
+import net.eduard.api.server.minigame.GameMap;
+import net.eduard.api.setup.Mine;
 
 public class ComandoPrincipal implements CommandExecutor {
 
@@ -19,7 +19,7 @@ public class ComandoPrincipal implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (API.onlyPlayer(sender)) {
+		if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
 				p.sendMessage("§c/parkour help");

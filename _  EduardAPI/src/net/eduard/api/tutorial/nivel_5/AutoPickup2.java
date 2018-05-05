@@ -6,12 +6,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import net.eduard.api.API;
+import net.eduard.api.setup.Mine;
 
 public class AutoPickup2 implements Listener {
 	@EventHandler
 	public void event(BlockBreakEvent e) {
-		API.TIME.delay(1L,new Runnable() {
+		Mine.TIME.delay(1L,new Runnable() {
 			
 			@Override
 			public void run() {

@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Team;
 
 import net.eduard.api.EduardAPI;
 import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.Mine.FakeOfflinePlayer;
+import net.eduard.api.setup.lib.FakePlayer;
 
 
 public class CriarScoreboard {
@@ -24,17 +24,17 @@ public class CriarScoreboard {
 		obj.setDisplayName("§6§lFACTION  ");
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
-		FakeOfflinePlayer line = new FakeOfflinePlayer("   ");
-		FakeOfflinePlayer line0 = new FakeOfflinePlayer("§0");
-		FakeOfflinePlayer line1 = new FakeOfflinePlayer(" §fAlmas: §8✟§7");
-		FakeOfflinePlayer line2 = new FakeOfflinePlayer(" §fCoins: §7");
-		FakeOfflinePlayer line3 = new FakeOfflinePlayer("§1");
-		FakeOfflinePlayer line4 = new FakeOfflinePlayer(" §fFacção: ");
-		FakeOfflinePlayer line8 = new FakeOfflinePlayer("§a");
-		FakeOfflinePlayer line9 = new FakeOfflinePlayer(" §fCash: §7");
-		FakeOfflinePlayer line11 = new FakeOfflinePlayer("§9");
+		FakePlayer line = new FakePlayer("   ");
+		FakePlayer line0 = new FakePlayer("§0");
+		FakePlayer line1 = new FakePlayer(" §fAlmas: §8✟§7");
+		FakePlayer line2 = new FakePlayer(" §fCoins: §7");
+		FakePlayer line3 = new FakePlayer("§1");
+		FakePlayer line4 = new FakePlayer(" §fFacção: ");
+		FakePlayer line8 = new FakePlayer("§a");
+		FakePlayer line9 = new FakePlayer(" §fCash: §7");
+		FakePlayer line11 = new FakePlayer("§9");
 
-		FakeOfflinePlayer line12 = new FakeOfflinePlayer("  §7www.smashmc.com");
+		FakePlayer line12 = new FakePlayer("  §7www.smashmc.com");
 
 		Team l = sb.registerNewTeam("line");
 		Team l1 = sb.registerNewTeam("line1");

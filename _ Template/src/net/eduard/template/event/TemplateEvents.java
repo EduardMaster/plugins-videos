@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.api.setup.Mine.EventsManager;
+import net.eduard.api.setup.manager.EventsManager;
 
 public class TemplateEvents extends EventsManager {
 

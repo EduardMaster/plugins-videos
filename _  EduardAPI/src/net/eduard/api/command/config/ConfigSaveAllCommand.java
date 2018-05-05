@@ -4,9 +4,9 @@ package net.eduard.api.command.config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
 import net.eduard.api.config.Config;
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ConfigSaveAllCommand extends CommandManager {
 
@@ -17,7 +17,7 @@ public class ConfigSaveAllCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		Config.reloadConfigs();
-		API.chat(sender,
+		Mine.chat(sender,
 				"§aTodas configurações de todos plugins foram salvadas!");
 		
 		return true;

@@ -14,14 +14,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.click.PlayerClick;
-import net.eduard.api.click.PlayerClickEffect;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Effects;
-import net.eduard.api.game.Jump;
-import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.click.PlayerClick;
+import net.eduard.api.setup.click.PlayerClickEffect;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.setup.game.Effects;
+import net.eduard.api.setup.game.Jump;
+import net.eduard.api.setup.game.Sounds;
 
 public class DeshFire extends Ability {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -33,7 +32,7 @@ public class DeshFire extends Ability {
 		setTime(40);
 		add(Material.REDSTONE_BLOCK);
 		display(new Effects(Effect.MOBSPAWNER_FLAMES, 10));
-		jump(new Jump(true, 0.5, 2, Sounds.create(Sound.CLICK)));
+		jump(new Jump(true, 0.5, 2, Sounds.create("CLICK")));
 		setClick(new PlayerClick(Material.REDSTONE_BLOCK,new PlayerClickEffect() {
 			
 			@Override
@@ -45,7 +44,7 @@ public class DeshFire extends Ability {
 						Mine.setEquip(player, Color.RED, "§c" + getName());
 						inEffect.add(player);
 						player.setAllowFlight(true);
-						API.TIME.delay(effectSeconds, new Runnable() {
+						Mine.TIME.delay(effectSeconds, new Runnable() {
 
 							@Override
 							public void run() {

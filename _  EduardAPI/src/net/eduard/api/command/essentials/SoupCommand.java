@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,10 +16,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.API;
-import net.eduard.api.game.Sounds;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Sounds;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class SoupCommand extends CommandManager {
 
@@ -28,7 +26,7 @@ public class SoupCommand extends CommandManager {
 	public boolean recoverFood = false;
 	public boolean hasHungry = true;
 	public List<String> sign = new ArrayList<>();
-	public Sounds sound = Sounds.create(Sound.BURP);
+	public Sounds sound = Sounds.create("BURP");
 	public String message = "§aPlaca de sopa criada!";
 	public ItemStack soup = Mine.newItem(Material.MUSHROOM_SOUP, "§6Sopa");
 
@@ -37,7 +35,7 @@ public class SoupCommand extends CommandManager {
 	}
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (API.onlyPlayer(sender)) {
+		if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			Mine.fill(p.getInventory(), soup);
 		}

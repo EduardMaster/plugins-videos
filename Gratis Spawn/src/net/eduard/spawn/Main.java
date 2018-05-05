@@ -2,39 +2,52 @@
 package net.eduard.spawn;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.api.EduardPlugin;
+import net.eduard.api.setup.game.Sounds;
 import net.eduard.spawn.command.SetSpawnCommand;
 import net.eduard.spawn.command.SpawnCommand;
 import net.eduard.spawn.event.SpawnEvent;
-import net.eduard.spawn.manager.ConfigAPI;
 
-public class Main extends JavaPlugin{
-	public static Main plugin;
-	public static ConfigAPI config;
-	public static ConfigAPI messages;
+
+
+public class Main extends EduardPlugin {
+	public static Main getPlugin() {
+		return JavaPlugin.getPlugin(Main.class);
+	}
 
 	@Override
 	public void onEnable() {
-		plugin = this;
-		config = new ConfigAPI("config.yml");
-		messages = new ConfigAPI("messages.yml");
-		save();
-		commands();
-		events();
+		Sounds sound = Sounds.create("ENDERMAN_TELEPORT");
+		messages.add("Spawn", "&6Voce foi teleportado para spawn!");
+		messages.add("DelaySpawn",
+				"&bVoce vai ser teleportando em $time segundos!");
+		messages.add("NoSpawn", "&cO spawn ainda nao foi setado!");
+		messages.add("SetSpawn", "&bVoce setou o spawn!");
+		messages.saveConfig();
+		for (World world : Bukkit.getWorlds()) {
+			String name = world.getName().toLowerCase();
+			config.add("teleportOnRespawnInWorld." + name, false);
+		}
+		config.add("teleportOnlyOnFirstJoin", false);
+		config.add("spawnWithDelay", false);
+		config.add("delayInSeconds", 4);
+		config.add("Sound.OnTeleport", sound);
+		config.add("Sound.OnJoin", sound);
+		config.add("Sound.OnRespawn", sound);
+		config.saveConfig();
+		new SpawnEvent().register(this);
+		new SpawnCommand();
+		new SetSpawnCommand();
+
 	}
-	public void commands() {
-		getCommand("setspawn").setExecutor(new SetSpawnCommand());
-		getCommand("spawn").setExecutor(new SpawnCommand());
-	}
-	public void events() {
-		Bukkit.getPluginManager().registerEvents(new SpawnEvent(), this);
-	}
-	public void save() {
-		messages.add("Spawn setado", "&bO spawn foi setado!");
-		messages.add("Spawn", "&6Voce foi teleportado para o Spawn!");
-		messages.add("Sem spawn", "&cO Spawn nao foi setado!");
-		messages.saveDefault();
+
+	@Override
+	public void onDisable() {
+
 	}
 
 }

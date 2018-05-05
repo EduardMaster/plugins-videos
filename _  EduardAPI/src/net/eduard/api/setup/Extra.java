@@ -1,10 +1,17 @@
 package net.eduard.api.setup;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,11 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.CodeSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -35,17 +37,189 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 
 /**
- * API contendo cosias relacionado a Textos e Numeros mais Database
- * 
- * @author Eduard-PC
+ * API contendo coisas relacionado a Textos e Numeros
+ * @version 2.0
+ * @since Lib v2.0
+ * @author Eduard
  *
  */
 public final class Extra {
-	
+	/**
+	 * Pega um Objecto serializavel do Arquivo
+	 * 
+	 * @param file
+	 *            Arquivo
+	 * @return Objeto
+	 */
+	public static Object getSerializable(File file) {
+		if (!file.exists()) {
+			return null;
+		}
+		try {
+
+			FileInputStream getStream = new FileInputStream(file);
+			ObjectInputStream get = new ObjectInputStream(getStream);
+			Object object = get.readObject();
+			get.close();
+			getStream.close();
+			return object;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Salva um Objecto no Arquivo em forma de serialização Java
+	 * 
+	 * @param object
+	 *            Objeto (Dado)
+	 * @param file
+	 *            Arquivo
+	 */
+	public static void setSerializable(Object object, File file) {
+		try {
+			FileOutputStream saveStream = new FileOutputStream(file);
+			ObjectOutputStream save = new ObjectOutputStream(saveStream);
+			if (object instanceof Serializable) {
+				save.writeObject(object);
+			} else {
+			}
+			save.close();
+			saveStream.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Desfazr o ZIP do Arquivo
+	 * 
+	 * @param zipFilePath
+	 *            Arquivo
+	 * @param destDirectory
+	 *            Destino
+	 */
+	public static void unzip(String zipFilePath, String destDirectory)
+
+	{
+		try {
+			File destDir = new File(destDirectory);
+			if (!destDir.exists()) {
+				destDir.mkdir();
+			}
+			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
+			ZipEntry entry = zipIn.getNextEntry();
+
+			while (entry != null) {
+				String filePath = destDirectory + File.separator + entry.getName();
+				if (!entry.isDirectory()) {
+					extractFile(zipIn, filePath);
+				} else {
+					File dir = new File(filePath);
+					dir.mkdir();
+				}
+				zipIn.closeEntry();
+				entry = zipIn.getNextEntry();
+			}
+			zipIn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Defaz o ZIP do Arquivo
+	 * 
+	 * @param zipIn
+	 *            Input Stream (Coneção de Algum Arquivo)
+	 * @param filePath
+	 *            Destino Arquivo
+	 */
+	public static void extractFile(ZipInputStream zipIn, String filePath) {
+		try {
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+			byte[] bytesIn = new byte[4096];
+			int read = 0;
+			while ((read = zipIn.read(bytesIn)) != -1) {
+				bos.write(bytesIn, 0, read);
+			}
+			bos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Pega uma lista de classes de uma package
+	 * 
+	 * @param plugin
+	 *            Plugin
+	 * @param pkgname
+	 *            Package
+	 * @return Lista de Classes
+	 */
+	public static List<Class<?>> getClasses(Class<?> classe, String pkgname) {
+		List<Class<?>> classes = new ArrayList<>();
+		CodeSource src = classe.getProtectionDomain().getCodeSource();
+		if (src != null) {
+			URL resource = src.getLocation();
+			try {
+
+				String resPath = resource.getPath().replace("%20", " ");
+				String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+				try {
+					return getClasses(new JarFile(jarPath), pkgname);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return classes;
+	}
+	public static List<Class<?>> getClasses(JarFile jar, String pack) {
+		List<Class<?>> lista = new ArrayList<>();
+		try {
+			String relPath = pack.replace('.', '/');
+			// (entryName.length() > relPath.length() + "/".length())
+			// String resPath = resource.getPath().replace("%20", " ");
+			// String jarPath = resPath.replaceFirst("[.]jar[!].*",
+			// ".jar").replaceFirst("file:", "");
+			Enumeration<JarEntry> entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				JarEntry entry = (JarEntry) entries.nextElement();
+				String entryName = entry.getName();
+				if ((entryName.endsWith(".class")) && (entryName.startsWith(relPath)) && !entryName.contains("$")) {
+					String classeName = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
+					try {
+						lista.add(Extra.loadClass(classeName));						
+					} catch (Exception e) {
+						System.out.println("Failed to load "+classeName);
+					}
+
+				}
+
+			}
+			jar.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
 	
 	public static String executePost(String targetURL, String urlParameters) {
 		  HttpURLConnection connection = null;
@@ -90,7 +264,11 @@ public final class Extra {
 		    }
 		  }
 		}
-
+	/**
+	 * Tenta carregar uma classe e a retorna
+	 * @param name Endereço
+	 * @return Classe carregada
+	 */
 	public static Class<?> loadClass(String name) {
 		Class<?> claz = null;
 		try {
@@ -99,177 +277,9 @@ public final class Extra {
 		}
 		return claz;
 	}
-	/**
-	 * Pega uma lista de classes de uma package
-	 * 
-	 * @param plugin
-	 *            Plugin
-	 * @param pkgname
-	 *            Package
-	 * @return Lista de Classes
-	 */
-	public static ArrayList<Class<?>> getClassesForPackage(
-			String pkgname) {
-		ArrayList<Class<?>> classes = new ArrayList<>();
-
-		CodeSource src = Extra.class.getProtectionDomain()
-				.getCodeSource();
-		if (src != null) {
-			URL resource = src.getLocation();
-			resource.getPath();
-			Extra.processJarfile(resource, pkgname, classes);
-		}
-		return classes;
-	}
-	
-	@SuppressWarnings("resource")
-	public static void processJarfile(URL resource, String pkgname, ArrayList<Class<?>> classes) {
-		String relPath = pkgname.replace('.', '/');
-		String resPath = resource.getPath().replace("%20", " ");
-		String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
-		JarFile jarFile;
-		try {
-			jarFile = new JarFile(jarPath);
-		} catch (IOException e) {
-			throw new RuntimeException("Unexpected IOException reading JAR File '" + jarPath + "'", e);
-		}
-
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry entry = (JarEntry) entries.nextElement();
-			String entryName = entry.getName();
-			String className = null;
-			if ((entryName.endsWith(".class")) && (entryName.startsWith(relPath))
-					&& (entryName.length() > relPath.length() + "/".length())) {
-				className = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
-			}
-			if (className != null)
-				classes.add(loadClass(className));
-		}
-	}
-	
-	/***
-	 * ----------------------------------------------------------
-	 * 
-	 */
 	
 	
-	
-	
-	public static class DBConnector {
 
-		private String userName;
-		private String password;
-		private String host = "locahost";
-		private int port = 3306;
-		private String database;
-		private String databasePath;
-
-		private Connection connection;
-
-		public DBConnector(String pathName) {
-			this.databasePath = pathName;
-		}
-
-		public DBConnector(String userName, String password, String database) {
-			this.userName = userName;
-			this.password = password;
-			this.database = database;
-		}
-
-		public Connection newMySQLConnection() {
-			try {
-				return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, userName,
-						password);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		public Connection newSQLiteConnection() {
-			try {
-				return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		public void openMySQLConnection() {
-			closeConnection();
-			this.connection = newMySQLConnection();
-		}
-
-		public void openSQLiteConnection() {
-			closeConnection();
-			this.connection = newSQLiteConnection();
-		}
-
-		public void closeConnection() {
-			try {
-
-				if (connection != null) {
-					if (!connection.isClosed()) {
-						connection.close();
-					}
-
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-		}
-
-		public boolean hasConnection() {
-
-			if (connection == null)
-				return false;
-			try {
-				return !connection.isClosed();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}
-			return false;
-
-		}
-
-		public PreparedStatement state(String sintax) {
-			PreparedStatement state = null;
-			if (hasConnection()) {
-				try {
-					if (!sintax.endsWith(";")) {
-						sintax += ";";
-					}
-					state = connection.prepareStatement(sintax);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			return state;
-		}
-
-		public ResultSet query(String sintax) {
-			ResultSet rs = null;
-			if (hasConnection()) {
-				PreparedStatement state = state(sintax);
-				try {
-					rs = state.executeQuery();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-
-			return rs;
-		}
-
-	}
 
 	private static Map<String, String> replacers = new LinkedHashMap<>();
 

@@ -5,8 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Schematic;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class MapCopyCommand extends CommandManager {
 
@@ -16,19 +17,19 @@ public class MapCopyCommand extends CommandManager {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (API.onlyPlayer(sender)) {
+		if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
-			if (!API.POSITION1.containsKey(p)) {
+			Schematic schema = Mine.getSchematic(p);
+			
+			if (!schema.hasFirstLocation()) {
 				p.sendMessage("§bEduardAPI §2Posição 1 não foi setada!");
 				return true;
 			}
-			if (!API.POSITION2.containsKey(p)) {
+			if (!schema.hasSecondLocation()) {
 				p.sendMessage("§bEduardAPI §2Posição 2 não foi setada!");
 				return true;
 			}
-			
-//			API.MAPS.put(p, new Arena(API.POSITION1.get(p),
-//					API.POSITION2.get(p), p.getLocation()));
+			schema.copy(p.getLocation());
 			p.sendMessage("§bEduardAPI §6Mapa copiado!");
 		}
 		return true;

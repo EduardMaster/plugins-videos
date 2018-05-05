@@ -34,63 +34,47 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import com.gmail.nossr50.datatypes.player.McMMOPlayer;
-import com.gmail.nossr50.util.player.UserManager;
-
-import net.eduard.api.click.ClickComparationType;
 import net.eduard.api.command.antihack.AntiHackCommand;
 import net.eduard.api.command.api.ApiCommand;
+import net.eduard.api.command.api.lag.LagCommand;
+import net.eduard.api.command.api.permission.PermissionCommand;
 import net.eduard.api.command.config.ConfigCommand;
-import net.eduard.api.command.economy.EconomyCommand;
-import net.eduard.api.command.essentials.AdminCommand;
 import net.eduard.api.command.essentials.EnchantCommand;
 import net.eduard.api.command.essentials.GotoCommand;
 import net.eduard.api.command.essentials.SoundCommand;
-import net.eduard.api.command.lag.LagCommand;
 import net.eduard.api.command.map.MapCommand;
-import net.eduard.api.command.permission.PermissionCommand;
 import net.eduard.api.config.Config;
 import net.eduard.api.config.ConfigSection;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Drop;
-import net.eduard.api.kits.Achilles;
-import net.eduard.api.manager.CommandManager;
-import net.eduard.api.minigame.Game;
-import net.eduard.api.setup.BukkitAPI;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.Mine.Replacer;
-import net.eduard.api.setup.Mine.TimeManager;
-import net.eduard.api.setup.ServerAPI.BukkitControl;
-import net.eduard.api.tutorial.nivel_4.CentralizarExemplo;
 import net.eduard.api.setup.StorageAPI;
 import net.eduard.api.setup.VaultAPI;
-import net.eduard.api.util.SimpleChatAPI;
-import net.eduard.api.util.SimpleChatAPI.ChatChannel;
+import net.eduard.api.setup.bungee.BukkitAPI;
+import net.eduard.api.setup.bungee.ServerAPI.BukkitControl;
+import net.eduard.api.setup.game.Chunk;
+import net.eduard.api.setup.game.Drop;
+import net.eduard.api.setup.game.Schematic;
+import net.eduard.api.setup.manager.CommandManager;
+import net.eduard.api.setup.manager.PlayerManager;
+import net.eduard.api.setup.manager.TimeManager;
 
 /**
  * Classe Principal do Plugin EduardAPI herda todas propriedades de um
- * JavaPlugin e também implementa Listener para alterar eventos.
+ * JavaPlugin e também implementa Listener para alterar eventos. <br>
+ * Padroes que vão existir na nomeclatura dos plugins<br>
+ * Possiveis Prefixos: e, Edu, Eduard, Master, EduMaster, EM, <br>
+ * Padrão para Plugins iniciado no dia 02/03/2018<br>
+ * Prefixo+Nome exemplo MasterFactions<br>
  * <br>
- *  Padroes que vão existir na nomeclatura dos plugins<br>
-	 * Possiveis Prefixos:
-	 * e, 
-	 * Edu, 
-	 * Eduard, 
-	 * Master, 
-	 * EduMaster, 
-	 * EM, 
-	 * <br>
-	 * Padrão para Plugins iniciado no dia 02/03/2018<br>
-	 * Prefixo+Nome exemplo MasterFactions<br>
-		* <br>
-	 * A qualquer momento posso mudar a nomeclatura porem os plugins já nomeados anteriormente continuam com mesmo nome.<br>
-	 * 
+ * A qualquer momento posso mudar a nomeclatura porem os plugins já nomeados
+ * anteriormente continuam com mesmo nome.<br>
+ * 
  * @author Eduard
  * @version 1.0
  * @since 1.0
-
-	 
-	 */
+ * 
+ * 
+ */
 public class EduardAPI extends JavaPlugin implements Listener {
 
 	private static JavaPlugin plugin;
@@ -131,30 +115,46 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public void onLoad() {
 	}
 
-	
+	@SafeVarargs
+	public static void commands(ConfigSection section, CommandManager... cmds) {
+		for (CommandManager cmd : cmds) {
+			try {
+				
+
+				String name = cmd.getName();
+				if (section != null) {
+					if (section.contains(name)) {
+						cmd = (CommandManager) section.get(name);
+
+					}
+
+				}
+				cmd.register();
+				if (section != null) {
+					section.add(name, cmd);
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void onEnable() {
 		plugin = this;
-//		UsarStorage.register(this);
-		CentralizarExemplo.register(this);
 		Mine.registerDefaults();
 		BukkitAPI.register(this);
 		config = new Config(this, "config.yml");
 		messages = new Config(this, "messages.yml");
 		time = new TimeManager(this);
-		StorageAPI.registerPackage(ClickComparationType.class);
-		StorageAPI.registerPackage(AntiHackCommand.class);
-		StorageAPI.registerPackage(ApiCommand.class);
-		StorageAPI.registerPackage(EconomyCommand.class);
-		StorageAPI.registerPackage(ConfigCommand.class);
-		StorageAPI.registerPackage(LagCommand.class);
-		StorageAPI.registerPackage(MapCommand.class);
-		StorageAPI.registerPackage(PermissionCommand.class);
-		StorageAPI.registerPackage(AdminCommand.class);
-		StorageAPI.registerPackage(Achilles.class);
-		StorageAPI.registerPackage(Ability.class);
-		StorageAPI.registerPackage(CommandManager.class);
-		StorageAPI.registerPackage(Game.class);
-		StorageAPI.registerClasses(SimpleChatAPI.class);
+
+		StorageAPI.register(Chunk.class, new Chunk());
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.command");
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.click");
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.setup.kits");
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.setup.game");
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.setup.manager");
+		StorageAPI.registerPackage(getClass(), "net.eduard.api.server");
 		StorageAPI.registerClasses(Mine.class);
 		Mine.resetScoreboards();
 		Mine.console("§bEduardAPI §fScoreboards resetadas!");
@@ -163,7 +163,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 
 			@Override
 			public void run() {
-				API.updateTargets();
+				Mine.updateTargets();
 			}
 		});
 		new GotoCommand().register();
@@ -183,52 +183,38 @@ public class EduardAPI extends JavaPlugin implements Listener {
 		Mine.console("§bEduardAPI §fCustom drops ativado!");
 		Mine.event(this, this);
 		Mine.console("§bEduardAPI §fBase ativado!");
+
+		Mine.loadMaps();
 		Mine.console("§bEduardAPI §fMapas §acarregados!");
-		SimpleChatAPI.setEnabled(config.getBoolean("custom-chat"));
-		if (SimpleChatAPI.isEnabled())
-			SimpleChatAPI.enable(this);
-		config.add("chat-default", "local");
 
-		config.add("sound-teleport", API.SOUND_TELEPORT);
-		config.add("sound-error", API.SOUND_ERROR);
-		config.add("sound-success", API.SOUND_SUCCESS);
-		ChatChannel local = new ChatChannel("local", "$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "", "l");
-		ChatChannel global = new ChatChannel("global", "$chat_prefix $player $chat_suffix: $message", "&e(L)&f", "",
-				"g");
-		config.add("chats.local", local);
-		config.add("chats.global", global);
-		config.saveConfig();
-		API.AUTO_RESPAWN = config.getBoolean("auto-respawn");
-		API.NO_JOIN_MESSAGE = config.getBoolean("no-join-message");
-		API.NO_QUIT_MESSAGE = config.getBoolean("no-quit-message");
-		API.NO_DEATH_MESSAGE = config.getBoolean("no-death-message");
+		config.add("sound-teleport", Mine.SOUND_TELEPORT);
+		config.add("sound-error", Mine.SOUND_ERROR);
+		config.add("sound-success", Mine.SOUND_SUCCESS);
+		Mine.AUTO_RESPAWN = config.getBoolean("auto-respawn");
+		Mine.NO_JOIN_MESSAGE = config.getBoolean("no-join-message");
+		Mine.NO_QUIT_MESSAGE = config.getBoolean("no-quit-message");
+		Mine.NO_DEATH_MESSAGE = config.getBoolean("no-death-message");
 
-		API.ON_JOIN = config.message("on-join-message");
-		API.ON_QUIT = config.message("on-quit-message");
-		API.SOUND_TELEPORT = config.getSound("sound-teleport");
-		API.SOUND_ERROR = config.getSound("sound-error");
-		API.SOUND_SUCCESS = config.getSound("sound-success");
-		Mine.register(this);
-		// Mine.setTagsEnabled(true);
-		for (ConfigSection sec : config.getValues("chats")) {
-			ChatChannel chat = (ChatChannel) sec.getValue();
-			SimpleChatAPI.getChannels().put(chat.getName(), chat);
-		}
-		SimpleChatAPI.setChatDefault(SimpleChatAPI.getChannels().getOrDefault(config.getString("chat-default"), local));
+		Mine.ON_JOIN = config.message("on-join-message");
+		Mine.ON_QUIT = config.message("on-quit-message");
+		Mine.SOUND_TELEPORT = config.getSound("sound-teleport");
+		Mine.SOUND_ERROR = config.getSound("sound-error");
+		Mine.SOUND_SUCCESS = config.getSound("sound-success");
 		if (config.getBoolean("auto-rejoin")) {
-			for (Player p : API.getPlayers()) {
+			for (Player p : Mine.getPlayers()) {
 				Mine.callEvent(new PlayerJoinEvent(p, null));
 			}
 		}
 		BukkitControl.register(this);
+		Mine.setPlayerManager(new PlayerManager());
+		Mine.getPlayerManager().register(this);
 		Mine.console("§bEduardAPI §acarregado!");
 
 	}
 
 	@Override
 	public void onDisable() {
-		// API.saveMaps();
-//		UsarStorage.save();
+		Mine.saveMaps();
 		Mine.console("§bEduardAPI §aMapas salvados!");
 		Mine.console("§bEduardAPI §cdesativado!");
 	}
@@ -261,9 +247,9 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player p = e.getEntity();
-		if (API.AUTO_RESPAWN) {
-			if (p.hasPermission("eduardapi.autorespawn")) {
-				API.TIME.delay(1L, new Runnable() {
+		if (Mine.AUTO_RESPAWN) {
+			if (p.hasPermission("eduardAPI.autorespawn")) {
+				Mine.TIME.delay(1L, new Runnable() {
 
 					@Override
 					public void run() {
@@ -280,7 +266,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			}
 
 		}
-		if (API.NO_DEATH_MESSAGE) {
+		if (Mine.NO_DEATH_MESSAGE) {
 			e.setDeathMessage(null);
 		}
 	}
@@ -306,8 +292,8 @@ public class EduardAPI extends JavaPlugin implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		if (config.getBoolean("custom-quit-message"))
-			e.setQuitMessage(API.ON_QUIT.replace("$player", p.getName()));
-		if (API.NO_QUIT_MESSAGE) {
+			e.setQuitMessage(Mine.ON_QUIT.replace("$player", p.getName()));
+		if (Mine.NO_QUIT_MESSAGE) {
 			e.setQuitMessage("");
 		}
 	}
@@ -319,10 +305,10 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			saveObject("Players/" + p.getName() + " " + p.getUniqueId(), p);
 		}
 		if (config.getBoolean("custom-join-message")) {
-			e.setJoinMessage(API.ON_JOIN.replace("$player", p.getName()));
+			e.setJoinMessage(Mine.ON_JOIN.replace("$player", p.getName()));
 		}
 
-		if (API.NO_JOIN_MESSAGE) {
+		if (Mine.NO_JOIN_MESSAGE) {
 			e.setJoinMessage(null);
 			return;
 		}
@@ -336,15 +322,16 @@ public class EduardAPI extends JavaPlugin implements Listener {
 			if (e.getItem() == null)
 				return;
 			if (e.getItem().getType() == Material.WOOD_AXE) {
+				Schematic mapa = Mine.getSchematic(p);
 				if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-					API.POSITION1.put(p, e.getClickedBlock().getLocation());
+					mapa.setHigh(e.getClickedBlock().getLocation().toVector());
 					p.sendMessage("§bEduardAPI §6Posição 1 setada!");
 				} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					API.POSITION2.put(p, e.getClickedBlock().getLocation());
+					mapa.setLow(e.getClickedBlock().getLocation().toVector());
 					p.sendMessage("§bEduardAPI §6Posição 2 setada!");
 				}
 
-			}
+			} 
 		}
 	}
 
@@ -533,7 +520,7 @@ public class EduardAPI extends JavaPlugin implements Listener {
 
 			@Override
 			public Object getText(Player p) {
-				return API.getPlayers().size();
+				return Mine.getPlayers().size();
 			}
 		});
 		Mine.addReplacer("$player_world", new Replacer() {
@@ -647,18 +634,18 @@ public class EduardAPI extends JavaPlugin implements Listener {
 				return p.getLocation().getZ();
 			}
 		});
-		if (Mine.hasPlugin("mcMMO")) {
-			Mine.addReplacer("$mcmmo_level", new Replacer() {
-
-				@Override
-				public Object getText(Player p) {
-					McMMOPlayer usuario = UserManager.getPlayer(p);
-					int nivel = usuario.getPowerLevel();
-					return nivel;
-				}
-			});
-
-		}
+		// if (Mine.hasPlugin("mcMMO")) {
+		// Mine.addReplacer("$mcmmo_level", new Replacer() {
+		//
+		// @Override
+		// public Object getText(Player p) {
+		// McMMOPlayer usuario = UserManager.getPlayer(p);
+		// int nivel = usuario.getPowerLevel();
+		// return nivel;
+		// }
+		// });
+		//
+		// }
 
 	}
 

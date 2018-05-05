@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
 import net.eduard.api.setup.StorageAPI.Storable;
-import net.eduard.api.setup.VaultAPI;
 
 public class Rank implements Storable {
 
@@ -25,44 +22,7 @@ public class Rank implements Storable {
 	}
 	
 
-	public void removeGroup(Player p) {
-		VaultAPI.getPermission().playerRemoveGroup(p, name);
-	}
-
-	public void addGroup(Player p) {
-		VaultAPI.getPermission().playerAddGroup(p, name);
-	}
-	/** Causa muito Lag usando o PermissionEX<br>
-	 * Solução é adicionar as permissões apenas quando entrar no servidor
-	 * @param player Jagador
-	 */
-	public void addPermissions(Player player) {
-		for (String perm : getPermissions()) {
-			VaultAPI.getPermission().playerAdd(player, perm);
-		}
-
-	}
-	/**
-	 * Causa muito Lag usando o PermissionEX<br>
-	 * Solução é adicionar as permissões apenas quando sair do servidor
-	 * @param player Jogador
-	 */
-	public void removePermissions(Player player) {
-		for (String perm : getPermissions()) {
-			VaultAPI.getPermission().playerRemove(player, perm);
-		}
-	}
-	public void addPermissions() {
-		for (String permission : permissions) {
-				VaultAPI.getPermission().groupAdd("null", name, permission);
-		}
-	}
-
-	public void removePermissions() {
-		for (String permission : permissions) {
-			VaultAPI.getPermission().groupRemove("null", name, permission);
-		}
-	}
+	
 
 	public Rank(String name, int position) {
 		this.name = name;

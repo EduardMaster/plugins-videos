@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.API;
+import net.eduard.api.setup.Mine;
 
 public class TeleportDelay implements Listener {
 
@@ -28,7 +28,7 @@ public class TeleportDelay implements Listener {
 						p.teleport(e.getTo());
 						teleporting.remove(p);
 					}
-				}.runTaskLater(API.PLUGIN, delaySeconds*20);
+				}.runTaskLater(Mine.getMainPlugin(), delaySeconds*20);
 //			}
 		}
 	}

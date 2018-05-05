@@ -14,10 +14,9 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.API;
-import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
 import net.eduard.api.setup.StorageAPI.Storable;
+import net.eduard.api.setup.game.Sounds;
 
 /**
  * Primeiro Sistema de Configuração proprio com suporte a 4 itens de 1 vez,
@@ -75,7 +74,7 @@ public class Config implements Storable {
 	}
 
 	public Config(String name) {
-		this(API.getAPI(), name);
+		this(Mine.getMainPlugin(), name);
 	}
 
 	public Config(Plugin plugin) {
@@ -86,7 +85,6 @@ public class Config implements Storable {
 		this.name = name;
 		this.plugin = plugin;
 		init();
-		
 
 	}
 
@@ -102,7 +100,7 @@ public class Config implements Storable {
 			}
 		}
 		if (!contains) {
-//			System.out.println("avancar");
+			// System.out.println("avancar");
 			file = new File(plugin.getDataFolder(), name);
 			root = new ConfigSection("", "{}");
 			lines = new ArrayList<>();
@@ -110,8 +108,8 @@ public class Config implements Storable {
 			root.lineSpaces = 1;
 			this.root.father = root;
 			reloadConfig();
-		}else {
-//			System.out.println("voltar");
+		} else {
+			// System.out.println("voltar");
 		}
 	}
 
@@ -131,10 +129,10 @@ public class Config implements Storable {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				//			} else {
-//				plugin.saveResource(name, true);
-			}else {
-				if (plugin.getResource(name)!=null) {
+				// } else {
+				// plugin.saveResource(name, true);
+			} else {
+				if (plugin.getResource(name) != null) {
 					plugin.saveResource(name, true);
 				}
 			}

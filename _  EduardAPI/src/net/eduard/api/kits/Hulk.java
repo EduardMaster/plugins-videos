@@ -7,18 +7,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.click.PlayerClickEntity;
-import net.eduard.api.click.PlayerClickEntityEffect;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Jump;
-import net.eduard.api.game.Sounds;
+import net.eduard.api.setup.click.PlayerClickEntity;
+import net.eduard.api.setup.click.PlayerClickEntityEffect;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.setup.game.Jump;
+import net.eduard.api.setup.game.Sounds;
 
 public class Hulk extends Ability {
 
 	public Hulk() {
 		setIcon(Material.DISPENSER, "§fLevante seus inimigos");
 		setTime(15);
-		jump(new Jump(Sounds.create(Sound.BURP),
+		jump(new Jump(Sounds.create("BURP"),
 				new Vector(0, 2, 0)));
 		setClick(new PlayerClickEntity(Material.AIR,new PlayerClickEntityEffect() {
 			

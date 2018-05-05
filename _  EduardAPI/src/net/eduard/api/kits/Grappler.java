@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.API;
-import net.eduard.api.game.Ability;
-import net.eduard.api.minecraft.v1_7_R4.GrapplerHook;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.util.v1_7_R4.GrapplerHook;
 
 public class Grappler extends Ability {
 	public static HashMap<Player, GrapplerHook> hooks = new HashMap<>();
@@ -74,7 +74,7 @@ public class Grappler extends Ability {
 	@EventHandler
 	public void event(PluginDisableEvent e) {
 		if (getPlugin().equals(e.getPlugin()))
-			for (Player p : API.getPlayers()) {
+			for (Player p : Mine.getPlayers()) {
 				if (hooks.containsKey(p)) {
 					hooks.get(p).remove();
 					hooks.remove(p);

@@ -4,8 +4,8 @@ package net.eduard.api.command.essentials;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
+import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ListCommand extends CommandManager {
 
@@ -16,7 +16,7 @@ public class ListCommand extends CommandManager {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		API.chat(sender, message.replace("$players", ""+API.getPlayers().size()));
+		Mine.chat(sender, message.replace("$players", ""+Mine.getPlayers().size()));
 		return true;
 	}
 }

@@ -6,9 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class GotoCommand extends CommandManager {
 	public GotoCommand() {
@@ -22,13 +21,13 @@ public class GotoCommand extends CommandManager {
 		if (args.length == 0)
 			return false;
 
-		if (API.onlyPlayer(sender)) {
+		if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
-			if (API.existsWorld(sender, args[0])) {
+			if (Mine.existsWorld(sender, args[0])) {
 				World world = Bukkit.getWorld(args[0]);
 				Mine.teleport(p, world.getSpawnLocation());
-				API.SOUND_TELEPORT.create(p);
-				API.chat(p,message.replace("$world", world.getName()));
+				Mine.SOUND_TELEPORT.create(p);
+				Mine.chat(p,message.replace("$world", world.getName()));
 			}
 		}
 

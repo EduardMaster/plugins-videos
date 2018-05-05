@@ -5,9 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.API;
-import net.eduard.api.manager.CommandManager;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.manager.CommandManager;
 
 public class ReportCommand extends CommandManager {
 
@@ -22,7 +21,7 @@ public class ReportCommand extends CommandManager {
 		if (args.length <= 1) {
 			return false;
 		}
-		if (API.existsPlayer(sender, args[0])) {
+		if (Mine.existsPlayer(sender, args[0])) {
 			Player target = Mine.getPlayer(args[0]);
 			StringBuilder builder = new StringBuilder();
 			for (int i = 1; i < args.length; i++) {

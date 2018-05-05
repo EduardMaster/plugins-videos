@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.eduard.api.setup.Mine.FakeOfflinePlayer;
+import net.eduard.api.setup.lib.FakePlayer;
 
 public class CriarScoreboard extends BukkitRunnable{
 
@@ -31,7 +31,7 @@ public class CriarScoreboard extends BukkitRunnable{
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		int id = 15;
 		for (final String line : lines) {
-			obj.getScore(new FakeOfflinePlayer(line)).setScore(id);;
+			obj.getScore(new FakePlayer(line)).setScore(id);;
 			id--;
 			if (id == 0) {
 				break;

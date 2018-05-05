@@ -1,6 +1,6 @@
 package net.eduard.api.tutorial.nivel_5;
 
-import net.eduard.api.setup.DBManager;
+import net.eduard.api.setup.manager.DBManager;
 
 public class UsarRanksDB extends DBManager {
  

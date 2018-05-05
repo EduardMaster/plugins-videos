@@ -16,14 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.API;
-import net.eduard.api.click.PlayerClick;
-import net.eduard.api.click.PlayerClickEffect;
-import net.eduard.api.game.Ability;
-import net.eduard.api.game.Effects;
-import net.eduard.api.game.Jump;
-import net.eduard.api.game.Sounds;
 import net.eduard.api.setup.Mine;
+import net.eduard.api.setup.click.PlayerClick;
+import net.eduard.api.setup.click.PlayerClickEffect;
+import net.eduard.api.setup.game.Ability;
+import net.eduard.api.setup.game.Effects;
+import net.eduard.api.setup.game.Jump;
+import net.eduard.api.setup.game.Sounds;
 
 public class Sonic extends Ability {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -34,7 +33,7 @@ public class Sonic extends Ability {
 		add(Material.LAPIS_BLOCK);
 		display( new Effects(Effect.SMOKE, 10));
 		jump(new Jump(true, 0.5, 2,
-				Sounds.create(Sound.CLICK)));
+				Sounds.create("CLICK")));
 		getPotions().add(new PotionEffect(PotionEffectType.POISON, 1, 20 * 5));
 		setClick(new PlayerClick(Material.LAPIS_BLOCK, new PlayerClickEffect() {
 			
@@ -46,7 +45,7 @@ public class Sonic extends Ability {
 						Mine.saveItems(player);
 						Mine.setEquip(player, Color.BLUE, "§b" + getName());
 						inEffect.add(player);
-						API.TIME.delay(effectSeconds,new Runnable() {
+						Mine.TIME.delay(effectSeconds,new Runnable() {
 
 							@Override
 							public void run() {
