@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -21,8 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.game.Sounds;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.game.Sounds;
 import net.eduard.soup.command.SoupCommand;
 
 

@@ -10,8 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.manager.EventsManager;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.manager.EventsManager;
 
 public class CPSCounter extends EventsManager {
 	private static Map<Player, Integer> clicks = new HashMap<>();

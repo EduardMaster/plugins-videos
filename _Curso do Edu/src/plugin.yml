@@ -1,0 +1,21 @@
+name: CursoEduard
+description: Plugin do Curso Eduard
+main: net.eduard.curso.Main
+version: 1.0
+authors: [Eduard]
+depend: [EduardLIB]
+website: https://www.youtube.com/user/EduTutoriaisHD
+
+commands:
+  cash:
+    description: Teste
+  login:
+  register:
+  setwarp:
+    aliases: [createwarp]
+  deletewarp:
+    aliases: [delwarp]
+  warps:
+    aliases: [warplist]
+  warp:
+  test: 

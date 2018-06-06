@@ -6,8 +6,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.EduardPlugin;
-import net.eduard.api.setup.Mine;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.toquesuave.command.ToqueSuaveCommand;
 import net.eduard.toquesuave.event.ToqueSuaveEvents;
 

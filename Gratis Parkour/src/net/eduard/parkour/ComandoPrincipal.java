@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.eduard.api.lib.core.Mine;
 import net.eduard.api.server.minigame.GameMap;
-import net.eduard.api.setup.Mine;
 
 public class ComandoPrincipal implements CommandExecutor {
 

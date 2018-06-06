@@ -4,6 +4,7 @@ main: net.eduard.spawn.Main
 version: 1.0
 authors: [Eduard]
 author: Eduard
+depends: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   spawn:

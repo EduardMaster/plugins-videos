@@ -2,12 +2,11 @@
 package net.eduard.spawn;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.EduardPlugin;
-import net.eduard.api.setup.game.Sounds;
+import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.spawn.command.SetSpawnCommand;
 import net.eduard.spawn.command.SpawnCommand;
 import net.eduard.spawn.event.SpawnEvent;

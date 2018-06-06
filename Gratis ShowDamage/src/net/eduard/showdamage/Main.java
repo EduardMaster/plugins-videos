@@ -3,7 +3,7 @@ package net.eduard.showdamage;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.EduardPlugin;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.showdamage.event.ShowDamageEvents;
 
 public class Main extends EduardPlugin  {

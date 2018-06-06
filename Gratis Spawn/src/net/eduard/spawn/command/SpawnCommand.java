@@ -4,8 +4,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.manager.CommandManager;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.spawn.Main;
 
 public class SpawnCommand extends CommandManager {

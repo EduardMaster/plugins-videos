@@ -6,8 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.manager.EventsManager;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.manager.EventsManager;
 import net.eduard.spawn.Main;
 
 public class SpawnEvent extends EventsManager {

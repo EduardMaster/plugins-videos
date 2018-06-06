@@ -25,10 +25,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.config.Config;
+import net.eduard.api.lib.core.Mine;
 import net.eduard.api.server.minigame.Game;
 import net.eduard.api.server.minigame.GameMap;
 import net.eduard.api.server.minigame.Minigame;
-import net.eduard.api.setup.Mine;
 
 public class Parkour extends Minigame {
 	private Main plugin;

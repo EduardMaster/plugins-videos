@@ -1,0 +1,12 @@
+name: EduEssentials
+description: Sistemas essenciais de qualquer servidor
+main: net.eduard.essentials.Main
+version: 1.0
+author: Eduard
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD
+commands:
+  ban:
+    aliases: [banir]
+    usage: "&cDigite /ban <nome> <motivo>"
+    

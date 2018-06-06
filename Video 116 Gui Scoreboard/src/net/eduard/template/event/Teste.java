@@ -19,7 +19,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.eduard.api.setup.Mine;
+import net.eduard.api.lib.storage.Mine;
 import net.eduard.template.Main;
 
 public class Teste implements Listener {

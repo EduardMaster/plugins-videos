@@ -15,9 +15,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.SpigotAPI.Chat;
-import net.eduard.api.setup.manager.EventsManager;
+import net.eduard.api.lib.SpigotAPI.Chat;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.manager.EventsManager;
 import net.eduard.showdamage.Main;
 
 public class ShowDamageEvents extends EventsManager {

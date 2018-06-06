@@ -3,7 +3,7 @@ package net.eduard.template;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.EduardPlugin;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.TemplateEvents;
 

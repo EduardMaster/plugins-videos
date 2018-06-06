@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.eduard.api.setup.Mine;
+import net.eduard.api.lib.core.Mine;
 import net.eduard.tapetevoador.Main;
 
 public class TapeteEvents implements Listener {

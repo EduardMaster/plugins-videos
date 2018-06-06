@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-import net.eduard.api.setup.Mine;
+import net.eduard.api.lib.core.Mine;
 import net.eduard.tapetevoador.command.TapeteCommand;
 import net.eduard.tapetevoador.event.TapeteEvents;
 

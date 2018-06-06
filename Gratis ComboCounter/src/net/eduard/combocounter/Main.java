@@ -7,7 +7,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.EduardPlugin;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.combocounter.command.ComboCounterCommand;
 import net.eduard.combocounter.event.ComboCounterEvents;
 

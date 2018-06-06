@@ -4,7 +4,7 @@ package net.eduard.template;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-import net.eduard.api.setup.Mine;
+import net.eduard.api.lib.storage.Mine;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.Teste;
 
