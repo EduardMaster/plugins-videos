@@ -11,9 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.lib.core.ConfigAPI;
 import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.storage.Reference;
 import net.eduard.api.lib.storage.Storable;
 import net.eduard.api.lib.storage.StorageAPI;
-import net.eduard.api.lib.storage.StorageAPI.Reference;
 
 public class UsarStorage implements Listener {
 	@EventHandler

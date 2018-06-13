@@ -22,7 +22,6 @@ public class Test {
 		return null;
 	}
 	public static void main(String[] args) {
-		
 		criarTabela(null, MeuObjeto.class);
 	}
 

@@ -3,7 +3,6 @@ package net.eduard.api.lib.manager;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -515,8 +514,8 @@ public class DBManager implements Storable ,Copyable{
 			}
 
 			PreparedStatement state = connection.prepareStatement(query);
-			ResultSetMetaData meta = state.getMetaData();
-			ParameterMetaData para = state.getParameterMetaData();
+//			ResultSetMetaData meta = state.getMetaData();
+//			ParameterMetaData para = state.getParameterMetaData();
 
 			if (!useSQLite) {
 
