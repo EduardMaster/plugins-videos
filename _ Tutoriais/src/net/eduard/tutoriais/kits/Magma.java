@@ -12,9 +12,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Magma extends Ability {
+public class Magma extends KitAbility {
 
 	public int effectSeconds = 5;
 	public double chance = 0.35;

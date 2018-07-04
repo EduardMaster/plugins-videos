@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Phantom extends Ability {
+public class Phantom extends KitAbility {
 	public int effectSeconds = 5;
 	public Phantom() {
 		setIcon(Material.FEATHER, "§fVoe por 5 segundos");

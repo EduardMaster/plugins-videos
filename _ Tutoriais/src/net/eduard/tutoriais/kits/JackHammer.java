@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.ClickComparationType;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class JackHammer extends Ability{
+public class JackHammer extends KitAbility{
 	
 	public JackHammer() {
 		setIcon(Material.STONE_AXE, "§fCrie grandes buracos na terra");

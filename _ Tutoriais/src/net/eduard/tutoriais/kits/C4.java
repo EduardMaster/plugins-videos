@@ -11,12 +11,12 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Explosion;
 import net.eduard.api.lib.game.Jump;
 import net.eduard.api.lib.game.Sounds;
 
-public class C4 extends Ability {
+public class C4 extends KitAbility {
 
 	
 	public Material materialType = Material.TNT;

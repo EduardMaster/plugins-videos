@@ -55,21 +55,21 @@ public class RegisterCommand extends CommandManager {
 	public boolean canRegister(Player p, String pass) {
 		if (pass.length() < minPasswordSize) {
 			Mine.chat(p, messageMinPasswordSize);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		} else if (pass.length() > maxPasswordSize) {
 			Mine.chat(p, messageMaxPasswordSize);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		} else {
 			if (canUseLettersOnPassword&!canUseNumbersOnPassword) {
 				if (pass.matches("[a-zA-Z]+")) {
 					Mine.chat(p, messageOnlyLetters);
-					Mine.SOUND_ERROR.create(p);
+					Mine.OPT_SOUND_ERROR.create(p);
 					return true;
 				}
 			} else if (canUseNumbersOnPassword&!canUseLettersOnPassword) {
 				if (pass.matches("[0-9]+")) {
 					Mine.chat(p, messageOnlyLetters);
-					Mine.SOUND_ERROR.create(p);
+					Mine.OPT_SOUND_ERROR.create(p);
 					return true;
 				}
 			}else {
@@ -96,7 +96,7 @@ public class RegisterCommand extends CommandManager {
 			} else {
 				if (isRegistered(p)) {
 					Mine.chat(p, messageError);
-					Mine.SOUND_ERROR.create(p);
+					Mine.OPT_SOUND_ERROR.create(p);
 				} else {
 					String pass = args[0];
 					if (canRegister(p, pass)) {
@@ -119,7 +119,7 @@ public class RegisterCommand extends CommandManager {
 							p.chat("/login " + pass);
 						} else {
 							titleSuccess.create(p);
-							Mine.SOUND_SUCCESS.create(p);
+							Mine.OPT_SOUND_SUCCESS.create(p);
 						}
 					}
 

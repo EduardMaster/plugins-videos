@@ -17,9 +17,9 @@ import org.bukkit.util.BlockIterator;
 
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Ryu extends Ability {
+public class Ryu extends KitAbility {
 
 	public static List<Snowball> inEffect = new ArrayList<>();
 

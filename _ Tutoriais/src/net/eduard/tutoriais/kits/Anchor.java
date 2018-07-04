@@ -7,9 +7,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.util.Vector;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Anchor extends Ability {
+public class Anchor extends KitAbility {
 
 	public Anchor() {
 		setIcon(Material.ANVIL, "§fNão leve e nem cause NockBack");

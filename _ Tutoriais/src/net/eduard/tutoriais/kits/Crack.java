@@ -9,9 +9,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Crack extends Ability {
+public class Crack extends KitAbility {
 	public double chance = 0.25;
 
 	public Crack() {

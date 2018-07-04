@@ -9,9 +9,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Ajnin extends Ability {
+public class Ajnin extends KitAbility {
 
 	public static HashMap<Player, Player> targets = new HashMap<>();
 

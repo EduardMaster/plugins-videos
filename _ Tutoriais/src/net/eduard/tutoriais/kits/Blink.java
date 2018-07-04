@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Blink extends Ability {
+public class Blink extends KitAbility {
 	public int distance = 7;
 	public Blink() {
 		setIcon(Material.LEAVES, "§fTeleporte para perto numa distancia");

@@ -12,10 +12,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Explosion;
 
-public class DemoMan extends Ability {
+public class DemoMan extends KitAbility {
 	
 	public static ArrayList<Location> inEffect = new ArrayList<>();
 

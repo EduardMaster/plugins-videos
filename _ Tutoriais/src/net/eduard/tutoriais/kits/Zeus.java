@@ -10,10 +10,10 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
 
-public class Zeus extends Ability{
+public class Zeus extends KitAbility{
 	
 	public Zeus() {
 		setIcon(Material.BOW, "§fGanhe uma espada Melhor");

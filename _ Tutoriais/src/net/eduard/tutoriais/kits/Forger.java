@@ -6,9 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Forger extends Ability {
+public class Forger extends KitAbility {
 
 	public Forger() {
 		setIcon(Material.COAL, "§fForge os itens!");

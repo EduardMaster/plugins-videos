@@ -9,9 +9,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Wither extends Ability {
+public class Wither extends KitAbility {
 	public double chance = 0.3;
 
 	public Wither() {	

@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Camel extends Ability {
+public class Camel extends KitAbility {
 	public Camel() {
 		setIcon(Material.SAND, "§fFique mais forte na areia");
 		getPotions().add(new PotionEffect(PotionEffectType.REGENERATION, 0, 20 * 5));

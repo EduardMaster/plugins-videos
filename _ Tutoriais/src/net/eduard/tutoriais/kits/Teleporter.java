@@ -9,9 +9,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Teleporter extends Ability {
+public class Teleporter extends KitAbility {
 	public Teleporter() {
 		setIcon(Material.BOW, "§fAo acertar a flecha você é teleportado até ela!");
 		add(Mine.addEnchant(new ItemStack(Material.BOW), Enchantment.ARROW_DAMAGE, 1));

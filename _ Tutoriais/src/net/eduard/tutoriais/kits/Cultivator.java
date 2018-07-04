@@ -8,9 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Cultivator extends Ability {
+public class Cultivator extends KitAbility {
 
 	public Cultivator() {
 		setIcon(Material.COAL, "§fSegue seus inimigos");

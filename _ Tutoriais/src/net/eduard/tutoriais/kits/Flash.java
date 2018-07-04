@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Flash extends Ability {
+public class Flash extends KitAbility {
 
 	public int distance = 45;
 

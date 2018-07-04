@@ -18,12 +18,12 @@ import org.bukkit.potion.PotionEffectType;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Effects;
 import net.eduard.api.lib.game.Jump;
 import net.eduard.api.lib.game.Sounds;
 
-public class Sonic extends Ability {
+public class Sonic extends KitAbility {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
 	public int effectSeconds = 5;
 	public int range = 5;

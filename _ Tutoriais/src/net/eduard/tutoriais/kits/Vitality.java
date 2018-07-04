@@ -7,10 +7,10 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
 
-public class Vitality extends Ability {
+public class Vitality extends KitAbility {
 	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	
 	public Vitality() {

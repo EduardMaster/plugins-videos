@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Poseidon extends Ability {
+public class Poseidon extends KitAbility {
 
 	public Poseidon() {
 		setIcon(Material.WATER_BUCKET, "§fFique mais forte na agua");

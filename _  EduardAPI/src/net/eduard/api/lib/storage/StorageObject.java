@@ -73,9 +73,9 @@ public class StorageObject extends StorageBase {
 		if (id == 0) {
 			id = StorageAPI.newId();
 		}
-		Object instance = store.newInstance();
+		Object instance = store.restore((Map<String, Object>) data);
 		if (instance == null) {
-			instance = store.restore((Map<String, Object>) data);
+			instance = store.newInstance();
 		}
 		Map<?, ?> map = (Map<?, ?>) data;
 

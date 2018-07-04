@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Bomber extends Ability {
+public class Bomber extends KitAbility {
 
 	public Bomber() {
 		setIcon(Material.TNT, "§fAtire bombas nos inimigos");

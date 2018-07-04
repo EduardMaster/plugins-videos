@@ -25,7 +25,7 @@ public class MinaCommnad extends CommandManager {
 			Player p = (Player) sender;
 			World world = Mine.getWorld(this.world);
 			Mine.teleport(p, world.getSpawnLocation());
-			Mine.SOUND_TELEPORT.create(p);
+			Mine.OPT_SOUND_TELEPORT.create(p);
 			Mine.chat(p, message);
 		}
 		return true;

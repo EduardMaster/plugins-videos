@@ -43,7 +43,7 @@ public class WarpCommand extends CommandManager {
 							@Override
 							public void effect(Player p) {
 								p.teleport(config.getLocation(path));
-								Mine.SOUND_TELEPORT.create(p);
+								Mine.OPT_SOUND_TELEPORT.create(p);
 								Mine.chat(p, message.replace("$warp", warp));
 								Mine.sendTitle(p,
 										title.getTitle().replace("$warp", warp),

@@ -6,9 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class NoFall extends Ability {
+public class NoFall extends KitAbility {
 
 	public NoFall() {
 		setIcon(Material.LAPIS_BLOCK, "§fNão leve dano de Queda");

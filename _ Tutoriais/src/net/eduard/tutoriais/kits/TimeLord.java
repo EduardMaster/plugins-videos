@@ -13,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class TimeLord extends Ability {
+public class TimeLord extends KitAbility {
 
 	public static ArrayList<Player> inEffect = new ArrayList<>();
 

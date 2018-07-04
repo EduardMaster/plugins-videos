@@ -12,10 +12,10 @@ import org.bukkit.inventory.PlayerInventory;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Explosion;
 
-public class HotPotato extends Ability {
+public class HotPotato extends KitAbility {
 
 	public int effectSeconds = 5;
 	public HotPotato() {

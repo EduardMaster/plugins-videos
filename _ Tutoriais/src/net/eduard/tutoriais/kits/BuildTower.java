@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class BuildTower extends Ability {
+public class BuildTower extends KitAbility {
 	public int size = 65;
 	public Material type = Material.DIRT;
 

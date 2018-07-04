@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Effects;
 
-public class Critical extends Ability {
+public class Critical extends KitAbility {
 	public double chance = 0.3;
 	public double damage = 4;
 	public String critMessage = "§6Voce levou um critico";

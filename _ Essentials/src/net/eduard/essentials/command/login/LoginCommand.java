@@ -65,7 +65,7 @@ public class LoginCommand extends CommandManager {
 		if (!PLAYERS_LOGGED.containsKey(p)) {
 			if (!Mine.equals2(e.getFrom(), e.getTo())) {
 				e.setTo(e.getFrom().setDirection(e.getTo().getDirection()));
-				Mine.SOUND_ERROR.create(p);
+				Mine.OPT_SOUND_ERROR.create(p);
 			}
 
 		}
@@ -83,7 +83,7 @@ public class LoginCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (!PLAYERS_LOGGED.containsKey(p)) {
 			e.setCancelled(true);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class LoginCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (!PLAYERS_LOGGED.containsKey(p)) {
 			e.setCancelled(true);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class LoginCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (!PLAYERS_LOGGED.containsKey(p)) {
 			e.setCancelled(true);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class LoginCommand extends CommandManager {
 
 			if (!PLAYERS_LOGGED.containsKey(p)) {
 				e.setCancelled(true);
-				Mine.SOUND_ERROR.create(p);
+				Mine.OPT_SOUND_ERROR.create(p);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ public class LoginCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (!PLAYERS_LOGGED.containsKey(p)) {
 			e.setCancelled(true);
-			Mine.SOUND_ERROR.create(p);
+			Mine.OPT_SOUND_ERROR.create(p);
 		}
 	}
 
@@ -185,11 +185,11 @@ public class LoginCommand extends CommandManager {
 				String pass = args[0];
 				if (!isRegistered(p)) {
 					Mine.chat(sender, messageRegister);
-					Mine.SOUND_ERROR.create(p);
+					Mine.OPT_SOUND_ERROR.create(p);
 				} else {
 					if (PLAYERS_LOGGED.containsKey(p)) {
 						Mine.chat(sender, messageError);
-						Mine.SOUND_ERROR.create(p);
+						Mine.OPT_SOUND_ERROR.create(p);
 					} else {
 						String password = getPassword(p);
 						if (pass.equals(password)) {
@@ -201,7 +201,7 @@ public class LoginCommand extends CommandManager {
 							}
 							PLAYERS_LOGGED.put(p, "" + System.currentTimeMillis());
 							titleSuccess.create(p);
-							Mine.SOUND_SUCCESS.create(p);
+							Mine.OPT_SOUND_SUCCESS.create(p);
 							for (String message : messagesOnJoin) {
 								p.sendMessage(message);
 							}
@@ -226,7 +226,7 @@ public class LoginCommand extends CommandManager {
 								FAILS_LOGINS.remove(p);
 							}
 							Mine.chat(p, messagePassword);
-							Mine.SOUND_ERROR.create(p);
+							Mine.OPT_SOUND_ERROR.create(p);
 						}
 					}
 				}

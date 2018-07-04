@@ -17,9 +17,9 @@ import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.core.Mine.LocationEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Infernor extends Ability {
+public class Infernor extends KitAbility {
 	
 	public static HashMap<Player, Location> locations = new HashMap<>();
 	public static HashMap<Player, Player> targets = new HashMap<>();

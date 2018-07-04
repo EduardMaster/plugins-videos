@@ -12,10 +12,10 @@ import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
 
-public class ForceField extends Ability{
+public class ForceField extends KitAbility{
 	
 	@Override
 	public void run() {

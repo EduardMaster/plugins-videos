@@ -17,9 +17,9 @@ import net.eduard.api.lib.click.ClickComparationType;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class EnderMage extends Ability {
+public class EnderMage extends KitAbility {
 
 	public double range = 2;
 	public double high = 100;

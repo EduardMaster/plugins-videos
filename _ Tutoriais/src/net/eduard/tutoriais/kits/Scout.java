@@ -4,10 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
 
-public class Scout extends Ability{
+public class Scout extends KitAbility{
 	public Scout() {
 		setIcon(Material.POTION,8261, "§fGanhe poções que te dão muita força");
 		add(new Potion(PotionType.SPEED,1).toItemStack(3));

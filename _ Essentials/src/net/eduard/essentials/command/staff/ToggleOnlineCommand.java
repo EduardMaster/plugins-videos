@@ -45,9 +45,9 @@ public class ToggleOnlineCommand extends CommandManager {
 					}
 				} else {
 					String cmd = args[0].toLowerCase();
-					if (Mine.COMMANDS_ON.contains(cmd)) {
+					if (Mine.OPT_COMMANDS_ON.contains(cmd)) {
 						p.chat("/" + commandsOn.get(0));
-					} else if (Mine.COMMANDS_OFF.contains(cmd)) {
+					} else if (Mine.OPT_COMMANDS_OFF.contains(cmd)) {
 						p.chat("/" + commandsOff.get(0));
 					} else {
 						Mine.chat(sender, getUsage());

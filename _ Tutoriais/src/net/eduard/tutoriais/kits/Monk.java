@@ -10,9 +10,9 @@ import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Monk extends Ability {
+public class Monk extends KitAbility {
 
 	public Monk() {
 		setIcon(Material.BLAZE_ROD, "§fBagunce o inventario do Inimigo");

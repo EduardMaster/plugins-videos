@@ -9,9 +9,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Switcher extends Ability {
+public class Switcher extends KitAbility {
 	public Switcher() {
 		setIcon(Material.SNOW_BALL,
 				"§fAo acertar uma Bolinha de Neve você sera teleportado ate ela!");

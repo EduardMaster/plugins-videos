@@ -10,9 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Vaccum extends Ability {
+public class Vaccum extends KitAbility {
 	public int range = 20;
 
 	public Vaccum() {

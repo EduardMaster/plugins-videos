@@ -9,9 +9,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Viper extends Ability {
+public class Viper extends KitAbility {
 	public double chance = 0.3;
 
 	public Viper() {

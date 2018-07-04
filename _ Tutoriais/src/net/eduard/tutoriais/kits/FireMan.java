@@ -7,10 +7,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
 
-public class FireMan extends Ability {
+public class FireMan extends KitAbility {
 	public FireMan() {
 		setIcon(Material.LAVA_BUCKET, "§fSeje imune ao fogo");
 		add(new ItemStack(Material.WATER_BUCKET));

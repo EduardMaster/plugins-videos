@@ -7,9 +7,9 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Worm extends Ability {
+public class Worm extends KitAbility {
 
 
 	public Worm() {

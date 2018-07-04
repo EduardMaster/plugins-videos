@@ -14,10 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Jump;
 
-public class Kangaroo extends Ability {
+public class Kangaroo extends KitAbility {
 
 	public static ArrayList<Player> inEffect = new ArrayList<>();
 	public Jump front = new Jump( true, 2, 0.5,null);

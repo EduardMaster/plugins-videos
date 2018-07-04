@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class LavaMan extends Ability {
+public class LavaMan extends KitAbility {
 
 	public LavaMan() {
 		setIcon(Material.WATER_BUCKET, "§fFique mais forte na agua");

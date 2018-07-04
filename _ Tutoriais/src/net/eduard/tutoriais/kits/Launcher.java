@@ -7,13 +7,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Jump;
 import net.eduard.api.lib.game.LaunchPad;
 import net.eduard.api.lib.game.Sounds;
 
 @SuppressWarnings("unused")
-public class Launcher extends Ability {
+public class Launcher extends KitAbility {
 
 	private LaunchPad pad= new LaunchPad(-1,19, new Jump(Sounds.create("BAT_TAKEOFF"), new Vector(0, 2.5, 0)));
 	

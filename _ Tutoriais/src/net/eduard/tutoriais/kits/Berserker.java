@@ -9,10 +9,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
 
-public class Berserker extends Ability {
+public class Berserker extends KitAbility {
 	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	public Berserker() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");

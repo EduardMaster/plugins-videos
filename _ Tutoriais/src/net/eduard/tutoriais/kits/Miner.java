@@ -9,9 +9,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.game.Ability;
+import net.eduard.api.lib.game.KitAbility;
 
-public class Miner extends Ability {
+public class Miner extends KitAbility {
 
 	public Miner() {
 		setIcon(Material.STONE_PICKAXE, "§fMinere muito rapido");
