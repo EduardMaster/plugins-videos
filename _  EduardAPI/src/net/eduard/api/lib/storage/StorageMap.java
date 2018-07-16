@@ -90,7 +90,7 @@ public class StorageMap extends StorageBase {
 		Map<String, Object> newMap = new HashMap<>();
 		Map<?, ?> map = (Map<?, ?>) data;
 		for (Entry<?, ?> entry : map.entrySet()) {
-			String key = new StorageObject(keyType, isReference()).store(entry.getKey()).toString();
+			String key = new StorageObject(keyType, false).store(entry.getKey()).toString();
 			Object value = new StorageObject(valueType, isReference()).store(entry.getValue());
 			newMap.put(key, value);
 		}

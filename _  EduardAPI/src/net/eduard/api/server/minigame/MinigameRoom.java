@@ -38,7 +38,9 @@ public class MinigameRoom implements Storable {
 
 	public void broadcast(String message) {
 		for (MinigamePlayer player : players) {
-			player.send(message.replace("$time", Mine.getTime(time)));
+			player.send(
+					message.replace("$time", Mine.getTime(time)).replace("$max", "" + getMap().getMaxPlayersAmount())
+							.replace("$players", "" + getPlayers().size()));
 		}
 	}
 
@@ -55,7 +57,7 @@ public class MinigameRoom implements Storable {
 		return teams.stream().filter(t -> t.getPlayers(state).size() > 0).collect(Collectors.toList());
 	}
 
-	public MinigameTeam getWinnerTeam() {
+	public MinigameTeam getTeamWinner() {
 		return teams.stream().filter(t -> t.getPlayers(MinigamePlayerState.NORMAL).size() > 0).findFirst().get();
 	}
 
@@ -89,7 +91,7 @@ public class MinigameRoom implements Storable {
 	}
 
 	public boolean checkWinner() {
-		return players.size() == 1;
+		return getPlayers(MinigamePlayerState.NORMAL).size() == 1;
 	}
 
 	public boolean checkTeamWinner() {
@@ -97,12 +99,9 @@ public class MinigameRoom implements Storable {
 	}
 
 	public MinigamePlayer getWinner() {
-		return players.get(0);
+		return getPlayers(MinigamePlayerState.NORMAL).get(0);
 	}
 
-	public MinigameTeam getTeamWinner() {
-		return teams.stream().filter(team -> team.getPlayers(MinigamePlayerState.NORMAL).size() > 0).findFirst().get();
-	}
 
 	public boolean checkForceStart() {
 		return getPlayers().size() >= map.getNeededPlayersAmount() && time > getMinigame().getTimeOnForceTimer();

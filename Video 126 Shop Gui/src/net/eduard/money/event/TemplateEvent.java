@@ -12,8 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.VaultAPI;
-import net.eduard.api.lib.storage.Mine;
-import net.eduard.api.lib.storage.manager.TimeManager;
+import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.manager.TimeManager;
 
 public class TemplateEvent extends TimeManager {
 

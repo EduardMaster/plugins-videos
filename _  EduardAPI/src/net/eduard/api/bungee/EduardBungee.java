@@ -2,11 +2,10 @@ package net.eduard.api.bungee;
 
 import java.util.UUID;
 
-import net.eduard.api.lib.ServerAPI;
-import net.eduard.api.lib.ServerAPI.BungeeControl;
-import net.eduard.api.lib.ServerAPI.Server;
-import net.eduard.api.lib.ServerAPI.ServerState;
-import net.eduard.api.lib.ServerAPI.ServerType;
+import net.eduard.api.lib.bungee.BungeeAPI;
+import net.eduard.api.lib.bungee.BungeeController;
+import net.eduard.api.lib.bungee.ServerSpigot;
+import net.eduard.api.lib.bungee.ServerState;
 import net.eduard.api.lib.core.BungeeConfig;
 import net.eduard.api.lib.manager.DBManager;
 import net.eduard.api.lib.storage.StorageAPI;
@@ -36,7 +35,6 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
-
 public class EduardBungee extends Plugin implements Listener {
 	private static EduardBungee instance;
 	private DBBungee bungeeManager;
@@ -58,18 +56,20 @@ public class EduardBungee extends Plugin implements Listener {
 		StorageAPI.register(DBBungee.class);
 
 		config = new BungeeConfig("control.yml", this);
-		BungeeControl.register(this);
 		reload();
-
+		BungeeController bungee = BungeeAPI.getBungee();
+		bungee.setPlugin(this);
+		bungee.register();
 		BungeeCord.getInstance().getPluginManager().registerCommand(this, new BungeeConfigReloadCommand());
 	}
 
+	
 	public void reload() {
+		config.reloadConfig();
+		
 		config.add("database-debug", false);
 		config.saveConfig();
 		DBManager.setDebug(config.getBoolean("database-debug"));
-		ServerAPI.getServerStates().clear();
-		ServerAPI.getServerTypes().clear();
 		if (bungeeManager != null) {
 			bungeeManager.closeConnection();
 		}
@@ -104,39 +104,24 @@ public class EduardBungee extends Plugin implements Listener {
 		}
 		for (ServerInfo server : BungeeCord.getInstance().getServers().values()) {
 			config.add("servers." + server.getName() + ".enabled", true);
-			config.add("servers." + server.getName() + ".type", ServerType.DEFAULT.getValue());
+			config.add("servers." + server.getName() + ".type", 0);
 		}
-		for (ServerState state : ServerState.values()) {
-			config.add("default-states." + state.name(), state.getValue());
-			ServerAPI.getServerStates().put(state.name(), state.getValue());
-		}
-		for (ServerType type : ServerType.values()) {
-			config.add("default-types." + type.name(), type.getValue());
-			ServerAPI.getServerTypes().put(type.name(), type.getValue());
-		}
-		config.add("custom-types.kitpvp", 5);
-		config.add("custom-states.manutencao", 5);
 		config.saveConfig();
-
-		for (String typeName : config.getSection("custom-types").getKeys()) {
-			int typeValue = config.getInt("custom-types." + typeName);
-			ServerAPI.getServerTypes().put(typeName, typeValue);
-		}
-		for (String stateName : config.getSection("custom-states").getKeys()) {
-			int stateValue = config.getInt("custom-states." + stateName);
-			ServerAPI.getServerStates().put(stateName, stateValue);
-		}
-
+		BungeeController bungee = BungeeAPI.getBungee();
+		bungee.setPlugin(this);
+		bungee.register();
 		for (String serverName : config.getSection("servers").getKeys()) {
 			boolean enabled = config.getBoolean("servers." + serverName + ".enabled");
 			int type = config.getInt("servers." + serverName + ".type");
-			Server server = ServerAPI.getServer(serverName);
+			
+			ServerSpigot server = BungeeAPI.getServer(serverName);
+			server.setType(type);
 			if (enabled) {
 				server.setState(ServerState.OFFLINE);
 			} else {
 				server.setState(ServerState.DISABLED);
 			}
-			server.setType(type);
+			
 		}
 
 	}
@@ -158,7 +143,7 @@ public class EduardBungee extends Plugin implements Listener {
 
 	public void onDisable() {
 		bungeeManager.closeConnection();
-		BungeeControl.unregister();
+		BungeeAPI.getController().unregister();
 	}
 
 	public DBManager getBungeeManager() {

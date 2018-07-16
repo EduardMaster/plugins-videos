@@ -17,8 +17,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import net.eduard.api.lib.Copyable;
-import net.eduard.api.lib.FakePlayer;
 import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.modules.FakePlayer;
 import net.eduard.api.lib.storage.Storable;
 
 @SuppressWarnings("deprecation")
@@ -204,9 +204,12 @@ public class DisplayBoard implements Storable ,Copyable{
 
 	public boolean remove(int id) {
 		OfflinePlayer fake = fakes.get(id);
+		if (fake!=null) {
 		scoreboard.resetScores(fake);
+		}
 		fakes.remove(id);
 		texts.remove(id);
+		
 		return false;
 	}
 

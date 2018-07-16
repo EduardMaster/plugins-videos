@@ -22,9 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.eduard.api.lib.EnchantGlow;
 import net.eduard.api.lib.VaultAPI;
 import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.modules.EnchantGlow;
 
 public class Eventos implements Listener {
 

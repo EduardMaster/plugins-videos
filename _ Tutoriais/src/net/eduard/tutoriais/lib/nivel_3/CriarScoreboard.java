@@ -10,8 +10,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import net.eduard.api.lib.FakePlayer;
 import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.modules.FakePlayer;
 
 
 public class CriarScoreboard {

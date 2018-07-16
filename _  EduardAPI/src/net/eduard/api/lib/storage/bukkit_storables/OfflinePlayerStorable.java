@@ -4,10 +4,16 @@ import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
 
-import net.eduard.api.lib.FakePlayer;
+import net.eduard.api.lib.modules.FakePlayer;
 import net.eduard.api.lib.storage.Storable;
 
 public class OfflinePlayerStorable implements Storable {
+	
+	@Override
+	public Object newInstance() {
+		return new FakePlayer();
+	}
+	
 	public boolean saveInline() {
 		return true;
 	}
