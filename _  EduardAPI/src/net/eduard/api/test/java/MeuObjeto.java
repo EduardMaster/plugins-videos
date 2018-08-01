@@ -3,6 +3,7 @@ package net.eduard.api.test.java;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ import net.eduard.api.lib.AutoBase;
 import net.eduard.api.lib.AutoBase.Info;
 
 @Info(name="tabela")
-public class MeuObjeto implements AutoBase<MeuObjeto> {
+public class MeuObjeto implements AutoBase<String> {
 	@Info(primary = true)
 	int id;
 	@Info(secondary = true)
@@ -29,7 +30,7 @@ public class MeuObjeto implements AutoBase<MeuObjeto> {
 	java.util.Date diautil = Calendar.getInstance().getTime();
 	@Override
 	public String toString() {
-	
+		
 		return "MeuObjeto [id=" + id + ", nome=" + nome + ", uuid=" + uuid + ", duplo=" + duplo + ", flutuante="
 				+ flutuante + ", carro=" + carro + ", longo=" + longo + ", bit=" + bit + ", shorte=" + shorte + ", dia="
 				+ dia + ", datetime=" + datetime + ", time=" + time + ", calendario=" + calendario + ", diautil="

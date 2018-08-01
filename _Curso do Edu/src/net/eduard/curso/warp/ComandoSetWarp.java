@@ -20,6 +20,7 @@ public class ComandoSetWarp implements CommandExecutor {
 			} else {
 				String nome = args[0];
 				Main.config.set("Warps." + nome, p.getLocation());
+				Main.config.saveConfig();
 				p.sendMessage("§aSua Warp Foi Setada");
 
 			}

@@ -1,4 +1,4 @@
-package net.eduard.curso.x1;
+package net.eduard.curso.comandos;
 
 import java.util.HashMap;
 

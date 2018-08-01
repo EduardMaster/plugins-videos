@@ -21,7 +21,7 @@ public final class VaultAPI {
 	 * Pega o prefixo no primeiro grupo do jogador
 	 * 
 	 * @param player
-	 *             Jogador
+	 *            Jogador
 	 * @return Prefixo do grupo
 	 */
 	@SuppressWarnings("deprecation")

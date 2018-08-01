@@ -9,6 +9,7 @@ website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   cash:
     description: Teste
+    usage: Digite /cash
   login:
   register:
   setwarp:

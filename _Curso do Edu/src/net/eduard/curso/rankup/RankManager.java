@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.VaultAPI;
 
-public class Ranks {
+public class RankManager {
 
 	private Map<String, Rank> ranks = new HashMap<>();
 

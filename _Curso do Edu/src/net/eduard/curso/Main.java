@@ -6,17 +6,18 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.lib.core.ConfigAPI;
 import net.eduard.curso.caixa.CaixaSistema;
+import net.eduard.curso.cash.CashSQLite;
 import net.eduard.curso.eventos.Eventos;
+import net.eduard.curso.eventos.SimplesScore;
 import net.eduard.curso.gladiador.Gladiador;
 import net.eduard.curso.login.ComandoLogin;
 import net.eduard.curso.login.ComandoRegister;
-import net.eduard.curso.scoreboard.Scoreboards;
-import net.eduard.curso.sql.TesteSQLite;
 import net.eduard.curso.warp.ComandoDeleteWarp;
 import net.eduard.curso.warp.ComandoSetWarp;
 import net.eduard.curso.warp.ComandoWarps;
@@ -31,16 +32,18 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		CaixaSistema.ligar(this);
-		TesteSQLite.abrir();
-		getCommand("test").setExecutor(new TesteSQLite());
+		CashSQLite.abrir();
+		getCommand("test").setExecutor(new CashSQLite());
 		glad = new Gladiador();
 		config = new ConfigAPI("config.yml", this);
 		config.saveDefaultConfig();
 
 		config.add("morte mesagem", "mensagem");
+		
+		
 		config.saveDefault();
 
-		Scoreboards scoreboards = new Scoreboards();
+		SimplesScore scoreboards = new SimplesScore();
 		Bukkit.getPluginManager().registerEvents(scoreboards, this);
 		scoreboards.runTaskTimer(this, 20, 20);
 
@@ -79,7 +82,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		TesteSQLite.fechar();
+		CashSQLite.fechar();
 		salvarRegistros();
 	}
 

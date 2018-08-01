@@ -9,5 +9,6 @@ public class EduardLIB extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		BukkitStorables.load();
+		BukkitBungeeAPI.requestCurrentServer();
 	}
 }
