@@ -5,8 +5,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.curso.Main;
-
 public class ComandoLogin implements CommandExecutor {
 
 	@Override
@@ -16,7 +14,7 @@ public class ComandoLogin implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 
-			if (Main.registrados.containsKey(p.getUniqueId())) {
+			if (LoginAPI.isRegistred(p)) {
 
 				// login senha
 
@@ -26,10 +24,10 @@ public class ComandoLogin implements CommandExecutor {
 
 				} else {
 					String digitou = args[0];
-					String senha = Main.registrados.get(p.getUniqueId());
+					String senha = LoginAPI.getSenha(p);
 					if (digitou.equals(senha)) {
 
-						Main.logados.put(p, System.currentTimeMillis());
+						LoginAPI.login(p);
 						p.sendMessage("§aAutenticação feita com sucesso!");
 
 					} else {

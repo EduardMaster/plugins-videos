@@ -1,47 +1,25 @@
 package net.eduard.curso.warp;
 
-import java.util.Set;
+import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.eduard.curso.Main;
 
 public class ComandoWarps implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-		if (Main.config.contains("Warps")) {
-
-
-
-			Set<String> warps = Main.config.getSection("Warps").getKeys(false);
-			sender.sendMessage("§aWarps disponiveis: " + warps);
-
-		} else {
-
+		List<String> warps = WarpAPI.getWarps();
+		if (warps.isEmpty()) {
 			sender.sendMessage("§cNão tem warps setadas");
-
+		} else {
+			sender.sendMessage("§aWarps disponiveis: " + warps);
 		}
 
 		return true;
 	}
 
-	//
-	// @Override
-	// public boolean onCommand(CommandSender sender, Command command,
-	// String label, String[] args) {
-	// if (Main.config.contains("Warps")) {
-	// Set<String> warps = Main.config.getSection("Warps").getKeys(false);
-	// sender.sendMessage("§aWarps disponiveis: "+warps);
-	//
-	// }else {
-	//
-	// sender.sendMessage("§cNão existe nenhuma Warp!");
-	// }
-	// return true;
-	// }
 
 }

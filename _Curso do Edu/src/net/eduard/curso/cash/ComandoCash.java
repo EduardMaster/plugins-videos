@@ -8,13 +8,11 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.core.ConfigAPI;
 import net.eduard.api.lib.core.Mine;
-import net.eduard.curso.Main;
+import net.eduard.curso.CursoMain;
 
 public class ComandoCash implements CommandExecutor {
 
-	public static ConfigAPI config = new ConfigAPI("contas.yml", Main.instance );
-	
-	
+
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +24,7 @@ public class ComandoCash implements CommandExecutor {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				double cashAtual = config.getDouble(p.getName().toLowerCase());
+				double cashAtual = CashAPI.getCash(p);
 				
 				p.sendMessage("§aSeu cash é: §2"+cashAtual);
 				
@@ -54,8 +52,7 @@ public class ComandoCash implements CommandExecutor {
 						
 						double quantidade = Mine.toDouble(args[2]);
 						
-						config.set(jogador.getName().toLowerCase(), quantidade);
-						config.saveConfig();
+						CashAPI.setCash(jogador, quantidade);
 						sender.sendMessage("§aVoce alterou o cash do "+
 						jogador.getName()+" para "+ quantidade);
 						

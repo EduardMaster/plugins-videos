@@ -16,7 +16,7 @@ import net.milkbowl.vault.permission.Permission;
  *
  */
 public final class VaultAPI {
-
+ 
 	/**
 	 * Pega o prefixo no primeiro grupo do jogador
 	 * 

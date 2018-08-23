@@ -5,8 +5,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.curso.Main;
-
 public class ComandoRegister implements CommandExecutor {
 
 	@Override
@@ -16,7 +14,7 @@ public class ComandoRegister implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 
-			if (!Main.registrados.containsKey(p.getUniqueId())) {
+			if (!LoginAPI.isRegistred(p)) {
 
 				if (args.length <= 2) {
 
@@ -30,7 +28,7 @@ public class ComandoRegister implements CommandExecutor {
 
 					if (senha.equals(confirmar)) {
 						sender.sendMessage("§aVoce registrou sua Conta!");
-						Main.registrados.put(p.getUniqueId(), senha);
+						LoginAPI.register(p, senha);
 						sender.sendMessage(
 								"§aVoce precisa Logar! digite /login senha");
 						

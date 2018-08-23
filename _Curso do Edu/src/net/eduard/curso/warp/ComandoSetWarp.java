@@ -5,8 +5,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.curso.Main;
-
 public class ComandoSetWarp implements CommandExecutor {
 
 	@Override
@@ -19,8 +17,7 @@ public class ComandoSetWarp implements CommandExecutor {
 
 			} else {
 				String nome = args[0];
-				Main.config.set("Warps." + nome, p.getLocation());
-				Main.config.saveConfig();
+				WarpAPI.setWarp(nome, p.getLocation());
 				p.sendMessage("§aSua Warp Foi Setada");
 
 			}

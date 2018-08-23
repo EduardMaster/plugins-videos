@@ -1,38 +1,41 @@
 package net.eduard.curso.rankup;
 
-public class Rank {
+import net.eduard.api.lib.storage.Storable;
 
-	private String name, tag, proximo, anterior;
-	private double price;
+public class Rank implements Storable{
+
+	private String name;
+	private String prefix;
+	private int level;
+	@Override
+	public String alias() {
+		return "Rankup";
+	}
+public Rank() {
+	// TODO Auto-generated constructor stub
+}
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getTag() {
-		return tag;
+
+	public int getLevel() {
+		return level;
 	}
-	public void setTag(String tag) {
-		this.tag = tag;
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
-	public String getProximo() {
-		return proximo;
+
+	public String getPrefix() {
+		return prefix;
 	}
-	public void setProximo(String proximo) {
-		this.proximo = proximo;
-	}
-	public String getAnterior() {
-		return anterior;
-	}
-	public void setAnterior(String anterior) {
-		this.anterior = anterior;
-	}
-	public double getPrice() {
-		return price;
-	}
-	public void setPrice(double price) {
-		this.price = price;
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 	
 }

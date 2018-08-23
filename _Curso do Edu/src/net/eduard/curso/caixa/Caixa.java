@@ -16,12 +16,6 @@ public class Caixa implements Storable {
 	
 	
 	
-	
-	
-	
-	
-	
-	
 
 	@Override
 	public Object restore(Map<String, Object> map) {
