@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.KitAbility;
-import net.eduard.api.util.v1_7_R4.GrapplerHook;
+import net.eduard.api.util.minecraft_v1_7_R4.GrapplerHook;
 
 public class Grappler extends KitAbility {
 	public static HashMap<Player, GrapplerHook> hooks = new HashMap<>();
@@ -35,12 +35,12 @@ public class Grappler extends KitAbility {
 							GrapplerHook hook = hooks.get(player);
 							if (hook.isHooked) {
 								player.setFallDistance(-10);
-								Location target = hook.getBukkitEntity()
-										.getLocation();
-								Vector velocity = GrapplerHook.moveTo(
-										player.getLocation(), target, 0.5, 1.5,
-										0.5, 0.04, 0.06, 0.04);
-								player.setVelocity(velocity);
+//								Location target = hook.getBukkitEntity()
+//										.getLocation();
+//								Vector velocity = GrapplerHook.moveTo(
+//										player.getLocation(), target, 0.5, 1.5,
+//										0.5, 0.04, 0.06, 0.04);
+//								player.setVelocity(velocity);
 							} else {
 								player.sendMessage(
 										"§6O gancho nao se prendeu em nada!");

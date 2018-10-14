@@ -35,7 +35,7 @@ public class SimplesScore extends BukkitRunnable implements Listener {
 		DisplayBoard scoreboard = new DisplayBoard("§6§lMEU SERVER", "§aLINHA1", "§aLinha2", "", "§aLinha4");
 		scoreboard.apply(p);
 		scoreboard.clear();
-		
+		scoreboard.getLines().clear();
 		scoreboards.put(p, scoreboard);
 	}
 
@@ -57,9 +57,13 @@ public class SimplesScore extends BukkitRunnable implements Listener {
 		DisplayBoard scoreboard = scoreboards.get(p);
 		if (scoreboard == null)
 			return;
-		scoreboard.setTitle("§a§l" + p.getName());
+		scoreboard.setDisplay("§a§l" + p.getName());
 		scoreboard.set(15, "oi");
-		scoreboard.update();
+		scoreboard.empty(14);
+		
+		
+		
+	
 
 	}
 

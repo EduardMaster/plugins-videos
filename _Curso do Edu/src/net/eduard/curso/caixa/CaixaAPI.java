@@ -5,8 +5,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.ConfigAPI;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.ConfigAPI;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.storage.StorageAPI;
 
 public class CaixaAPI {

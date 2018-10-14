@@ -1,2 +1,8 @@
 
+no slime split: false
 
+
+blocked-commands:
+- /plugins
+blocked-tab-commands:
+- /plugins

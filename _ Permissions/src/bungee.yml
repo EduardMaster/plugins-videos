@@ -1,0 +1,8 @@
+name: Template
+description: Plugin Template
+main: net.eduard.template.bungee.Template
+version: 1.0
+author: Eduard
+authors: [Eduard]
+depend: [EduardAPI]
+website: https://www.youtube.com/user/EduTutoriaisHD

@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.core.ConfigAPI;
+import net.eduard.api.lib.ConfigAPI;
 import net.eduard.curso.caixa.CaixaAPI;
 import net.eduard.curso.eventos.Eventos;
 import net.eduard.curso.login.ComandoLogin;

@@ -34,7 +34,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		config = plugin.getConfig();
-		saveDefaultConfig();
+//		saveDefaultConfig();
 		{
 			config.addDefault("valor3", "valor4");
 			config.options().copyDefaults(true);

@@ -16,7 +16,7 @@ import net.milkbowl.vault.permission.Permission;
  *
  */
 public final class VaultAPI {
- 
+
 	/**
 	 * Pega o prefixo no primeiro grupo do jogador
 	 * 
@@ -29,8 +29,8 @@ public final class VaultAPI {
 		return VaultAPI.getChat()
 				.getGroupPrefix("null",
 						VaultAPI.getPermission().getPrimaryGroup("null", Bukkit.getOfflinePlayer(player)))
-				.replace('&', '�');
-	}
+				.replace('&', '§');
+	} 
 
 	/**
 	 * Controle de permiss�es

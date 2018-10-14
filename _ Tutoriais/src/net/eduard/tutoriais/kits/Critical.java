@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.Effects;
 
 public class Critical extends KitAbility {

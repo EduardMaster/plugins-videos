@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.core.ConfigAPI;
+import net.eduard.api.lib.ConfigAPI;
 
 public class CashAPI {
 	private static Connection con;

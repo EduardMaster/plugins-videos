@@ -14,10 +14,10 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.Mine.LocationEffect;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.core.Mine;
-import net.eduard.api.lib.core.Mine.LocationEffect;
 import net.eduard.api.lib.game.KitAbility;
 
 public class Gladiator extends KitAbility {

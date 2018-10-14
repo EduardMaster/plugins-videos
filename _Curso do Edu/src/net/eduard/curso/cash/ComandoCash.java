@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.core.ConfigAPI;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.ConfigAPI;
+import net.eduard.api.lib.Mine;
 import net.eduard.curso.CursoMain;
 
 public class ComandoCash implements CommandExecutor {

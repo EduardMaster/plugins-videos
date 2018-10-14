@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import net.eduard.api.lib.core.ConfigAPI;
+import net.eduard.api.lib.ConfigAPI;
 
 public class ChatComDelay implements Listener {
 

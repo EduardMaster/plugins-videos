@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.storage.Storable;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -27,7 +27,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 /**
- * Mine de manipulação de Cores e CHAT do Minecraft
+ * Mine de manipulacao de Cores e CHAT do Minecraft
  * 
  * @author Eduard
  *
@@ -61,8 +61,8 @@ public final class CriarChatAPI {
 		CriarChatAPI.enabled = enabled;
 	}
 	private static String messageChatDisabled = "&cChat desabilitado temporiamente!";
-	private static String messageChatPermission = "§cVocê não tem permissão para falar neste Chat!";
-	private static SimpleChatChannel chatDefault = new SimpleChatChannel("local", "", "§e§l(L) ", "", "l");
+	private static String messageChatPermission = "�cVoce nao tem permissao para falar neste Chat!";
+	private static SimpleChatChannel chatDefault = new SimpleChatChannel("local", "", "�e�l(L) ", "", "l");
 	private static boolean useSpigot= true;
 	private static Map<String, SimpleChatChannel> channels = new HashMap<>();
 

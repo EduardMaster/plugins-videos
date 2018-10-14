@@ -8,9 +8,9 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Explosion;
 import net.eduard.api.lib.game.Jump;

@@ -24,7 +24,7 @@ public class Main extends JavaPlugin {
 	}
 	public void onEnable() {
 		plugin = this;
-		getCommand("money").setExecutor(new Money());
+		getCommand("money").setExecutor(new ComandoMoney());
 	}
 
 }

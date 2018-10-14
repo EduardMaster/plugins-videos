@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 
-import net.eduard.api.lib.core.ConfigAPI;
+import net.eduard.api.lib.ConfigAPI;
 import net.eduard.curso.CursoMain;
 
 public class WarpAPI {

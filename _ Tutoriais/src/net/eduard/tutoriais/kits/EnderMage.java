@@ -13,10 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.ClickComparationType;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.game.KitAbility;
 
 public class EnderMage extends KitAbility {

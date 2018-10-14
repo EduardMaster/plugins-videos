@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.core.ConfigAPI;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.ConfigAPI;
+import net.eduard.api.lib.Mine;
 
 public class LoginAPI {
 	private static HashMap<UUID, String> registrados = new HashMap<>();

@@ -11,8 +11,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.Explosion;
 
 public class DemoMan extends KitAbility {

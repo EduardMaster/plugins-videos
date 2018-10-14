@@ -23,7 +23,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public final class SpigotAPI {
 	public static void sendMessage(Player player, String message, String hoverMessage, String clickCommand) {
 		sendMessage(Arrays.asList(player), message, hoverMessage, clickCommand);
-	} 
+	}
 
 	public static void sendMessage(Collection<Player> players, String message, String hoverMessage,
 			String clickCommand) {

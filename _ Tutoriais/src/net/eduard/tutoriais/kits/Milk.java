@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.game.KitAbility;
-import net.eduard.api.lib.game.KitType;
+import net.eduard.api.lib.modules.KitType;
 
 public class Milk extends KitAbility {
 
