@@ -1,4 +1,4 @@
-package net.eduard.curso.sistemas;
+package net.eduard.curso.exemplos;
 
 import org.bukkit.entity.Player;
 

@@ -1,5 +1,6 @@
-package net.eduard.curso.exemplos;
+package net.eduard.tutoriais.exemplos;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +10,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.Mine;
 
 public class CriarLoja implements Listener {
 	@EventHandler
@@ -21,7 +21,7 @@ public class CriarLoja implements Listener {
 	}
 
 	private void abriMenu(Player p) {
-		Inventory inv = Mine.newInventory("texto", 9);
+		Inventory inv = Bukkit.createInventory(p,9, "texto");
 		inv.setItem(3, new ItemStack(Material.DIAMOND,15));
 		inv.setItem(5, new ItemStack(Material.DIAMOND,16));
 		p.openInventory(inv);
@@ -34,10 +34,9 @@ public class CriarLoja implements Listener {
 				if (e.getCurrentItem() == null)
 					return;
 				if (inv.containsAtLeast(new ItemStack(Material.DIAMOND), 16)) {
-					Mine.broadcast("OI");
 				}
 				if (e.getCurrentItem().getType() == Material.DIAMOND) {
-					Mine.remove(inv, new ItemStack(Material.DIAMOND,3));;
+//					Mine.remove(inv, new ItemStack(Material.DIAMOND,3));;
 					e.setCancelled(true);
 				}
 

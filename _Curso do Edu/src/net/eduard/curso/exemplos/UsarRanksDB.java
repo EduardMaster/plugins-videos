@@ -1,4 +1,4 @@
-package net.eduard.curso.sistemas;
+package net.eduard.curso.exemplos;
 
 import net.eduard.api.lib.manager.DBManager;
 

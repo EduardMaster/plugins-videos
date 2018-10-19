@@ -1,33 +1,32 @@
 package net.eduard.curso.exemplos;
 
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.menu.SimpleMenu;
+import net.eduard.api.lib.game.Menu;
 import net.eduard.api.lib.modules.ClickEffect;
 
 public class CriarMenus {
 
 	public CriarMenus(Plugin plugin) {
-		SimpleMenu menu = new SimpleMenu("Mudar velocidade", 3);
+		Menu menu = new Menu("Mudar velocidade", 3);
 		for (Player p : Mine.getPlayers()) {
 			p.getInventory().addItem(menu.getItemKey());
 
 		}
-		menu.getItems().put(10,
-				SimpleMenu.newItem(Material.LEATHER_BOOTS, 1, 0, "§aVelocidade 1", "§aClique para mudar sua velocidade"));
-		menu.getItems().put(11,
-				SimpleMenu.newItem(Material.CHAINMAIL_BOOTS, 1, 0, "§aVelocidade 2", "§aClique para mudar sua velocidade"));
-		menu.getItems().put(12,
-				SimpleMenu.newItem(Material.GOLD_BOOTS, 1, 0, "§aVelocidade 3", "§aClique parea mudar sua velocidade"));
-		menu.getItems().put(13,
-				SimpleMenu.newItem(Material.IRON_BOOTS, 1, 0, "§aVelocidade 4", "§aClique para mudar sua velocidade"));
-		menu.getItems().put(14,
-				SimpleMenu.newItem(Material.DIAMOND_BOOTS, 1, 0, "§aVelocidade 5", "§aClique para mudar sua velocidade"));
+//		menu.getItems().put(10,
+//				SimpleMenu.newItem(Material.LEATHER_BOOTS, 1, 0, "§aVelocidade 1", "§aClique para mudar sua velocidade"));
+//		menu.getItems().put(11,
+//				SimpleMenu.newItem(Material.CHAINMAIL_BOOTS, 1, 0, "§aVelocidade 2", "§aClique para mudar sua velocidade"));
+//		menu.getItems().put(12,
+//				SimpleMenu.newItem(Material.GOLD_BOOTS, 1, 0, "§aVelocidade 3", "§aClique parea mudar sua velocidade"));
+//		menu.getItems().put(13,
+//				SimpleMenu.newItem(Material.IRON_BOOTS, 1, 0, "§aVelocidade 4", "§aClique para mudar sua velocidade"));
+//		menu.getItems().put(14,
+//				SimpleMenu.newItem(Material.DIAMOND_BOOTS, 1, 0, "§aVelocidade 5", "§aClique para mudar sua velocidade"));
 		menu.register(plugin);
 		menu.setEffect(new ClickEffect() {
 

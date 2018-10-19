@@ -1,4 +1,4 @@
-package net.eduard.tutoriais.util;
+package net.eduard.tutoriais.java;
 
 public class SobreAvancadoNumeros {
 	public static int teste1(int x, int y) {

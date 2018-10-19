@@ -1,16 +1,18 @@
-package net.eduard.curso.sistemas;
+package net.eduard.tutoriais.eventos;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import net.eduard.api.lib.ConfigAPI;
 
 public class ChatComDelay implements Listener {
 
-	public static final ConfigAPI cooldown = new ConfigAPI("cooldown.yml");
 	public static int cooldownSeconds = 10;
+	private static HashMap<UUID, Long> tempoArmazenado = new HashMap<>();
 
 	@EventHandler
 	private void chat(AsyncPlayerChatEvent e) {
@@ -21,8 +23,8 @@ public class ChatComDelay implements Listener {
 	}
 
 	private boolean onCooldown(Player p) {
-		if (cooldown.getConfig().contains(p.getUniqueId().toString())) {
-			long before = cooldown.getConfig().getLong(p.getUniqueId().toString());
+		if (tempoArmazenado.containsKey(p.getUniqueId())) {
+			long before = tempoArmazenado.get(p.getUniqueId());
 			long now = System.currentTimeMillis();
 			int time = cooldownSeconds * 1000;
 			// 10     7     15 =  -2
@@ -31,7 +33,7 @@ public class ChatComDelay implements Listener {
 				p.sendMessage("§cNão pode conversar espere mais "+div+" segundos!");
 				return true;
 			} else {
-				cooldown.getConfig().set(p.getUniqueId().toString(), null);
+				tempoArmazenado.remove(p.getUniqueId());
 				return onCooldown(p);
 			}
 		} else {
@@ -43,8 +45,8 @@ public class ChatComDelay implements Listener {
 
 	}
 	private void setOnCooldown(Player p) {
-		cooldown.getConfig().set(p.getUniqueId().toString(), System.currentTimeMillis());
-		cooldown.saveConfig();
+		tempoArmazenado.put(p.getUniqueId(), System.currentTimeMillis());
+		
 	}
 
 }

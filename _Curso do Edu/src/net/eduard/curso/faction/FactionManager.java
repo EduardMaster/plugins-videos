@@ -1,11 +1,8 @@
 package net.eduard.curso.faction;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.bukkit.entity.Player;
-
-import com.sun.management.jmx.Trace;
 
 public class FactionManager {
 

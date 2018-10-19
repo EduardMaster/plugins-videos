@@ -1,5 +1,5 @@
 name: Template
-description: Plugin Template
+description: "§2Plugin Template plugin exemplo"
 main: net.eduard.template.Main
 version: 1.0
 author: Eduard
@@ -8,8 +8,8 @@ depend: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   comando:
-    aliases: [dg]
+    aliases: [cmd]
     permission: perm.use
-    permission-message: No Permission
+    permission-message: "Você não tem permissão para executar este comando."
     usage: /<command> [usage]
-    description: Comando Description
+    description: "Descrição do Comando"

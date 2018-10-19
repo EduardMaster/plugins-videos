@@ -1,4 +1,4 @@
-package net.eduard.tutoriais.util;
+package net.eduard.tutoriais.eventos;
 
 import java.util.ArrayList;
 import java.util.List;

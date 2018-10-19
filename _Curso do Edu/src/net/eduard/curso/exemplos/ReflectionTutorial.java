@@ -1,4 +1,4 @@
-package net.eduard.curso.sistemas;
+package net.eduard.curso.exemplos;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -33,64 +33,10 @@ import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.PlayerInteractManager;
 import net.minecraft.server.v1_8_R3.WorldServer;
 
-public class TestandoNMS  implements CommandExecutor {
-	public void createNPC(Player player, String name) {
-
-		Location location = player.getLocation();
-		MinecraftServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
-		WorldServer nmsWorld = ((CraftWorld) player.getWorld()).getHandle();
-		GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "§e§l" + name);
-		EntityPlayer npc = new EntityPlayer(nmsServer, nmsWorld, gameProfile, new PlayerInteractManager(nmsWorld));
-		changeSkin(gameProfile);
-		npc.setLocation(location.getX(), location.getY(), location.getZ(), player.getLocation().getYaw(),
-				player.getLocation().getPitch());
-
-		PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-		connection.sendPacket(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.ADD_PLAYER, npc));
-		connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
-		
-	}
-
-	private void changeSkin(GameProfile profile) {
-		String texture = "";
-		String signature = "";
-		profile.getProperties().put("textures", new Property("textures", texture, signature));
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String lb, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("sendmesnsagem")) {
-			if (sender instanceof Player) {
-
-				Player p = (Player) sender;
-
-				if (args.length == 0) {
-					p.sendMessage("§cPor favor,use /sendmesnsagem <mensagem>");
-				} else {
-
-					String msg = Mine.getText(0, args);
-//					ActionBarUtil.sendActionBarMessage(p, msg);
-
-				}
-			}
-
-		}
-		if (cmd.getName().equalsIgnoreCase("setnpc")) {
-			if (sender instanceof Player) {
-				Player p = (Player) sender;
-				TestandoNMS.getNewNpc(p);
-				p.sendMessage("§aNpc setado com sucesso");
-			}
-		}
-		return false;
-	}
+public class ReflectionTutorial  {
+	
 
 
-	public static void ativar() {
-		Bukkit.getConsoleSender().sendMessage("§e[NMS] Habilitado");
-		Mine.command("sendmesnsagem", new TestandoNMS(), null, null);
-		Mine.command("setnpc", new TestandoNMS(), null, null);
-	}
 	
 	public static Class<?> getNMSClass(String nmsClassString) throws ClassNotFoundException {
 	    String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
@@ -111,25 +57,25 @@ public class TestandoNMS  implements CommandExecutor {
 			World world = p.getWorld();
 			Object mundo = world.getClass().getDeclaredMethod("getHandle").invoke(world);
 			GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "TESTONA");
-			Class<?> cplayerInteractPlaye = TestandoNMS.getNMSClass("PlayerInteractManager");
-			Object interact = cplayerInteractPlaye.getDeclaredConstructor(TestandoNMS.getNMSClass("World")).newInstance(mundo);
-			Class<?> centityPlayer = TestandoNMS.getNMSClass("EntityPlayer");
-			Constructor<?> constructor = centityPlayer.getDeclaredConstructor(TestandoNMS.getNMSClass("MinecraftServer"), TestandoNMS.getNMSClass("WorldServer"),
+			Class<?> cplayerInteractPlaye = ReflectionTutorial.getNMSClass("PlayerInteractManager");
+			Object interact = cplayerInteractPlaye.getDeclaredConstructor(ReflectionTutorial.getNMSClass("World")).newInstance(mundo);
+			Class<?> centityPlayer = ReflectionTutorial.getNMSClass("EntityPlayer");
+			Constructor<?> constructor = centityPlayer.getDeclaredConstructor(ReflectionTutorial.getNMSClass("MinecraftServer"), ReflectionTutorial.getNMSClass("WorldServer"),
 					gameProfile.getClass(), cplayerInteractPlaye);
 			Object npc = constructor.newInstance(servidor, mundo, gameProfile, interact);
 			List<Object> lista = new ArrayList<>();
 			lista.add(npc);
 			System.out.println("NPC: " + npc.getClass());
 //			System.out.println("" + npc.getClass());
-			Method setLocation = TestandoNMS.getNMSClass("Entity").getDeclaredMethod("setLocation", double.class, double.class, double.class,
+			Method setLocation = ReflectionTutorial.getNMSClass("Entity").getDeclaredMethod("setLocation", double.class, double.class, double.class,
 					float.class, float.class);
 			setLocation.invoke(npc, p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 0F, 0F);
-			Class<?> cpacote = TestandoNMS.getNMSClass("PacketPlayOutPlayerInfo");
-			Class<?> cenumPlayerInfo = TestandoNMS.getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+			Class<?> cpacote = ReflectionTutorial.getNMSClass("PacketPlayOutPlayerInfo");
+			Class<?> cenumPlayerInfo = ReflectionTutorial.getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
 			Object enumer = cenumPlayerInfo.getField("ADD_PLAYER").get(cenumPlayerInfo);
 			System.out.println("ENUMER: " + enumer.getClass());
 //			System.out.println("" + enumer);
-			Class<?> cEntityPlayer = TestandoNMS.getNMSClass("EntityPlayer");
+			Class<?> cEntityPlayer = ReflectionTutorial.getNMSClass("EntityPlayer");
 			for (Constructor<?> construtor : cpacote.getDeclaredConstructors()) {
 				System.out.println(""+construtor);
 			}
@@ -143,8 +89,8 @@ public class TestandoNMS  implements CommandExecutor {
 //			Lists.newArrayList(npc)
 //			new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.ADD_PLAYER, Lists.newArrayList(npc));
 			sendPacket(pacote, p);
-			Object pacote2 = TestandoNMS.getNMSClass("PacketPlayOutNamedEntitySpawn")
-					.getDeclaredConstructor(TestandoNMS.getNMSClass("EntityHuman")).newInstance(npc);
+			Object pacote2 = ReflectionTutorial.getNMSClass("PacketPlayOutNamedEntitySpawn")
+					.getDeclaredConstructor(ReflectionTutorial.getNMSClass("EntityHuman")).newInstance(npc);
 			sendPacket(pacote2, p);
 			
 			
@@ -172,7 +118,7 @@ public class TestandoNMS  implements CommandExecutor {
 		try {
 			Object getHandle = player.getClass().getDeclaredMethod("getHandle").invoke(player);
 			Object playerConnection = getHandle.getClass().getDeclaredField("playerConnection").get(getHandle);
-			playerConnection.getClass().getDeclaredMethod("sendPacket", TestandoNMS.getNMSClass("Packet"))
+			playerConnection.getClass().getDeclaredMethod("sendPacket", ReflectionTutorial.getNMSClass("Packet"))
 					.invoke(playerConnection, pacote);
 		} catch (Exception e) {
 			// TODO: handle exception

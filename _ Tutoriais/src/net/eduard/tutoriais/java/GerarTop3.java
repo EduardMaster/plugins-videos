@@ -1,4 +1,4 @@
-package net.eduard.tutoriais.sistemas;
+package net.eduard.tutoriais.java;
 
 import java.util.HashMap;
 import java.util.Map;

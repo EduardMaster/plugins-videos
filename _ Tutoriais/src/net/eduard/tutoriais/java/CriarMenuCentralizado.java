@@ -1,4 +1,4 @@
-package net.eduard.curso.exemplos;
+package net.eduard.tutoriais.java;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.Mine;
 
 public class CriarMenuCentralizado implements Listener {
-
-	public static void register(JavaPlugin plugin) {
-		CriarMenuCentralizado exemplo = new CriarMenuCentralizado();
-		Mine.registerEvents(exemplo, plugin);
+	public CriarMenuCentralizado(JavaPlugin plugin) {
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+		// TODO Auto-generated constructor stub
 	}
 
 	@EventHandler
@@ -33,6 +31,16 @@ public class CriarMenuCentralizado implements Listener {
 		}
 
 	}
+	public static boolean isColumn(int index, int colunm) {
+		return getColumn(index) == colunm;
+	}
+
+	public static int getColumn(int index) {
+		if (index < 9) {
+			return index + 1;
+		}
+		return (index % 9) + 1;
+	}
 
 	public void abrir(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 6 * 9, "Centralizar");
@@ -45,12 +53,12 @@ public class CriarMenuCentralizado implements Listener {
 		int index = 10;
 		for (ItemStack item : lista) {
 
-			if (Mine.isColumn(index, 1)) {
+			if (isColumn(index, 1)) {
 				index++;
 				continue;
 
 			}
-			if (Mine.isColumn(index, 9)) {
+			if (isColumn(index, 9)) {
 				index++;
 				continue;
 

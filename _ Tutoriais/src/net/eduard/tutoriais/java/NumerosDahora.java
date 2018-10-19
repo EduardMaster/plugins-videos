@@ -1,4 +1,4 @@
-package net.eduard.curso.java;
+package net.eduard.tutoriais.java;
 
 import java.util.ArrayList;
 import java.util.Random;

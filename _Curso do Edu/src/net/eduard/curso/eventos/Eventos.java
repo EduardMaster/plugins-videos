@@ -28,8 +28,12 @@ import net.eduard.api.lib.modules.VaultAPI;
 
 public class Eventos implements Listener {
 
-	// item que faz o efeito
-	public static ItemStack itemPremio1() {
+	
+
+	// ganhar um item ao entrar
+	@EventHandler
+	public void event(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
 		@SuppressWarnings("deprecation")
 		ItemStack item = new ItemStack(19);
 		ItemMeta meta = item.getItemMeta();
@@ -37,15 +41,7 @@ public class Eventos implements Listener {
 		meta.setLore(Arrays.asList("linha1"));
 		item.setItemMeta(meta);
 		EnchantGlow.addGlow(item);
-		return item;
-	}
-
-	// ganhar um item ao entrar
-	@EventHandler
-	public void event(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-
-		p.getInventory().addItem(itemPremio1());
+		p.getInventory().addItem(item);
 		// criar uma cabeça de um jogador
 		p.getInventory().addItem(Mine.newHead("Display", "EduardKIllerPro", 1, Arrays.asList("linha1")));
 	}
@@ -54,15 +50,22 @@ public class Eventos implements Listener {
 	@EventHandler
 	public void event(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
+		@SuppressWarnings("deprecation")
+		ItemStack item = new ItemStack(19);
+		ItemMeta meta1 = item.getItemMeta();
+		meta1.setDisplayName("titulo");
+		meta1.setLore(Arrays.asList("linha1"));
+		item.setItemMeta(meta1);
+		EnchantGlow.addGlow(item);
 		if (e.getAction() == Action.RIGHT_CLICK_AIR | e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
 			if (e.getMaterial() == Material.AIR)
 				return;
-			if (e.getItem().isSimilar(itemPremio1())) {
+			if (e.getItem().isSimilar(item)) {
 
 				// Se o item tiver efeito proprio fazer este comando abaixo
 				e.setCancelled(true);
-				Mine.remove(p.getInventory(), itemPremio1(), 1);
+				Mine.remove(p.getInventory(), item, 1);
 
 				// tocar um som
 				p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 2, 1);
@@ -122,8 +125,8 @@ public class Eventos implements Listener {
 
 				// quantidades aleatorias de qualquer coisa
 				int random = 5 + new Random().nextInt(10);
-				ItemStack item = new ItemStack(Material.EMERALD, random);
-				p.getInventory().addItem(item);
+				ItemStack item2 = new ItemStack(Material.EMERALD, random);
+				p.getInventory().addItem(item2);
 
 				// encher o inventario de algum item
 				Mine.fill(p.getInventory(), new ItemStack(Material.MUSHROOM_SOUP));

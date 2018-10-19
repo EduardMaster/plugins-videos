@@ -1,4 +1,4 @@
-package net.eduard.tutoriais.sistemas;
+package net.eduard.tutoriais.java;
 
 import java.util.ArrayList;
 import java.util.HashMap;

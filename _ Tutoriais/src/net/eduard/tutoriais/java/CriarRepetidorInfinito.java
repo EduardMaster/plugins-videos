@@ -1,4 +1,4 @@
-package net.eduard.tutoriais.exemplos;
+package net.eduard.tutoriais.java;
 
 
 public class CriarRepetidorInfinito {
