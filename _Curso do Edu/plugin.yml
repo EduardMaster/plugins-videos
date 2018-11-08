@@ -1,4 +1,4 @@
-name: CursoEduard
+name: EduardCurso
 description: Plugin do Curso Eduard
 main: net.eduard.curso.CursoMain
 version: 1.0

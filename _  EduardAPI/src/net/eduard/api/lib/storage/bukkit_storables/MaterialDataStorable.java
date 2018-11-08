@@ -7,14 +7,15 @@ import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.storage.Storable;
 import net.eduard.api.lib.storage.StorageAttributes;
 
-@StorageAttributes(inline=true)
+@StorageAttributes(inline = true)
 public class MaterialDataStorable implements Storable {
 
 	@Override
 	public Object newInstance() {
 
-		return new MaterialData(Material.STONE);
+		return null;
 	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public Object store(Object object) {
@@ -35,7 +36,6 @@ public class MaterialDataStorable implements Storable {
 				String[] split = string.split(":");
 				return new MaterialData(Material.getMaterial(Mine.toInt(split[0])), Mine.toByte(split[1]));
 			} catch (Exception e) {
-				new MaterialData(Material.STONE);
 			}
 
 		}

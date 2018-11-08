@@ -26,7 +26,7 @@ public class CursoMain extends JavaPlugin {
 	public void onEnable() {
 		setInstance(this);
 		setConfigs(new BukkitConfig("config.yml", this));
-		SimplesScore.ligar(this);
+//		SimplesScore.ligar(this);
 		CaixaAPI.ligar(this);
 		Bukkit.getPluginManager().registerEvents(new Eventos(), this);
 		getCommand("setspawn").setExecutor(new ComandoSetSpawn());
@@ -39,11 +39,12 @@ public class CursoMain extends JavaPlugin {
 		getCommand("warps").setExecutor(new ComandoWarps());
 		getCommand("rank").setExecutor(new ComandoRankup());
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin ativado do curso");
-		RankAPI.reload();
+//		RankAPI.reload();
 	}
 
 	public void onDisable() {
-		RankAPI.save();
+		CaixaAPI.save();
+//		RankAPI.save();
 		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin desativado do curso");
 	}
 
