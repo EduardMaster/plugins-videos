@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import net.eduard.api.config.Config;
 import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.game.Title;
 import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.api.lib.modules.VaultAPI;

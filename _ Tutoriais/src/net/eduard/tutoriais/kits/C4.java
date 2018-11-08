@@ -25,10 +25,10 @@ public class C4 extends KitAbility {
 	public C4() {
 		setIcon(Material.TNT, "§fPlante e Ative a C4");
 		add(Material.STONE_BUTTON);
-		message("§6A bomba foi plantada!");
-		jump(new Jump(false, 0.6, 0.5,
+		setMessage("§6A bomba foi plantada!");
+		setJump(new Jump(false, 0.6, 0.5,
 				Sounds.create("CLICK")));
-		explosion(new Explosion(4, false, false));
+		setExplosion(new Explosion(4, false, false));
 		setTime(2);
 		setTimes(2);
 		setClick(new PlayerClick(Material.STONE_BUTTON,new PlayerClickEffect() {
@@ -39,7 +39,7 @@ public class C4 extends KitAbility {
 					if (cooldown(player)) {
 						if (bombs.containsKey(player)) {
 							Item c4 = bombs.get(player);
-							makeExplosion(c4);
+							getExplosion().create(c4);
 							c4.remove();
 							bombs.remove(player);
 						} else {
@@ -47,9 +47,9 @@ public class C4 extends KitAbility {
 									player.getEyeLocation(), new ItemStack(materialType));
 							c4.setPickupDelay(99999);
 							Mine.setDirection(c4, player);
-							jump(c4);
+							getJump().create(c4);
 							bombs.put(player, c4);
-							sendMessage(player);
+							player.sendMessage(getMessage());
 						}
 					}
 				}

@@ -3,16 +3,15 @@ package net.eduard.api.server.factions;
 import org.bukkit.Location;
 
 import net.eduard.api.lib.game.Chunk;
-import net.eduard.api.lib.storage.Reference;
+import net.eduard.api.lib.storage.StorageAttributes;
 import net.eduard.api.lib.storage.Storable;
 
+
+@StorageAttributes(inline=true)
 public class FactionClaim implements Storable {
 
-	public boolean saveInline() {
-		return true;
-	}
 
-	@Reference
+	@StorageAttributes(reference=true)
 	private Faction faction;
 
 	private boolean onAttack;

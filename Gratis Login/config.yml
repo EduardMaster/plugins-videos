@@ -1,0 +1,12 @@
+
+
+maxTimeToRegister = 30;
+minPasswordSize = 4;
+maxPasswordSize = 12;
+canUseNumbersOnPassword = true;
+canUseLettersOnPassword = true;
+maxFailsLogin = 2;
+
+	public boolean kickOnMaxFails = true;
+	public boolean banOnMaxFails = false;
+	public boolean banIpOnMaxFails = false;

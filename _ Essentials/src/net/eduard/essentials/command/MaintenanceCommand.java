@@ -10,8 +10,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
-import me.smashmanutencao.Main;
-
 public class MaintenanceCommand implements CommandExecutor {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLogin(PlayerLoginEvent e) {

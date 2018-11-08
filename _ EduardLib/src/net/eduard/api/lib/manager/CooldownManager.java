@@ -6,16 +6,19 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 
 public class CooldownManager extends EffectManager {
 
 	private Map<UUID, TimeManager> playersInCooldown = new HashMap<>();
-	private String onCooldownMessage = "ง6Voce esta em Cooldown!";
-	private String overCooldownMessage = "ง6Voce saiu do Cooldown!";
-	private String startCooldownMessage = "ง6Voce usou a Habilidade!";
-
+	private String onCooldownMessage = "ยง6Voce esta em Cooldown!";
+	private String overCooldownMessage = "ยง6Voce saiu do Cooldown!";
+	private String startCooldownMessage = "ยง6Voce usou a Habilidade!";
 	public CooldownManager() {
+		
+	}
+	public CooldownManager(int time) {
+		setTime(time);
 	}
 
 	public String getOnCooldownMessage() {
@@ -78,7 +81,7 @@ public class CooldownManager extends EffectManager {
 			}
 		};
 		cd.setTime(getTime());
-		cd.delay(getPlugin());
+		cd.asyncDelay();
 		playersInCooldown.put(player.getUniqueId(), cd);
 		return this;
 

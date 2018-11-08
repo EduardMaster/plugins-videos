@@ -3,10 +3,11 @@ package net.eduard.essentials;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.api.lib.storage.StorageAPI;
 import net.eduard.api.server.EduardPlugin;
+import net.eduard.api.server.Systems;
 
 public class EssentialsPlugin extends EduardPlugin {
 	private static EssentialsPlugin plugin;
@@ -25,6 +26,7 @@ public class EssentialsPlugin extends EduardPlugin {
 		plugin = this;
 		commands = new Config(this, "commands.yml");
 		reload();
+		Systems.getSouls().addSouls(player, amount);
 	}
 
 	public void reloadCommmands() {

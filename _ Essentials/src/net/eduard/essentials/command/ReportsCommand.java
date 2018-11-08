@@ -2,6 +2,7 @@ package net.eduard.essentials.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -9,8 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.slimeessentials.json.FancyMessage;
 import me.slimeessentials.utils.MensagemAPI;
+import net.eduard.api.util.fancyful.FancyMessage;
 
 public class ReportsCommand implements CommandExecutor {
 

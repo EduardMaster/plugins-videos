@@ -32,14 +32,14 @@ public class Anchor extends KitAbility {
 			
 		}
 		if (no) {
-			Mine.TIME.delay(1L,new Runnable() {
+			asyncDelay(new Runnable() {
 				
 				@Override
 				public void run() {
 					e.getEntity().setVelocity(new Vector());
 					e.getDamager().setVelocity(new Vector());
 				}
-			});
+			},1L);
 		}
 	}
 	

@@ -8,8 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.nightessentials.Main;
-
 public class RestartCommand implements CommandExecutor {
 
 	public static HashMap<String, Boolean> evento = new HashMap<>();

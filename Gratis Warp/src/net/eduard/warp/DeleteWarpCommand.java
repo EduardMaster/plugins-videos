@@ -17,7 +17,7 @@ public class DeleteWarpCommand extends CommandManager {
 	public Config config = new Config("warps.yml");
 	public Sounds sound = Sounds.create("ENDERMAN_TELEPORT");
 	public String message = "§6Voce deletou o warp $warp";
-	public String messageError = "§cNão existe este Warp";
+	public String messageError = "";
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {

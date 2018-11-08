@@ -2,14 +2,12 @@ package net.eduard.api.lib.storage.java_storables;
 
 import java.sql.Timestamp;
 
-import net.eduard.api.lib.Extra;
+import net.eduard.api.lib.modules.Extra;
 import net.eduard.api.lib.storage.Storable;
+import net.eduard.api.lib.storage.StorageAttributes;
 
+@StorageAttributes(inline=true)
 public class TimeStampStorable implements Storable {
-	@Override
-	public boolean saveInline() {
-		return true;
-	}
 
 	@Override
 	public Object store(Object object) {

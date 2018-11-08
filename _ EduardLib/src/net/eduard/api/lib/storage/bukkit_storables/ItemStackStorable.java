@@ -8,21 +8,18 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.Extra;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.modules.Extra;
 import net.eduard.api.lib.storage.Storable;
 
+
 public class ItemStackStorable implements Storable {
-	
+
 	@Override
 	public Object newInstance() {
 		return new ItemStack(Material.STONE);
 	}
-	@Override
-	public Class<?> type() {
-		return ItemStack.class;
-	}
-	
+
 	@Override
 	public Object restore(Map<String, Object> map) {
 		int id = Extra.toInt(map.get("id"));
@@ -63,11 +60,6 @@ public class ItemStackStorable implements Storable {
 		return item;
 	}
 
-	@Override
-	public String alias() {
-		return "Item";
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public void store(Map<String, Object> map, Object object) {
@@ -76,6 +68,7 @@ public class ItemStackStorable implements Storable {
 			map.remove("durability");
 			map.remove("meta");
 			map.remove("type");
+			map.remove("handle");
 			map.put("id", item.getTypeId());
 			map.put("data", item.getDurability());
 			map.put("amount", item.getAmount());

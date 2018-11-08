@@ -16,7 +16,7 @@ public class WarpsCommand extends CommandManager {
 
 	}
 	public Config config = new Config("warps.yml");
-	public String message = "§bWarps disponiveis! $warps";
+	public String message = "";
 	public String messageEmpty = "§cNenhum Warp disponivel!";
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

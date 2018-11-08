@@ -2,27 +2,30 @@ package net.eduard.api.lib.manager;
 
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.modules.BukkitTimeHandler;
 
 /**
- * Controlador de Tempo, classe que controla e ajuda na criação de
+ * Controlador de Tempo, classe que controla e ajuda na criaÂ§Â§o de
  * temporarizador (Timer)<br>
- * , de atrasador (Delayer) que são Tarefa de Tempo (Task ou BukkitTask)
+ * , de atrasador (Delayer) que sÂ§o Tarefa de Tempo (Task ou BukkitTask)
  * 
  * @author Eduard-PC
  *
  */
-public class TimeManager extends EventsManager implements Runnable {
+public class TimeManager extends EventsManager implements Runnable , BukkitTimeHandler{
 
 	/**
 	 * Construtor base automatico usando o Plugin da Mine;
 	 */
 	public TimeManager() {
 		setPlugin(defaultPlugin());
+		
 	}
 
 	/**
@@ -31,7 +34,7 @@ public class TimeManager extends EventsManager implements Runnable {
 	 * @param plugin
 	 *            Plugin
 	 */
-	public TimeManager(JavaPlugin plugin) {
+	public TimeManager(Plugin plugin) {
 		setPlugin(plugin);
 	}
 
@@ -41,7 +44,7 @@ public class TimeManager extends EventsManager implements Runnable {
 	private long time = 20;
 
 	/**
-	 * Tempo anterior para fazer a compara§§o
+	 * Tempo anterior para fazer a comparaÂ§Â§o
 	 */
 	private long startTime;
 
@@ -61,8 +64,8 @@ public class TimeManager extends EventsManager implements Runnable {
 	 *            Plugin
 	 * @return Delay
 	 */
-	public BukkitTask delay(Plugin plugin) {
-		setTask(Mine.delay(plugin, time, this));
+	public BukkitTask syncDelay() {
+		setTask(syncDelay(this, this.time));
 		setStartTime(Mine.getNow());
 		return task;
 	}
@@ -74,8 +77,8 @@ public class TimeManager extends EventsManager implements Runnable {
 	 *            Plugin
 	 * @return Timer
 	 */
-	public BukkitTask timer(Plugin plugin) {
-		setTask(Mine.timer(plugin, time, this));
+	public BukkitTask syncTimer() {
+		setTask(syncTimer(this, this.time, this.time));
 		setStartTime(Mine.getNow());
 		return task;
 	}
@@ -86,8 +89,8 @@ public class TimeManager extends EventsManager implements Runnable {
 	 *            Plugin
 	 * @return Timer
 	 */
-	public BukkitTask timers(Plugin plugin) {
-		setTask(Mine.timers(plugin, time, this));
+	public BukkitTask asyncTimer() {
+		setTask(asyncTimer(this, this.time, this.time));
 		setStartTime(Mine.getNow());
 		return task;
 	}
@@ -101,27 +104,13 @@ public class TimeManager extends EventsManager implements Runnable {
 	 *            Efeito rodavel
 	 * @return Delay
 	 */
-	public BukkitTask delay(long ticks, Runnable run) {
-		setTask(Mine.delay(getPlugin(), ticks, run));
+	public BukkitTask asyncDelay() {
+		setTask(asyncDelay(this, this.time));
 		setStartTime(Mine.getNow());
 		return task;
 	}
 
-	/**
-	 * Cria um Timer com um Plugin e um Efeito rodavel
-	 * 
-	 * @param plugin
-	 *            Plugin
-	 * @param run
-	 *            Efeito rodavel
-	 * @return Timer
-	 */
-	public BukkitTask timer(long ticks, Runnable run) {
-		setTask(Mine.timer(getPlugin(), ticks, run));
-		setStartTime(Mine.getNow());
-		return task;
-	}
-
+	
 	/**
 	 * 
 	 * @return Tempo em ticks
@@ -136,6 +125,9 @@ public class TimeManager extends EventsManager implements Runnable {
 	 */
 	public boolean existsTask() {
 		return task != null;
+	}
+	public boolean isRunning() {
+		return existsTask() && Bukkit.getScheduler().isCurrentlyRunning(getTask().getTaskId());
 	}
 
 	/**
@@ -210,5 +202,7 @@ public class TimeManager extends EventsManager implements Runnable {
 		// TODO Auto-generated method stub
 
 	}
+
+	
 
 }

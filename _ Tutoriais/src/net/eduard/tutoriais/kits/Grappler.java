@@ -13,8 +13,8 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.util.Vector;
 
 import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.advanced.GrapplerHook;
 import net.eduard.api.lib.game.KitAbility;
-import net.eduard.api.util.minecraft_v1_7_R4.GrapplerHook;
 
 public class Grappler extends KitAbility {
 	public static HashMap<Player, GrapplerHook> hooks = new HashMap<>();

@@ -1,0 +1,20 @@
+messageError: "§cVoce ja esta registrado!"
+messageTimeOut: "§cVoce demorou para Registrar!"
+messageConfirm: "§cConfirme a senha!"
+messageConfirmError: "§cConfirmou a senha errada!"
+messageOnlyNumbers: "§cSó pode ter numeros na senha!"
+messageOnlyLetters: "§cSó pode ter letras na senha!"
+messageRegister:  "§aPor favor se registre no servidor /register"
+message: "§aVoce foi registrado com sucesso!"
+messageMaxPasswordSize: "§cA senha esta muito grande!"
+messageMinPasswordSize: "§cA senha esta muito pequena!"
+message: "§aVoce foi logado com sucesso!"
+messageError: "§cVoce ja esta logado!"
+messageRegister: "§cVoce não esta registrado!"
+messagePassword: "§cSenha incorreta"
+messageKickOnFails: "§cVoce errou muitas vezes a senha!"
+message: "§aVoce trocou sua senha!";
+messageError: "§cVoce ja esta logado!"
+messagePassword: "§cSenha antiga incorreta"
+messagesOnJoin:
+- Voce logou

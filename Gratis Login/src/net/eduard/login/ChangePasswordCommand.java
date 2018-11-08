@@ -7,13 +7,11 @@ import org.bukkit.entity.Player;
 import net.eduard.api.config.Config;
 import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.manager.CommandManager;
-
+ 
 public class ChangePasswordCommand extends CommandManager {
-	public String message = "§aVoce trocou sua senha!";
-	public String messageError = "§cVoce ja esta logado!";
-	public String messagePassword = "§cSenha antiga incorreta";
+	
 
-	public Config config = new Config("auth.yml");
+
 	public ChangePasswordCommand() {
 		super("changepassword");
 

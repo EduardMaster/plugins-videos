@@ -16,7 +16,11 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-
+/**
+ * Sistema de Criar Configs no BungeeCord
+ * @author Eduard
+ * @version 1.0
+ */
 public class BungeeConfigs {
 
 	private Plugin plugin;
@@ -96,7 +100,7 @@ public class BungeeConfigs {
 	}
 
 	public String toConfigMessage(String text) {
-		return text.replace("ง", "&");
+		return text.replace("ยง", "&");
 	}
 
 	public boolean delete() {

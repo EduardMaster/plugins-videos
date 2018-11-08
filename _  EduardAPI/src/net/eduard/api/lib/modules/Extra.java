@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -54,6 +55,8 @@ import java.util.zip.ZipInputStream;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
+import net.eduard.api.lib.Mine;
+
 /**
  * API contendo coisas relacionado a Textos, Numeros e Reflection
  * 
@@ -65,6 +68,24 @@ import com.google.common.io.ByteStreams;
 public final class Extra {
 
 	private static Map<String, String> replacers = new LinkedHashMap<>();
+
+	public static String formatDate(long date) {
+		Calendar calendario = Calendar.getInstance();
+		calendario.setTimeInMillis(date);
+
+		SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+
+		return formatador.format(calendario.getTime());
+	}
+
+	public static String formatHours(long milisegundos) {
+		Calendar calendario = Calendar.getInstance();
+		calendario.setTimeInMillis(milisegundos);
+
+		SimpleDateFormat formatador = new SimpleDateFormat("HH:mm:ss");
+
+		return formatador.format(calendario.getTime());
+	}
 
 	/**
 	 * 
@@ -83,6 +104,61 @@ public final class Extra {
 		}
 		return null;
 	}
+	private static Map<Class<?>, Double> classesPrice = new HashMap<>();
+
+	public static boolean hasPrice(Class<?> claz) {
+		for (Class<?> key : classesPrice.keySet()) {
+			if (key.equals(claz)) {
+				return true;
+			}
+			if (key.isAssignableFrom(claz)) {
+				return true;
+			}
+			if (claz.isAssignableFrom(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static double calculateClassValue(Class<?> claz) {
+
+//		System.out.println("Classe " + claz.getName());
+		double valor = 0.05;
+
+		if (hasPrice(claz)) {
+			while (!claz.equals(Object.class)) {
+				if (classesPrice.containsKey(claz)) {
+					valor += classesPrice.get(claz);
+				}
+				claz = claz.getSuperclass();
+
+			}
+		} else {
+			while (!claz.equals(Object.class)) {
+				for (Field field : claz.getDeclaredFields()) {
+					try {
+						if (hasPrice(field.getType())) {
+							valor += calculateClassValue(field.getType());
+						} else {
+							valor += 0.05;
+						}
+
+					} catch (Exception e) {
+//							System.out.println("Erro var " + field.getName());
+						e.printStackTrace();
+					}
+
+				}
+				valor += 0.025 * claz.getDeclaredMethods().length;
+				claz = claz.getSuperclass();
+			}
+
+		}
+		return valor;
+
+	}
+
 	/**
 	 * Descobre qual é a coluna baseada no numero
 	 * 
@@ -95,10 +171,27 @@ public final class Extra {
 		}
 		return (index % 9) + 1;
 	}
-	
-	public static int getLine(int index	) {
-		return (index/9)+1;
+
+	public static int getIndex(int column, int line) {
+		if (line <= 0) {
+			line = 1;
+		}
+
+		if (column > 9) {
+			column = 9;
+		}
+		if (column <= 0) {
+			column = 1;
+		}
+
+		int index = (line - 1) * 9;
+		return index + (column - 1);
 	}
+
+	public static int getLine(int index) {
+		return (index / 9) + 1;
+	}
+
 	/**
 	 * 
 	 * @param type Variavel {@link Type} (Classe/Tipo)
@@ -120,7 +213,7 @@ public final class Extra {
 	/**
 	 * 
 	 * @param claz Classe
-	 * @return Se a claz � um {@link Map} (Mapa)
+	 * @return Se a claz § um {@link Map} (Mapa)
 	 * 
 	 */
 	public static boolean isMap(Class<?> claz) {
@@ -130,7 +223,7 @@ public final class Extra {
 	/**
 	 * 
 	 * @param claz Classe
-	 * @return Se a claz � uma {@link List} (Lista)
+	 * @return Se a claz § uma {@link List} (Lista)
 	 * 
 	 */
 	public static boolean isList(Class<?> claz) {
@@ -163,7 +256,7 @@ public final class Extra {
 	}
 
 	/**
-	 * Salva um Objecto no Arquivo em forma de serializa��o Java
+	 * Salva um Objecto no Arquivo em forma de serializa§§o Java
 	 * 
 	 * @param object Objeto (Dado)
 	 * @param file   Arquivo
@@ -222,7 +315,7 @@ public final class Extra {
 	/**
 	 * Defaz o ZIP do Arquivo
 	 * 
-	 * @param zipIn    Input Stream (Cone��o de Algum Arquivo)
+	 * @param zipIn    Input Stream (Cone§§o de Algum Arquivo)
 	 * @param filePath Destino Arquivo
 	 */
 	public static void extractFile(ZipInputStream zipIn, String filePath) {
@@ -239,6 +332,35 @@ public final class Extra {
 		}
 
 	}
+
+//	/**
+//	 * Pega uma lista de classes de uma package
+//	 * 
+//	 * @param plugin  Plugin
+//	 * @param pkgname Package
+//	 * @return Lista de Classes
+//	 */
+//	public static List<String> getClassesName(Class<?> classe, String pkgname) {
+//		List<String> classes = new ArrayList<>();
+//		CodeSource src = classe.getProtectionDomain().getCodeSource();
+//		if (src != null) {
+//			URL resource = src.getLocation();
+//			try {
+//
+//				String resPath = resource.getPath().replace("%20", " ");
+//				String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+//				try {
+//					return getClassesName(new JarFile(jarPath), pkgname);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return classes;
+//	}
 
 	/**
 	 * Pega uma lista de classes de uma package
@@ -269,6 +391,32 @@ public final class Extra {
 		return classes;
 	}
 
+//	public static List<String> getClassesName(JarFile jar, String pack) {
+//		List<String> lista = new ArrayList<>();
+//		try {
+//			String relPath = pack.replace('.', '/');
+//			// (entryName.length() > relPath.length() + "/".length())
+//			// String resPath = resource.getPath().replace("%20", " ");
+//			// String jarPath = resPath.replaceFirst("[.]jar[!].*",
+//			// ".jar").replaceFirst("file:", "");
+//			Enumeration<JarEntry> entries = jar.entries();
+//			while (entries.hasMoreElements()) {
+//				JarEntry entry = (JarEntry) entries.nextElement();
+//				String entryName = entry.getName();
+//				if ((entryName.endsWith(".class")) && (entryName.startsWith(relPath)) && !entryName.contains("$")) {
+//					String classeName = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
+//					lista.add(classeName);
+//
+//				}
+//
+//			}
+//			jar.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return lista;
+//	}
+
 	public static List<Class<?>> getClasses(JarFile jar, String pack) {
 		List<Class<?>> lista = new ArrayList<>();
 		try {
@@ -284,7 +432,9 @@ public final class Extra {
 				if ((entryName.endsWith(".class")) && (entryName.startsWith(relPath)) && !entryName.contains("$")) {
 					String classeName = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
 					try {
-						lista.add(Extra.loadClass(classeName));
+						lista.add(Class.forName(classeName));
+					} catch (Error e) {
+						System.out.println("Error on load " + classeName);
 					} catch (Exception e) {
 						System.out.println("Failed to load " + classeName);
 					}
@@ -343,7 +493,7 @@ public final class Extra {
 	/**
 	 * Tenta carregar uma classe e a retorna
 	 * 
-	 * @param name Endere�o
+	 * @param name Endere§o
 	 * @return Classe carregada
 	 */
 	public static Class<?> loadClass(String name) {
@@ -465,7 +615,7 @@ public final class Extra {
 	/**
 	 * 
 	 * @param claz Classe
-	 * @return Se a claz � um {@link String} (Texto)
+	 * @return Se a claz § um {@link String} (Texto)
 	 * 
 	 */
 	public static boolean isString(Class<?> claz) {
@@ -475,7 +625,7 @@ public final class Extra {
 	/**
 	 * 
 	 * @param claz Classe
-	 * @return Se a claz � do tipo Primitivo ou Wrapper (Envolocro)
+	 * @return Se a claz § do tipo Primitivo ou Wrapper (Envolocro)
 	 * 
 	 */
 	public static boolean isWrapper(Class<?> claz) {
@@ -510,7 +660,7 @@ public final class Extra {
 	}
 
 	public static String toChatMessage(String text) {
-		return text.replace("&", "�");
+		return text.replace("&", "§");
 	}
 
 	public static List<String> toMessages(List<Object> list) {
@@ -565,7 +715,7 @@ public final class Extra {
 	}
 
 	/**
-	 * Formata o resultado da subtra��o de *numero antigo - numero atual)
+	 * Formata o resultado da subtra§§o de *numero antigo - numero atual)
 	 * 
 	 * @param timestamp Numero Antigo
 	 * @return Texto do numero formatado
@@ -776,7 +926,7 @@ public final class Extra {
 	}
 
 	public static String toConfigMessage(String text) {
-		return text.replace("�", "&");
+		return text.replace("§", "&");
 	}
 
 	public static String toDecimal(Object number) {
@@ -1122,7 +1272,7 @@ public final class Extra {
 	}
 
 	/**
-	 * Tipo de gera��o de Key
+	 * Tipo de gera§§o de Key
 	 * 
 	 * @author Eduard-PC
 	 *
@@ -1194,7 +1344,7 @@ public final class Extra {
 	}
 
 	/**
-	 * Pega o Ip do Cone��o do Servidor
+	 * Pega o Ip do Cone§§o do Servidor
 	 * 
 	 * @return Ip do Servidor
 	 */
@@ -1258,7 +1408,7 @@ public final class Extra {
 	 * Seta um valor para um determinado ? de um PreparedStatement
 	 * 
 	 * @param state State
-	 * @param param Posi��o
+	 * @param param Posi§§o
 	 * @param value Valor ser setado
 	 */
 	public static void setSQLValue(PreparedStatement state, int param, Object value) {
@@ -1394,13 +1544,12 @@ public final class Extra {
 
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * 
 	 */
-	
-	
+
 	public static List<Object> read(byte[] message, boolean oneLine) {
 		List<Object> lista = new ArrayList<>();
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
@@ -1455,6 +1604,8 @@ public final class Extra {
 		return stream.toByteArray();
 	}
 
-	
-	
+	public static void setPrice(Class<?> claz, double value) {
+		classesPrice.put(claz, value);
+	}
+
 }

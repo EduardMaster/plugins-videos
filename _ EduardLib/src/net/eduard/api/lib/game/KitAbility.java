@@ -12,28 +12,46 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerInteract;
-import net.eduard.api.lib.core.Mine;
 import net.eduard.api.lib.manager.CooldownManager;
+import net.eduard.api.lib.modules.KitType;
+import net.eduard.api.lib.modules.Copyable.NotCopyable;
+import net.eduard.api.lib.storage.StorageAttributes;
 
 public class KitAbility extends CooldownManager {
 
 	private String name;
 	private double price;
-	private ItemStack icon;
 	private boolean showOnGui = true;
 	private boolean enabled = true;
-	private String disabled = "ง6Habilidade desativada temporariamente!";
+	private String disabled = "ยง6Habilidade desativada temporariamente!";
 	private boolean activeCooldownOnPvP;
 	private int times = 1;
+	private ItemStack icon;
+	@NotCopyable
 	private transient PlayerInteract click;
+	@NotCopyable
 	private transient Map<Player, Integer> timesUsed = new HashMap<>();
-	private List<String> kits = new ArrayList<>();
+	@StorageAttributes(reference = true)
+	private List<KitAbility> kits = new ArrayList<>();
 	private transient List<Player> players = new ArrayList<>();
+
+	public List<KitAbility> getKits() {
+		return kits;
+	}
+	public void setKits(List<KitAbility> kits) {
+		this.kits = kits;
+	}
 	public KitAbility() {
 		this("", KitType.DEFAULT);
 
 	}
+	public KitAbility(String name) {
+		this(name, KitType.DEFAULT);
+
+	}
+
 	public KitAbility(String name, KitType type) {
 		if (name.isEmpty()) {
 			setName(getClass().getSimpleName());
@@ -44,13 +62,8 @@ public class KitAbility extends CooldownManager {
 	}
 
 	public ItemStack add(ItemStack item) {
-		getItems().add(Mine.setName(item, "งb" + name));
+		getItems().add(Mine.setName(item, "ยงb" + name));
 		return item;
-	}
-
-	public KitAbility add(KitType subKit) {
-		kits.add(subKit.name());
-		return this;
 	}
 
 	public ItemStack add(Material material) {
@@ -61,15 +74,6 @@ public class KitAbility extends CooldownManager {
 		return add(new ItemStack(material, 1, (short) data));
 	}
 
-	public KitAbility add(Player player) {
-		players.add(player);
-		return this;
-	}
-
-	public KitAbility add(String kit) {
-		kits.add(kit);
-		return this;
-	}
 
 	@Override
 	public boolean cooldown(Player player) {
@@ -108,13 +112,8 @@ public class KitAbility extends CooldownManager {
 		}
 	}
 
-
 	public ItemStack getIcon() {
 		return icon;
-	}
-
-	public List<String> getKits() {
-		return kits;
 	}
 
 	public String getName() {
@@ -153,7 +152,7 @@ public class KitAbility extends CooldownManager {
 
 	public KitAbility setIcon(Material material, int data, String... lore) {
 		icon = new ItemStack(material);
-		Mine.setName(icon, "ง6Kit " + name);
+		Mine.setName(icon, "ยง6Kit " + name);
 		Mine.setLore(icon, lore);
 		Mine.addEnchant(icon, Enchantment.DURABILITY, 10);
 		return this;
@@ -177,33 +176,42 @@ public class KitAbility extends CooldownManager {
 		this.price = price;
 		return this;
 	}
+
 	public KitAbility setTimes(int times) {
 		this.times = times;
 		return this;
 	}
+
 	public boolean isShowOnGui() {
 		return showOnGui;
 	}
+
 	public void setShowOnGui(boolean showOnGui) {
 		this.showOnGui = showOnGui;
 	}
+
 	public boolean isEnabled() {
 		return enabled;
 	}
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
 	public String getDisabled() {
 		return disabled;
 	}
+
 	public void setDisabled(String disabled) {
 		this.disabled = disabled;
 	}
+
 	public PlayerInteract getClick() {
 		return click;
 	}
+
 	public void setClick(PlayerInteract click) {
 		this.click = click;
 	}
-	
+
 }

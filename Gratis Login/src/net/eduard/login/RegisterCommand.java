@@ -13,35 +13,7 @@ import net.eduard.api.lib.game.Title;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class RegisterCommand extends CommandManager {
-	public String messageError = "§cVoce ja esta registrado!";
-	public String messageTimeOut = "§cVoce demorou para Registrar!";
-	public String messageConfirm = "§cConfirme a senha!";
-	public String messageConfirmError = "§cConfirmou a senha errada!";
-	public String messageOnlyNumbers = "§cSó pode ter numeros na senha!";
-	public String messageOnlyLetters = "§cSó pode ter letras na senha!";
-	public String messageRegister = "§aPor favor se registre no servidor /register";
-	public String message = "§aVoce foi registrado com sucesso!";
-	public String messageMaxPasswordSize = "§cA senha esta muito grande!";
-	public String messageMinPasswordSize = "§cA senha esta muito pequena!";
-	public Config config = new Config("auth.yml");
-	public int maxTimeToRegister = 30;
-	public int minPasswordSize = 4;
-	public int maxPasswordSize = 12;
-	public boolean canUseNumbersOnPassword = true;
-	public boolean canUseLettersOnPassword = true;
-	public Title title = new Title(20, 20 * 60, 20, "§cAutenticação",
-			"§c/register <senha>");
-	public Title titleSuccess = new Title(20, 20 * 3, 20, "§a§lRegistrado!",
-			"§cNao use senhas faceis!");
-	public boolean onRegisterAutoLogin = true;
 
-	public boolean needCofirmPassword = true;
-
-	private static RegisterCommand registerCommand = null;
-
-	public static RegisterCommand getRegister() {
-		return registerCommand;
-	}
 
 	public boolean isRegistered(Player p) {
 		return config.contains(p.getUniqueId().toString() + ".password");
@@ -129,25 +101,5 @@ public class RegisterCommand extends CommandManager {
 
 		return true;
 	}
-	@EventHandler
-	public void event(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-		p.setAllowFlight(true);
-		p.setFlying(true);
-		if (!isRegistered(p)) {
-			Mine.chat(p, messageRegister);
-			title.create(p);
-			Mine.TIME.delay(maxTimeToRegister * 20, new Runnable() {
-
-				@Override
-				public void run() {
-					if (!isRegistered(p)) {
-						p.kickPlayer(messageTimeOut);
-					}
-				}
-			});
-		}
-
-	}
-
+	
 }

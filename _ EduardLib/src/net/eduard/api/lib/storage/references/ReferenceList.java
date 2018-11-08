@@ -1,32 +1,24 @@
 package net.eduard.api.lib.storage.references;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ReferenceList extends ReferenceBase{
+import net.eduard.api.lib.storage.StorageAPI;
+
+public class ReferenceList extends ReferenceBase {
 
 	private List<Integer> list;
-	
-	public ReferenceList(List<Integer> list, Field field, Object instance) {
-		super(field, instance);
+
+	public ReferenceList(List<Integer> list,Object result) {
+		super(null, result);
 		setList(list);
 	}
 
 	@Override
-	public void update() {
-		List<Object> newList = new ArrayList<>();
+	public void update() { 
+		@SuppressWarnings("unchecked")
+		List<Object> newList = (List<Object>) getInstance();
 		for (Integer item : list) {
-			newList.add(getObjectById(item));
-		}
-		try {
-			getField().set(getInstance(), newList);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			newList.add(StorageAPI.getObjectById(item));
 		}
 	}
 

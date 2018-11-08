@@ -11,37 +11,39 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.game.Chunk;
-import net.eduard.api.lib.storage.Reference;
 import net.eduard.api.lib.storage.Storable;
+import net.eduard.api.lib.storage.StorageAttributes;
 import net.eduard.api.server.ranks.Rank;
 import net.eduard.api.server.ranks.RankManager;
 
+@StorageAttributes(indentificate = true)
 public class FactionManager implements Storable {
 
-	private int maxPlayerSize=15;
-	private int startingPower=5,startingPowerMax=5;
-	private ItemStack itemMaxPower,itemInstantPower;
+	private int maxPlayerSize = 15;
+	private int startingPower = 5, startingPowerMax = 5;
+	private ItemStack itemMaxPower, itemInstantPower;
 	private Map<EntityType, Double> generatorsPrices = new HashMap<>();
 	private Map<String, Faction> factions = new HashMap<>();
-	private Map<UUID, FactionPlayer> members = new HashMap<>();
+	
+	
 	private transient FactionGeneratorManager generatorManager;
 	private RankManager ranks = new RankManager();
-	@Reference
+	@StorageAttributes(reference = true)
 	private Faction warZone;
-	@Reference
+	@StorageAttributes(reference = true)
 	private Faction protectedZone;
-	@Reference
+	@StorageAttributes(reference = true)
 	private Faction freeZone;
-
+	private Map<UUID, FactionPlayer> members = new HashMap<>();
 
 	public Rank getRank(FactionPlayer player) {
 		return ranks.getPlayerRank(player.getPlayerData());
 	}
 
 	public FactionManager() {
-		warZone = new Faction("Zona de Guerra", "§4Zona de Guerra");
-		protectedZone = new Faction("Zona Protegida", "§6Zona Protegida!");
-		freeZone = new Faction("Zona Livre", "§2Zona Livre");
+		warZone = new Faction("Zona de Guerra", "Â§4Zona de Guerra");
+		protectedZone = new Faction("Zona Protegida", "Â§6Zona Protegida!");
+		freeZone = new Faction("Zona Livre", "Â§2Zona Livre");
 		factions.put("zonadeguerra", warZone);
 		factions.put("zonaprotegida", protectedZone);
 		factions.put("zonalivre", freeZone);
@@ -50,34 +52,33 @@ public class FactionManager implements Storable {
 		freeZone.setManager(this);
 
 		Rank rankLeader = new Rank("leader", 4);
-		
+
 		rankLeader.setPrefix("#");
-		rankLeader.setHeadName("Líder");
+		rankLeader.setHeadName("LÂ§der");
 		rankLeader.setPreviousRank("captain");
 		ranks.getRanks().put("leader", rankLeader);
 
 		Rank rankMember = new Rank("member", 2);
 		rankMember.setPrefix("+");
 		rankMember.setHeadName("Membro");
-	
+
 		rankMember.setNextRank("captain");
 		ranks.getRanks().put("member", rankMember);
-		
+
 		Rank rankRecruit = new Rank("recruit", 1);
 		rankRecruit.setPrefix("-");
 		rankRecruit.setNextRank("member");
 		rankRecruit.setHeadName("Recruta");
 
 		ranks.getRanks().put("recruit", rankRecruit);
-		
+
 		Rank rankCaptain = new Rank("captain", 3);
 		rankCaptain.setPrefix("*");
 		rankCaptain.setNextRank("leader");
-		rankCaptain.setHeadName("Capitão");
-	
+		rankCaptain.setHeadName("CapitÂ§o");
+
 		ranks.getRanks().put("captain", rankCaptain);
-		
-		
+
 		ranks.setFirst("recruit");
 		ranks.setLast("leader");
 		for (EntityType e : EntityType.values()) {
@@ -122,8 +123,6 @@ public class FactionManager implements Storable {
 
 	public FactionPlayer getMember(OfflinePlayer player) {
 		FactionPlayer member = members.get(player.getUniqueId());
-		// Mine.console("§c"+ranks.getFirstRank());
-		// Mine.console("§e"+ranks.getLastRank());
 		if (member == null) {
 			member = new FactionPlayer();
 			member.setPlayerData(player);
@@ -137,8 +136,6 @@ public class FactionManager implements Storable {
 
 	public FactionPlayer getMember(Player player) {
 		FactionPlayer member = members.get(player.getUniqueId());
-		// Mine.console("§c"+ranks.getFirst());
-		// Mine.console("§e"+ranks.getRanks());
 		if (member == null) {
 			member = new FactionPlayer(player);
 			member.setManager(this);

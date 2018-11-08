@@ -2,59 +2,90 @@ package net.eduard.api.server;
 
 import java.util.List;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.manager.TimeManager;
+import net.eduard.api.lib.config.Config;
+import net.eduard.api.lib.modules.BukkitTimeHandler;
+import net.eduard.api.lib.modules.Extra;
 import net.eduard.api.lib.storage.StorageAPI;
+
 /**
  * Representa os plugins feitos pelo Eduard
+ * 
  * @version 1.0
  * @since 4.0
  * @author Eduard
  *
  */
-public abstract class EduardPlugin extends JavaPlugin {
+public abstract class EduardPlugin extends JavaPlugin implements BukkitTimeHandler {
 
-	protected TimeManager time;
 	protected Config config;
 	protected Config messages;
+	protected Config storage;
 	protected boolean free;
-	
-	
 
-	public boolean isFree() {
-		
-		return free;
+	public boolean isEditable() {
+		return !config.getKeys().isEmpty();
 	}
 
+	public boolean hasMessages() {
+		return !messages.getKeys().isEmpty();
+	}
 
+	public boolean hasStorage() {
+		return !storage.getKeys().isEmpty();
+	}
+	public Config getStorage() {
+		return storage;
+	}
+
+	public boolean isFree() {
+		return free;
+	}
 
 	public void setFree(boolean free) {
 		this.free = free;
 	}
 
-
+	public Plugin getPlugin() {
+		return this;
+	}
 
 	public void onLoad() {
 		config = new Config(this);
 		messages = new Config(this, "messages.yml");
-		time = new TimeManager(this);
+		storage = new Config(this, "storage.yml");
 	}
-	
-
 
 	public void registerPackage(String packname) {
 		StorageAPI.registerPackage(getClass(), packname);
 	}
 
-	public List<Class<?>> getClasses(String clazzName) {
-		return Mine.getClasses(this, clazzName);
+	public List<Class<?>> getClasses(String pack) {
+		return Mine.getClasses(this, pack);
 	}
 
-	public List<Class<?>> getClasses(JavaPlugin plugin, Class<?> clazz) {
-		return Mine.getClasses(plugin, clazz);
+	public double getPrice() {
+
+		double valor = 0;
+		List<Class<?>> classes = Mine.getClasses(this, getClass());
+		for (Class<?> claz : classes) {
+			valor += Extra.calculateClassValue(claz);
+		}
+		if (hasMessages()) {
+			valor += 5;
+		}
+		if (isEditable()) {
+			valor += 5;
+		}
+		if (hasStorage()) {
+			valor += 10;
+		}
+		valor += 5;
+		return valor;
+
 	}
 
 	public void save() {
@@ -62,6 +93,10 @@ public abstract class EduardPlugin extends JavaPlugin {
 	}
 
 	public void reload() {
+	}
+
+	public void configDefault() {
+
 	}
 
 	public boolean getBoolean(String path) {
@@ -74,10 +109,6 @@ public abstract class EduardPlugin extends JavaPlugin {
 
 	public List<String> getMessages(String path) {
 		return messages.getMessages(path);
-	}
-
-	public TimeManager getTime() {
-		return time;
 	}
 
 	public Config getMessages() {

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
-import net.eduard.api.lib.modules.SpigotAPI.Chat;
 import net.eduard.chat.Main;
 
 public class TellCommand extends CommandManager {
@@ -36,9 +35,9 @@ public class TellCommand extends CommandManager {
 					} else {
 						Main.getInstance().getLastPrivateMessage().put(target, p);
 						Mine.chat(sender, this.message.replace("$target", target.getName())
-								.replace("$>", Chat.getArrowRight()).replace("$message", message));
+								.replace("$>", "").replace("$message", message));
 						Mine.chat(target, messageTarget.replace("$player", sender.getName())
-								.replace("$>", Chat.getArrowRight()).replace("$message", message));
+								.replace("$>", "").replace("$message", message));
 					}
 				}
 			}

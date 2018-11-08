@@ -3,20 +3,18 @@ package net.eduard.api.lib.game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import net.eduard.api.lib.Copyable;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.modules.Copyable;
 import net.eduard.api.lib.storage.Storable;
+import net.eduard.api.lib.storage.StorageAttributes;
 
+@StorageAttributes(inline=true)
 public class Chunk implements Storable, Copyable {
 	private String world;
 	private int x, z;
 
 	public org.bukkit.Chunk getChunk() {
 		return Bukkit.getWorld(world).getChunkAt(x, z);
-	}
-	@Override
-	public boolean saveInline() {
-		return true;
 	}
 
 	public Chunk copy() {

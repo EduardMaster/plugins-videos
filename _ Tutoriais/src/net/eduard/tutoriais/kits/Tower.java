@@ -10,8 +10,8 @@ public class Tower extends KitAbility{
 
 	public Tower() {
 		setIcon(Material.DIAMOND_BOOTS, "§fJunte a força do Stomper com o Worm");
-		add(KitType.STOMPER);
-		add(KitType.WORM);
+//		add(KitType.STOMPER);
+//		add(KitType.WORM);
 	}
 	
 	

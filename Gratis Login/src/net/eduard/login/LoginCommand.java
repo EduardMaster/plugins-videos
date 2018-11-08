@@ -29,22 +29,9 @@ import net.eduard.api.lib.game.Title;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class LoginCommand extends CommandManager {
-	public String message = "§aVoce foi logado com sucesso!";
-	public String messageError = "§cVoce ja esta logado!";
-	public String messageRegister = "§cVoce não esta registrado!";
-	public String messagePassword = "§cSenha incorreta";
-	private List<String> messagesOnJoin  = new ArrayList<>();
-	public String messageKickOnFails = "§cVoce errou muitas vezes a senha!";
-	public int maxFailsLogin = 2;
 
-	public Title title = new Title(20, 20 * 60, 20, "§cAutenticação", "§c/login <senha>");
-	public Title titleSuccess = new Title(20, 20 * 3, 20, "§a§lAutenticado!", "§6§lSeja bem vindo novamente!");
-	public Config config = new Config("auth.yml");
-	public boolean kickOnMaxFails = true;
-	public boolean banOnMaxFails = false;
-	public boolean banIpOnMaxFails = false;
-	public static final Map<Player, String> PLAYERS_LOGGED = new HashMap<>();
-	public static final Map<Player, Integer> FAILS_LOGINS = new HashMap<>();
+	
+	
 
 	public LoginCommand() {
 		super("login");

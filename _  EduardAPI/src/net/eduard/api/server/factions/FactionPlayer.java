@@ -6,15 +6,15 @@ import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.storage.Reference;
+import net.eduard.api.lib.storage.StorageAttributes;
 import net.eduard.api.lib.storage.Storable;
 import net.eduard.api.server.ranks.Rank;
-
+@StorageAttributes(indentificate=true)
 public class FactionPlayer implements Storable {
 
-	@Reference
+	@StorageAttributes(reference=true)
 	private FactionManager manager;
-	@Reference
+	@StorageAttributes(reference=true)
 	private Faction faction;
 	private OfflinePlayer playerData;
 	private long lastLogin;

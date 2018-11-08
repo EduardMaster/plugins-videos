@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import net.eduard.api.config.Config;
 import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class ConfigReloadCommand extends CommandManager {
@@ -27,7 +27,7 @@ public class ConfigReloadCommand extends CommandManager {
 				if (args.length == 2) {
 					Config.reloadConfigs(pl);
 					Mine.chat(sender,
-							"�aRecarregando todas configura��es do Plugin "
+							"§aRecarregando todas configura§§es do Plugin "
 									+ pl.getName());
 				} else {
 

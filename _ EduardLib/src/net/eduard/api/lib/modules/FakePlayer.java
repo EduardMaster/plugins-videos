@@ -1,6 +1,7 @@
 package net.eduard.api.lib.modules;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -10,8 +11,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
- * Jogador Off Ficticio
- * 
+ * Jogador Off Ficticio<br>
+ *  nome;id
  * @author Eduard-PC
  *
  */
@@ -19,13 +20,14 @@ public class FakePlayer implements OfflinePlayer {
 
 	private String name;
 	private UUID id;
-
+//
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	public FakePlayer(String name) {
 		this.name = name;
+		setIdByName();
 
 	}
 
@@ -92,13 +94,16 @@ public class FakePlayer implements OfflinePlayer {
 	}
 
 	@Override
-	public void setOp(boolean arg0) {
+	public void setOp(boolean op) {
 
 	}
 
 	@Override
 	public Map<String, Object> serialize() {
-		return null;
+		HashMap<String, Object> mapaNovo = new HashMap<>();
+		mapaNovo.put("name", this.name);
+		mapaNovo.put("uuid", this.getUniqueId());
+		return mapaNovo;
 	}
 
 	@Override
@@ -123,8 +128,15 @@ public class FakePlayer implements OfflinePlayer {
 
 	@Override
 	public Player getPlayer() {
-		Player player = Bukkit.getPlayer(id);
-		return player == null ? Bukkit.getPlayer(name) : player;
+		Player player = null;
+		if (id != null)
+			player = Bukkit.getPlayer(id);
+		if (player != null)
+			return player;
+		if (name != null) {
+			player = Bukkit.getPlayer(name);
+		}
+		return player;
 	}
 
 	@Override

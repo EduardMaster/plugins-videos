@@ -5,27 +5,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.ConfigAPI;
-import net.eduard.curso.caixa.CaixaAPI;
+import net.eduard.api.lib.BukkitConfig;
+import net.eduard.curso.apis.CaixaAPI;
+import net.eduard.curso.apis.RankAPI;
+import net.eduard.curso.comandos.ComandoDeleteWarp;
+import net.eduard.curso.comandos.ComandoLogin;
+import net.eduard.curso.comandos.ComandoRankup;
+import net.eduard.curso.comandos.ComandoRegister;
+import net.eduard.curso.comandos.ComandoSetSpawn;
+import net.eduard.curso.comandos.ComandoSetWarp;
+import net.eduard.curso.comandos.ComandoSpawn;
+import net.eduard.curso.comandos.ComandoWarps;
 import net.eduard.curso.eventos.Eventos;
-import net.eduard.curso.exemplos.SimplesScore;
-import net.eduard.curso.login.ComandoLogin;
-import net.eduard.curso.login.ComandoRegister;
-import net.eduard.curso.rankup.ComandoRankup;
-import net.eduard.curso.rankup.RankAPI;
-import net.eduard.curso.spawn.ComandoSetSpawn;
-import net.eduard.curso.spawn.ComandoSpawn;
-import net.eduard.curso.warp.ComandoDeleteWarp;
-import net.eduard.curso.warp.ComandoSetWarp;
-import net.eduard.curso.warp.ComandoWarps;
+import net.eduard.curso.manager.SimplesScore;
 
 public class CursoMain extends JavaPlugin {
 	private static CursoMain instance;
-	private static ConfigAPI configs;
+	private static BukkitConfig configs;
 
 	public void onEnable() {
 		setInstance(this);
-		setConfigs(new ConfigAPI("config.yml", this));
+		setConfigs(new BukkitConfig("config.yml", this));
 		SimplesScore.ligar(this);
 		CaixaAPI.ligar(this);
 		Bukkit.getPluginManager().registerEvents(new Eventos(), this);
@@ -55,11 +55,11 @@ public class CursoMain extends JavaPlugin {
 		CursoMain.instance = instance;
 	}
 
-	public static ConfigAPI getConfigs() {
+	public static BukkitConfig getConfigs() {
 		return configs;
 	}
 
-	public static void setConfigs(ConfigAPI configs) {
+	public static void setConfigs(BukkitConfig configs) {
 		CursoMain.configs = configs;
 	}
 

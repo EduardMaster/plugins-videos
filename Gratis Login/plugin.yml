@@ -1,0 +1,17 @@
+name: EduLogin
+description: Sistema de Login funcional
+main: net.eduard.login.LoginPlugin
+version: 1.0
+authors: [Eduard]
+author: Eduard
+website: https://www.youtube.com/user/EduTutoriaisHD
+depend: [EduardAPI]
+commands:
+  login:
+    description: Entrar no servidor
+    permission: spawn.use
+    usage: /<command>
+  register:
+    usage: /<command>
+    permission: spawn.set
+    description: Registrar no servidor
