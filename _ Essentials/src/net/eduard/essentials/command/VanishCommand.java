@@ -13,8 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import me.slimeessentials.utils.MensagemAPI;
-
 public class VanishCommand implements CommandExecutor, Listener {
 
 	public static List<String> vanish = new ArrayList<>();
@@ -54,7 +52,7 @@ public class VanishCommand implements CommandExecutor, Listener {
 					}
 				} else {
 
-					MensagemAPI.semPermissao(p, "Moderador");
+//					MensagemAPI.semPermissao(p, "Moderador");
 
 				}
 			}

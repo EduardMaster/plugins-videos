@@ -60,7 +60,7 @@ public class AutoPickup extends EventsManager {
 					}
 
 				}
-			}.runTaskLaterAsynchronously(EssentialsPlugin.getPlugin(), 1);
+			}.runTaskLaterAsynchronously(EssentialsPlugin.getInstance(), 1);
 		}
 	}
 }

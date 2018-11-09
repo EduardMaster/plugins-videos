@@ -36,9 +36,6 @@ package net.eduard.tutoriais.util.worldedit;
 import java.util.Collections;
 import java.util.List;
 
-import net.eduard.api.util.worldedit.NBTUtils;
-import net.eduard.api.util.worldedit.Tag;
-
 /**
  * The <code>TAG_List</code> tag.
  * @author Graham Edgecombe

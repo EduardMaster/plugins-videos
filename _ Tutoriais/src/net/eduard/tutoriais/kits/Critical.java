@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.Effects;
+import net.eduard.api.lib.game.KitAbility;
 
 public class Critical extends KitAbility {
 	public double chance = 0.3;

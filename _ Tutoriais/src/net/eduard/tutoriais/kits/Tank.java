@@ -7,8 +7,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Explosion;
+import net.eduard.api.lib.game.KitAbility;
 
 public class Tank extends KitAbility {
 

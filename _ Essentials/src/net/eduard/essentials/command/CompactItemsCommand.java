@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.smashapi.apis.MessageAPI;
-
 public class CompactItemsCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -128,7 +126,7 @@ public class CompactItemsCommand implements CommandExecutor {
 					}
 				} else {
 
-					MessageAPI.semPermissao(p, "Paladino");
+//					MessageAPI.semPermissao(p, "Paladino");
 
 				}
 			}

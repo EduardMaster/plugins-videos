@@ -123,7 +123,7 @@ public class CombatLog implements Listener {
 							}
 							tempo--;
 						}
-					}.runTaskTimerAsynchronously(EssentialsPlugin.getPlugin(), 20, 20 * 1);
+					}.runTaskTimerAsynchronously(EssentialsPlugin.getInstance(), 20, 20 * 1);
 				}
 
 				if (!players.contains(damager)) {
@@ -153,7 +153,7 @@ public class CombatLog implements Listener {
 							}
 							tempo--;
 						}
-					}.runTaskTimerAsynchronously(EssentialsPlugin.getPlugin(), 20, 20 * 1);
+					}.runTaskTimerAsynchronously(EssentialsPlugin.getInstance(), 20, 20 * 1);
 				}
 			}
 		}

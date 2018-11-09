@@ -1,7 +1,5 @@
 package net.eduard.tutoriais.util.worldedit;
 
-import net.eduard.api.util.worldedit.Tag;
-
 /*
  * JNBT License
  * 

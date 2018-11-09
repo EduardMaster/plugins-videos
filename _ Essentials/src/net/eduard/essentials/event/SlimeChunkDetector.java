@@ -16,7 +16,7 @@ import net.eduard.essentials.command.SlimeChunkCommand;
 public class SlimeChunkDetector extends EventsManager {
 	@EventHandler
 	public void split(SlimeSplitEvent e) {
-		e.setCancelled(EssentialsPlugin.getPlugin().getConfigs().getBoolean("no slime split"));
+		e.setCancelled(EssentialsPlugin.getInstance().getConfigs().getBoolean("no slime split"));
 	}
 
 	@EventHandler(ignoreCancelled = true)

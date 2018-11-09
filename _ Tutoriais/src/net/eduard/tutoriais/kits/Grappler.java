@@ -2,7 +2,6 @@ package net.eduard.tutoriais.kits;
 
 import java.util.HashMap;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +9,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.util.Vector;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.advanced.GrapplerHook;

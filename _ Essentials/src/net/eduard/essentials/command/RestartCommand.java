@@ -8,8 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class RestartCommand implements CommandExecutor {
+import net.eduard.essentials.EssentialsPlugin;
 
+public class RestartCommand implements CommandExecutor {
+private static boolean reiniciando = false;
 	public static HashMap<String, Boolean> evento = new HashMap<>();
 
 	public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
@@ -26,18 +28,18 @@ public class RestartCommand implements CommandExecutor {
 
 			if (p.hasPermission("nightmc.restart")) {
 				if (args[0].equalsIgnoreCase("iniciar")) {
-					if (Main.reinicio) {
-						sender.sendMessage("§cO restart ja esta ocorrendo.");
-					} else {
-						Main.reinicio = true;
-						evento.put("Restart", Boolean.valueOf(true));
-						anuncio(5);
-					}
+//					if (reiniciando) {
+//						sender.sendMessage("§cO restart ja esta ocorrendo.");
+//					} else {
+//						reiniciando = true;
+//						evento.put("Restart", Boolean.valueOf(true));
+//						anuncio(5);
+//					}
 
 				}
 
-				if ((args[0].equalsIgnoreCase("Cancelar")) && (Main.reinicio)) {
-					Main.reinicio = false;
+				if ((args[0].equalsIgnoreCase("Cancelar")) && (reiniciando)) {
+					reiniciando = false;
 					Bukkit.broadcastMessage("");
 					Bukkit.broadcastMessage("   \u00A7e* \u00A7e\u00A7lREINICIANDO");
 					Bukkit.broadcastMessage("   \u00A7e* \u00A7eO restart foi cancelado!");
@@ -51,7 +53,7 @@ public class RestartCommand implements CommandExecutor {
 
 	public void anuncio(final int quantidade) {
 		if (quantidade == 0) {
-			Main.reinicio = false;
+			reiniciando = false;
 			return;
 		}
 
@@ -75,7 +77,7 @@ public class RestartCommand implements CommandExecutor {
 			Bukkit.broadcastMessage("   \u00A7e* \u00A7eServidor reiniciando em 30 segundos!");
 			Bukkit.broadcastMessage(" ");
 
-			Main.reinicio = true;
+			reiniciando = true;
 		}
 
 		if (quantidade == 1) {
@@ -93,13 +95,13 @@ public class RestartCommand implements CommandExecutor {
 			Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "stop");
 		}
 
-		Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskLater(EssentialsPlugin.getInstance(), new Runnable() {
 			public void run() {
 				if (quantidade == 0) {
 					evento.put("Restart", Boolean.valueOf(false));
 					return;
 				}
-				if (Main.reinicio)
+				if (reiniciando)
 					anuncio(quantidade - 1);
 			}
 		}, 600L);

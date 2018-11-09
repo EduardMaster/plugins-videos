@@ -36,8 +36,6 @@ package net.eduard.tutoriais.util.worldedit;
 import java.util.Collections;
 import java.util.Map;
 
-import net.eduard.api.util.worldedit.Tag;
-
 /**
  * The <code>TAG_Compound</code> tag.
  * @author Graham Edgecombe

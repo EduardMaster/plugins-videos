@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import net.eduard.api.lib.Mine;
+import net.eduard.essentials.EssentialsPlugin;
 
 public class LagReductor implements Listener{
 	@EventHandler
@@ -38,7 +39,7 @@ public class LagReductor implements Listener{
 			}
 			item.setPickupDelay(20);
 			item.setMetadata("ReduzirLag",
-					new FixedMetadataValue(Main.getInstance(), amount));
+					new FixedMetadataValue(EssentialsPlugin.getInstance(), amount));
 			Mine.broadcast("§c"+amount);
 			result.setAmount(1);
 			item.setItemStack(result);

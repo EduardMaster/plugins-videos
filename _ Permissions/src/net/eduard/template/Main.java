@@ -1,8 +1,6 @@
 
 package net.eduard.template;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import net.eduard.api.server.EduardPlugin;
 import net.eduard.template.command.TemplateCommand;
 import net.eduard.template.event.TemplateEvents;
@@ -12,9 +10,7 @@ public class Main extends EduardPlugin  {
 	public static Main getInstance() {
 		return plugin;
 	}
-	public static Main getPlugin() {
-		return JavaPlugin.getPlugin(Main.class);
-	}
+
 	@Override
 	public void onEnable() {
 		plugin = this;

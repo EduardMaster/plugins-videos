@@ -17,16 +17,13 @@ public class EssentialsPlugin extends EduardPlugin {
 		return plugin;
 	}
 
-	public static EssentialsPlugin getPlugin() {
-		return JavaPlugin.getPlugin(EssentialsPlugin.class);
-	}
+
 
 	@Override
 	public void onEnable() {
 		plugin = this;
 		commands = new Config(this, "commands.yml");
 		reload();
-		Systems.getSouls().addSouls(player, amount);
 	}
 
 	public void reloadCommmands() {

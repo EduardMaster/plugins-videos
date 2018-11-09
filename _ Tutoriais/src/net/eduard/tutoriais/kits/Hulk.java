@@ -8,8 +8,8 @@ import org.bukkit.util.Vector;
 
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Jump;
+import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
 
 public class Hulk extends KitAbility {

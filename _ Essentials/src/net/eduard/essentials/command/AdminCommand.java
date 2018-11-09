@@ -135,14 +135,14 @@ public class AdminCommand extends CommandManager {
 					Mine.show(player);
 					Mine.makeInvunerable(player, 1);
 					Mine.chat(player, "§6Troca rapida ativada!");
-					Mine.TIME.delay(20, new Runnable() {
+					Mine.TIME.asyncDelay(new Runnable() {
 
 						@Override
 						public void run() {
 							Mine.hide(player);
 							Mine.chat(player, "§6Troca rapida desativada!");
 						}
-					});
+					}, 20);
 				}
 			}
 

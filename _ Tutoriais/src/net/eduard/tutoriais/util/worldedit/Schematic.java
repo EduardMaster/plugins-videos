@@ -13,13 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import net.eduard.api.util.worldedit.ByteArrayTag;
-import net.eduard.api.util.worldedit.CompoundTag;
-import net.eduard.api.util.worldedit.DataException;
-import net.eduard.api.util.worldedit.NBTInputStream;
-import net.eduard.api.util.worldedit.ShortTag;
-import net.eduard.api.util.worldedit.Tag;
-
 public class Schematic
 {
   private short[] blocks;

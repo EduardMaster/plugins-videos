@@ -9,12 +9,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.nightessentials.utilidades.API;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import nightclan.config.RexAPI;
 
 public class TeleportRequestCommand implements CommandExecutor {
 
@@ -35,7 +33,7 @@ public class TeleportRequestCommand implements CommandExecutor {
 						long diff = (System.currentTimeMillis()
 								- ((Long) this.tpaCooldown.get(sender.getName())).longValue()) / 1000L;
 						if (diff < cooldown) {
-							RexAPI.sendActionBar(p, "§cAguarde " + cooldown + " para usar o tpa novamente.");
+//							RexAPI.sendActionBar(p, "§cAguarde " + cooldown + " para usar o tpa novamente.");
 							return false;
 						}
 					}
@@ -51,17 +49,17 @@ public class TeleportRequestCommand implements CommandExecutor {
 						sender.sendMessage(JogadorVoce());
 						return false;
 					}
-					if (!API.tpa(target)) {
-						sender.sendMessage("§cO jogador está com o teleporte desativo.");
-						return true;
-					}
+//					if (!API.tpa(target)) {
+//						sender.sendMessage("§cO jogador está com o teleporte desativo.");
+//						return true;
+//					}
 					sendRequest(p, target);
 
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), new Runnable() {
-						public void run() {
-							killRequest(target.getName());
-						}
-					}, keepAlive);
+//					Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), new Runnable() {
+//						public void run() {
+//							killRequest(target.getName());
+//						}
+//					}, keepAlive);
 
 					this.tpaCooldown.put(p.getName(), Long.valueOf(System.currentTimeMillis()));
 				} else {

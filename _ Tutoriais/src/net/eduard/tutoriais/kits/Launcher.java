@@ -7,10 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Jump;
+import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.lib.game.LaunchPadManager;
 import net.eduard.api.lib.game.Sounds;
-import net.eduard.api.lib.manager.LaunchPadManager;
 
 @SuppressWarnings("unused")
 public class Launcher extends KitAbility {

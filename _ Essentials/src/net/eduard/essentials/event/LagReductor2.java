@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import net.eduard.api.lib.Mine;
+import net.eduard.essentials.EssentialsPlugin;
 
 public class LagReductor2 implements Listener {
 	@SuppressWarnings("unchecked")
@@ -67,7 +68,7 @@ public class LagReductor2 implements Listener {
 			stack.setAmount(1);
 			item.setItemStack(stack);
 			item.setMetadata("LagReductor",
-					new FixedMetadataValue(Main.getInstance(), lista));
+					new FixedMetadataValue(EssentialsPlugin.getInstance(), lista));
 
 		}
 	}

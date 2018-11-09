@@ -7,9 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginDisableEvent;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.click.PlayerEffect;
 import net.eduard.api.lib.config.Config;
-import net.eduard.api.lib.game.Delay;
 import net.eduard.api.lib.game.Sounds;
 import net.eduard.api.lib.game.Title;
 import net.eduard.api.lib.manager.CommandManager;
@@ -18,16 +16,15 @@ public class HomeCommand extends CommandManager {
 	public HomeCommand() {
 		super("home");
 	}
+
 	public Config config = new Config("homes.yml");
 	public Sounds sound = Sounds.create("ENDERMAN_TELEPORT");
 	public String message = "§6Voce teleportado para sua Home!";
 	public String messageError = "§cSua home não foi setada!";
-	public Delay delay = new Delay();
-	public Title title = new Title(20, 20 * 2, 20, "§6Casa §e$home",
-			"§bTeleportado para sua casa §3$home!");
+	public Title title = new Title(20, 20 * 2, 20, "§6Casa §e$home", "§bTeleportado para sua casa §3$home!");
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command command,
-			String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			String home = "home";
@@ -37,21 +34,20 @@ public class HomeCommand extends CommandManager {
 			String path = p.getUniqueId().toString() + "." + home;
 			if (config.contains(path)) {
 				final String homex = home;
-				delay.effect(p, new PlayerEffect() {
-					
-					@Override
-					public void effect(Player p) {
+				Mine.TIME.asyncDelay(new Runnable() {
+					public void run() {
 						p.teleport(config.getLocation(path));
 						sound.create(p);
 						Mine.chat(p, message.replace("$home", homex));
-						Mine.sendTitle(p,
-								title.getTitle().replace("$home", homex),
-								title.getSubTitle().replace("$home", homex),
-								title.getFadeIn(), title.getStay(), title.getFadeOut());
-					
+						Mine.sendTitle(p, title.getTitle().replace("$home", homex),
+								title.getSubTitle().replace("$home", homex), title.getFadeIn(), title.getStay(),
+								title.getFadeOut());
+
 					}
-				});
-			
+				}
+
+						, 20);
+
 			} else {
 				Mine.chat(p, messageError.replace("$home", home));
 				config.remove(path);
@@ -61,6 +57,7 @@ public class HomeCommand extends CommandManager {
 
 		return true;
 	}
+
 	@EventHandler
 	public void event(PluginDisableEvent e) {
 		if (e.getPlugin().equals(getPlugin())) {
