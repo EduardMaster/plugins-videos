@@ -7,10 +7,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.warp.Main;
+import net.eduard.warp.WarpPlugin;
 
 public class DeleteWarpCommand implements CommandExecutor {
 
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label,
 		String[] args) {
@@ -18,11 +19,11 @@ public class DeleteWarpCommand implements CommandExecutor {
 			return false;
 		}
 		String name = args[0];
-		if (!Main.warps.containsKey(name.toLowerCase())) {
+		if (!WarpPlugin.getWarps().containsKey(name.toLowerCase())) {
 			sender.sendMessage("§cNão existe esse Warp §4" + name);
 		} else {
-			Main.warps.remove(name.toLowerCase());
-			new File(Main.plugin.getDataFolder(),"/Warps/"+name.toLowerCase()+".yml").delete();
+			WarpPlugin.getWarps().remove(name.toLowerCase());
+			new File(WarpPlugin.getInstance().getDataFolder(),"/Warps/"+name.toLowerCase()+".yml").delete();
 			sender.sendMessage("§bWarp deletada §3"+name);
 		}
 		

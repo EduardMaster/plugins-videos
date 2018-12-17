@@ -16,9 +16,9 @@ public class SpawnCommand extends CommandManager {
 	}
 
 	public void teleport(Player p) {
-		p.teleport(SpawnPlugin.getPlugin().getConfigs().getLocation("Spawn"));
-		p.sendMessage(SpawnPlugin.getPlugin().message("Spawn teleport"));
-		SpawnPlugin.getPlugin().getConfigs().getSound("Sound on teleport").create(p);
+		p.teleport(SpawnPlugin.getInstance().getConfigs().getLocation("Spawn"));
+		p.sendMessage(SpawnPlugin.getInstance().message("Spawn teleport"));
+		SpawnPlugin.getInstance().getConfigs().getSound("Sound on teleport").create(p);
 
 	}
 
@@ -26,21 +26,21 @@ public class SpawnCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (Mine.noConsole(sender)) {
 			Player p = (Player) sender;
-			if (SpawnPlugin.getPlugin().getConfigs().contains("Spawn")) {
-				if (SpawnPlugin.getPlugin().getConfigs().getBoolean("Teleport delay")) {
-					int delay = SpawnPlugin.getPlugin().getConfigs().getInt("Teleport delay seconds");
-					Mine.TIME.delays(delay * 20L, new Runnable() {
+			if (SpawnPlugin.getInstance().getConfigs().contains("Spawn")) {
+				if (SpawnPlugin.getInstance().getConfigs().getBoolean("Teleport delay")) {
+					int delay = SpawnPlugin.getInstance().getConfigs().getInt("Teleport delay seconds");
+					Mine.TIME.asyncDelay(new Runnable() {
 						@Override
 						public void run() {
 							teleport(p);
 						}
-					});
-					p.sendMessage(SpawnPlugin.getPlugin().message("Spawn delay teleport").replace("$time", "" + delay));
+					}, delay * 20L);
+					p.sendMessage(SpawnPlugin.getInstance().message("Spawn delay teleport").replace("$time", "" + delay));
 				} else
 					teleport(p);
 
 			} else {
-				p.sendMessage(SpawnPlugin.getPlugin().message("Spawn not setted"));
+				p.sendMessage(SpawnPlugin.getInstance().message("Spawn not setted"));
 
 			}
 

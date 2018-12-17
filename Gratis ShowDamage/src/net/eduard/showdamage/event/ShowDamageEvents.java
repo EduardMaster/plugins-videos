@@ -15,8 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.eduard.api.lib.SpigotAPI.Chat;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.EventsManager;
 import net.eduard.showdamage.Main;
 
@@ -46,7 +45,7 @@ public class ShowDamageEvents extends EventsManager {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
 			
-			Mine.sendActionBar(p, "§e" + (formato.format(dano / 2)) + "§c§l" + Chat.getHeart());
+			Mine.sendActionBar(p, "§e" + (formato.format(dano / 2)) + "§c§l<3"  );
 			
 		}else {
 			if (e.getDamager() instanceof Projectile) {
@@ -54,7 +53,7 @@ public class ShowDamageEvents extends EventsManager {
 				
 				if (projectile.getShooter() instanceof Player) {
 					Player p = (Player) projectile.getShooter();
-					Mine.sendActionBar(p, "§e" + (formato.format(dano / 2)) + "§c§l" + Chat.getRedHeart());
+					Mine.sendActionBar(p, "§e" + (formato.format(dano / 2)) + "§c§l<3" );
 				}
 				
 			} 
@@ -82,7 +81,7 @@ public class ShowDamageEvents extends EventsManager {
 	public static void createTempArmourStand(Location location, double dano) {
 		ArmorStand armor = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
 		armor.setVisible(false);
-		armor.setCustomName("§e" + (formato.format(dano / 2)) + "§c§l" + Chat.getHeart());
+		armor.setCustomName("§e" + (formato.format(dano / 2)) + "§c§l<3" );
 		armor.setCustomNameVisible(true);
 		// armor.setGravity(false);
 		armor.setSmall(true);

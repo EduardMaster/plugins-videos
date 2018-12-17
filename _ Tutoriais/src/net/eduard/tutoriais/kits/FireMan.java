@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 
 public class FireMan extends KitAbility {

@@ -7,15 +7,15 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Vitality extends KitAbility {
 	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");
 	
 	public Vitality() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
-		sound(Sounds.create("LEVEL_UP"));
+		setSound(Sounds.create("LEVEL_UP"));
 	}
 
 	@EventHandler
@@ -27,7 +27,7 @@ public class Vitality extends KitAbility {
 			}
 			Mine.fill(p.getInventory(), soup);
 			if (hasKit(p)) {
-				makeSound(p);
+				getSound().create(p);
 			}
 			p.sendMessage(getMessage());
 		}

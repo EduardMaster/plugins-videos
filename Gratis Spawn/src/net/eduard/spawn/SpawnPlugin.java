@@ -14,7 +14,7 @@ import net.eduard.spawn.events.SpawnEvents;
 public class SpawnPlugin extends EduardPlugin {
 	private static SpawnPlugin instance;
 
-	public static SpawnPlugin getPlugin() {
+	public static SpawnPlugin getInstance() {
 		return instance;
 	}
 

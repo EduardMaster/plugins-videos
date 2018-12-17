@@ -6,9 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.smashapi.apis.MessageAPI;
-import me.smashapi.apis.SimbolosAPI;
-
 public class KillCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -22,7 +19,7 @@ public class KillCommand implements CommandExecutor {
 
 					if (args.length == 0) {
 
-						p.sendMessage("§7" + SimbolosAPI.seta + "Você se matou.");
+//						p.sendMessage("§7" + SimbolosAPI.seta + "Você se matou.");
 						p.setHealth(0.0D);
 
 					} else {
@@ -35,14 +32,14 @@ public class KillCommand implements CommandExecutor {
 						}
 
 						target.setHealth(0.0D);
-						target.sendMessage("§7" + SimbolosAPI.seta + "O jogador " + p.getName() + " te matou.");
-						p.sendMessage("§7" + SimbolosAPI.seta + "Você matou o jogador " + target.getName());
+//						target.sendMessage("§7" + SimbolosAPI.seta + "O jogador " + p.getName() + " te matou.");
+//						p.sendMessage("§7" + SimbolosAPI.seta + "Você matou o jogador " + target.getName());
 
 					}
 
 				} else {
 
-					MessageAPI.semPermissao(p, "Administrador");
+//					MessageAPI.semPermissao(p, "Administrador");
 
 				}
 			}

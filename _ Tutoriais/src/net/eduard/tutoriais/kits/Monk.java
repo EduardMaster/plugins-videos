@@ -10,7 +10,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Monk extends KitAbility {
 

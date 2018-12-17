@@ -25,7 +25,7 @@ public class UnMuteCommand extends CommandManager {
 
 		if (Mine.existsPlayer(sender, args[0])) {
 			Player target = Mine.getPlayer(args[0]);
-			target.removeMetadata("muted", getPlugin());
+			target.removeMetadata("muted", getPluginInstance());
 			Mine.broadcast(
 					messageTarget.replace("$player", target.getDisplayName())
 							.replace("$sender", sender.getName()));

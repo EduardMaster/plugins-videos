@@ -10,10 +10,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class TimeLord extends KitAbility {
 
@@ -33,13 +32,13 @@ public class TimeLord extends KitAbility {
 						Player target = (Player) entity;
 						if (cooldown(player)) {
 							inEffect.add(target);
-							Mine.TIME.delay(2,new Runnable() {
+							asyncDelay(new Runnable() {
 
 								@Override
 								public void run() {
 									inEffect.remove(target);
 								}
-							});
+							},20*2);
 						}
 					}
 

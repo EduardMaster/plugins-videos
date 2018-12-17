@@ -9,9 +9,11 @@ depend: [EduardAPI]
 commands:
   login:
     description: Entrar no servidor
-    permission: spawn.use
-    usage: /<command>
+    permission: comando.login
+    usage: /<command> <password>
+    alias: [logar,entrar]
   register:
-    usage: /<command>
-    permission: spawn.set
+    usage: /<command> <password> <confirm_passord>
+    alias: [registrar]
+    permission: comando.register
     description: Registrar no servidor

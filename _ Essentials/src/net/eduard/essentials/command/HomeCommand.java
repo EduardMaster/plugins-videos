@@ -60,7 +60,7 @@ public class HomeCommand extends CommandManager {
 
 	@EventHandler
 	public void event(PluginDisableEvent e) {
-		if (e.getPlugin().equals(getPlugin())) {
+		if (e.getPlugin().equals(getPluginInstance())) {
 			config.saveConfig();
 		}
 	}

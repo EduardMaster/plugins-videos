@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Turtle extends KitAbility {
 	public double chance = 0.3;
@@ -18,7 +18,7 @@ public class Turtle extends KitAbility {
 
 	public Turtle() {
 		setIcon(Material.LEATHER_CHESTPLATE, "§fAo estiver agaixado vai ficar quase invuneravel");
-		message("§6Voce não pode bater enquanto estiver agaixando");
+		setMessage("§6Voce não pode bater enquanto estiver agaixando");
 		getPotions().add(new PotionEffect(PotionEffectType.POISON, 0, 20 * 5));
 	}
 
@@ -36,7 +36,9 @@ public class Turtle extends KitAbility {
 				if (e.getEntity() instanceof LivingEntity) {
 					LivingEntity livingEntity = (LivingEntity) e.getEntity();
 					if (Mine.getChance(chance)) {
-						givePotions(livingEntity);
+						for (PotionEffect pot : getPotions()) {
+							pot.apply(livingEntity);
+						}
 					}
 				}
 

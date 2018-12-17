@@ -8,13 +8,13 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.eduard.api.lib.game.Explosion;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Tank extends KitAbility {
 
 	public Tank() {
 		setIcon(Material.TNT, "§fSeja um Terrista");
-		explosion(new Explosion(6, false, false));
+		setExplosion(new Explosion(6, false, false));
 	}
 
 	@EventHandler
@@ -35,14 +35,14 @@ public class Tank extends KitAbility {
 		if (e.getEntity().getKiller() != null) {
 			Player p = e.getEntity().getPlayer();
 			if (hasKit(p)) {
-				makeExplosion(p);
+				getExplosion().create(p);
 			}
 
 		}
 		if (e.getEntity() instanceof Player) {
 			Player p = e.getEntity();
 			if (hasKit(p)) {
-				makeExplosion(p);
+				getExplosion().create(p);
 			}
 		}
 

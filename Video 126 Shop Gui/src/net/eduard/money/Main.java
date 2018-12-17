@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.server.EduardPlugin;
 import net.eduard.money.command.TemplateCommand;
-import net.eduard.money.event.TemplateEvent;
+import net.eduard.money.event.MenuTutorial;
 
 public class Main extends EduardPlugin {
 	private static Main plugin;
@@ -17,7 +17,7 @@ public class Main extends EduardPlugin {
 	}
 	public void onEnable() {
 		plugin = this;
-		new TemplateEvent().register(this);
+		new MenuTutorial().register(this);
 		new TemplateCommand().register();
 	}
 	

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
-import net.eduard.chat.Main;
+import net.eduard.chat.ChatPlugin;
 
 public class TellCommand extends CommandManager {
 
@@ -30,10 +30,10 @@ public class TellCommand extends CommandManager {
 				if (Mine.existsPlayer(sender, args[0])) {
 					Player target = Mine.getPlayer(args[0]);
 					String message = Mine.getText(1, args);
-					if (!Main.getInstance().getChat().getTellDisabled().contains(target)) {
+					if (!ChatPlugin.getInstance().getChat().getTellDisabled().contains(target)) {
 						Mine.chat(sender, messageDisabled.replace("$player", target.getName()));
 					} else {
-						Main.getInstance().getLastPrivateMessage().put(target, p);
+						ChatPlugin.getInstance().getLastPrivateMessage().put(target, p);
 						Mine.chat(sender, this.message.replace("$target", target.getName())
 								.replace("$>", "").replace("$message", message));
 						Mine.chat(target, messageTarget.replace("$player", sender.getName())

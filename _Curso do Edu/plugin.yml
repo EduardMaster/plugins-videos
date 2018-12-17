@@ -43,4 +43,7 @@ commands:
     description: Teleportar ate uma Warp
     aliases: [local]
     usage: /<command> <warp>
+  delay:
+  timer:
+  cooldown:
 

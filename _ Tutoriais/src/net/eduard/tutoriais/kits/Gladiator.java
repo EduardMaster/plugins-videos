@@ -17,8 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.modules.LocationEffect;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Gladiator extends KitAbility {
 	
@@ -33,7 +33,7 @@ public class Gladiator extends KitAbility {
 	public Gladiator() {
 		setIcon(Material.IRON_FENCE, "§fChame seus inimigos para um Duelo 1v1");
 		add(Material.IRON_FENCE);
-		message("§6Voce esta invuneravel por 5 segundos!");
+		setMessage("§6Voce esta invuneravel por 5 segundos!");
 		setPrice(60 * 1000);
 		setClick(new PlayerClickEntity(Material.IRON_FENCE,new PlayerClickEntityEffect() {
 			
@@ -63,8 +63,8 @@ public class Gladiator extends KitAbility {
 							.setDirection(player.getLocation().getDirection()));
 					target.teleport(loc.clone().add(2 - size, 1, size - 2)
 							.setDirection(target.getLocation().getDirection()));
-					sendMessage(player);
-					sendMessage(target);
+					player.sendMessage(getMessage());
+					target.sendMessage(getMessage());
 
 				}
 			}

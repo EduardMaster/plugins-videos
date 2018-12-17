@@ -12,7 +12,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.advanced.GrapplerHook;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Grappler extends KitAbility {
 	public static HashMap<Player, GrapplerHook> hooks = new HashMap<>();
@@ -71,7 +71,7 @@ public class Grappler extends KitAbility {
 
 	@EventHandler
 	public void event(PluginDisableEvent e) {
-		if (getPlugin().equals(e.getPlugin()))
+		if (getPluginInstance().equals(e.getPlugin()))
 			for (Player p : Mine.getPlayers()) {
 				if (hooks.containsKey(p)) {
 					hooks.get(p).remove();

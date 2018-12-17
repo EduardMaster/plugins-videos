@@ -10,13 +10,13 @@ import net.eduard.api.lib.manager.EventsManager;
 public class BotDetector extends EventsManager {
 
 	public BotDetector() {
-		Main.time.timer(20,new BukkitRunnable() {
+		Main.time.asyncTimer(new BukkitRunnable() {
 			
 			@Override
 			public void run() {
 				test();
 			}
-		});
+		},20,20);
 	}
 
 	private int contagem = 0;
@@ -40,13 +40,13 @@ public class BotDetector extends EventsManager {
 	public void test() {
 		if (contagem > 6) {
 			whitelist = true;
-			Main.time.delay(10,new Runnable() {
+			Main.time.asyncDelay(new Runnable() {
 				
 				@Override
 				public void run() {
 					whitelist = false;
 				}
-			});
+			},10);
 		}
 		contagem = 0;
 	}

@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Poseidon extends KitAbility {
 
@@ -22,14 +22,16 @@ public class Poseidon extends KitAbility {
 	@EventHandler
 	public void event(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
-		Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskAsynchronously(getPluginInstance(), new Runnable() {
 			
 			@Override
 			public void run() {
 				if (hasKit(p)) {
 					Material type = e.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
 					if (type == Material.WATER | type == Material.STATIONARY_WATER) {
-						givePotions(p);
+						for (PotionEffect pot : getPotions()) {
+							pot.apply(p);
+						}
 					}
 				}
 			}

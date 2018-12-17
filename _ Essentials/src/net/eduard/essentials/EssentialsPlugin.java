@@ -31,7 +31,7 @@ public class EssentialsPlugin extends EduardPlugin {
 		commands.reloadConfig();
 
 		for (CommandManager cmd : CommandManager.getCommandsRegistred().values()) {
-			if (cmd.getPlugin().equals(this)) {
+			if (cmd.getPluginInstance().equals(this)) {
 				cmd.unregisterCommand();
 				cmd.unregisterListener();
 			}

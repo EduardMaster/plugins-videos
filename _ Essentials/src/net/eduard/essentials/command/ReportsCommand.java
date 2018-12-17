@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.slimeessentials.utils.MensagemAPI;
 import net.eduard.api.util.fancyful.FancyMessage;
 
 public class ReportsCommand implements CommandExecutor {
@@ -100,7 +99,7 @@ public class ReportsCommand implements CommandExecutor {
 				}
 			} else {
 
-				MensagemAPI.semPermissao(p, "Ajudante");
+//				MensagemAPI.semPermissao(p, "Ajudante");
 
 			}
 		}

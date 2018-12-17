@@ -18,9 +18,9 @@ public class SetSpawnCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (Mine.noConsole(sender)) {
 			Player p = (Player) sender;
-			SpawnPlugin.getPlugin().getConfigs().set("Spawn", p.getLocation());
-			SpawnPlugin.getPlugin().getConfigs().saveConfig();
-			p.sendMessage(SpawnPlugin.getPlugin().message("Spawn setted"));
+			SpawnPlugin.getInstance().getConfigs().set("Spawn", p.getLocation());
+			SpawnPlugin.getInstance().getConfigs().saveConfig();
+			p.sendMessage(SpawnPlugin.getInstance().message("Spawn setted"));
 
 		}
 		return true;

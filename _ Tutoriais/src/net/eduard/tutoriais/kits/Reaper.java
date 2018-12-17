@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Reaper extends KitAbility {
 	public Material reaper = Material.WOOD_HOE;
@@ -30,7 +30,9 @@ public class Reaper extends KitAbility {
 					if (e.getEntity() instanceof LivingEntity) {
 						LivingEntity livingEntity = (LivingEntity) e
 								.getEntity();
-						givePotions(livingEntity);
+						for (PotionEffect pot : getPotions()) {
+							pot.apply(livingEntity);
+						}
 					}
 			}
 

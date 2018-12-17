@@ -12,9 +12,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
-import me.confuser.barapi.BarAPI;
+import com.connorlinfoot.actionbarapi.ActionBarAPI;
+
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 
 public class MadMan extends KitAbility{
@@ -44,7 +45,7 @@ public class MadMan extends KitAbility{
 		                this.madman.put((Player)e, Double.valueOf(0.01D));
 		                ((Player)e).sendMessage("\u00A7bTem um madman por perto!");
 		              }
-		              BarAPI.setMessage((Player)e, dm.format(this.madman.get(e).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
+		              Mine.sendActionBar((Player)e, dm.format(this.madman.get(e).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
 		            }
 		          }
 		        }
@@ -66,13 +67,13 @@ public class MadMan extends KitAbility{
 		            if (this.madman.get(p).doubleValue() - 0.2D <= 0.0D)
 		            {
 		              this.madman.remove(p);
-		              BarAPI.setMessage(p, "\u00A73Efeito do madman passou!");
-		              BarAPI.removeBar(p);
+		              Mine.sendActionBar(p, "\u00A73Efeito do madman passou!");
+		              
 		            }
 		            else
 		            {
 		              this.madman.put(p, Double.valueOf(this.madman.get(p).doubleValue() - 0.2D));
-		              BarAPI.setMessage(p, dm.format(this.madman.get(p).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
+		              Mine.sendActionBar(p, dm.format(this.madman.get(p).doubleValue() * 100.0D) + "% \u00A76<< \u00A7bEfeito do madman");
 		            }
 		        }
 		      }
@@ -84,7 +85,7 @@ public class MadMan extends KitAbility{
 	
 	@Override
 	public void register(Plugin plugin) {
-		timer(20, this);
+		asyncTimer();
 		super.register(plugin);
 	}
 	

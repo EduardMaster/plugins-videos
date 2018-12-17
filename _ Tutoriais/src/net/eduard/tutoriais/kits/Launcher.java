@@ -8,9 +8,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.LaunchPadManager;
 import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.kits.KitAbility;
 
 @SuppressWarnings("unused")
 public class Launcher extends KitAbility {
@@ -29,7 +29,7 @@ public class Launcher extends KitAbility {
 	}
 	@Override
 	public Object restore(Map<String, Object> map) {
-		pad.register(getPlugin());
+		pad.register(getPluginInstance());
 		return null;
 	}
 

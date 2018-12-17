@@ -9,66 +9,69 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.click.PlayerEffect;
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.game.Gui;
-import net.eduard.api.setup.game.Slot;
-import net.eduard.api.setup.game.Sounds;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.click.PlayerEffect;
+import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.manager.EffectManager;
+import net.eduard.api.lib.menu.Menu;
+import net.eduard.api.lib.menu.MenuButton;
 
 public class Main extends JavaPlugin implements Listener {
-	public Gui gui;
+	public Menu gui;
 
 	@Override
 	public void onEnable() {
 		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
-		gui.setItem(Mine.newItem("§4Abrir Gui Custom", Material.DIAMOND));
-		gui = new Gui("§8Trocar velocidade", 3);
+		gui.setOpenWithItem(Mine.newItem("§4Abrir Gui Custom", Material.DIAMOND));
+		gui = new Menu("§8Trocar velocidade", 3);
 		for (int i = 0; i < 5; i++) {
 			Material boot = null;
 			switch (i) {
-				case 0 :
-					boot = Material.LEATHER_BOOTS;
-					break;
-				case 1 :
-					boot = Material.CHAINMAIL_BOOTS;
-					break;
-				case 2 :
-					boot = Material.IRON_BOOTS;
-					break;
-				case 3 :
-					boot = Material.GOLD_BOOTS;
-					break;
-				case 4 :
-					boot = Material.DIAMOND_BOOTS;
-					break;
-				default :
-					break;
+			case 0:
+				boot = Material.LEATHER_BOOTS;
+				break;
+			case 1:
+				boot = Material.CHAINMAIL_BOOTS;
+				break;
+			case 2:
+				boot = Material.IRON_BOOTS;
+				break;
+			case 3:
+				boot = Material.GOLD_BOOTS;
+				break;
+			case 4:
+				boot = Material.DIAMOND_BOOTS;
+				break;
+			default:
+				break;
 			}
 			final int id = i;
-			Slot slot = new Slot(Mine.newItem(boot, "§6Nivel " + (i + 1)),
-					11 + i);
-			slot.newEffect(new PlayerEffect() {
+			MenuButton botao = new MenuButton(Mine.newItem(boot, "§6Nivel " + (i + 1), 11 + i));
+			botao.setPosition(2, 1+id);
+			botao.setEffects(new EffectManager());
+			botao.getEffects().setEffect(new PlayerEffect() {
 
 				@Override
 				public void effect(Player p) {
-					p.sendMessage("§6Sua velocidade foi alterada para o nivel "
-							+ (id + 1));
+					// TODO Auto-generated method stub
+
+					p.sendMessage("§6Sua velocidade foi alterada para o nivel " + (id + 1));
 					p.closeInventory();
 					sound.create(p);
 					float value = (id + 1) * 0.2F;
 					p.setWalkSpeed(value);
 				}
 			});
-			gui.addSlot(1, slot);
+			gui.addButton(botao);
 		}
 		gui.register(this);
-		Mine.event(this,this);
+		Mine.registerEvents(this, this);
 	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 
 		Player p = e.getPlayer();
-		p.getInventory().addItem(gui.getItem());
+		p.getInventory().addItem(gui.getOpenWithItem());
 	}
 }

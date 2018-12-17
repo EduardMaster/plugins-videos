@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.Explosion;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class DemoMan extends KitAbility {
 	
@@ -22,7 +22,7 @@ public class DemoMan extends KitAbility {
 	public DemoMan() {
 		setIcon(Material.GRAVEL, "§fExploda seus inimigos com armadilhas");
 		add(new ItemStack(Material.GRAVEL, 8));
-		explosion(new Explosion(6, false, false));
+		setExplosion(new Explosion(6, false, false));
 
 	}
 

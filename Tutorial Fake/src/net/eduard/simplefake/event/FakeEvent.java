@@ -7,7 +7,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.simplefake.FakeAPI;
 import net.eduard.simplefake.Main;
 

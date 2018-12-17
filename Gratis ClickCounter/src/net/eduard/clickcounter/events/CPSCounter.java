@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.EventsManager;
 
 public class CPSCounter extends EventsManager {
@@ -24,13 +24,13 @@ public class CPSCounter extends EventsManager {
 	}
 	private static List<Player> clicking = new ArrayList<>();
 	public CPSCounter() {
-		Mine.TIME.timer(20, new Runnable() {
+		Mine.TIME.asyncTimer(new Runnable() {
 
 			@Override
 			public void run() {
 				show();
 			}
-		});
+		},20, 20);
 	}
 	public void show() {
 		for (Player p : Mine.getPlayers()) {

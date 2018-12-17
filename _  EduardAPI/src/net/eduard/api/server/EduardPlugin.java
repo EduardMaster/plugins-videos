@@ -1,5 +1,10 @@
 package net.eduard.api.server;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.bukkit.plugin.Plugin;
@@ -37,6 +42,7 @@ public abstract class EduardPlugin extends JavaPlugin implements BukkitTimeHandl
 	public boolean hasStorage() {
 		return !storage.getKeys().isEmpty();
 	}
+
 	public Config getStorage() {
 		return storage;
 	}
@@ -49,7 +55,7 @@ public abstract class EduardPlugin extends JavaPlugin implements BukkitTimeHandl
 		this.free = free;
 	}
 
-	public Plugin getPlugin() {
+	public Plugin getPluginInstance() {
 		return this;
 	}
 
@@ -72,20 +78,56 @@ public abstract class EduardPlugin extends JavaPlugin implements BukkitTimeHandl
 		double valor = 0;
 		List<Class<?>> classes = Mine.getClasses(this, getClass());
 		for (Class<?> claz : classes) {
-			valor += Extra.calculateClassValue(claz);
+			double numero = Extra.calculateClassValue(claz);
+			valor += numero;
+//			System.out.println("PRECO DA CLASSE "+ claz+ " eh "+ numero);
 		}
+//		System.out.println("NORMAL PRICE "+valor);
 		if (hasMessages()) {
 			valor += 5;
+//			System.out.println("HAVE Messages");
 		}
 		if (isEditable()) {
 			valor += 5;
+//			System.out.println("IS Editable");
 		}
 		if (hasStorage()) {
 			valor += 10;
+//			System.out.println("HAVE Storage");
 		}
-		valor += 5;
+//		System.out.println("HAVE ADICIONAL");
+//		valor += 5;
 		return valor;
 
+	}
+
+	public void backupStorage() {
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-YYYY hh-mm-ss");
+			File pasta = new File(getDataFolder(), "/backup/");
+			pasta.mkdirs();
+			if (getStorage().existConfig())
+				Files.copy(getStorage().getFile().toPath(),
+						Paths.get(pasta.getPath(), "storage-" + format.format(System.currentTimeMillis()) + ".yml"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void startAutoSave() {
+		startAutoSave(60);
+	}
+
+	public void startAutoSave(int seconds) {
+		asyncTimer(new Runnable() {
+
+			@Override
+			public void run() {
+				save();
+			}
+		}, seconds * 20, seconds * 20);
 	}
 
 	public void save() {

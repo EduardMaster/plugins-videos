@@ -9,33 +9,32 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.tapetevoador.command.TapeteCommand;
 import net.eduard.tapetevoador.event.TapeteEvents;
 
-public class Main extends JavaPlugin {
+public class Main extends EduardPlugin {
 
 	@Override
 	public void onEnable() {
 
-		config = new Config(this);
 		config.add("Material", "DIAMOND_BLOCK");
 		config.add("Gamemode", "CREATIVE");
 		config.add("Enable", "&6Voce ativou o tapete voador!");
 		config.add("Disable", "&6Voce desativou o tapete voador!");
 		config.saveConfig();
-		Mine.event(new TapeteEvents(),this);
+		new TapeteEvents().register(this);
 		new TapeteCommand().register();
-		Mine.timer(this, 3, new Runnable() {
+		asyncTimer(new Runnable() {
 			
 			@Override
 			public void run() {
 				effect();
 			}
-		});
+		}, 3, 3);
 	}
 	private static void effect() {
 		for (Player p : players) {

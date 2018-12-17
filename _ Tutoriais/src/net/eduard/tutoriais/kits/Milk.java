@@ -7,8 +7,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.modules.KitType;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Milk extends KitAbility {
 
@@ -26,7 +26,9 @@ public class Milk extends KitAbility {
 		if (hasKit(p)) {
 			if (e.getItem().getType() == Material.MILK_BUCKET) {
 				if (cooldown(p)) {
-					givePotions(p);
+					for (PotionEffect pot : getPotions()) {
+						pot.apply(p);
+					}
 				}
 			}
 		}

@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.simplefake.comandos.FakeCommand;
 import net.eduard.simplefake.event.FakeEvent;
 
@@ -19,7 +19,7 @@ public class Main extends JavaPlugin {
 		for (Player p : Mine.getPlayers()) {
 			FakeAPI.reset(p);
 		}
-	}
+	} 
 
 	public static Config config;
 

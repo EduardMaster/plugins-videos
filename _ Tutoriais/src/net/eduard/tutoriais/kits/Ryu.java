@@ -17,7 +17,7 @@ import org.bukkit.util.BlockIterator;
 
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Ryu extends KitAbility {
 

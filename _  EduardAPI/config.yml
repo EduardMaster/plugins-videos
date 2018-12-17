@@ -4,10 +4,14 @@ debug-plugin-messages: true
 
 debug-storage: false
 
+debug-menu: false
+
 debug-db: false
 
+backup-minutes: 10 
 
 save-worlds: true
+
 save-players: false
 
 no-join-message: true

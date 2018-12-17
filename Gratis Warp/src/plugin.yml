@@ -1,9 +1,10 @@
 name: EduWarps
 description: Criacao de Warps
-main: net.eduard.warp.Main
+main: net.eduard.warp.WarpPlugin
 version: 1.0
 author: Eduard
 authors: [Eduard]
+depend: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD
 commands:
   warp:

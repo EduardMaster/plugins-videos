@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Worm extends KitAbility {
 
@@ -22,7 +22,9 @@ public class Worm extends KitAbility {
 		Player p = e.getPlayer();
 		if (hasKit(p)) {
 			if (e.getBlock().getType() == Material.DIRT) {
-				givePotions(p);
+				for (PotionEffect pot : getPotions()) {
+					pot.apply(p);
+				}
 				e.setInstaBreak(true);
 			}
 		}

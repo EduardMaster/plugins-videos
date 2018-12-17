@@ -7,9 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.click.PlayerEffect;
-import net.eduard.api.setup.game.Gui;
-import net.eduard.api.setup.game.Slot;
+import net.eduard.api.lib.click.PlayerEffect;
+import net.eduard.api.lib.manager.EffectManager;
+import net.eduard.api.lib.menu.Menu;
+import net.eduard.api.lib.menu.MenuButton;
+import net.eduard.api.lib.menu.Slot;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -27,29 +29,31 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
-		Gui loja = new Gui("§8Loja", 3);
-		loja.setItem(new ItemStack(Material.BONE));
-		loja.addSlot(1, (Slot) new Slot(new ItemStack(Material.DIAMOND), 5)
-				.newEffect(new PlayerEffect() {
+		Menu loja = new Menu("§8Loja", 3);
+		loja.setOpenWithItem(new ItemStack(Material.BONE));
+		MenuButton botao = new MenuButton(new ItemStack(Material.DIAMOND));
+		botao.setEffects(new EffectManager());
+		botao.getEffects().setEffect(new PlayerEffect() {
 
-					@SuppressWarnings("deprecation")
-					@Override
-					public void effect(Player p) {
-						if (p.hasPermission("loja.teste")) {
-							Main.economy.depositPlayer(p.getName(), 200);
-							p.sendMessage("§bVoce vendeu o diamante!");
-							Main.permission.playerRemove(p, "loja.teste");
+			@Override
+			public void effect(Player p) {
 
-						} else {
-							// Ta diferente por causa da API do Vault atualizada
-							// '-'
-							Main.economy.withdrawPlayer(p.getName(), 200);
-							p.sendMessage("§aVoce comprou o diamante");
-							Main.permission.playerAdd(p, "loja.teste");
-						}
-						p.setNoDamageTicks(20 * 10);
-					}
-				}));
+				if (p.hasPermission("loja.teste")) {
+					Main.economy.depositPlayer(p.getName(), 200);
+					p.sendMessage("§bVoce vendeu o diamante!");
+					Main.permission.playerRemove(p, "loja.teste");
+
+				} else {
+					// Ta diferente por causa da API do Vault atualizada
+					// '-'
+					Main.economy.withdrawPlayer(p.getName(), 200);
+					p.sendMessage("§aVoce comprou o diamante");
+					Main.permission.playerAdd(p, "loja.teste");
+				}
+				p.setNoDamageTicks(20 * 10);
+			}
+		});
+		loja.addButton(botao);
 		loja.register(this);
 	}
 
@@ -66,8 +70,7 @@ public class Main extends JavaPlugin {
 
 	private boolean setupChat() {
 
-		RegisteredServiceProvider<Chat> chatProvider = getServer()
-				.getServicesManager()
+		RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.chat.Chat.class);
 		if (chatProvider != null) {
 			chat = chatProvider.getProvider();
@@ -78,8 +81,7 @@ public class Main extends JavaPlugin {
 
 	private boolean setupEconomy() {
 
-		RegisteredServiceProvider<Economy> economyProvider = getServer()
-				.getServicesManager()
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
@@ -90,9 +92,8 @@ public class Main extends JavaPlugin {
 
 	private boolean setupPermissions() {
 
-		RegisteredServiceProvider<Permission> permissionProvider = getServer()
-				.getServicesManager().getRegistration(
-						net.milkbowl.vault.permission.Permission.class);
+		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager()
+				.getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null) {
 			permission = permissionProvider.getProvider();
 		}

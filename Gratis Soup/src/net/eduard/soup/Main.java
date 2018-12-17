@@ -19,8 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.game.Sounds;
 import net.eduard.soup.command.SoupCommand;
 
@@ -41,7 +41,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		config = new Config(this);
 		new SoupCommand().register();
-		Mine.event(this, this);
+		Mine.registerEvents(this, this);
 		Sounds sound = Sounds.create("BURP");
 		config.add("soup", "&6Voce ganhou varias sopas!");
 		config.add("soup-name", "§6Soup");

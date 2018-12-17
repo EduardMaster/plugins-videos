@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Camel extends KitAbility {
 	public Camel() {
@@ -23,7 +23,9 @@ public class Camel extends KitAbility {
 		if (hasKit(p)) {
 			Material type = e.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
 			if (type == Material.SAND | type == Material.SANDSTONE) {
-				givePotions(p);
+				for (PotionEffect pot : getPotions()) {
+					pot.apply(p);
+				}
 			}	
 		}
 	}

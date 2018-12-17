@@ -2,7 +2,7 @@ package net.eduard.tutoriais.kits;
 
 import org.bukkit.Material;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 
 public class Tower extends KitAbility{

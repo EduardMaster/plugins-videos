@@ -14,7 +14,7 @@ public class MaintenanceCommand implements CommandExecutor {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLogin(PlayerLoginEvent e) {
 		
-		if (Main.manutencao) {
+//		if (Main.manutencao) {
 			
 			Player p = e.getPlayer();
 			
@@ -23,7 +23,7 @@ public class MaintenanceCommand implements CommandExecutor {
 				e.disallow(Result.KICK_OTHER, "§c§lSMASHMC NETWORK\n\n§c   O servidor se encontra em modo manutenção,\n§c  Para obter mais informações acesse: §rwww.smash-mc.com");
 				
 			}
-		}
+//		}
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -42,7 +42,7 @@ public class MaintenanceCommand implements CommandExecutor {
 
 						if (args[0].equalsIgnoreCase("on")) {
 
-							Main.manutencao = true;
+//							Main.manutencao = true;
 
 							Bukkit.broadcastMessage("");
 							Bukkit.broadcastMessage("§4 • §cO servidor entrou em modo §4§lMANUTENÇAO§c!");
@@ -59,19 +59,19 @@ public class MaintenanceCommand implements CommandExecutor {
 							}
 						} else if (args[0].equalsIgnoreCase("off")) {
 							
-							if (!Main.manutencao) {
-								
-								Bukkit.broadcastMessage("");
-								Bukkit.broadcastMessage("§4 • §cO servidor saiu do modo §4§lMANUTENÇAO§c!");
-								Bukkit.broadcastMessage("");
-								
-								Main.manutencao = false;
-								
-							} else {
-								
-								sender.sendMessage("§cO servidor não está em manutenção.");
-								
-							}
+//							if (!Main.manutencao) {
+//								
+//								Bukkit.broadcastMessage("");
+//								Bukkit.broadcastMessage("§4 • §cO servidor saiu do modo §4§lMANUTENÇAO§c!");
+//								Bukkit.broadcastMessage("");
+//								
+//								Main.manutencao = false;
+//								
+//							} else {
+//								
+//								sender.sendMessage("§cO servidor não está em manutenção.");
+//								
+//							}
 						}
 					}
 

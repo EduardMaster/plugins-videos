@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Thor extends KitAbility {
 	public double damage = 4;

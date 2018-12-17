@@ -1,6 +1,6 @@
-name: Template
+name: ScoreGui
 description: Plugin Template
-main: net.eduard.template.Main
+main: net.eduard.scoregui.Main
 version: 1.0
 authors: [Eduard]
 depend: [EduardAPI]

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Phantom extends KitAbility {
 	public int effectSeconds = 5;
@@ -17,7 +17,7 @@ public class Phantom extends KitAbility {
 		setIcon(Material.FEATHER, "§fVoe por 5 segundos");
 		add(Material.FEATHER);
 		setTime(40);
-		message("§6Acabou o tempo nao pode mais voar");
+		setMessage("§6Acabou o tempo nao pode mais voar");
 		setClick(new PlayerClick(Material.FEATHER,new PlayerClickEffect() {
 			
 			@Override
@@ -29,18 +29,18 @@ public class Phantom extends KitAbility {
 						Mine.saveArmours(player);
 						Mine.setEquip(player, Color.WHITE, "§b" + getName());
 						player.setAllowFlight(true);
-						Mine.TIME.delay(effectSeconds*20,new Runnable() {
+						asyncDelay(new Runnable() {
 							
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
 								if (hasKit(player)) {
 									Mine.getArmours(player);
-									sendMessage(player);
+									player.sendMessage(getMessage());
 								}
 								player.setAllowFlight(false);
 							}
-						});
+						},effectSeconds*20);
 
 					}
 				}

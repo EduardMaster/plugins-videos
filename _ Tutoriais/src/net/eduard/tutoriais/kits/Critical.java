@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.game.Effects;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Critical extends KitAbility {
 	public double chance = 0.3;
@@ -19,7 +19,7 @@ public class Critical extends KitAbility {
 
 	public Critical() {
 		setIcon(Material.GOLDEN_APPLE, "§fCause criticos em seus inimigos");
-		message("§6Voce causou critico");
+		setMessage("§6Voce causou critico");
 	}
 
 	@Override

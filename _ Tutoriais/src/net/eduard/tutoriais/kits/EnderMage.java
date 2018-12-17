@@ -17,7 +17,7 @@ import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.ClickComparationType;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class EnderMage extends KitAbility {
 
@@ -29,7 +29,7 @@ public class EnderMage extends KitAbility {
 		setIcon(Material.ENDER_PORTAL_FRAME, "§fPuxe os seus inimigos");
 		add(Material.ENDER_PORTAL_FRAME);
 		setTime(5);
-		message("§6Voce esta invuneravel por 5 segundos");
+		setMessage("§6Voce esta invuneravel por 5 segundos");
 		
 		PlayerClick playerClick = new PlayerClick(Material.ACACIA_DOOR, new PlayerClickEffect() {
 
@@ -44,7 +44,7 @@ public class EnderMage extends KitAbility {
 					state.getBlock().setType(Material.ENDER_PORTAL_FRAME);
 					// e.setCanceled(false);
 					player.setItemInHand(null);
-					Mine.TIME.timer(20, new BukkitRunnable() {
+					Mine.TIME.asyncTimer(new BukkitRunnable() {
 						int x = effectSeconds;
 						@Override
 						public void run() {
@@ -60,7 +60,7 @@ public class EnderMage extends KitAbility {
 								cancel();
 							}
 						}
-					});
+					},20, 20);
 
 				}
 			}
@@ -78,7 +78,7 @@ public class EnderMage extends KitAbility {
 				LivingEntity livingEntity = (LivingEntity) entity;
 				if (livingEntity instanceof Player) {
 					Player player = (Player) entity;
-					sendMessage(player);
+				player.sendMessage(getMessage());
 					Mine.makeInvunerable(player, effectSeconds);
 					Mine.makeInvunerable(p, effectSeconds);
 					pulled = true;
@@ -89,7 +89,7 @@ public class EnderMage extends KitAbility {
 		}
 
 		if (pulled) {
-			sendMessage(p);
+			p.sendMessage(getMessage());
 			Mine.makeInvunerable(p, effectSeconds);
 			Mine.teleport(p, teleport);
 		}

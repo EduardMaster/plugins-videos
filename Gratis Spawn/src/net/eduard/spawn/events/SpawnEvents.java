@@ -17,15 +17,15 @@ public class SpawnEvents extends EventsManager {
 
 		Player p = e.getPlayer();
 		if (p.hasPermission("spawn.join")) {
-			if (SpawnPlugin.getPlugin().getBoolean("Teleport on first join")) {
-				if (SpawnPlugin.getPlugin().getBoolean("Teleport only on first join")) {
+			if (SpawnPlugin.getInstance().getBoolean("Teleport on first join")) {
+				if (SpawnPlugin.getInstance().getBoolean("Teleport only on first join")) {
 					if (p.hasPlayedBefore()) {
 						return;
 					}
 				}
-				if (SpawnPlugin.getPlugin().getConfigs().contains("Spawn")) {
-					p.teleport(SpawnPlugin.getPlugin().getConfigs().getLocation("Spawn"));
-					SpawnPlugin.getPlugin().getConfigs().getSound("Sound on join").create(p);
+				if (SpawnPlugin.getInstance().getConfigs().contains("Spawn")) {
+					p.teleport(SpawnPlugin.getInstance().getConfigs().getLocation("Spawn"));
+					SpawnPlugin.getInstance().getConfigs().getSound("Sound on join").create(p);
 				}
 			}
 		}
@@ -38,17 +38,17 @@ public class SpawnEvents extends EventsManager {
 		Player p = e.getPlayer();
 		String name = p.getWorld().getName().toLowerCase();
 		if (p.hasPermission("spawn.respawn")) {
-			if (SpawnPlugin.getPlugin().getBoolean("Teleport on respawn")) {
-				if (SpawnPlugin.getPlugin().getBoolean("Teleport on respawn in world." + name)) {
-					if (SpawnPlugin.getPlugin().getConfigs().contains("Spawn")) {
-						e.setRespawnLocation(SpawnPlugin.getPlugin().getConfigs().getLocation("Spawn"));
-						Mine.TIME.delays(1, new Runnable() {
+			if (SpawnPlugin.getInstance().getBoolean("Teleport on respawn")) {
+				if (SpawnPlugin.getInstance().getBoolean("Teleport on respawn in world." + name)) {
+					if (SpawnPlugin.getInstance().getConfigs().contains("Spawn")) {
+						e.setRespawnLocation(SpawnPlugin.getInstance().getConfigs().getLocation("Spawn"));
+						Mine.TIME.asyncDelay(new Runnable() {
 
 							@Override
 							public void run() {
-								SpawnPlugin.getPlugin().getConfigs().getSound("Sound on respawn").create(p);
+								SpawnPlugin.getInstance().getConfigs().getSound("Sound on respawn").create(p);
 							}
-						});
+						}, 1);
 
 					}
 				}

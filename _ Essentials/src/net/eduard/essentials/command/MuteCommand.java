@@ -35,7 +35,7 @@ public class MuteCommand extends CommandManager {
 					.replace("$reason", builder.toString()));
 			Mine.chat(target,message);
 			target.setMetadata("muted",
-					new FixedMetadataValue(getPlugin(), true));
+					new FixedMetadataValue(getPluginInstance(), true));
 		}
 		return true;
 	}

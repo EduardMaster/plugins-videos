@@ -13,7 +13,7 @@ import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.game.Explosion;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class HotPotato extends KitAbility {
 
@@ -22,8 +22,8 @@ public class HotPotato extends KitAbility {
 		setIcon(Material.BAKED_POTATO, "");
 		add(new ItemStack(Material.BAKED_POTATO));
 		setTime(30);
-		explosion( new Explosion(6, true, false));
-		message("§6");
+		setExplosion( new Explosion(6, true, false));
+		setMessage("§6");
 		setClick(new PlayerClickEntity(Material.BAKED_POTATO,new PlayerClickEntityEffect() {
 			
 			@Override
@@ -34,20 +34,21 @@ public class HotPotato extends KitAbility {
 						Player target = (Player) entity;
 						PlayerInventory inv = target.getInventory();
 						inv.setHelmet(new ItemStack(Material.TNT));
-						sendMessage(target);
-						Mine.TIME.delay( effectSeconds,new Runnable() {
+						target.sendMessage(getMessage());
+						
+						Mine.TIME.asyncDelay( new Runnable() {
 
 							@Override
 							public void run() {
 								if (inv.getHelmet() != null) {
 									if (inv.getHelmet()
 											.getType() == Material.TNT) {
-										makeExplosion(target);
+										getExplosion().create(target);
 									}
 								}
 
 							}
-						});
+						},effectSeconds);
 					}
 				}
 			}

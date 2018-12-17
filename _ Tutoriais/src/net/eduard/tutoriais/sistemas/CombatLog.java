@@ -10,8 +10,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class CombatLog extends BukkitRunnable{
+public class CombatLog extends BukkitRunnable {
 	public static final HashMap<Player, Long> ON_COMBAT = new HashMap<>();
+
 	@EventHandler
 	public void Combat(EntityDamageByEntityEvent e) {
 
@@ -52,6 +53,7 @@ public class CombatLog extends BukkitRunnable{
 	}
 
 	public static final int COMBAT_LIMIT_SECONDS = 15;
+
 	@EventHandler
 	public void event(PlayerQuitEvent e) {
 
@@ -70,6 +72,6 @@ public class CombatLog extends BukkitRunnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

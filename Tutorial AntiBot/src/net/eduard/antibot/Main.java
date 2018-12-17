@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.manager.TimeManager;
 
 public class Main extends JavaPlugin {

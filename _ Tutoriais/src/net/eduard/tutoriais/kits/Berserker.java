@@ -9,8 +9,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Berserker extends KitAbility {
 	public ItemStack soup = Mine.newItem(Material.BROWN_MUSHROOM, "§6Sopa");

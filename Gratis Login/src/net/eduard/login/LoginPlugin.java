@@ -1,27 +1,58 @@
 package net.eduard.login;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.entity.Player;
-
+import net.eduard.api.lib.storage.StorageAPI;
 import net.eduard.api.server.EduardPlugin;
+import net.eduard.login.events.LoginEvents;
+import net.eduard.login.manager.LoginAPI;
+import net.eduard.login.manager.PlayerAccount;
+import net.eduard.login.manager.PlayerAccountManager;
 
-public class LoginPlugin extends EduardPlugin{
-	public static final Map<Player, String> PLAYERS_LOGGED = new HashMap<>();
-	public static final Map<Player, Integer> FAILS_LOGINS = new HashMap<>();
+public class LoginPlugin extends EduardPlugin {
+	private static LoginPlugin plugin;
+
+	private PlayerAccountManager manager;
+
+	public static LoginPlugin getInstance() {
+		return plugin;
+	}
+
 	@Override
 	public void onEnable() {
-		
-		
-//		public Title title = new Title(20, 20 * 60, 20, "§cAutenticação",
-//				"§c/register <senha>");
-//		public Title titleSuccess = new Title(20, 20 * 3, 20, "§a§lRegistrado!",
-//				"§cNao use senhas faceis!");
-		
-//		public Title title = new Title(20, 20 * 60, 20, "§cAutenticação", "§c/login <senha>");
-//		public Title titleSuccess = new Title(20, 20 * 3, 20, "§a§lAutenticado!", "§6§lSeja bem vindo novamente!");
+		plugin = this;
+		new LoginEvents().register(this);
+		StorageAPI.register(PlayerAccount.class);
+		StorageAPI.register(PlayerAccountManager.class);
+		LoginAPI.reload();
 
-		
 	}
+
+	@Override
+	public void onDisable() {
+		save();
+	}
+
+	public void reload() {
+		config.reloadConfig();
+		storage.reloadConfig();
+		if (storage.contains("login")) {
+			manager = (PlayerAccountManager) storage.get("login");
+		} else {
+			manager = new PlayerAccountManager();
+			save();
+		}
+	}
+
+	public void save() {
+		storage.set("login", manager);
+		storage.saveConfig();
+	}
+
+	public PlayerAccountManager getManager() {
+		return manager;
+	}
+
+	public void setManager(PlayerAccountManager manager) {
+		this.manager = manager;
+	}
+
 }

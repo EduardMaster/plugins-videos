@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.nightessentials.utilidades.MessageAPI;
+//import me.nightessentials.utilidades.MessageAPI;
 
 public class PullCommand implements CommandExecutor {
 
@@ -44,7 +44,7 @@ public class PullCommand implements CommandExecutor {
 					}
 				} else {
 
-					MessageAPI.semPermissaoEssentials(p, "Administrador");
+//					MessageAPI.semPermissaoEssentials(p, "Administrador");
 
 				}
 			}

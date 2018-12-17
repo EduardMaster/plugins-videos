@@ -3,7 +3,7 @@ package net.eduard.witherspawn.event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.EventsManager;
 import net.eduard.witherspawn.Main;
 

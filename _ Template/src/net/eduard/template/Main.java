@@ -9,7 +9,7 @@ public class Main extends EduardPlugin  {
 	private static Main plugin;
 	public static Main getInstance() {
 		return plugin;
-	}
+	} 
 	@Override
 	public void onEnable() {
 		plugin = this;

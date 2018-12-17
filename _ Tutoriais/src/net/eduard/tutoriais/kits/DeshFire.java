@@ -18,8 +18,8 @@ import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.game.Effects;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.kits.KitAbility;
 
 public class DeshFire extends KitAbility {
 	public static ArrayList<Player> inEffect = new ArrayList<>();
@@ -30,8 +30,8 @@ public class DeshFire extends KitAbility {
 		setIcon(Material.REDSTONE_BLOCK, "§fGanha um boost para frente");
 		setTime(40);
 		add(Material.REDSTONE_BLOCK);
-		display(new Effects(Effect.MOBSPAWNER_FLAMES, 10));
-		jump(new Jump(true, 0.5, 2, Sounds.create("CLICK")));
+		setDisplay(new Effects(Effect.MOBSPAWNER_FLAMES, 10));
+		setJump(new Jump(true, 0.5, 2, Sounds.create("CLICK")));
 		setClick(new PlayerClick(Material.REDSTONE_BLOCK,new PlayerClickEffect() {
 			
 			@Override
@@ -43,7 +43,7 @@ public class DeshFire extends KitAbility {
 						Mine.setEquip(player, Color.RED, "§c" + getName());
 						inEffect.add(player);
 						player.setAllowFlight(true);
-						Mine.TIME.delay(effectSeconds, new Runnable() {
+						asyncDelay(new Runnable() {
 
 							@Override
 							public void run() {
@@ -52,8 +52,8 @@ public class DeshFire extends KitAbility {
 									inEffect.remove(player);
 								}
 							}
-						});
-						jump(player);
+						}, effectSeconds);
+						getJump().create(player);
 					}
 
 				}

@@ -1,19 +1,21 @@
 
 package net.eduard.witherspawn;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Wither;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.config.Config;
-import net.eduard.api.lib.core.Mine;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.manager.TimeManager;
+import net.eduard.api.server.EduardPlugin;
 import net.eduard.witherspawn.command.WitherCommand;
 import net.eduard.witherspawn.event.WitherSpawnEvent;
 
-public class Main extends JavaPlugin  {
+public class Main extends EduardPlugin  {
 
 	public static Config config;
 	public static Wither wither;
@@ -72,7 +74,7 @@ public class Main extends JavaPlugin  {
 		if (canSpawnWither()) {
 			spawnWither();
 		}
-		Mine.delay(this,20,new BukkitRunnable() {
+		asyncDelay(new BukkitRunnable() {
 			
 			@Override
 			public void run() {
@@ -80,8 +82,8 @@ public class Main extends JavaPlugin  {
 					spawnWither();
 				}
 			}
-		});
-		time.timer(20,new BukkitRunnable() {
+		},20);
+		asyncTimer(new BukkitRunnable() {
 			
 			@Override
 			public void run() {
@@ -89,7 +91,8 @@ public class Main extends JavaPlugin  {
 					spawnWither();
 				}
 			}
-		});
+		},20,20);
+	
 	}
 
 	public static boolean canSpawnWither() {

@@ -5,14 +5,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import net.eduard.warp.Main;
+import net.eduard.warp.WarpPlugin;
 
 public class WarpEvent implements Listener {
 
 	@EventHandler
 	private void aoUsarComando(PlayerCommandPreprocessEvent e) {
 		String warp = e.getMessage().replace("/", "").toLowerCase();
-		if (Main.warps.containsKey(warp)) {
+		if (WarpPlugin.getWarps().containsKey(warp)) {
 			e.setMessage("/warp "+warp);
 		}
 		// affs so burro pakas

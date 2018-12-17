@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Magma extends KitAbility {
 
@@ -63,7 +63,9 @@ public class Magma extends KitAbility {
 						.getRelative(BlockFace.DOWN).getType();
 				if (type == Material.WATER
 						| type == Material.STATIONARY_WATER) {
-					givePotions(p);
+					for (PotionEffect pot : getPotions()) {
+						pot.apply(p);
+					}
 				}
 			}
 		}

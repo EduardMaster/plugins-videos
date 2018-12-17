@@ -9,18 +9,17 @@ import org.bukkit.util.Vector;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.KitAbility;
 import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Hulk extends KitAbility {
 
 	public Hulk() {
 		setIcon(Material.DISPENSER, "§fLevante seus inimigos");
 		setTime(15);
-		jump(new Jump(Sounds.create("BURP"),
-				new Vector(0, 2, 0)));
-		setClick(new PlayerClickEntity(Material.AIR,new PlayerClickEntityEffect() {
-			
+		setJump(new Jump(Sounds.create("BURP"), new Vector(0, 2, 0)));
+		setClick(new PlayerClickEntity(Material.AIR, new PlayerClickEntityEffect() {
+
 			@Override
 			public void onClickAtEntity(Player player, Entity entity, ItemStack item) {
 				// TODO Auto-generated method stub
@@ -30,15 +29,15 @@ public class Hulk extends KitAbility {
 						if (entity.equals(player.getPassenger())) {
 							Entity target = entity;
 							player.eject();
-							jump(target);;
+							getJump().create(target);
+//							jump(target);
 							player.sendMessage("§6Voce jogou alguem para Cima!");
 
 						}
 					} else {
 						if (cooldown(player)) {
 							player.setPassenger(entity);
-							player.sendMessage(
-									"§6Voce colocou alguem em suas costas!");
+							player.sendMessage("§6Voce colocou alguem em suas costas!");
 						}
 					}
 

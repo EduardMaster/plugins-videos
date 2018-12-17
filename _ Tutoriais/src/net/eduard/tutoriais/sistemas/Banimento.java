@@ -3,11 +3,7 @@ package net.eduard.tutoriais.sistemas;
 import java.util.Date;
 import java.util.UUID;
 
-
 public class Banimento {
-
-
-	
 
 	private String alvo;
 	private UUID alvoId;

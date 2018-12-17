@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.warp.Main;
-import net.eduard.warp.Warp;
+import net.eduard.warp.WarpPlugin;
+import net.eduard.warp.manager.Warp;
 
 public class SetWarpCommand implements CommandExecutor {
 
@@ -25,14 +25,14 @@ public class SetWarpCommand implements CommandExecutor {
 			return false;
 		}
 		String name = args[0];
-		if (Main.warps.containsKey(name.toLowerCase())) {
+		if (WarpPlugin.getWarps().containsKey(name.toLowerCase())) {
 			sender.sendMessage("§cJá existe esse Warp §4" + name);
 		} else {
 			Warp warp = new Warp();
 			warp.setWarpLocation(p.getLocation());
 			warp.setWarpName(name);
 			warp.setWarpMessage("§6Voce foi teleportado para o " + name);
-			Main.warps.put(name.toLowerCase(), warp);
+			WarpPlugin.getWarps().put(name.toLowerCase(), warp);
 			sender.sendMessage("§aWarp criada §2"+name);
 		}
 		

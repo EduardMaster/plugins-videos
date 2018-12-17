@@ -11,16 +11,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import jdk.nashorn.internal.ir.annotations.Reference;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.EventsManager;
 import net.eduard.api.lib.modules.Extra;
+import net.eduard.api.lib.storage.StorageAttributes;
 
 public class ChatManager extends EventsManager  {
 	private String format = "(channel) (player): (color) (message)";
 	private String messageChatDisabled = "&cChat desabilitado tempariamente!";
 	private String messageChatPermission = "§cVoc§ n§o tem permiss§o para falar neste Chat!";
-	@Reference
+	@StorageAttributes(reference=true)
 	private ChatChannel chatDefault; 
 	private ChatType chatType = ChatType.BUKKIT;
 	

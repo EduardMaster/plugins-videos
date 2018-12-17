@@ -12,8 +12,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.setup.Mine;
-import net.eduard.api.setup.game.DisplayBoard;
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.game.DisplayBoard;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -21,15 +21,15 @@ public class Main extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		Mine.event(this,this);
+		Mine.registerEvents(this,this);
 		
-		Mine.timer(this,20,new Runnable() {
+		Mine.TIME.asyncTimer(new Runnable() {
 
 			@Override
 			public void run() {
 				updateScoreboards();
 			}
-		});
+		},20,20);
 	}
 	public void updateScoreboards() {
 		for (Entry<Player, DisplayBoard> map : scoreboards.entrySet()) {

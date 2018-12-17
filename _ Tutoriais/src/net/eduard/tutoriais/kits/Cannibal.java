@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class Cannibal extends KitAbility {
 
@@ -29,7 +29,10 @@ public class Cannibal extends KitAbility {
 				if (e.getEntity() instanceof LivingEntity) {
 					LivingEntity livingEntity = (LivingEntity) e.getEntity();
 					if (Mine.getChance(chance)) {
-						givePotions(livingEntity);
+						for (PotionEffect pot : getPotions()) {
+							pot.apply(p);
+						}
+
 					}
 				}
 				

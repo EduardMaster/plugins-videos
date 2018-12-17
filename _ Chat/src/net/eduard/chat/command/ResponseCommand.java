@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
-import net.eduard.chat.Main;
+import net.eduard.chat.ChatPlugin;
 
 public class ResponseCommand extends CommandManager {
 
@@ -25,12 +25,12 @@ public class ResponseCommand extends CommandManager {
 				sendUsage(sender);
 			} else {
 
-				if (!Main.getInstance().getLastPrivateMessage().containsKey(p)) {
+				if (!ChatPlugin.getInstance().getLastPrivateMessage().containsKey(p)) {
 
 					p.sendMessage("§cVocê não possui nenhuma conversa recente.");
 
 				} else {
-					Player alvo = Main.getInstance().getLastPrivateMessage().get(p);
+					Player alvo = ChatPlugin.getInstance().getLastPrivateMessage().get(p);
 					alvo.chat("/tell " + alvo.getName() + " " + Mine.getText(0, args));
 				}
 

@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 public class LavaMan extends KitAbility {
 
@@ -26,7 +26,9 @@ public class LavaMan extends KitAbility {
 		if (hasKit(p)) {
 			Material type = e.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
 			if (type == Material.LAVA | type == Material.STATIONARY_LAVA) {
-				givePotions(p);
+				for (PotionEffect pot : getPotions()) {
+					pot.apply(p);
+				}
 			}
 		}
 	}

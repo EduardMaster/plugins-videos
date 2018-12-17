@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.KitAbility;
+import net.eduard.api.server.kits.KitAbility;
 
 
 public class ForceField extends KitAbility{
@@ -49,7 +49,7 @@ public class ForceField extends KitAbility{
 	public ForceField() {
 		setIcon(Material.NETHER_FENCE, "§fAtive Force Field nos Inimigos");
 		add(Material.NETHER_FENCE);
-		message("§6Force field desativado!");
+		setMessage("§6Force field desativado!");
 		setTime(30);
 		setClick(new PlayerClick(Material.NETHER_FENCE,new PlayerClickEffect() {
 			
@@ -59,14 +59,14 @@ public class ForceField extends KitAbility{
 				if (hasKit(player)){
 					if (cooldown(player)){
 						force.add(player);
-						delay(effectSeconds*20, new Runnable() {
+						asyncDelay(new Runnable() {
 							
 							@Override
 							public void run() {
 								force.remove(player);
-								sendMessage(player);
+								player.sendMessage(getMessage());
 							}
-						});
+						}, effectSeconds*20);
 					}
 				}
 			}
@@ -75,7 +75,7 @@ public class ForceField extends KitAbility{
 	@Override
 	public void register(Plugin plugin) {
 		setPlugin(plugin);
-		timer(1,this);
+		asyncTimer();
 		super.register(plugin);
 	}
 

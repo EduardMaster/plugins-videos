@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.smashapi.apis.MessageAPI;
-import me.smashapi.apis.SimbolosAPI;
+//import me.smashapi.apis.MessageAPI;
+//import me.smashapi.apis.SimbolosAPI;
 
 public class PromoteCommand implements CommandExecutor {
 
@@ -35,9 +35,9 @@ public class PromoteCommand implements CommandExecutor {
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 							"pex user " + target.getName() + " group set " + cargo);
 
-					p.sendMessage(
-							SimbolosAPI.seta + "Você promoveu o jogador " + target.getName() + " para " + cargo + ".");
-					target.sendMessage(SimbolosAPI.seta + "Você foi promovido para " + cargo + ".");
+//					p.sendMessage(
+//							SimbolosAPI.seta + "Você promoveu o jogador " + target.getName() + " para " + cargo + ".");
+//					target.sendMessage(SimbolosAPI.seta + "Você foi promovido para " + cargo + ".");
 
 					target.getWorld().strikeLightningEffect(target.getLocation());
 					target.getWorld().strikeLightningEffect(target.getLocation());
@@ -52,7 +52,7 @@ public class PromoteCommand implements CommandExecutor {
 
 			} else {
 
-				MessageAPI.semPermissao(p, "Administrador");
+//				MessageAPI.semPermissao(p, "Administrador");
 
 			}
 		}
