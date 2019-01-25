@@ -21,14 +21,14 @@ public class CheckIpCommand extends CommandManager {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				Mine.chat(p,message.replace("$ip", Mine.getIp(p)));
+				p.sendMessage(message.replace("$ip", Mine.getIp(p)));
 			} else
 				return false;
 
 		} else {
 			if (Mine.existsPlayer(sender, args[0])) {
 				Player target = Mine.getPlayer(args[0]);
-				Mine.chat(sender,messageTarget
+				sender.sendMessage(messageTarget
 						.replace("$player", target.getDisplayName())
 						.replace("$ip", Mine.getIp(target)));
 			}

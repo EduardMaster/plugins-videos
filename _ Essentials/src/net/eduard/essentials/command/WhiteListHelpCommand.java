@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class WhiteListHelpCommand extends CommandManager {
@@ -26,7 +25,7 @@ public class WhiteListHelpCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		for (String line : messages) {
-			Mine.chat(sender,line);
+			sender.sendMessage(line);
 		}
 		
 		return true;

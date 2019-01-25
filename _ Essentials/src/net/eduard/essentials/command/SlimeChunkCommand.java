@@ -8,12 +8,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.manager.CommandManager;
+import net.eduard.essentials.EssentialsPlugin;
 
 public class SlimeChunkCommand extends CommandManager {
-	public static ArrayList<Player> activeted = new ArrayList<>();
+	
 
 	public SlimeChunkCommand() {
-		super("slime");
+		super("slime","gosma");
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -21,9 +22,9 @@ public class SlimeChunkCommand extends CommandManager {
 		if (sender instanceof Player) {
 
 			Player p = (Player) sender;
-
-			if (activeted.contains(p)) {
-				activeted.remove(p);
+			ArrayList<Player> lista = EssentialsPlugin.getInstance().getSlimeChunkActive();
+			if (lista.contains(p)) {
+				lista.remove(p);
 
 				p.sendMessage(" ");
 				p.sendMessage("§cVocê desligou o localizador de Slime Chunk, Você não receber\u00E1");
@@ -39,7 +40,7 @@ public class SlimeChunkCommand extends CommandManager {
 				p.sendMessage("§afique atento e ative os sons do seu Jogo");
 				p.sendMessage(" ");
 				p.playSound(p.getLocation(), Sound.SLIME_WALK, 5.0F, 5.0F);
-				activeted.add(p);
+				lista.add(p);
 			}
 
 		}

@@ -10,13 +10,13 @@ public class ApiLoadCommand extends CommandManager {
 
 	public ApiLoadCommand() {
 		super("load","carregar");
+		setUsage("/api load <plugin>");
+		setDescription("Carrega um plugin descarregado no servidor");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (args.length ==0) {
-			
-		}
+		sender.sendMessage("§cNão implementado");
 		
 		return true;
 	}

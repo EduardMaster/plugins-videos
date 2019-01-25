@@ -21,7 +21,9 @@ public class AutoPickup extends EventsManager {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void aoQuebrar(BlockBreakEvent e) {
 		Player p = e.getPlayer();
-
+		if (!EssentialsPlugin.getInstance().getBoolean("auto-pickup-enabled")) {
+			return;
+		}
 		if (p.getItemInHand() == null)
 			return;
 		if (p.getItemInHand().getType() == Material.AIR)
@@ -29,7 +31,7 @@ public class AutoPickup extends EventsManager {
 
 		if (Mine.isFull(p.getInventory())) {
 
-			p.sendMessage("§cSeu inventário está lotado.");
+			p.sendMessage(EssentialsPlugin.getInstance().message("inventory-full"));
 
 			Collection<ItemStack> lista = e.getBlock().getDrops(p.getItemInHand());
 

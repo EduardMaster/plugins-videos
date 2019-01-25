@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.config.Config;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.soup.command.SoupCommand;
 
 
@@ -42,7 +42,7 @@ public class Main extends JavaPlugin implements Listener {
 		config = new Config(this);
 		new SoupCommand().register();
 		Mine.registerEvents(this, this);
-		Sounds sound = Sounds.create("BURP");
+		SoundEffect sound = SoundEffect.create("BURP");
 		config.add("soup", "&6Voce ganhou varias sopas!");
 		config.add("soup-name", "§6Soup");
 		soup = Mine.newItem(Material.MUSHROOM_SOUP, config.message("SoupName"));

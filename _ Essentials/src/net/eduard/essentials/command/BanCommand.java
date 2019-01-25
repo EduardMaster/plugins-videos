@@ -4,9 +4,9 @@ package net.eduard.essentials.command;
 import org.bukkit.BanList;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
@@ -27,7 +27,7 @@ public class BanCommand extends CommandManager {
 		}
 		// /ban edu
 		if (Mine.existsPlayer(sender, args[0])) {
-			Player target = Bukkit.getPlayer(args[0]);
+			OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
 			StringBuilder builder = new StringBuilder();
 			for (int i = 1; i < args.length; i++) {
@@ -36,10 +36,13 @@ public class BanCommand extends CommandManager {
 			target.setBanned(true);
 			BanList lista = Bukkit.getBanList(Type.NAME);
 			lista.addBan(target.getName(), builder.toString(), null, null);
-			target.kickPlayer(messageTarget.replace("$target", sender.getName())
-					.replace("$sender", sender.getName())
-					.replace("$reason", builder.toString()));
-			Mine.broadcast(message.replace("$target", target.getDisplayName())
+			if (target.isOnline()) {
+				target.getPlayer().kickPlayer(messageTarget.replace("$target", sender.getName())
+						.replace("$sender", sender.getName())
+						.replace("$reason", builder.toString()));	
+			}
+			
+			Mine.broadcast(message.replace("$target", target.getName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
 		}

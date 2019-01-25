@@ -28,12 +28,12 @@ public class ToggleOnlineCommand extends CommandManager {
 			Player p = (Player) sender;
 			if (commandsOn.contains(label.toLowerCase())) {
 				Mine.show(p);
-				Mine.chat(sender, messageOn);
+				sender.sendMessage(messageOn);
 				if (!players.contains(p))
 					players.add(p);
 			} else if (commandsOff.contains(label.toLowerCase())) {
 				Mine.hide(p);
-				Mine.chat(sender, messageOff);
+				sender.sendMessage(messageOff);
 				players.remove(p);
 			} else {
 				if (args.length == 0) {
@@ -50,7 +50,7 @@ public class ToggleOnlineCommand extends CommandManager {
 					} else if (Mine.OPT_COMMANDS_OFF.contains(cmd)) {
 						p.chat("/" + commandsOff.get(0));
 					} else {
-						Mine.chat(sender, getUsage());
+						sender.sendMessage(getUsage());
 					}
 				}
 

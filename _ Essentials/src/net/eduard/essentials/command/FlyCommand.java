@@ -13,31 +13,31 @@ public class FlyCommand extends CommandManager {
 	public String messageOn = "§6Voce pode voar!";
 	public String messageOff = "§6Voce não pode mais voar!";
 	public String messageTarget = "§6Voce troco o modo de voo do jogador $player";
+
 	public FlyCommand() {
 		super("fly");
 	}
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command command,
-			String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			if (Mine.onlyPlayer(sender)) {
 				Player p = (Player) sender;
 				if (p.getAllowFlight()) {
 					p.setFlying(false);
 					p.setAllowFlight(false);
-					Mine.chat(p, messageOff);
+					p.sendMessage(messageOff);
 
 				} else {
 					p.setAllowFlight(true);
-					Mine.chat(p, messageOn);
+					sender.sendMessage(messageOn);
 				}
 			}
 		} else {
 			String player = args[0];
 			if (Mine.existsPlayer(sender, player)) {
 				Player target = Bukkit.getPlayer(player);
-				Mine.chat(sender,
-						messageTarget.replace("$player", target.getName()));
+				sender.sendMessage(messageTarget.replace("$player", target.getName()));
 
 			}
 		}

@@ -23,7 +23,7 @@ public class InventorySeeCommand extends CommandManager {
 			if (Mine.existsPlayer(sender, args[0])) {
 				Player target = Mine.getPlayer(args[0]);
 				p.openInventory(target.getInventory());
-				Mine.chat(p,messageTarget.replace("$target", target.getDisplayName()));
+				sender.sendMessage(messageTarget.replace("$target", target.getDisplayName()));
 			}
 		}
 

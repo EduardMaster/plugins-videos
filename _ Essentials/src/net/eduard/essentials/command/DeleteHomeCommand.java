@@ -26,10 +26,10 @@ public class DeleteHomeCommand extends CommandManager {
 				String path = p.getUniqueId().toString()+"."+args[0].toLowerCase();
 				if (config.contains(path)) {
 					config.remove(path);
-					Mine.chat(sender, message.replace("$home", ""));
+					sender.sendMessage(message.replace("$home", ""));
 					
 				} else {
-					Mine.chat(sender, messageError.replace("$home", ""));
+					sender.sendMessage( messageError.replace("$home", ""));
 				}
 			}
 		}

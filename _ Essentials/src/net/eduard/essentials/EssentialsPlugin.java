@@ -1,23 +1,22 @@
 
 package net.eduard.essentials;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import java.util.ArrayList;
+
+import org.bukkit.entity.Player;
 
 import net.eduard.api.lib.config.Config;
 import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.api.lib.storage.StorageAPI;
 import net.eduard.api.server.EduardPlugin;
-import net.eduard.api.server.Systems;
 
 public class EssentialsPlugin extends EduardPlugin {
 	private static EssentialsPlugin plugin;
 	private Config commands;
-
+	private ArrayList<Player> slimeChunkActive = new ArrayList<>();
 	public static EssentialsPlugin getInstance() {
 		return plugin;
 	}
-
-
 
 	@Override
 	public void onEnable() {
@@ -26,8 +25,11 @@ public class EssentialsPlugin extends EduardPlugin {
 		reload();
 	}
 
-	public void reloadCommmands() {
+	public void save() {
 
+	}
+
+	public void reload() {
 		commands.reloadConfig();
 
 		for (CommandManager cmd : CommandManager.getCommandsRegistred().values()) {
@@ -46,25 +48,20 @@ public class EssentialsPlugin extends EduardPlugin {
 					} else {
 						commands.set(path, cmd);
 					}
-					cmd.registerCommand(this);
-					cmd.register(this);
+					config.add(path, true);
+					if (config.getBoolean(path)) {
+						cmd.registerCommand(this);
+						cmd.register(this);
+					}
 				}
 
 			}
 			StorageAPI.updateReferences();
 			commands.saveConfig();
+			config.saveConfig();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-	}
-
-	public void save() {
-
-	}
-
-	public void reload() {
-		reloadCommmands();
 	}
 
 	@Override
@@ -78,6 +75,14 @@ public class EssentialsPlugin extends EduardPlugin {
 
 	public void setCommands(Config commands) {
 		this.commands = commands;
+	}
+
+	public ArrayList<Player> getSlimeChunkActive() {
+		return slimeChunkActive;
+	}
+
+	public void setSlimeChunkActive(ArrayList<Player> slimeChunkActive) {
+		this.slimeChunkActive = slimeChunkActive;
 	}
 
 }

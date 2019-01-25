@@ -9,14 +9,11 @@ import net.eduard.api.lib.manager.CommandManager;
 public class EconomyHelpCommand extends CommandManager {
 
 	public EconomyHelpCommand() {
-		super("reload");
+		super("help","ajuda","?");
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (args.length ==0) {
-			
-		}
 		
 		return true;
 	}

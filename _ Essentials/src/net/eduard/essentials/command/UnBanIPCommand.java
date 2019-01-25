@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class UnBanIPCommand extends CommandManager {
@@ -22,7 +21,7 @@ public class UnBanIPCommand extends CommandManager {
 		}
 		String ip = args[0];
 		Bukkit.unbanIP(ip);
-		Mine.chat(sender, message.replace("$ip", ip));
+		sender.sendMessage(message.replace("$ip", ip));
 
 		return true;
 	}

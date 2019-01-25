@@ -41,7 +41,7 @@ public class SetHomeCommand extends CommandManager {
 				}
 			}
 			config.set(path, p.getLocation());
-			Mine.chat(p, message.replace("$home", home));
+			sender.sendMessage(message.replace("$home", home));
 
 		}
 

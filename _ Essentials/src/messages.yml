@@ -1,1 +1,15 @@
 
+enchantment-table-disabled: "§cSinto muito, você não pode abrir a mesa de encantamento."
+hopper-disabled: §cSinto muito, você não pode abrir o funil.
+anvil-disabled: "§cSinto muito, você não pode abrir a bigorna."
+inventory-full: "§cSeu inventário está lotado."
+redstone-blocked: "§cSinto muito, você não pode usar Restone."
+command-cooldown: "§cEspere um momento para digitar o comando novamente!"
+chat-cooldown: "§aEspere um momento para digitar no chat novamente!"	
+combat-started: §cVocê entrou em combate, não deslogue ou perderá todos os itens do inventário.
+combat-out: "§aVocê não está mais em combate, pode deslogar tranquilamente."
+combat-try-command: "§cVocê não pode digitar comandos em combate."
+combat-quit: "§cO jogador $player deslogou em combate e perdeu todos os itens!"
+macro-suspect: "§cO jogador §f<jogador> §cestá clicando muito. §f(<cliques>)"
+macro-found: "§cO jogador §f<jogador> §cestá §e§lPROVAVELMENTE §cde macro. §f(<cliques>)"
+macro-warn: "§aO jogador $player esta batendo com mais de 5 blocos de distancia. Distancia: $distance"

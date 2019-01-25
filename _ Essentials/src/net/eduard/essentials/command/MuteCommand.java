@@ -33,7 +33,7 @@ public class MuteCommand extends CommandManager {
 			broadcast(messageTarget.replace("$target", target.getDisplayName())
 					.replace("$sender", sender.getName())
 					.replace("$reason", builder.toString()));
-			Mine.chat(target,message);
+			target.sendMessage(message);
 			target.setMetadata("muted",
 					new FixedMetadataValue(getPluginInstance(), true));
 		}
@@ -44,7 +44,7 @@ public class MuteCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (p.hasMetadata("muted")) {
 			e.setCancelled(true);
-			Mine.chat(p,message);
+			p.sendMessage(message);
 
 		}
 	}

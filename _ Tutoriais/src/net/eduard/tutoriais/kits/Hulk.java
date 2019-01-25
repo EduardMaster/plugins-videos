@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class Hulk extends KitAbility {
@@ -17,7 +17,7 @@ public class Hulk extends KitAbility {
 	public Hulk() {
 		setIcon(Material.DISPENSER, "§fLevante seus inimigos");
 		setTime(15);
-		setJump(new Jump(Sounds.create("BURP"), new Vector(0, 2, 0)));
+		setJump(new Jump(SoundEffect.create("BURP"), new Vector(0, 2, 0)));
 		setClick(new PlayerClickEntity(Material.AIR, new PlayerClickEntityEffect() {
 
 			@Override

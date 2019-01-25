@@ -26,7 +26,7 @@ public class TeleportCommand extends CommandManager {
 				if (Mine.existsPlayer(sender, args[0])) {
 					Player target = Mine.getPlayer(args[0]);
 					System.out.println(target == null);
-					Mine.chat(p,message.replace("$target",
+					sender.sendMessage(message.replace("$target",
 							target.getDisplayName()));
 					p.teleport(target);
 				}
@@ -40,9 +40,9 @@ public class TeleportCommand extends CommandManager {
 					Player player = Mine.getPlayer(args[0]);
 					Player target = Mine.getPlayer(args[1]);
 					player.teleport(target);
-					Mine.chat(player,message.replace("$target",
+					player.sendMessage(message.replace("$target",
 							target.getDisplayName()));
-					Mine.chat(sender,messageTarget
+					sender.sendMessage(messageTarget
 							.replace("$player", player.getDisplayName())
 							.replace("$target", target.getDisplayName()));
 				}

@@ -23,8 +23,8 @@ public class DeopCommand extends CommandManager {
 		if (Mine.existsPlayer(sender, args[0])) {
 			Player target = Mine.getPlayer(args[0]);
 			target.setOp(false);
-			Mine.chat(target, message);
-			Mine.chat(sender,
+			target.sendMessage(message);
+			sender.sendMessage(
 					messageTarget.replace("$target", target.getDisplayName()));
 		}
 

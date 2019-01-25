@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.Effects;
+import net.eduard.api.lib.game.VisualEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class Critical extends KitAbility {
@@ -15,7 +15,7 @@ public class Critical extends KitAbility {
 	public double damage = 4;
 	public String critMessage = "§6Voce levou um critico";
 	@SuppressWarnings("deprecation")
-	public Effects effect = new Effects(Effect.STEP_SOUND, Material.REDSTONE_BLOCK.getId());
+	public VisualEffect effect = new VisualEffect(Effect.STEP_SOUND, Material.REDSTONE_BLOCK.getId());
 
 	public Critical() {
 		setIcon(Material.GOLDEN_APPLE, "§fCause criticos em seus inimigos");

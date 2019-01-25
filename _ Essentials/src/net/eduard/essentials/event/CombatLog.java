@@ -12,11 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.essentials.EssentialsPlugin;
 
 public class CombatLog implements Listener {
@@ -27,46 +25,35 @@ public class CombatLog implements Listener {
 	public void aoSair(PlayerQuitEvent e) {
 
 		Player p = e.getPlayer();
-
+		if (!EssentialsPlugin.getInstance().getBoolean("combatlog-enabled")) {
+			return;
+		}
 		if (players.contains(p)) {
 
 			p.damage(1000);
 			players.remove(p);
-			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage("§cO jogador " + p.getName() + " deslogou em combate e perdeu todos os itens!");
-			Bukkit.broadcastMessage("");
+			Bukkit.broadcastMessage(
+					EssentialsPlugin.getInstance().message("combat-quit").replace("$player", p.getName()));
 
 		}
 	}
 
-	@EventHandler
-	public void aoSerKick(PlayerKickEvent e) {
-
-		Player p = e.getPlayer();
-
-		if (players.contains(p)) {
-
-			p.damage(1000);
-			players.remove(p);
-			Bukkit.broadcastMessage("");
-			Bukkit.broadcastMessage("§cO jogador " + p.getName() + " deslogou em combate e perdeu todos os itens!");
-			Bukkit.broadcastMessage("");
-
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void aoDigitarComandos(PlayerCommandPreprocessEvent e) {
 
 		Player p = e.getPlayer();
-
+		if (!EssentialsPlugin.getInstance().getBoolean("combatlog-enabled")) {
+			return;
+		}
 		if (players.contains(p)) {
-			
-			if (!e.getMessage().contains("/report")) {
-				e.setCancelled(true);
-				p.sendMessage("§cVocê não pode digitar comandos em combate.");
-				
-			}	
+			for (String cmd : EssentialsPlugin.getInstance().getConfigs().getMessages("combatlog.commands-permitted")) {
+				if (e.getMessage().toLowerCase().startsWith(cmd.toLowerCase())) {
+					return;
+				}
+			}
+			e.setCancelled(true);
+			p.sendMessage(EssentialsPlugin.getInstance().message("combat-try-command"));
+
 		}
 	}
 
@@ -86,9 +73,11 @@ public class CombatLog implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void aoBater(EntityDamageByEntityEvent e) {
 
-		if (e.isCancelled())
+		if (!EssentialsPlugin.getInstance().getBoolean("combatlog-enabled")) {
 			return;
+		}
 
+		Integer time = EssentialsPlugin.getInstance().getConfigs().getInt("combatlog.combat-seconds");
 		if (e.getEntity() instanceof Player) {
 
 			if (e.getDamager() instanceof Player) {
@@ -99,61 +88,36 @@ public class CombatLog implements Listener {
 				if (!players.contains(entity)) {
 
 					players.add(entity);
-					entity.sendMessage(
-							"§cVocê entrou em combate, não deslogue ou perderá todos os itens do inventário.");
+					entity.sendMessage(EssentialsPlugin.getInstance().message("combat-started"));
 
 					new BukkitRunnable() {
 
-						int tempo = 10;
-
 						public void run() {
 
-							if (tempo % 1 == 0) {
+							players.remove(entity);
+							entity.sendMessage(EssentialsPlugin.getInstance().message("combat-out"));
+							entity.playSound(entity.getLocation(), Sound.LEVEL_UP, 1, 1);
 
-								Mine.sendActionBar(entity,
-										"§c(!) Você está em combate, por §f§l" + tempo + "§c segundos!");
-
-							}
-
-							if (tempo == 0) {
-								players.remove(entity);
-								entity.sendMessage("§aVocê não está mais em combate, pode deslogar tranquilamente.");
-								entity.playSound(entity.getLocation(), Sound.LEVEL_UP, 1, 1);
-								cancel();
-							}
-							tempo--;
 						}
-					}.runTaskTimerAsynchronously(EssentialsPlugin.getInstance(), 20, 20 * 1);
+					}.runTaskLaterAsynchronously(EssentialsPlugin.getInstance(), 20 * time);
 				}
 
 				if (!players.contains(damager)) {
 
 					players.add(damager);
-					damager.sendMessage(
-							"§cVocê entrou em combate, não deslogue ou perderá todos os itens do inventário.");
+					damager.sendMessage(EssentialsPlugin.getInstance().message("combat-started"));
 
 					new BukkitRunnable() {
 
-						int tempo = 10;
-
 						public void run() {
 
-							if (tempo % 1 == 0) {
-
-								Mine.sendActionBar(damager,
-										"§c(!) Você está em combate, por §f§l" + tempo + "§c segundos!");
-
-							}
-
-							if (tempo == 0) {
-								players.remove(damager);
-								damager.sendMessage("§aVocê não está mais em combate, pode deslogar tranquilamente.");
-								damager.playSound(damager.getLocation(), Sound.LEVEL_UP, 1, 1);
-								cancel();
-							}
-							tempo--;
+							players.remove(damager);
+							damager.sendMessage(EssentialsPlugin.getInstance().message("combat-out"));
+							damager.playSound(damager.getLocation(), Sound.LEVEL_UP, 1, 1);
+							cancel();
 						}
-					}.runTaskTimerAsynchronously(EssentialsPlugin.getInstance(), 20, 20 * 1);
+					}.runTaskLaterAsynchronously(EssentialsPlugin.getInstance(), 20 * time);
+
 				}
 			}
 		}

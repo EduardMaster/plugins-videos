@@ -4,7 +4,7 @@ package net.eduard.spawn;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.game.Title;
 import net.eduard.api.server.EduardPlugin;
 import net.eduard.spawn.command.SetSpawnCommand;
@@ -17,7 +17,7 @@ public class SpawnPlugin extends EduardPlugin {
 	public static SpawnPlugin getInstance() {
 		return instance;
 	}
-
+ 
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -39,9 +39,9 @@ public class SpawnPlugin extends EduardPlugin {
 		config.add("Teleport delay", false, "Atraso ao teleportar");
 		config.add("Teleport delay seconds", 4, "Tempo de atraso ao teleportar");
 
-		config.add("Sound on teleport", Sounds.create("ENDERMAN_TELEPORT"), "Som ao teleportar");
-		config.add("Sound on join", Sounds.create("ENDERMAN_TELEPORT"), "Som ao entrar ");
-		config.add("Sound on respawn", Sounds.create("ENDERMAN_TELEPORT"),"Som ao renascer");
+		config.add("Sound on teleport", SoundEffect.create("ENDERMAN_TELEPORT"), "Som ao teleportar");
+		config.add("Sound on join", SoundEffect.create("ENDERMAN_TELEPORT"), "Som ao entrar ");
+		config.add("Sound on respawn", SoundEffect.create("ENDERMAN_TELEPORT"),"Som ao renascer");
 
 		config.add("Title on teleport enabled", true, "Enviar um titulo ao ir pro spawn");
 		config.add("Title on teleport", new Title(20, 20 * 2, 20, "§6Inicio", "§eVoce foi para o Spawn!"),

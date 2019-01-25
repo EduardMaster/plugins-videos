@@ -1,12 +1,13 @@
 name: EduardCurso
-description: Plugin do Curso Eduard
-main: net.eduard.curso.CursoMain
+description: Sistemas feitos no Curso do Eduard
+main: net.eduard.curso.CursoEduard
 version: 1.0
 authors: [Eduard]
 depend: [EduardAPI]
 website: https://www.youtube.com/user/EduTutoriaisHD
 
 commands:
+  caixa:
   rank:
     description: Subir de Rank
     usage: /<command>

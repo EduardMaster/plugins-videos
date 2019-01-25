@@ -8,7 +8,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.config.Config;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.game.Title;
 import net.eduard.api.lib.manager.CommandManager;
 
@@ -18,7 +18,7 @@ public class HomeCommand extends CommandManager {
 	}
 
 	public Config config = new Config("homes.yml");
-	public Sounds sound = Sounds.create("ENDERMAN_TELEPORT");
+	public SoundEffect sound = SoundEffect.create("ENDERMAN_TELEPORT");
 	public String message = "§6Voce teleportado para sua Home!";
 	public String messageError = "§cSua home não foi setada!";
 	public Title title = new Title(20, 20 * 2, 20, "§6Casa §e$home", "§bTeleportado para sua casa §3$home!");
@@ -38,7 +38,7 @@ public class HomeCommand extends CommandManager {
 					public void run() {
 						p.teleport(config.getLocation(path));
 						sound.create(p);
-						Mine.chat(p, message.replace("$home", homex));
+						sender.sendMessage(message.replace("$home", homex));
 						Mine.sendTitle(p, title.getTitle().replace("$home", homex),
 								title.getSubTitle().replace("$home", homex), title.getFadeIn(), title.getStay(),
 								title.getFadeOut());
@@ -49,7 +49,7 @@ public class HomeCommand extends CommandManager {
 						, 20);
 
 			} else {
-				Mine.chat(p, messageError.replace("$home", home));
+				sender.sendMessage(messageError.replace("$home", home));
 				config.remove(path);
 			}
 

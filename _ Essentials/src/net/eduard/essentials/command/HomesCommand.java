@@ -26,7 +26,7 @@ public class HomesCommand extends CommandManager {
 
 			Set<String> list = config.getKeys(p.getUniqueId().toString());
 			if (list.size() == 0) {
-				Mine.chat(p, messageError);
+				sender.sendMessage( messageError);
 			} else {
 				StringBuilder builder = new StringBuilder();
 				int id = 0;
@@ -37,7 +37,7 @@ public class HomesCommand extends CommandManager {
 					id++;
 					builder.append(sec);
 				}
-				Mine.chat(p, message.replace("$homes", builder.toString()));
+				sender.sendMessage( message.replace("$homes", builder.toString()));
 			}
 
 		}

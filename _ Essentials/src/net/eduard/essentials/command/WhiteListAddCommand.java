@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class WhiteListAddCommand extends CommandManager {
@@ -27,7 +26,7 @@ public class WhiteListAddCommand extends CommandManager {
 		String name = args[1];
 		OfflinePlayer target = Bukkit.getOfflinePlayer(name);
 		target.setWhitelisted(true);
-		Mine.chat(sender,message.replace("$player", target.getName()));
+		sender.sendMessage(message.replace("$player", target.getName()));
 		return true;
 	}
 	

@@ -22,16 +22,16 @@ public class ClearInventoryCommand extends CommandManager {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
 				Mine.clearInventory(p);
-				Mine.chat(p,message);
+				p.sendMessage(message);
 			}else 
 			return false;
 		} else {
 			String name = args[0];
 			if (Mine.existsPlayer(sender, name)) {
 				Player target = Mine.getPlayer(name);
-				Mine.chat(sender, messageTarget.replace("$player",
+				sender.sendMessage( messageTarget.replace("$player",
 						target.getDisplayName()));
-				Mine.chat(target,message);
+				target.sendMessage(message);
 				Mine.clearInventory(target);
 			}
 		}

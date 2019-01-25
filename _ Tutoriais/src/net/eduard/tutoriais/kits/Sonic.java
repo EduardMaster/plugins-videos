@@ -18,9 +18,9 @@ import org.bukkit.potion.PotionEffectType;
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
-import net.eduard.api.lib.game.Effects;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
+import net.eduard.api.lib.game.VisualEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class Sonic extends KitAbility {
@@ -30,9 +30,9 @@ public class Sonic extends KitAbility {
 	public Sonic() {
 		setIcon(Material.LAPIS_BLOCK, "§fGanha um boost para frente");
 		add(Material.LAPIS_BLOCK);
-		setDisplay( new Effects(Effect.SMOKE, 10));
+		setDisplay( new VisualEffect(Effect.SMOKE, 10));
 		setJump(new Jump(true, 0.5, 2,
-				Sounds.create("CLICK")));
+				SoundEffect.create("CLICK")));
 		getPotions().add(new PotionEffect(PotionEffectType.POISON, 1, 20 * 5));
 		setClick(new PlayerClick(Material.LAPIS_BLOCK, new PlayerClickEffect() {
 			

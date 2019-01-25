@@ -40,7 +40,7 @@ public class ToggleChatCommand extends CommandManager {
 		Player p = e.getPlayer();
 		if (!chatEnabled && !p.hasPermission(chatPerm)) {
 			e.setCancelled(true);
-			Mine.chat(p,messageDisabled);
+			p.sendMessage(messageDisabled);
 		}
 	}
 

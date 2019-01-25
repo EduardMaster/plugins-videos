@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class Vitality extends KitAbility {
@@ -15,7 +15,7 @@ public class Vitality extends KitAbility {
 	
 	public Vitality() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
-		setSound(Sounds.create("LEVEL_UP"));
+		setSound(SoundEffect.create("LEVEL_UP"));
 	}
 
 	@EventHandler

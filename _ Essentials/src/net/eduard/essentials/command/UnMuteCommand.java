@@ -29,7 +29,7 @@ public class UnMuteCommand extends CommandManager {
 			Mine.broadcast(
 					messageTarget.replace("$player", target.getDisplayName())
 							.replace("$sender", sender.getName()));
-			Mine.chat(target, message);
+			target.sendMessage(message);
 
 		}
 		return true;

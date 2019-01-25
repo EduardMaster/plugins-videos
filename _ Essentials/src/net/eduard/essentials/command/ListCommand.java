@@ -16,7 +16,7 @@ public class ListCommand extends CommandManager {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		Mine.chat(sender, message.replace("$players", ""+Mine.getPlayers().size()));
+		sender.sendMessage( message.replace("$players", ""+Mine.getPlayers().size()));
 		return true;
 	}
 }

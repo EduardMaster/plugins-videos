@@ -36,7 +36,7 @@ public class SetGroupCommand extends CommandManager {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		if (args.length <= 1) {
-			Mine.chat(sender, getUsage());
+			sendUsage(sender);
 
 		} else {
 			// /setgroup dono eduard
@@ -54,7 +54,7 @@ public class SetGroupCommand extends CommandManager {
 				for (Player player : Mine.getPlayers()) {
 					t.create(player);
 					for (String message : messages) {
-						Mine.chat(player, getValues(message, name, group));
+						player.sendMessage(getValues(message, name, group));
 					}
 				}
 

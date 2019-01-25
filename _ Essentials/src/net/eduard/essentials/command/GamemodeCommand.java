@@ -32,7 +32,7 @@ public class GamemodeCommand extends CommandManager {
 				} else {
 					p.setGameMode(GameMode.CREATIVE);
 				}
-				Mine.chat(sender, message.replace("$gamemode", getGamemode(p)));
+				sender.sendMessage( message.replace("$gamemode", getGamemode(p)));
 
 			} else
 				return false;
@@ -52,7 +52,7 @@ public class GamemodeCommand extends CommandManager {
 			if (args.length >= 2) {
 				if (Mine.existsPlayer(sender, args[1])) {
 					p = Mine.getPlayer(args[1]);
-					Mine.chat(sender,
+					sender.sendMessage(
 							messageTarget.replace("$gamemode", getGamemode(p))
 									.replace("$player", p.getDisplayName()));
 				} else
@@ -63,7 +63,7 @@ public class GamemodeCommand extends CommandManager {
 				return false;
 			}
 			p.setGameMode(gm);
-			Mine.chat(p, message.replace("$gamemode", getGamemode(p)));
+			sender.sendMessage(message.replace("$gamemode", getGamemode(p)));
 
 		}
 		return true;

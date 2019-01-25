@@ -8,44 +8,43 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class JailCommand implements CommandExecutor {
+import net.eduard.api.lib.Mine;
+import net.eduard.api.lib.manager.CommandManager;
+
+public class JailCommand extends CommandManager {
+
+	public JailCommand() {
+		super("jail", "prender");
+	}
 
 	private List<Player> players = new ArrayList<>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-		Player p = (Player) sender;
-
-		if (sender.hasPermission("nightmc.prender")) {
+		if (sender instanceof Player) {
+			Player p = (Player) sender;
 
 			if (args.length == 0) {
-				sender.sendMessage("§cPor favor, use /" + label + " {Jogador}");
+				sendUsage(p);
 
 			} else {
 
-				Player target = Bukkit.getPlayer(args[0]);
-				if (target == null) {
-					sender.sendMessage("§cEste jogador está offline.");
+				if (Mine.existsPlayer(sender, args[0])) {
+					Player target = Bukkit.getPlayer(args[0]);
 
-				} else {
 					if (players.contains(target)) {
 						removePrison(target);
-						;
+						sender.sendMessage("§aO jogador " + target.getName() + " foi absolvido!");
 					} else {
 						prison(target);
-						sender.sendMessage("§aO jogador " + target.getName() + " foi aprisinado!");
+						sender.sendMessage("§aO jogador " + target.getName() + " foi aprisionado!");
 					}
+
 				}
 			}
-		} else {
-
-//			MessageAPI.semPermissaoEssentials(p, "Moderador");
-
 		}
 
 		return false;
@@ -66,7 +65,7 @@ public class JailCommand implements CommandExecutor {
 		loc.clone().add(0, 1, 1).getBlock().setType(Material.BEDROCK);
 		player.teleport(loc.clone().add(-0.4, 1, -0.4));
 		player.sendMessage("§cVoce foi Aprisionado!");
-		
+
 	}
 
 	public void removePrison(Player player) {

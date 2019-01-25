@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.manager.CommandManager;
 
 public class SoupCommand extends CommandManager {
@@ -26,7 +26,7 @@ public class SoupCommand extends CommandManager {
 	public boolean recoverFood = false;
 	public boolean hasHungry = true;
 	public List<String> sign = new ArrayList<>();
-	public Sounds sound = Sounds.create("BURP");
+	public SoundEffect sound = SoundEffect.create("BURP");
 	public String message = "§aPlaca de sopa criada!";
 	public ItemStack soup = Mine.newItem(Material.MUSHROOM_SOUP, "§6Sopa");
 

@@ -36,10 +36,10 @@ public class PvPCommand extends CommandManager {
 				World world = Bukkit.getWorld(name);
 				if (world.getPVP()) {
 					world.setPVP(false);
-					Mine.chat(sender,messageOff);
+					sender.sendMessage(messageOff);
 				} else {
 					world.setPVP(true);
-					Mine.chat(sender,messageOn);
+					sender.sendMessage(messageOn);
 				}
 			}
 		}

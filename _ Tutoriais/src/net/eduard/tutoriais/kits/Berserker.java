@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class Berserker extends KitAbility {
@@ -17,7 +17,7 @@ public class Berserker extends KitAbility {
 	public Berserker() {
 		setIcon(Material.MUSHROOM_SOUP, "§fAo eliminar um Inimigo vai ganhar sopas");
 		setMessage("§6Modo berseker ativado");
-		setSound(Sounds.create("AMBIENCE_THUNDER"));
+		setSound(SoundEffect.create("AMBIENCE_THUNDER"));
 		getPotions().add(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 0, 20*30));
 		getPotions().add(new PotionEffect(PotionEffectType.SPEED, 0, 20*30));
 	}

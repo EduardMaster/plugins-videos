@@ -23,10 +23,10 @@ public class TeleportAllCommand extends CommandManager {
 				if (d.equals(p))
 					continue;
 				d.teleport(p);
-				Mine.chat(d,
+				d.sendMessage(
 						messageTarget.replace("$player", p.getDisplayName()));
 			}
-			Mine.chat(p,message);
+			sender.sendMessage(message);
 		}
 		return true;
 	}

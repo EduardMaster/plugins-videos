@@ -20,13 +20,13 @@ public class MinaCommnad extends CommandManager {
 			String label, String[] args) {
 
 		if (args.length == 0) {
-			Mine.chat(sender, getUsage());
+			sendUsage(sender);
 		} else if (Mine.onlyPlayer(sender)) {
 			Player p = (Player) sender;
 			World world = Mine.getWorld(this.world);
 			Mine.teleport(p, world.getSpawnLocation());
 			Mine.OPT_SOUND_TELEPORT.create(p);
-			Mine.chat(p, message);
+			sender.sendMessage(message);
 		}
 		return true;
 	}

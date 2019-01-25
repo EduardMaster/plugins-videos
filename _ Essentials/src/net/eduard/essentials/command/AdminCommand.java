@@ -29,7 +29,7 @@ import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.click.PlayerClickEntity;
 import net.eduard.api.lib.click.PlayerClickEntityEffect;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.api.lib.menu.Slot;
 import net.eduard.api.lib.modules.VaultAPI;
@@ -69,7 +69,7 @@ public class AdminCommand extends CommandManager {
 
 	}
 	public static List<Player> players = new ArrayList<>();
-	public Jump jumpEffect = new Jump(Sounds.create("BAT_LOOP"),
+	public Jump jumpEffect = new Jump(SoundEffect.create("BAT_LOOP"),
 			new Vector(0, 2, 0));
 	public String messageOn = "Voce entrou no Modo Admin!";
 	public String messageOff = "Voce saiu do Modo Admin!";
@@ -134,13 +134,13 @@ public class AdminCommand extends CommandManager {
 				if (players.contains(player)) {
 					Mine.show(player);
 					Mine.makeInvunerable(player, 1);
-					Mine.chat(player, "§6Troca rapida ativada!");
+					player.sendMessage("§6Troca rapida ativada!");
 					Mine.TIME.asyncDelay(new Runnable() {
 
 						@Override
 						public void run() {
 							Mine.hide(player);
-							Mine.chat(player, "§6Troca rapida desativada!");
+							player.sendMessage("§6Troca rapida desativada!");
 						}
 					}, 20);
 				}

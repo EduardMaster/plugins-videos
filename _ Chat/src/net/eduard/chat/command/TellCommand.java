@@ -25,18 +25,18 @@ public class TellCommand extends CommandManager {
 
 			Player p = (Player) sender;
 			if (args.length <= 1) {
-				Mine.chat(sender, getUsage());
+				sendUsage(sender);
 			} else {
 				if (Mine.existsPlayer(sender, args[0])) {
 					Player target = Mine.getPlayer(args[0]);
 					String message = Mine.getText(1, args);
 					if (!ChatPlugin.getInstance().getChat().getTellDisabled().contains(target)) {
-						Mine.chat(sender, messageDisabled.replace("$player", target.getName()));
+						sender.sendMessage(messageDisabled.replace("$player", target.getName()));
 					} else {
 						ChatPlugin.getInstance().getLastPrivateMessage().put(target, p);
-						Mine.chat(sender, this.message.replace("$target", target.getName())
+						sender.sendMessage( this.message.replace("$target", target.getName())
 								.replace("$>", "").replace("$message", message));
-						Mine.chat(target, messageTarget.replace("$player", sender.getName())
+						target.sendMessage( messageTarget.replace("$player", sender.getName())
 								.replace("$>", "").replace("$message", message));
 					}
 				}

@@ -22,14 +22,14 @@ public class PingCommand extends CommandManager {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				Player p = (Player) sender;
-				Mine.chat(p,message.replace("$ping", Mine.getPing(p)));
+				sender.sendMessage(message.replace("$ping", Mine.getPing(p)));
 			} else
 				return false;
 		} else {
 			String name = args[0];
 			if (Mine.existsPlayer(sender, name)) {
 				Player target = Mine.getPlayer(name);
-				Mine.chat(sender,messageTarget
+				sender.sendMessage(messageTarget
 						.replace("$target", target.getDisplayName())
 						.replace("$ping", Mine.getPing(target)));
 			}

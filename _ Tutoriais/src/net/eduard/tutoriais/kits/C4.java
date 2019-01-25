@@ -13,7 +13,7 @@ import net.eduard.api.lib.click.PlayerClick;
 import net.eduard.api.lib.click.PlayerClickEffect;
 import net.eduard.api.lib.game.Explosion;
 import net.eduard.api.lib.game.Jump;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.server.kits.KitAbility;
 
 public class C4 extends KitAbility {
@@ -27,7 +27,7 @@ public class C4 extends KitAbility {
 		add(Material.STONE_BUTTON);
 		setMessage("§6A bomba foi plantada!");
 		setJump(new Jump(false, 0.6, 0.5,
-				Sounds.create("CLICK")));
+				SoundEffect.create("CLICK")));
 		setExplosion(new Explosion(4, false, false));
 		setTime(2);
 		setTimes(2);
