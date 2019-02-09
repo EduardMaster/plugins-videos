@@ -6,27 +6,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.config.Config;
 import net.eduard.simplefake.comandos.FakeCommand;
 import net.eduard.simplefake.event.FakeEvent;
+import net.eduard.simplefake.manager.Configs;
+import net.eduard.simplefake.manager.FakeAPI;
 
 
 public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (Player p : Mine.getPlayers()) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
 			FakeAPI.reset(p);
 		}
 	} 
 
-	public static Config config;
+	public static Configs config;
 
 	@Override
 	public void onEnable() {
 
-		config = new Config(this);
+		config = new Configs("config.yml",this);
 		config.add("name_reset_to_original",
 				"&aSeu nome voltou para o estado original!");
 		config.add("name_exist_exeption",
@@ -39,9 +39,9 @@ public class Main extends JavaPlugin {
 				"&aSeu nome foi resetado porque entrou um jogador com esse nome! &e$name");
 		config.saveConfig();
 		Bukkit.getPluginManager().registerEvents(new FakeEvent(), this);
-		new FakeCommand().register();
-		for (Player p : Mine.getPlayers()) {
-			Mine.callEvent(new PlayerJoinEvent(p, null));
+		getCommand("fake").setExecutor(new FakeCommand());
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(p, null));
 		}
 	}
 }

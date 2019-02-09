@@ -3,6 +3,7 @@ package net.eduard.clickcounter;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.api.lib.Mine;
 import net.eduard.api.server.EduardPlugin;
 import net.eduard.clickcounter.command.TestClickCommand;
 import net.eduard.clickcounter.events.CPSCounter;

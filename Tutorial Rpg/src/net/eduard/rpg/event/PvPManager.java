@@ -12,8 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import net.eduard.rpg.Stat;
-import net.eduard.rpg.Stats;
+import net.eduard.rpg.manager.Stat;
+import net.eduard.rpg.manager.Stats;
 
 public class PvPManager implements Listener {
 	public static boolean acceptNormalDamages = true;

@@ -1,5 +1,5 @@
-name: eDinheiro
-description: Sistema de moedas pro servidor basico
+name: eduardDinheiro
+description: Tutorial de Sistema de moedas 
 main: net.eduard.dinheiro.Main
 version: 1.0
 authors: [Eduard]

@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import net.eduard.misterybox.system.MysteryBox;
+import net.eduard.misterybox.manager.MysteryBox;
 
 public class TemplateEvent implements Listener {
 

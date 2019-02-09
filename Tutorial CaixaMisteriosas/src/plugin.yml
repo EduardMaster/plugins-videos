@@ -1,5 +1,5 @@
-name: eCaixas
-description: Sistema de Caixas Misteriosas Simpels
+name: EduardCaixas
+description: Tutorial de Caixas Misteriosas
 main: net.eduard.misterybox.Main
 version: 1.0
 authors: [Eduard]

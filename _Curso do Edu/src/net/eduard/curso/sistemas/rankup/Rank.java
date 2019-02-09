@@ -9,6 +9,9 @@ public class Rank implements Storable {
 	private String prefix;
 	private int level;
 
+	public int getPosicao() {
+		return level;
+	}
 	public Rank() {
 		// TODO Auto-generated constructor stub
 	}

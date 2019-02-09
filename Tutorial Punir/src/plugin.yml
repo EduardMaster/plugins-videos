@@ -1,5 +1,5 @@
-name: eSimplesPunir
-description: Sistema basico de punir
+name: EduardSimplesPunir
+description: Tutorial de Sistema basico de punir
 main: net.eduard.simplespunir.Main
 version: 1.0
 authors: [Eduard]

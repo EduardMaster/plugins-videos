@@ -12,7 +12,7 @@ public class ComandoRankup implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			Rank rank = RankAPI.getManager().getRank(p);
-			p.sendMessage("§cSeu rank é " + rank.getName());
+			p.sendMessage("Â§aSeu rank: Â§2" + rank.getName());
 
 
 		}

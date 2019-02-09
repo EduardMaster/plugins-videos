@@ -1,5 +1,5 @@
 name: EduardAntBot
-description: Sistema Ant Login de Bot usando Proxy de uma config para saber quem eh Proxy
+description: Tutorial Sistema Ant Login (Nao foi testado)
 main: net.eduard.antbot.Main
 version: 1.0
 authors: [Eduard]

@@ -3,18 +3,17 @@ package net.eduard.tapetevoador.command;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.manager.CommandManager;
 import net.eduard.tapetevoador.Main;
 
-public class TapeteCommand extends CommandManager {
+public class TapeteCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (Mine.noConsole(sender)) {
+		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (Main.players.contains(p)) {
 				Main.players.remove(p);

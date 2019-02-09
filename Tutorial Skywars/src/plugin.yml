@@ -1,5 +1,5 @@
-name: EduSkyWars
-description: Plugin SkyWars
+name: EduardSkyWars
+description: Tutorial Plugin SkyWars
 version: 1.0
 main: net.eduard.skywars.Main
 authors: [Eduard]

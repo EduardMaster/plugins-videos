@@ -23,7 +23,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		main = this;
-		
+
 		reloadMaps();
 		new SkyWars().runTaskTimer(this, 20, 20);
 		if (getConfig().contains("lobby")) {
@@ -35,7 +35,7 @@ public class Main extends JavaPlugin {
 			double yaw = config.getDouble("lobby.yaw");
 			double pitch = config.getDouble("lobby.pitch");
 			Location location = new Location(world, x, y, z, (float) yaw, (float) pitch);
-			Lobby= location;
+			Lobby = location;
 		}
 		getCommand("skywars").setExecutor(new SkyWarsCommand());
 	}
@@ -84,8 +84,9 @@ public class Main extends JavaPlugin {
 			}
 		}
 	}
+
 	public static boolean existsLobby() {
-		return Lobby!=null;
+		return Lobby != null;
 	}
 
 	@Override
@@ -122,7 +123,6 @@ public class Main extends JavaPlugin {
 		SkyWars sky = new SkyWars(name);
 		skywars.add(sky);
 		return sky;
-		
 
 	}
 

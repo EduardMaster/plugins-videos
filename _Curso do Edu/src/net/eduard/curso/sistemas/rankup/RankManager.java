@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.storage.StorageAttributes;
 import net.eduard.api.lib.storage.Storable;
+import net.eduard.api.lib.storage.StorageAttributes;
 
 public class RankManager implements Storable {
 
@@ -17,6 +17,34 @@ public class RankManager implements Storable {
 	}
 
 	private ArrayList<Rank> ranks = new ArrayList<>();
+	
+	
+	public Rank getRank(String nome) {
+		for (Rank rank : ranks) {
+			if (rank.getName().equalsIgnoreCase(nome)) {
+				return rank;
+			}
+		}
+		return null;
+	}
+	public Rank getRankPelaPosicao(int posicao) {
+		for (Rank rank : ranks) {
+			if (rank.getPosicao() == posicao) {
+				return rank;
+			}
+		}
+		return null;
+	}
+	public Rank getRank(int level) {
+		for (Rank rank : ranks) {
+			if (rank.getLevel() == level) {
+				return rank;
+			}
+		}
+		return null;
+
+	}
+
 
 	@StorageAttributes(reference = true)
 	private Map<UUID, Rank> players = new HashMap<>();
@@ -51,14 +79,5 @@ public class RankManager implements Storable {
 		return rank;
 	}
 
-	public Rank getRank(int level) {
-		for (Rank rank : ranks) {
-			if (rank.getLevel() == level) {
-				return rank;
-			}
-		}
-		return null;
-
-	}
 
 }

@@ -1,5 +1,5 @@
-name: EduFake
-description: Sistema de Alterar o Nome temporariamente
+name: EduardFake
+description: Tutorial de Sistema de Alterar o Nome temporariamente
 main: net.eduard.simplefake.Main
 version: 1.0
 authors: [Eduard]

@@ -1,5 +1,5 @@
-name: EduPvP
-description: Plugin de KitPvP
+name: EduardPvP
+description: Tutorial de Plugin de KitPvP
 main: net.eduard.kitpvp.Main
 version: 1.0
 authors: [Eduard,KyzeYT]

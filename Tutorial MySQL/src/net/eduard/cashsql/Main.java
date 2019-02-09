@@ -7,19 +7,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin implements  Listener{	
+public class Main extends JavaPlugin implements Listener {
 	@Override
-	public void onEnable() {Bukkit.getPluginManager().registerEvents(this, this);
-	
-	MysqlTest.criarTabela();
+	public void onEnable() {
+		Bukkit.getPluginManager().registerEvents(this, this);
+
+		CashSQL.criarTabela();
 	}
+
 	@EventHandler
-	public void event(PlayerJoinEvent e){
+	public void event(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if (!MysqlTest.hasJogador(p)){
-			MysqlTest.addJogador(p);
+		if (!CashSQL.hasJogador(p)) {
+			CashSQL.addJogador(p);
 		}
-		MysqlTest.setJogador(p, 50000);
+		CashSQL.setJogador(p, 50000);
 	}
 
 }

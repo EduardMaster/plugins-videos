@@ -12,6 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.eduard.simplewarp.manager.Configs;
+import net.eduard.simplewarp.manager.Warp;
+
 public class Main extends JavaPlugin {
 
 	private static Main plugin;

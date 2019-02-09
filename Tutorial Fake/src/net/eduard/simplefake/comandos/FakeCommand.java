@@ -1,20 +1,19 @@
 package net.eduard.simplefake.comandos;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.manager.CommandManager;
-import net.eduard.simplefake.FakeAPI;
 import net.eduard.simplefake.Main;
+import net.eduard.simplefake.manager.FakeAPI;
 
-public class FakeCommand extends CommandManager {
+public class FakeCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 
-		if (Mine.noConsole(sender)) {
+		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length == 0) {
 				if (FakeAPI.isFake(p)) {
@@ -22,7 +21,7 @@ public class FakeCommand extends CommandManager {
 				} else
 					return false;
 			} else {
-				String name = Mine.removeBrackets(args[0]);
+				String name = args[0];
 				if (FakeAPI.getData().containsValue(name)
 						|| FakeAPI.getOriginal().containsValue(name)) {
 					p.sendMessage(Main.config.message("name_exist_exeption")

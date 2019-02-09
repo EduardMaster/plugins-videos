@@ -1,5 +1,6 @@
 package net.eduard.simplefake.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -7,9 +8,8 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.simplefake.FakeAPI;
 import net.eduard.simplefake.Main;
+import net.eduard.simplefake.manager.FakeAPI;
 
 
 public class FakeEvent implements Listener  {
@@ -28,7 +28,7 @@ public class FakeEvent implements Listener  {
 			e.setKickMessage(Main.config.message("kick_by_player_exist").replace("$name", name));
 				e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
 		}else if (FakeAPI.getData().containsValue(name)){
-			Player p = Mine.getPlayer(name);
+			Player p = Bukkit.getPlayer(name);
 			FakeAPI.reset(p);
 			p.sendMessage(Main.config.message("name_reset_by_other")
 					.replace("$name", name));

@@ -2,21 +2,23 @@
 package net.eduard.antibot;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.eduard.api.lib.manager.EventsManager;
-
-public class BotDetector extends EventsManager {
+/*
+ * Não foi testado
+ * 
+ */
+public class BotDetector implements Listener {
 
 	public BotDetector() {
-		Main.time.asyncTimer(new BukkitRunnable() {
+	new BukkitRunnable() {
 			
 			@Override
 			public void run() {
 				test();
 			}
-		},20,20);
+		}.runTaskTimerAsynchronously(Main.plugin,20,20);
 	}
 
 	private int contagem = 0;
@@ -40,13 +42,14 @@ public class BotDetector extends EventsManager {
 	public void test() {
 		if (contagem > 6) {
 			whitelist = true;
-			Main.time.asyncDelay(new Runnable() {
+			new BukkitRunnable() {
 				
 				@Override
 				public void run() {
 					whitelist = false;
+					
 				}
-			},10);
+			}.runTaskLaterAsynchronously(Main.plugin, 10);
 		}
 		contagem = 0;
 	}

@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
-
 import net.eduard.api.lib.Mine;
 import net.eduard.api.server.kits.KitAbility;
 

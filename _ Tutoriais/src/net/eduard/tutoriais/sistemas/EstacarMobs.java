@@ -34,7 +34,6 @@ public class EstacarMobs implements Listener {
 				if (entity instanceof Creature) {
 					mobs.add((Creature) entity);
 				}
-
 			}
 			int stacks = 1;
 

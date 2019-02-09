@@ -18,6 +18,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.eduard.rpg.event.PvPManager;
+import net.eduard.rpg.manager.ItemStats;
+import net.eduard.rpg.manager.Stats;
 
 public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;

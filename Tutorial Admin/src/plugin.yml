@@ -1,5 +1,5 @@
-name: EduAdmin
-description: Simples plugin de /admin
+name: EduardAdmin
+description: Tutorial de plugin de /admin
 main: net.eduard.admin.Main
 version: 1.0
 authors: [Eduard]
