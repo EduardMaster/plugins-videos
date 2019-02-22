@@ -1,9 +1,0 @@
-
-
-time-to-register: 30
-min-password-size: 4
-max-password-size: 12
-use-numbers-on-password: true
-use-letters-on-password: true
-max-login-attempts: 2
-kick-on-max-fails: true

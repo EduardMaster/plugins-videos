@@ -1,8 +1,0 @@
-name: EduEssentials
-description: Sistemas essenciais de qualquer servidor
-main: net.eduard.essentials.EssentialsPlugin
-version: 1.0
-author: Eduard
-authors: [Eduard]
-depend: [EduardAPI]
-website: https://www.youtube.com/user/EduTutoriaisHD

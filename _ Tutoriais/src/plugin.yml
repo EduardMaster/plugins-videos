@@ -1,7 +1,0 @@
-name: EduTutoriais
-description: Plugin que contem tutoriais prontos feitos pelo Eduard
-main: net.eduard.tutorias.Tutorial
-version: 1.0
-authors: [Eduard]
-soft-depend: [Essentials,Vault,McMMO,EduardAPI]
-website: https://www.youtube.com/user/EduTutoriaisHD
