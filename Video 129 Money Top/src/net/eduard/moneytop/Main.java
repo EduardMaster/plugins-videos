@@ -1,5 +1,5 @@
 
-package net.eduard.template;
+package net.eduard.moneytop;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -11,14 +11,13 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.eduard.api.server.EduardPlugin;
-import net.eduard.template.command.TemplateCommand;
-import net.eduard.template.event.TemplateEvents;
-
-public class Main extends EduardPlugin {
+public class Main extends JavaPlugin implements Listener{
 	private static Main plugin;
 
 	public static Main getInstance() {
@@ -36,8 +35,7 @@ public class Main extends EduardPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		new TemplateEvents().register(this);
-		new TemplateCommand().register();
+		Bukkit.getPluginManager().registerEvents(this, this);
 		new BukkitRunnable() {
 
 			@Override
@@ -45,15 +43,21 @@ public class Main extends EduardPlugin {
 				atualizador();
 			}
 		}.runTaskTimer(this, 20, 60*2);
-		
-		//errado 
-		//atualizar a cada segundo é locura
-		
+
+		// errado
+		// atualizar a cada segundo é locura
+
 		// mudei pra 2 min
 
 	}
 
-	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void event(PlayerCommandPreprocessEvent e) {
+		if (e.getMessage().startsWith("/money top")) {
+			e.setCancelled(true);
+			Main.mostrarTop(e.getPlayer());
+		}
+	}
 	public static void atualizador() {
 		// REQUISITO USAR VAULTAPI
 		for (OfflinePlayer offline : Bukkit.getOfflinePlayers()) {

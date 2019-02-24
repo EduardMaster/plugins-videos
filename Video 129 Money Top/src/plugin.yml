@@ -1,6 +1,6 @@
-name: Template
-description: Plugin Template
-main: net.eduard.template.Main
+name: TutorialMoneyTop
+description: Sistema de Money TOP
+main: net.eduard.moneytop.Main
 version: 1.0
 authors: [Eduard]
 depend: [EduardAPI]

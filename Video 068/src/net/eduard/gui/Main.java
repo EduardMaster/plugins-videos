@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.lib.Mine;
 import net.eduard.api.lib.click.PlayerEffect;
-import net.eduard.api.lib.game.Sounds;
+import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.manager.EffectManager;
 import net.eduard.api.lib.menu.Menu;
 import net.eduard.api.lib.menu.MenuButton;
@@ -21,7 +21,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		Sounds sound = new Sounds(Sound.LEVEL_UP, 2, 0.5F);
+		SoundEffect sound = new SoundEffect(Sound.LEVEL_UP, 2, 0.5F);
 		gui.setOpenWithItem(Mine.newItem("§4Abrir Gui Custom", Material.DIAMOND));
 		gui = new Menu("§8Trocar velocidade", 3);
 		for (int i = 0; i < 5; i++) {

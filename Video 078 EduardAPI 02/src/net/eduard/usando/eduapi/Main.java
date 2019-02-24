@@ -1,10 +1,10 @@
 
-package net.eduard.template;
+package net.eduard.usando.eduapi;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.eduard.api.server.EduardPlugin;
-import net.eduard.template.command.TemplateCommand;
+import net.eduard.usando.eduapi.command.ComandoExemplo;
 
 public class Main extends EduardPlugin {
 	private static Main plugin;
@@ -17,7 +17,7 @@ public class Main extends EduardPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		new TemplateCommand().register();
+		new ComandoExemplo().register();
 	}
 
 	@Override

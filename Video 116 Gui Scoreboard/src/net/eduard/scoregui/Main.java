@@ -1,22 +1,17 @@
 
 package net.eduard.scoregui;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.config.Config;
-import net.eduard.scoregui.command.TemplateCommand;
-import net.eduard.scoregui.event.Teste;
+import net.eduard.scoregui.event.ScoreboardTutorial;
 
 public class Main extends JavaPlugin {
 	private static Main plugin;
-	private static Config config;
 	@Override
 	public void onEnable() {
-		plugin = this;
-		config = new Config(this);
-		config.saveConfig();
-		Mine.registerEvents(new Teste(this),this);
+		setPlugin(this);
+		Bukkit.getPluginManager().registerEvents(new ScoreboardTutorial(this),this);
 	}
 
 	@Override
@@ -24,7 +19,14 @@ public class Main extends JavaPlugin {
 
 	}
 	public void commands(){
-		new TemplateCommand();
+	}
+
+	public static Main getPlugin() {
+		return plugin;
+	}
+
+	public static void setPlugin(Main plugin) {
+		Main.plugin = plugin;
 	}
 	
 

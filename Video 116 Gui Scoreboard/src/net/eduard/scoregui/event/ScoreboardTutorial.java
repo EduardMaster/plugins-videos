@@ -19,18 +19,17 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.eduard.api.lib.Mine;
 import net.eduard.scoregui.Main;
 
-public class Teste implements Listener {
+public class ScoreboardTutorial implements Listener {
 	
-	public Teste(Main main) {
+	public ScoreboardTutorial(Main main) {
 		
 		Bukkit.getScheduler().runTaskTimer(main, new Runnable() {
 			
 			@Override
 			public void run() {
-				for (Player p:Mine.getPlayers()){
+				for (Player p:Bukkit.getOnlinePlayers()){
 					Scoreboard board = criarScoreboard("§6Testando", "§cLinha 1","§2","§eLinha 2");
 					p.setScoreboard(board);
 				}
@@ -85,6 +84,7 @@ public class Teste implements Listener {
 		Inventory inv = Bukkit.createInventory(player, 4*9, "§cExemplo2");
 		player.openInventory(inv);
 	}
+	@SuppressWarnings("deprecation")
 	public static Scoreboard criarScoreboard(String nome,String... linhas){
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective("simpleboard", "scoreboard");

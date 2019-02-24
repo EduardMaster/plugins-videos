@@ -1,4 +1,4 @@
-package net.eduard.template;
+package net.eduard.moneytop;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;

@@ -11,7 +11,6 @@ import net.eduard.api.lib.click.PlayerEffect;
 import net.eduard.api.lib.manager.EffectManager;
 import net.eduard.api.lib.menu.Menu;
 import net.eduard.api.lib.menu.MenuButton;
-import net.eduard.api.lib.menu.Slot;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -35,6 +34,7 @@ public class Main extends JavaPlugin {
 		botao.setEffects(new EffectManager());
 		botao.getEffects().setEffect(new PlayerEffect() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void effect(Player p) {
 
