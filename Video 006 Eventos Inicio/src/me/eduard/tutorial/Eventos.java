@@ -1,6 +1,8 @@
 
 package me.eduard.tutorial;
 
+import java.util.HashSet;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,8 +21,9 @@ public class Eventos implements Listener {
 		Action action = event.getAction();
 		if ((action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)
 			&& player.getItemInHand().getType() == Material.DIAMOND) {
-			Location blocoClicado = player.getTargetBlock(null, 100).getLocation();
-			player.getWorld().createExplosion(blocoClicado, 10, true);
+			
+			//Location blocoClicado = player.getTargetBlock((HashSet)null, 100).getLocation();
+			//player.getWorld().createExplosion(blocoClicado, 10, true);
 		}
 	}
 }

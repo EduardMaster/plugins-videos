@@ -9,21 +9,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.eduard.api.lib.Mine;
-import net.eduard.api.lib.click.PlayerEffect;
 import net.eduard.api.lib.game.SoundEffect;
 import net.eduard.api.lib.manager.EffectManager;
 import net.eduard.api.lib.menu.Menu;
 import net.eduard.api.lib.menu.MenuButton;
+import net.eduard.api.lib.modules.Mine;
+import net.eduard.api.lib.plugin.IPluginInstance;
 
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin implements Listener, IPluginInstance {
 	public Menu gui;
 
 	@Override
 	public void onEnable() {
 		SoundEffect sound = new SoundEffect(Sound.LEVEL_UP, 2, 0.5F);
-		gui.setOpenWithItem(Mine.newItem("§4Abrir Gui Custom", Material.DIAMOND));
-		gui = new Menu("§8Trocar velocidade", 3);
+		gui.setOpenWithItem(Mine.newItem( Material.DIAMOND,"§4Abrir Gui Custom"));
+		gui = new Menu();
+		gui.setTitle("§8Trocar velocidade");
+		gui.setLineAmount(3);
 		for (int i = 0; i < 5; i++) {
 			Material boot = null;
 			switch (i) {
@@ -46,13 +48,14 @@ public class Main extends JavaPlugin implements Listener {
 				break;
 			}
 			final int id = i;
-			MenuButton botao = new MenuButton(Mine.newItem(boot, "§6Nivel " + (i + 1), 11 + i));
+			MenuButton botao = new MenuButton();
+			
+			botao.setIcon(Mine.newItem(boot, "§6Nivel " + (i + 1), 11 + i));
 			botao.setPosition(2, 1+id);
 			botao.setEffects(new EffectManager());
-			botao.getEffects().setEffect(new PlayerEffect() {
-
-				@Override
-				public void effect(Player p) {
+			botao.setClick(e ->{
+				Player p = (Player) e.getWhoClicked();
+				
 					// TODO Auto-generated method stub
 
 					p.sendMessage("§6Sua velocidade foi alterada para o nivel " + (id + 1));
@@ -61,10 +64,10 @@ public class Main extends JavaPlugin implements Listener {
 					float value = (id + 1) * 0.2F;
 					p.setWalkSpeed(value);
 				}
-			});
+			);
 			gui.addButton(botao);
 		}
-		gui.register(this);
+		gui.registerMenu(this);
 		Mine.registerEvents(this, this);
 	}
 
@@ -73,5 +76,11 @@ public class Main extends JavaPlugin implements Listener {
 
 		Player p = e.getPlayer();
 		p.getInventory().addItem(gui.getOpenWithItem());
+	}
+
+	@Override
+	public JavaPlugin getPlugin() {
+		
+		return this;
 	}
 }

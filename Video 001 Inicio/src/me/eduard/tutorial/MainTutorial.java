@@ -8,5 +8,10 @@ public class MainTutorial extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
+		
+
+		
+		
+		
 	}
 }
